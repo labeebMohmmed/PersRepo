@@ -1082,7 +1082,7 @@
             this.panelRemove.Location = new System.Drawing.Point(17, 222);
             this.panelRemove.Name = "panelRemove";
             this.panelRemove.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.panelRemove.Size = new System.Drawing.Size(289, 143);
+            this.panelRemove.Size = new System.Drawing.Size(289, 128);
             this.panelRemove.TabIndex = 666;
             this.panelRemove.Visible = false;
             // 
