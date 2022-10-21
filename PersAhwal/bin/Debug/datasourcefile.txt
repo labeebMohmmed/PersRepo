@@ -1,0 +1,1 @@
+Data Source=GOUNSLY\\SQLEXPRESS;Initial Catalog=AhwalDataBase;Integrated Security=True

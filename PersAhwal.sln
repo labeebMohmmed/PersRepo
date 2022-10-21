@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31005.135
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersAhwal", "PersAhwal\PersAhwal.csproj", "{08B6D8C1-F5F7-4C28-8411-123657E1FD92}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PassPort", "PassPort\PassPort.csproj", "{91035314-0348-4510-BCE2-9F1712A8FBCD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{08B6D8C1-F5F7-4C28-8411-123657E1FD92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08B6D8C1-F5F7-4C28-8411-123657E1FD92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08B6D8C1-F5F7-4C28-8411-123657E1FD92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08B6D8C1-F5F7-4C28-8411-123657E1FD92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91035314-0348-4510-BCE2-9F1712A8FBCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91035314-0348-4510-BCE2-9F1712A8FBCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91035314-0348-4510-BCE2-9F1712A8FBCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91035314-0348-4510-BCE2-9F1712A8FBCD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {41725DBB-08A0-4819-A331-56F30D53D626}
+	EndGlobalSection
+EndGlobal

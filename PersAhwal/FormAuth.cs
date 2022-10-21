@@ -1,0 +1,2905 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using Word = Microsoft.Office.Interop.Word;
+using System.Globalization;
+using System.Threading;
+using System.Data.SqlClient;
+using System.Configuration;
+using System.IO;
+using OfficeOpenXml;
+using Xceed.Document.NET;
+using Excel = Microsoft.Office.Interop.Excel;
+using System.Runtime.InteropServices;
+using System.Net;
+using Xceed.Words.NET;
+using System.Diagnostics;
+using WIA;
+using System.Diagnostics.Contracts;
+using static System.Net.WebRequestMethods;
+using File = System.IO.File;
+using DocumentFormat.OpenXml.Office2010.Excel;
+using Color = System.Drawing.Color;
+using Microsoft.Office.Core;
+using static Azure.Core.HttpHeader;
+using Aspose.Words.Settings;
+using DocumentFormat.OpenXml.Drawing.Spreadsheet;
+using System.Security.AccessControl;
+using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Drawing;
+
+namespace PersAhwal
+{
+    public partial class FormAuth : Form
+    {
+        bool colored = false;
+        bool ArchData = true;
+        string AuthNoPart1 = "ق س ج/160/12/";
+        string AuthNoPart2 = "";
+        public string rowCount = "";
+        public bool NewAuth = false;
+        int intID = -1;
+        string archFile = @"D:\ArchiveFiles\";
+        string FilespathIn, FilespathOut;
+        bool timerColor = true;
+        bool timer = true;
+        bool steadyGrid = false;
+        public Delegate DataMovePage;
+        string[] dataSum = new string[50];
+        string dataSource = "Data Source=192.168.100.100,49170;Network Library=DBMSSOCN;Initial Catalog=AhwalDataBase;User ID=ConsJeddahAdmin;Password=DataBC0nsJ49170";
+        public Form11 ParentData { get; set; }
+        bool fileloaded = false;
+        string[] colIDs = new string[100];
+        string[] allList;
+        string DataSource = "";
+        string updateAll = "";
+        int addNameIndex = 0;
+        int addAuthticIndex = 0;
+        int currentPanelIndex = 0;
+        int InvalidControl = 0;
+        string EmpName = "";
+        static string[,] preffix = new string[10, 20];
+        string strRights = "";
+        string strRightList = "";
+        string ColName = "";
+        string ColRight = "Col0";
+        Word.Document oBDoc;
+        DataTable checkboxdt;
+        int Nobox = 0, LastID = 0, LastTabIndex = 0;
+        string LastCol = "";
+        static string[] Text_statis = new string[5];
+        string spacialCharacter = "";
+        static int[] statistic = new int[100];
+        static int[] staticIndex = new int[100];
+        static int[] times = new int[100];
+        bool ShowNewApp = false;
+        string[] dataGrid = new string[50];
+        string StrSpecPur = "";
+        int LegaceyIndex = 0;
+        string LegaceyItem = "";
+        string LegaceyPreStr = "";
+        int idIndex = -1;
+        string[] txtComboOptions = new string[5] { "", "", "", "", "" };
+        string[] txtCheckOptions = new string[5] { "", "", "", "", "" };
+        string lastInput1 = "";
+        string lastInput2 = "";
+        string lastInput3 = "";
+        string lastInput4 = "";
+        string lastInput5 = "";
+        
+        public FormAuth(int Atvc, int rowid, string AuthNo, string datasource, string filespathIn, string filespathOut, string empName, string jobposition, string greDate, string hijriDate)
+        {
+            InitializeComponent();
+            FilespathIn = filespathIn;
+            FilespathOut = filespathOut;
+            DataSource = datasource;
+            EmpName = empName; 
+            genPreperations();
+            FillDataGridView(DataSource);            
+        }
+
+        public void panelShow(int panelIndex)
+        {
+            switch (panelIndex) { 
+                case 0:
+                    //DataGrid
+                    PanelDataGrid.Size = new System.Drawing.Size(1318, 648);
+                    PanelDataGrid.Location = new System.Drawing.Point(12, 38);                    
+                    PanelDataGrid.BringToFront();
+                    ListSearch.Visible = btnListView.Visible = PanelDataGrid.Visible = true;
+
+                    //false
+                    btnSettings.Visible = btnDelete.Visible = btnFile1.Visible = btnFile2.Visible = btnFile3.Visible = Panelapp.Visible = false;
+                    panelAuthRights.Visible = btnPrevious.Visible = btnNext.Visible = panelapplicationInfo.Visible = false;
+                    break;
+            case 1:
+                    //Basic Info
+                    panelapplicationInfo.Size = new System.Drawing.Size(821, 649);
+                    panelapplicationInfo.Location = new System.Drawing.Point(294, 38);
+                    panelapplicationInfo.BringToFront();
+                    btnPrevious.Visible = btnNext.Visible = panelapplicationInfo.Visible = true;
+                    //false
+                    ListSearch.Visible = btnListView.Visible = panelAuthRights.Visible = PanelDataGrid.Visible = false;
+                    btnDelete.Visible = btnFile1.Visible = btnFile2.Visible = btnFile3.Visible = Panelapp.Visible = true;
+                    break;
+            case 2:
+                    //AuthData
+                    chooseDocxFile();
+                    //MessageBox.Show("");
+                    boxesPreparations();
+                    
+                    btnSettings.Visible = panelAuthRights.Visible = true;
+                    panelAuthRights.BringToFront();
+
+                    //false
+                    PanelDataGrid.Visible = panelapplicationInfo.Visible = false;
+                    break;
+            case 3:
+                    fillDocFileStep1();
+                    break;
+            }
+        }
+        public void boxesPreparations() 
+        {
+            int appCaseIndex = Appcases(النوع, addNameIndex);
+            //البداية
+            string firstPart = "أنا المواطن" + preffix[appCaseIndex, 5] + "/ ";
+            if (addNameIndex > 1)
+                firstPart = "نحن المواطن" + preffix[appCaseIndex, 5] + " الموقع" + preffix[appCaseIndex, 5] + " ";
+            
+            //مقدم الطلب والوكيل
+            if (addNameIndex == 1)
+                نص_مقدم_الطلب.Text = firstPart + مقدم_الطلب.Text + "، المقيم" + preffix[appCaseIndex, 5] + " بالمملكة العربية السعودية حامل" + preffix[appCaseIndex, 5] +" "+ نوع_الهوية.Text + " رقم " + رقم_الهوية.Text.Replace("p", "P") + " إصدار " + مكان_الإصدار.Text + "، بكامل قوا" + preffix[appCaseIndex, 12] + " العقلية وبطوع" + preffix[appCaseIndex, 12] + " واختيار" + preffix[appCaseIndex, 12] + " وحالت" + preffix[appCaseIndex, 12] + " المعتبرة شرعاً وقانوناً، بهذا فقد أوكلت" + createAuthPart1();
+            else
+                نص_مقدم_الطلب.Text = firstPart + "-" + "والمقيم" + preffix[appCaseIndex, 5] + " بالمملكة العربية السعودية بهذا فقد أوكل" + preffix[appCaseIndex, 1] + createAuthPart1() + " بكامل قوا" + preffix[appCaseIndex, 12] + " العقلية وبطوع" + preffix[appCaseIndex, 12] + " واختيار" + preffix[appCaseIndex, 12] + " وحالت" + preffix[appCaseIndex, 12] + " المعتبرة شرعاً وقانوناً";
+
+            //التوثيق
+            موقع_التوكيل1.Text = موقع_التوكيل.Text;
+            التوقيع.Text = مقدم_الطلب.Text;
+            string auth = " المواطن" + preffix[appCaseIndex, 5] + " المذكور" + preffix[appCaseIndex, 5] + " أعلاه قد حضر" + preffix[appCaseIndex, 3] + " ووقع" + preffix[appCaseIndex, 3] + " بتوقيع" + preffix[appCaseIndex, 4] + " على هذا التوكيل في حضور الشاهدين المذكورين أعلاه وذلك بعد تلاوته علي" + preffix[appCaseIndex, 4] + " وبعد أن فهم" + preffix[appCaseIndex, 3] + " مضمونه ومحتواه";    
+            if(!طريقة_الطلب.Checked)
+                auth= " المواطن" + preffix[appCaseIndex, 5] + " المذكور" + preffix[appCaseIndex, 5] + " أعلاه قد حضر" + preffix[appCaseIndex, 5] + " ووقع" + preffix[appCaseIndex, 5] + " بتوقيع" + preffix[appCaseIndex, 5] + " على هذا التوكيل في حضور الشهود المذكورين أعلاه " + " بعد تلاوته علي" + preffix[appCaseIndex, 5] + " وبعد أن فهم" + preffix[appCaseIndex, 5] + " مضمونه ومحتواه" + " وذلك أمام مندوب جالية منطقة " + اسم_المندوب.Text.Split('_')[1] + " السيد/ " + اسم_المندوب.Text.Split('_')[0] + " بموجب التفويض الممنوح له من القنصلية العامة ";                
+            التوثيق.Text = " نائب قنصل بالقنصلية العامة لجمهورية السودان بجدة، بأن"+ auth + "، صدر تحت توقيعي وختم القنصلية العامة";
+        }
+
+        private void Suffex_preffixList()
+        {
+
+            preffix[0, 0] = "ي"; //$$$
+            preffix[1, 0] = "ي";
+            preffix[2, 0] = "ا";
+            preffix[3, 0] = "ا";
+            preffix[4, 0] = "ا";
+            preffix[5, 0] = "ا";
+
+            preffix[0, 1] = "ت";//&&&
+            preffix[1, 1] = "ت";
+            preffix[2, 1] = "نا";
+            preffix[3, 1] = "نا";
+            preffix[4, 1] = "نا";
+            preffix[5, 1] = "نا";
+
+            preffix[0, 2] = "ني";//^^^
+            preffix[1, 2] = "ني";
+            preffix[2, 2] = "نا";
+            preffix[3, 2] = "نا";
+            preffix[4, 2] = "نا";
+            preffix[5, 2] = "نا";
+
+            preffix[0, 3] = "";//***
+            preffix[1, 3] = "ت";
+            preffix[2, 3] = "ا";
+            preffix[3, 3] = "تا";
+            preffix[4, 3] = "ن";
+            preffix[5, 3] = "وا";
+
+            preffix[0, 4] = "ه";//###
+            preffix[1, 4] = "ها";
+            preffix[2, 4] = "هما";
+            preffix[3, 4] = "هما";
+            preffix[4, 4] = "هن";
+            preffix[5, 4] = "هم";
+
+            preffix[0, 5] = "";
+            preffix[1, 5] = "ة";
+            preffix[2, 5] = "ان";
+            preffix[3, 5] = "تان";
+            preffix[4, 5] = "ات";
+            preffix[5, 5] = "ون";
+
+            preffix[0, 6] = "";
+            preffix[1, 6] = "ة";
+            preffix[2, 6] = "ين";
+            preffix[3, 6] = "تين";
+            preffix[4, 6] = "ات";
+            preffix[5, 6] = "ين";
+
+            preffix[0, 7] = "ينوب";
+            preffix[1, 7] = "تنوب";
+            preffix[2, 7] = "ينوبا";
+            preffix[3, 7] = "تنوبا";
+            preffix[4, 7] = "ينبن";
+            preffix[5, 7] = "ينوبوا";
+
+            preffix[0, 8] = "يقوم";
+            preffix[1, 8] = "تقوم";
+            preffix[2, 8] = "يقوما";
+            preffix[3, 8] = "تقوما";
+            preffix[4, 8] = "يقمن";
+            preffix[5, 8] = "يقوموا";
+
+            preffix[0, 9] = "";
+            preffix[1, 9] = "ة";
+            preffix[2, 9] = "ين";
+            preffix[3, 9] = "ان";
+            preffix[4, 9] = "ات";
+            preffix[5, 9] = "ين";
+
+            preffix[0, 10] = "أوكلت";//&&&
+            preffix[1, 10] = "أوكلت";
+            preffix[2, 10] = "أوكلنا";
+            preffix[3, 10] = "أوكلنا";
+            preffix[4, 10] = "أوكلنا";
+            preffix[5, 10] = "أوكلنا";
+
+            preffix[0, 11] = "تنازلت تنازلاً نهائياً";//&&&
+            preffix[1, 11] = "تنازلت تنازلاً نهائياً";
+            preffix[2, 11] = "تنازلنا تنازلاً نهائياً";
+            preffix[3, 11] = "تنازلنا تنازلاً نهائياً";
+            preffix[4, 11] = "تنازلنا تنازلاً نهائياً";
+            preffix[5, 11] = "تنازلنا تنازلاً نهائياً";
+
+            preffix[0, 12] = "ي";
+            preffix[1, 12] = "ي";
+            preffix[2, 12] = "نا";
+            preffix[3, 12] = "نا";
+            preffix[4, 12] = "نا";
+            preffix[5, 12] = "نا";
+
+            preffix[0, 13] = "أنا";
+            preffix[1, 13] = "أنا";
+            preffix[2, 13] = "نحن";
+            preffix[3, 13] = "نحن";
+            preffix[4, 13] = "نحن";
+            preffix[5, 13] = "نحن";
+
+        }
+
+        public void panelFill(Control control)
+        {
+            for (int col = 0; col < allList.Length; col++)
+            {
+                if (control.Name.Replace("V","") == allList[col])
+                {
+                    control.Text = dataGridView1.CurrentRow.Cells[allList[col]].Value.ToString();
+                }
+            }
+        }
+        public void genPreperations()
+        {
+            
+            label36.Text = "الموظف:" + EmpName;
+            dataGridView1.DefaultCellStyle.SelectionBackColor = Color.DarkTurquoise;
+            dataGridView1.DefaultCellStyle.SelectionForeColor = Color.WhiteSmoke;
+            dataGridView1.BackgroundColor = Color.White;
+            allList = getColList("TableAuth");
+            PanelDataGrid.Size = new System.Drawing.Size(1318, 648);
+            PanelDataGrid.Location = new System.Drawing.Point(12, 38);
+            //
+            PanelDataGrid.BringToFront();
+            //
+            Suffex_preffixList();
+        }
+        private string[] getColList(string table)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT name FROM sys.columns WHERE object_id = OBJECT_ID('"+ table+"') and  name <> 'ID' and name not like 'Data%'", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            string[] allList = new string[dtbl.Rows.Count];
+            int i = 0;
+            string insertItems = "";
+            string insertValues = "";
+            string updateValues = "";
+            foreach (DataRow row in dtbl.Rows)
+            {
+
+                if (row["name"].ToString() != "ID" && !row["name"].ToString().Contains("data"))
+                {
+                    allList[i] = row["name"].ToString();
+                    if (i == 0)
+                    {
+                        insertItems = row["name"].ToString();
+                        insertValues = "@" + row["name"].ToString();
+                        updateValues = row["name"].ToString() + "=@" + row["name"].ToString();
+                    }
+                    else
+                    {
+                        insertItems = insertItems + "," + row["name"].ToString();
+                        insertValues = insertValues + "," + "@" + row["name"].ToString();
+                        updateValues = updateValues + "," + row["name"].ToString() + "=@" + row["name"].ToString();
+                    }
+                    i++;
+                }
+            }
+            updateAll = "UPDATE " + table + " SET " + updateValues + " where ID = @id";
+            return allList;
+
+        }
+
+        public void addAuthenticPerson(string name, string sex, string nationality, string docNo) {
+            // 
+            // label42
+            // 
+            Label labelauthName = new Label();  
+            labelauthName.AutoSize = true;
+            labelauthName.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            labelauthName.Location = new System.Drawing.Point(685, 0);
+            labelauthName.Name = "label42" + addAuthticIndex + ".";
+            labelauthName.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            labelauthName.Size = new System.Drawing.Size(68, 27);
+            labelauthName.TabIndex = 433;
+            labelauthName.Text = "اسم الموكَّل:";
+            // 
+            // txtAuthPerson1
+            // 
+            TextBox txtAuthPerson = new TextBox();
+            txtAuthPerson.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            txtAuthPerson.Location = new System.Drawing.Point(419, 3);
+            txtAuthPerson.Name = "الموكَّل_" + addAuthticIndex + ".";
+            txtAuthPerson.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            txtAuthPerson.Size = new System.Drawing.Size(260, 35);
+            txtAuthPerson.TabIndex = 432;
+            txtAuthPerson.TextChanged += new System.EventHandler(this.txtAuthPerson1_TextChanged);
+            txtAuthPerson.Text = name;
+            // 
+            // labeltitle7
+            // 
+            Label labelauthSex = new Label();
+            labelauthSex.AutoSize = true;
+            labelauthSex.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            labelauthSex.Location = new System.Drawing.Point(373, 0);
+            labelauthSex.Name = "labeltitle7_" + addAuthticIndex + ".";
+            labelauthSex.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            labelauthSex.Size = new System.Drawing.Size(40, 27);
+            labelauthSex.TabIndex = 491;
+            labelauthSex.Text = "النوع:";
+
+            // 
+            // txtAuthPersonsex1
+            // 
+            CheckBox txtAuthPersonsex = new CheckBox();
+            txtAuthPersonsex.AutoSize = true;
+            txtAuthPersonsex.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            txtAuthPersonsex.Location = new System.Drawing.Point(318, 3);
+            txtAuthPersonsex.Name = "جنس_الموكَّل_" + addAuthticIndex + ".";
+            txtAuthPersonsex.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            txtAuthPersonsex.Size = new System.Drawing.Size(49, 31);
+            txtAuthPersonsex.TabIndex = 492;
+            txtAuthPersonsex.Text = sex;            
+            if (txtAuthPersonsex.Text == "ذكر")
+                txtAuthPersonsex.Checked = true;
+            else txtAuthPersonsex.Checked = false;
+            txtAuthPersonsex.UseVisualStyleBackColor = true;
+            txtAuthPersonsex.CheckedChanged += new System.EventHandler(txtAuthPersonsex1_CheckedChanged);
+            // 
+            // combTitle7
+            // 
+            //this.combTitle7.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            //this.combTitle7.FormattingEnabled = true;
+            //this.combTitle7.Items.AddRange(new object[] {
+            //"Mr",
+            //"Mrs",
+            //"Miss",
+            //"Madam"});
+            //this.combTitle7.Location = new System.Drawing.Point(297, 3);
+            //this.combTitle7.Name = "combTitle7";
+            //this.combTitle7.Size = new System.Drawing.Size(15, 35);
+            //this.combTitle7.TabIndex = 550;
+            //this.combTitle7.Visible = false;
+            // 
+            // label3
+            //
+            Label labelauthNation = new Label();  
+            labelauthNation.AutoSize = true;
+            labelauthNation.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            labelauthNation.Location = new System.Drawing.Point(235, 0);
+            labelauthNation.Name = "label3";
+            labelauthNation.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            labelauthNation.Size = new System.Drawing.Size(56, 27);
+            labelauthNation.TabIndex = 530;
+            labelauthNation.Text = "الجنسية:";
+            // 
+            // nantionality1
+            // 
+            ComboBox nantionality = new ComboBox();
+            nantionality.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            nantionality.FormattingEnabled = true;
+            nantionality.Items.AddRange(new object[] {
+            "سوداني الجنسية",
+            "سعودي الجنسية",
+            "أخرى"});
+            nantionality.Location = new System.Drawing.Point(55, 3);
+            nantionality.Name = "جنسية_الموكل_" + addAuthticIndex + ".";
+            nantionality.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            nantionality.Size = new System.Drawing.Size(174, 35);
+            nantionality.TabIndex = 533;
+            nantionality.Text = nationality;    
+            nantionality.TextChanged += new System.EventHandler(this.nantionalityID_TextChanged);
+            // 
+            // label9
+            // 
+            Label labelauthDocNo = new Label();
+           labelauthDocNo.AutoSize = true;
+           labelauthDocNo.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+           labelauthDocNo.Location = new System.Drawing.Point(667, 41);
+           labelauthDocNo.Name = "label9";
+           labelauthDocNo.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+           labelauthDocNo.Size = new System.Drawing.Size(86, 27);
+           labelauthDocNo.TabIndex = 531;
+           labelauthDocNo.Text = "الهوية/الاقامة:";
+            // 
+            // nantionalityID1
+            // 
+            TextBox authIDNo = new TextBox();
+            authIDNo.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            authIDNo.Location = new System.Drawing.Point(175, 44);
+            authIDNo.Name = "هوية_الموكل_" + addAuthticIndex + ".";
+            authIDNo.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            authIDNo.Size = new System.Drawing.Size(486, 35);
+            authIDNo.TabIndex = 532;
+            authIDNo.Tag = "pass";
+            authIDNo.Text = docNo;
+            authIDNo.TextChanged += new System.EventHandler(this.authIDNo_TextChanged);
+            // 
+            // pictureBox11
+            // 
+            PictureBox addAuthPic = new PictureBox();
+            addAuthPic.Image = global::PersAhwal.Properties.Resources.add;
+            addAuthPic.Location = new System.Drawing.Point(115, 44);
+            addAuthPic.Name = "pictureBox11";
+            addAuthPic.Size = new System.Drawing.Size(54, 35);
+            addAuthPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            addAuthPic.TabIndex = 440;
+            addAuthPic.TabStop = false;
+            addAuthPic.Click += new System.EventHandler(addAuthPic_Click);
+            // 
+            // pictureBox13
+            // 
+            PictureBox removeAuthPic = new PictureBox();
+            removeAuthPic .Image = global::PersAhwal.Properties.Resources.remove;
+            removeAuthPic .Location = new System.Drawing.Point(55, 44);
+            removeAuthPic .Name = "pictureBox13";
+            removeAuthPic .Size = new System.Drawing.Size(54, 35);
+            removeAuthPic .SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            removeAuthPic .TabIndex = 490;
+            removeAuthPic .TabStop = false;
+            removeAuthPic .Click += new System.EventHandler(removeAuthPic_Click);
+            
+            PanelAuthPers.Controls.Add(labelauthName); 
+            PanelAuthPers.Controls.Add(txtAuthPerson); 
+            PanelAuthPers.Controls.Add(labelauthSex); 
+            PanelAuthPers.Controls.Add(txtAuthPersonsex); 
+            PanelAuthPers.Controls.Add(labelauthNation); 
+            PanelAuthPers.Controls.Add(nantionality); 
+            PanelAuthPers.Controls.Add(labelauthDocNo); 
+            PanelAuthPers.Controls.Add(authIDNo); 
+            PanelAuthPers.Controls.Add(addAuthPic); 
+            PanelAuthPers.Controls.Add(removeAuthPic); 
+            
+            addAuthticIndex++;
+            
+
+        }
+
+        private void txtAuthPersonsex1_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox checkBox = (CheckBox)sender;
+            if (checkBox.CheckState == CheckState.Unchecked) checkBox.Text = "أنثى";
+            else checkBox.Text = "ذكر";
+            checkChanged(جنس_الموكَّل, PanelAuthPers);
+        }
+        private void nantionalityID_TextChanged(object sender, EventArgs e)
+        {
+            checkChanged(جنسية_الموكل, PanelAuthPers);
+        }
+        private void txtAuthPerson1_TextChanged(object sender, EventArgs e)
+        {
+            checkChanged(الموكَّل, PanelAuthPers);
+        }
+        private void authIDNo_TextChanged(object sender, EventArgs e)
+        {
+            checkChanged(هوية_الموكل, PanelAuthPers);
+        }
+        private void addAuthPic_Click(object sender, EventArgs e)
+        {
+            addAuthenticPerson("", "ذكر", "سوداني الجنسية", "P0");
+            btnPanelAuthPers.Height = PanelAuthPers.Height = 90 * addAuthticIndex;
+            checkChanged(جنس_الموكَّل, PanelAuthPers);
+            checkChanged(جنسية_الموكل, PanelAuthPers);
+            checkChanged(الموكَّل, PanelAuthPers);
+            checkChanged(هوية_الموكل, PanelAuthPers);
+        }
+
+        private void removeAuthPic_Click(object sender, EventArgs e)
+        {
+            PictureBox pictureBox = (PictureBox)sender;
+            string rowID = pictureBox.Name.Split('_')[1];
+            // MessageBox.Show(pictureBox.Name);
+            foreach (Control control in PanelAuthPers.Controls)
+            {
+                if (control.Visible && control.Name.Contains("_" + rowID) && control.Name.Contains("."))
+                {
+                    control.Visible = false;
+                    control.Name = "unvalid_" + InvalidControl.ToString();
+                    InvalidControl++;
+                }
+            }
+            if (addAuthticIndex > 0)
+            {
+                addAuthticIndex--;
+                Panelapp.Height = 90 * addAuthticIndex;
+            }
+            else
+            {
+                PanelAuthPers.Height = 90;
+                addAuthenticPerson("", "ذكر", "سوداني الجنسية", "P0");
+            }
+            checkChanged(جنس_الموكَّل, PanelAuthPers);
+            checkChanged(جنسية_الموكل, PanelAuthPers);
+            checkChanged(الموكَّل, PanelAuthPers);
+            checkChanged(هوية_الموكل, PanelAuthPers);
+        }
+
+        public void addName(string name, string sex, string docType, string docNo, string docIssue, string language, string job, string age)
+        {
+            Label labelName = new Label();
+            labelName.AutoSize = true;
+            labelName.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            labelName.Location = new System.Drawing.Point(673, 0);
+            labelName.Name = "labelName_" + addNameIndex + ".";
+            labelName.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            labelName.Size = new System.Drawing.Size(80, 27);
+            labelName.TabIndex = 94;
+            labelName.Text = "مقدم الطلب:";
+            // 
+            // AppName1
+            // 
+            TextBox AppName = new TextBox();
+            AppName.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            AppName.Location = new System.Drawing.Point(413, 3);
+            AppName.Name = "مقدم_الطلب_" + addNameIndex + ".";
+            AppName.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            AppName.Size = new System.Drawing.Size(254, 35);
+            AppName.TabIndex = 93;
+            AppName.Text = name;
+            AppName.TextChanged += new System.EventHandler(this.AppName_TextChanged);
+            // 
+            // labeltitle1
+            // 
+            Label labeltitle1 = new Label();
+            labeltitle1.AutoSize = true;
+            labeltitle1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            labeltitle1.Location = new System.Drawing.Point(367, 0);
+            labeltitle1.Name = "labeltitle1_" + addNameIndex + ".";
+            labeltitle1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            labeltitle1.Size = new System.Drawing.Size(40, 27);
+            labeltitle1.TabIndex = 176;
+            labeltitle1.Text = "النوع:";
+            // 
+            // checkSexType1
+            // 
+            CheckBox checkSexType = new CheckBox();
+            checkSexType.AutoSize = true;
+            checkSexType.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            checkSexType.Location = new System.Drawing.Point(312, 3);
+            checkSexType.Name = "النوع_" + addNameIndex + ".";
+            checkSexType.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            checkSexType.Size = new System.Drawing.Size(49, 31);
+            checkSexType.TabIndex = 177;
+            checkSexType.Text = sex;
+            if (checkSexType.Text == "ذكر")
+                checkSexType.Checked = true;
+            else checkSexType.Checked = false;
+            checkSexType.UseVisualStyleBackColor = true;
+            checkSexType.CheckedChanged += new System.EventHandler(this.sexCheckedChanged);
+            // 
+            // combTitle1
+            // 
+            //ComboBox combTitle = new ComboBox();
+            //combTitle.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            //combTitle.FormattingEnabled = true;
+            //combTitle.Items.AddRange(new object[] {
+            //"Mr",
+            //"Mrs",
+            //"Miss",
+            //"Madam"});
+            //combTitle.Location = new System.Drawing.Point(291, 3);
+            //combTitle.Name = "النوع_الانجليزية_" + addNameIndex + ".";
+            //combTitle.Size = new System.Drawing.Size(15, 35);
+            //combTitle.TabIndex = 189;
+            //combTitle.Visible = false;
+            //combTitle.Text = sex;
+            //if (language == "العربية")
+            //{
+            //    checkSexType.Visible = true;
+            //    combTitle.Visible = false;
+            //}
+            //else
+            //{
+            //    checkSexType.Visible = false;
+            //    combTitle.Visible = true;
+            //}
+
+            // 
+            // label4
+            // 
+            Label labeldocType = new Label();
+            labeldocType.AutoSize = true;
+            labeldocType.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            labeldocType.Location = new System.Drawing.Point(167, 0);
+            labeldocType.Name = "label4_" + addNameIndex + ".";
+            labeldocType.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            labeldocType.Size = new System.Drawing.Size(118, 27);
+            labeldocType.TabIndex = 117;
+            labeldocType.Text = "نوع اثبات الشخصية:";
+            // 
+            // DocType1
+            // 
+            ComboBox DocType = new ComboBox();
+            DocType.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            DocType.FormattingEnabled = true;
+            DocType.Items.AddRange(new object[] {
+            "جواز سفر",
+            "إقامة",
+            "رقم وطني"});
+            DocType.Location = new System.Drawing.Point(12, 3);
+            DocType.Name = "نوع_الهوية_" + addNameIndex + ".";
+            DocType.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            DocType.Size = new System.Drawing.Size(149, 35);
+            DocType.TabIndex = 122;
+            DocType.Text = docType;
+            DocType.TextChanged += new System.EventHandler(this.DocType_TextChanged);
+            // 
+            // labeldoctype1
+            // 
+            Label labeldocNo = new Label();
+            labeldocNo.AutoSize = true;
+            labeldocNo.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            labeldocNo.Location = new System.Drawing.Point(653, 41);
+            labeldocNo.Name = "labeldoctype1_" + addNameIndex + ".";
+            labeldocNo.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            labeldocNo.Size = new System.Drawing.Size(100, 27);
+            labeldocNo.TabIndex = 119;
+            labeldocNo.Text = "رقم جواز السفر: ";
+            // 
+            // DocNo1
+            // 
+            TextBox DocNo = new TextBox();
+            DocNo.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            DocNo.Location = new System.Drawing.Point(464, 44);
+            DocNo.Name = "رقم_الهوية_" + addNameIndex + ".";
+            DocNo.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            DocNo.Size = new System.Drawing.Size(120, 35);
+            DocNo.TabIndex = 120;
+            DocNo.Tag = "pass";
+            DocNo.Text = docNo;
+            DocNo.TextChanged += new System.EventHandler(this.DocNo_TextChanged);
+            // 
+            // label7
+            // 
+            Label labeldocIssue = new Label();
+            labeldocIssue.AutoSize = true;
+            labeldocIssue.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            labeldocIssue.Location = new System.Drawing.Point(371, 41);
+            labeldocIssue.Name = "label7_" + addNameIndex + ".";
+            labeldocIssue.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            labeldocIssue.Size = new System.Drawing.Size(87, 27);
+            labeldocIssue.TabIndex = 121;
+            labeldocIssue.Text = "مكان الإصدار:";
+            // 
+            // DocIssue1
+            // 
+            TextBox DocIssue = new TextBox();
+            DocIssue.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            DocIssue.Location = new System.Drawing.Point(152, 44);
+            DocIssue.Name = "مكان_الإصدار_" + addNameIndex + ".";
+            DocIssue.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            DocIssue.Size = new System.Drawing.Size(210, 35);
+            DocIssue.TabIndex = 118;
+            DocIssue.Text = docIssue;
+            DocIssue.TextChanged += new System.EventHandler(this.DocIssue_TextChanged);
+            // 
+            // addName1
+            //
+            PictureBox addName = new PictureBox();
+            addName.Image = global::PersAhwal.Properties.Resources.add;
+            addName.Location = new System.Drawing.Point(92, 44);
+            addName.Name = "addName_" + addNameIndex + ".";
+            addName.Size = new System.Drawing.Size(54, 35);
+            addName.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            addName.TabIndex = 123;
+            addName.TabStop = false;
+            addName.Click += new System.EventHandler(this.addName_Click);
+            // 
+            // removeName1
+            // 
+            PictureBox removeName = new PictureBox();
+            removeName.Image = global::PersAhwal.Properties.Resources.remove;
+            removeName.Location = new System.Drawing.Point(32, 44);
+            removeName.Name = "removeName_" + addNameIndex + ".";
+            removeName.Size = new System.Drawing.Size(54, 35);
+            removeName.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            removeName.TabIndex = 175;
+            removeName.TabStop = false;
+            removeName.Click += new System.EventHandler(this.removeName_Click);
+            //
+            // Job
+            //
+            Label Job = new Label();
+            Job.AutoSize = true;
+            Job.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            Job.Location = new System.Drawing.Point(1129, 555);
+            Job.Name = "label36_" + addNameIndex + ".";
+            Job.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            Job.Size = new System.Drawing.Size(40, 27);
+            Job.TabIndex = 604;
+            Job.Text = "المهنة:";
+            // 
+            // المهنة
+            // 
+            TextBox textJob = new TextBox();
+            textJob.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            textJob.Location = new System.Drawing.Point(801, 400);
+            textJob.Name = "المهنة_" + addNameIndex + ".";
+            textJob.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            textJob.Size = new System.Drawing.Size(570, 35);
+            textJob.TabIndex = 603;
+            textJob.Text = job;
+            textJob.TextChanged += new System.EventHandler(this.textJob_TextChanged);
+            // 
+            // label37
+            // 
+            Label Age = new Label();
+            Age.AutoSize = true;
+            Age.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            Age.Location = new System.Drawing.Point(724, 555);
+            Age.Name = "label37_" + addNameIndex + ".";
+            Age.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            Age.Size = new System.Drawing.Size(75, 27);
+            Age.TabIndex = 606;
+            Age.Text = "تاريخ الميلاد:";
+            // 
+            // تاريخ_الميلاد
+            //
+            TextBox textAge = new TextBox();    
+            textAge.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            textAge.Location = new System.Drawing.Point(522, 552);
+            textAge.Name = "تاريخ_الميلاد_" + addNameIndex + ".";
+            textAge.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            textAge.Size = new System.Drawing.Size(100, 35);
+            textAge.TabIndex = 844;
+            textAge.Text = age;
+            textAge.TextChanged += new System.EventHandler(this.textAge_TextChanged);
+
+            Panelapp.Controls.Add(labelName);
+            Panelapp.Controls.Add(AppName);
+            Panelapp.Controls.Add(labeltitle1);
+            Panelapp.Controls.Add(checkSexType);
+            //Panelapp.Controls.Add(combTitle);
+            Panelapp.Controls.Add(labeldocType);
+            Panelapp.Controls.Add(DocType);
+            Panelapp.Controls.Add(labeldocNo);
+            Panelapp.Controls.Add(DocNo);
+            Panelapp.Controls.Add(labeldocIssue);
+            Panelapp.Controls.Add(DocIssue);
+            Panelapp.Controls.Add(Age);
+            Panelapp.Controls.Add(textAge);
+            Panelapp.Controls.Add(Job);            
+            Panelapp.Controls.Add(textJob);            
+            Panelapp.Controls.Add(addName);
+            Panelapp.Controls.Add(removeName);            
+            addNameIndex++;
+
+            //Panelapp.Height = 130 * (addNameIndex);
+        }
+        public int Appcases(TextBox text, int index)
+        {
+            if (index == 1)
+            {
+                if (النوع.Text == "ذكر")
+                    return 0;//المقيم
+                else
+                    return 1;//المقيمة
+            }
+
+            else if (index == 2)
+            {
+                if (text.Text.Split('_')[0] != "ذكر" && text.Text.Split('_')[0] != "ذكر")
+                    return 3;//المقيمتان
+                else
+                    return 2;//المقيمان
+            }
+
+            else if (index == 3)
+            {
+                if (text.Text.Split('_')[0] != "ذكر" && text.Text.Split('_')[0] != "ذكر" && text.Text.Split('_')[0] != "ذكر")
+                    return 4;//المقيمات
+            }
+
+            return 5;//المقيمون
+        }
+        private void textAge_TextChanged(object sender, EventArgs e)
+        {
+            checkChanged(تاريخ_الميلاد, Panelapp);
+        }
+        private void textJob_TextChanged(object sender, EventArgs e)
+        {
+            checkChanged(المهنة, Panelapp);
+        }
+        private void AppName_TextChanged(object sender, EventArgs e)
+        {
+            checkChanged(مقدم_الطلب, Panelapp);
+        }
+        private void DocIssue_TextChanged(object sender, EventArgs e)
+        {
+            checkChanged(مكان_الإصدار, Panelapp);
+        }
+        
+        private void DocType_TextChanged(object sender, EventArgs e)
+        {
+            checkChanged(نوع_الهوية, Panelapp);
+        }
+        private void DocNo_TextChanged(object sender, EventArgs e)
+        {
+            checkChanged(رقم_الهوية, Panelapp);
+        }
+        private void sexCheckedChanged(object sender, EventArgs e)
+        {
+            
+            CheckBox checkBox = (CheckBox)sender;
+            if (checkBox.CheckState == CheckState.Unchecked) checkBox.Text = "أنثى";
+            else checkBox.Text = "ذكر";
+            checkChanged(النوع, Panelapp);
+        }
+
+        
+        private void checkChanged( TextBox text, FlowLayoutPanel panel) {
+            int index = 0;
+            foreach (Control control in panel.Controls)
+            {
+                if (control.Visible && control.Name == text.Name + "_" + index + ".")
+                {
+                    if (index == 0) text.Text = control.Text;
+                    else text.Text = text.Text + "_" + control.Text;
+                    index++;
+                }
+            }
+        }
+
+        private void addName_Click(object sender, EventArgs e)
+        {
+            addName("", "ذكر", "جواز سفر", "P0", "", "العربية", "", "");
+            btnPanelapp.Height = Panelapp.Height = 130 * addNameIndex;
+            checkChanged(مقدم_الطلب, Panelapp);
+            checkChanged(النوع, Panelapp);
+            checkChanged(نوع_الهوية, Panelapp);
+            checkChanged(رقم_الهوية, Panelapp);
+            checkChanged(مكان_الإصدار, Panelapp);
+            checkChanged(تاريخ_الميلاد, Panelapp);
+            checkChanged(المهنة, Panelapp);
+        }
+
+        private void removeName_Click(object sender, EventArgs e)
+        {
+            PictureBox pictureBox = (PictureBox)sender;
+            string rowID = pictureBox.Name.Split('_')[1];
+            foreach (Control control in Panelapp.Controls)
+            {
+                if (control.Visible && control.Name.Contains("_" + rowID) && control.Name.Contains("."))
+                {
+                    control.Visible = false;
+                    control.Name = "unvalid_" + InvalidControl.ToString();
+                    InvalidControl++;
+                }
+            }
+            if (addNameIndex > 0)
+            {
+                addNameIndex--;
+                Panelapp.Height = 130 * addNameIndex;
+            }
+            else
+            {
+                Panelapp.Height = 130;
+                addName("", "ذكر", "جواز سفر", "P0", "", "العربية", "", "");
+
+            }
+            checkChanged(مقدم_الطلب, Panelapp);
+            checkChanged(النوع, Panelapp);
+            checkChanged(نوع_الهوية, Panelapp);
+            checkChanged(رقم_الهوية, Panelapp);
+            checkChanged(مكان_الإصدار, Panelapp);
+            checkChanged(تاريخ_الميلاد, Panelapp);
+            checkChanged(المهنة, Panelapp);
+        }
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            //
+            //Panel app
+            //
+            intID = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value.ToString());
+            addNameIndex = 0;
+            if (dataGridView1.CurrentRow.Index != -1)
+            {
+                fillInfo(Panelapp, true);
+                fillInfo(PanelAuthPers, true);
+                fillInfo(panelapplicationInfo, false);
+                fillInfo(PanelItemsboxes, false);
+                if (مقدم_الطلب.Text == "") ArchData = true;
+                
+
+                for (int app = 0; app < مقدم_الطلب.Text.Split('_').Length; app++)
+                {
+                    string appJob, appBirth;
+                    try
+                    {
+                        appJob = المهنة.Text.Split('_')[app];
+                        appBirth = تاريخ_الميلاد.Text.Split('_')[app];
+                    }
+                    catch (Exception ex) {
+                        appBirth = appJob = "";
+                    }
+
+                    if (مقدم_الطلب.Text.Split('_')[app] != "") 
+                        addName(مقدم_الطلب.Text.Split('_')[app], النوع.Text.Split('_')[app], نوع_الهوية.Text.Split('_')[app], رقم_الهوية.Text.Split('_')[app], مكان_الإصدار.Text.Split('_')[app], "العربية", appJob, appBirth);
+                    else 
+                        addName("", "ذكر", "جواز سفر", "P0","", "العربية", "", appBirth);
+                }
+
+                for (int app = 0; app < الموكَّل.Text.Split('_').Length; app++)
+                {
+                    if (مقدم_الطلب.Text.Split('_')[app] != "")
+                        addAuthenticPerson(الموكَّل.Text.Split('_')[app], جنس_الموكَّل.Text.Split('_')[app], جنسية_الموكل.Text.Split('_')[app], هوية_الموكل.Text.Split('_')[app]); 
+                    else
+                        addAuthenticPerson("", "ذكر", "سوداني الجنسية", "P0");
+                }
+                
+                currentPanelIndex = 1;
+                panelShow(currentPanelIndex);
+            }
+            checkChanged(مقدم_الطلب, Panelapp);
+            checkChanged(النوع, Panelapp);
+            checkChanged(نوع_الهوية, Panelapp);
+            checkChanged(رقم_الهوية, Panelapp);
+            checkChanged(مكان_الإصدار, Panelapp);
+            checkChanged(تاريخ_الميلاد, Panelapp);
+            checkChanged(المهنة, Panelapp);
+            checkChanged(الموكَّل, PanelAuthPers);
+            checkChanged(جنسية_الموكل, PanelAuthPers);
+            checkChanged(جنس_الموكَّل, PanelAuthPers);
+            checkChanged(هوية_الموكل, PanelAuthPers);
+            //
+            //Panel app
+            //
+            return;
+            if (dataGridView1.CurrentRow.Index != -1)
+            {
+
+                ParentData.NewDataValue = true;
+                dataSum[9] = dataGridView1.CurrentRow.Cells[0].Value.ToString();
+                //MessageBox.Show(dataSum[9]);
+
+                foreach (Control control in ParentData.MainPanel.Controls)
+                {
+                    if (control is TextBox && ((TextBox)control).Name == "txtAuthNo")
+                    {
+                        ParentData.txtAuthNoValue.Text = dataSum[19] = dataGridView1.CurrentRow.Cells[1].Value.ToString();
+
+                    }
+                    if (control is TextBox && ((TextBox)control).Name == "txtGreDate")
+                    {
+                        ((TextBox)control).Text = dataGridView1.CurrentRow.Cells[14].Value.ToString();
+                    }
+                    if (control is TextBox && ((TextBox)control).Name == "txtHijDate")
+                    {
+                        ((TextBox)control).Text = dataGridView1.CurrentRow.Cells[15].Value.ToString();
+                    }
+                    if (control is TextBox && ((TextBox)control).Name == "txtAttendVC")
+                    {
+                        ((TextBox)control).Text = dataGridView1.CurrentRow.Cells[16].Value.ToString();
+                    }
+                    if (control is ComboBox && ((ComboBox)control).Name == "ComboAuthDestin")
+                    {
+                        if (dataGridView1.CurrentRow.Cells[21].Value.ToString() != "")
+                            ((ComboBox)control).Text = dataGridView1.CurrentRow.Cells[21].Value.ToString();
+                    }
+                    if (control is CheckBox && ((CheckBox)control).Name == "checkedViewed")
+                    {
+                        if (dataGridView1.CurrentRow.Cells[17].Value.ToString() == "غير معالج")
+                        {
+                            ((CheckBox)control).CheckState = CheckState.Unchecked;
+                        }
+                        else ((CheckBox)control).CheckState = CheckState.Checked;
+                    }
+                }
+
+                foreach (Control control in ParentData.subMainPanel.Controls)
+                {
+                    if (control is CheckBox && ((CheckBox)control).Name == "AppType")
+                    {
+                        ((CheckBox)control).Text = dataGridView1.CurrentRow.Cells[18].Value.ToString();
+                        if (((CheckBox)control).Text == "حضور مباشرة إلى القنصلية") ((CheckBox)control).CheckState = CheckState.Checked;
+                        else ((CheckBox)control).CheckState = CheckState.Unchecked;
+                        if (((CheckBox)control).CheckState == CheckState.Unchecked)
+                        {
+                            if (((CheckBox)control).CheckState == CheckState.Checked)
+                            {
+                                ((CheckBox)control).Text = "حضور مباشرة إلى القنصلية";
+                                ParentData.MandoubNameValue.Visible = false;
+                                ParentData.MandoubLabelValue.Visible = false;
+                            }
+                            else
+                            {
+                                ((CheckBox)control).Text = "عن طريق أحد مندوبي القنصلية";
+                                ParentData.MandoubNameValue.Visible = true;
+                                ParentData.MandoubLabelValue.Visible = true;
+                            }
+                            ParentData.MandoubNameValue.Text = dataGridView1.CurrentRow.Cells[20].Value.ToString();
+                        }
+                        if (control is TextBox && ((TextBox)control).Name == "txtComment")
+                        {
+                            ((TextBox)control).Text = dataGridView1.CurrentRow.Cells[29].Value.ToString();
+                        }
+
+                    }
+                }
+
+
+                if (dataGridView1.CurrentRow.Cells[2].Value.ToString().Contains("_"))
+                {
+                    ParentData.strAppnameList = dataGridView1.CurrentRow.Cells[2].Value.ToString().Split('_');
+                    ParentData.intAppCounts = dataGridView1.CurrentRow.Cells[2].Value.ToString().Split('_').Length;
+                    //MessageBox.Show("here2");
+
+                }
+                else
+                {
+                    ParentData.strAppnameList[0] = dataGridView1.CurrentRow.Cells[2].Value.ToString();
+
+                    ParentData.intAppCounts = 1;
+                }
+
+                if (dataGridView1.CurrentRow.Cells[3].Value.ToString().Contains("_"))
+                {
+                    ParentData.strAppMaleFemaleList = dataGridView1.CurrentRow.Cells[3].Value.ToString().Split('_');
+                }
+                else
+                {
+                    ParentData.strAppMaleFemaleList[0] = dataGridView1.CurrentRow.Cells[3].Value.ToString();
+                }
+
+                if (dataGridView1.CurrentRow.Cells[4].Value.ToString().Contains("_"))
+                {
+                    ParentData.strAppDocTypelist = dataGridView1.CurrentRow.Cells[4].Value.ToString().Split('_');
+                }
+                else
+                {
+                    ParentData.strAppDocTypelist[0] = dataGridView1.CurrentRow.Cells[4].Value.ToString();
+                }
+
+                if (dataGridView1.CurrentRow.Cells[5].Value.ToString().Contains("_"))
+                {
+                    ParentData.strAppDocNolist = dataGridView1.CurrentRow.Cells[5].Value.ToString().Split('_');
+
+                }
+                else
+                {
+
+                    ParentData.strAppDocNolist[0] = dataGridView1.CurrentRow.Cells[5].Value.ToString();
+
+                }
+
+                if (dataGridView1.CurrentRow.Cells[6].Value.ToString().Contains("_"))
+                {
+                    ParentData.strAppissueList = dataGridView1.CurrentRow.Cells[6].Value.ToString().Split('_');
+                }
+                else
+                {
+                    ParentData.strAppissueList[0] = dataGridView1.CurrentRow.Cells[6].Value.ToString();
+                }
+
+                if (dataGridView1.CurrentRow.Cells[7].Value.ToString().Contains("_"))
+                {
+                    ParentData.strAuthNames = dataGridView1.CurrentRow.Cells[7].Value.ToString().Split('_');
+                    ParentData.intAuthCount = dataGridView1.CurrentRow.Cells[7].Value.ToString().Split('_').Length;
+                }
+                else
+                {
+                    ParentData.strAuthNames[0] = dataGridView1.CurrentRow.Cells[7].Value.ToString();
+                }
+
+                if (dataGridView1.CurrentRow.Cells[8].Value.ToString().Contains("_"))
+                {
+                    ParentData.strAuthMaleFemale = dataGridView1.CurrentRow.Cells[8].Value.ToString().Split('_');
+                }
+                else
+                {
+                    ParentData.strAuthMaleFemale[0] = dataGridView1.CurrentRow.Cells[8].Value.ToString();
+                }
+                dataSum[0] = dataGridView1.CurrentRow.Cells[9].Value.ToString();//نوع_التوكيل
+                dataSum[1] = dataGridView1.CurrentRow.Cells[10].Value.ToString();//رقم_العمود
+                dataSum[2] = dataGridView1.CurrentRow.Cells[11].Value.ToString();//موضوع التوكيل
+                dataSum[3] = dataGridView1.CurrentRow.Cells[12].Value.ToString();//حقوق_التوكيل
+                dataSum[4] = dataGridView1.CurrentRow.Cells[13].Value.ToString();//التاريخ_الميلادي
+
+                dataSum[10] = dataGridView1.CurrentRow.Cells[23].Value.ToString();//txtWitName1
+                dataSum[11] = dataGridView1.CurrentRow.Cells[24].Value.ToString();//txtWitPass1
+                dataSum[12] = dataGridView1.CurrentRow.Cells[25].Value.ToString();//txtWitName2
+                dataSum[13] = dataGridView1.CurrentRow.Cells[26].Value.ToString();//txtWitPass2
+                                                                                  //
+                dataSum[15] = dataGridView1.CurrentRow.Cells[32].Value.ToString();// "غير مؤرشف"  
+                dataSum[16] = dataGridView1.CurrentRow.Cells[33].Value.ToString();// "إجراء توكيل"  
+                ParentData.NewDataValue = true;
+                ParentData.txtAuthNoValue.Text = AuthNoPart1 + AuthNoPart2;
+
+                dataSum[17] = dataGridView1.CurrentRow.Cells[34].Value.ToString();// "إجراء توكيل"  
+                dataSum[18] = dataGridView1.CurrentRow.Cells[27].Value.ToString();// "إجراء توكيل"  
+                dataSum[21] = dataGridView1.CurrentRow.Cells[35].Value.ToString();// المكاتبات الملغية
+                dataSum[20] = dataGridView1.CurrentRow.Cells[22].Value.ToString();// توكيل مرجعي
+
+                DataMovePage.DynamicInvoke(2);
+            }
+        }
+
+        private void fillDocFileStep1()
+        {
+           
+            object oBMiss = System.Reflection.Missing.Value;
+            Word.Application oBMicroWord = new Word.Application();
+
+            object objCurrentCopy = localCopy.Text;
+
+            oBDoc = oBMicroWord.Documents.Open(objCurrentCopy, oBMiss);
+            oBMicroWord.Selection.Find.ClearFormatting();
+            oBMicroWord.Selection.Find.Replacement.ClearFormatting();
+
+            foreach (Control control in panelapplicationInfo.Controls)
+            {
+                if (control is TextBox || control is ComboBox)
+                {
+                    
+                    /// hash
+                    if (control.Name == "نص_مقدم_الطلب" && control.Text.Contains("-"))
+                    {
+                        try
+                        {
+                            object ParaAuthIDNo = "MarkIntroPart1";
+                            Word.Range BookAuthIDNo = oBDoc.Bookmarks.get_Item(ref ParaAuthIDNo).Range;
+                            BookAuthIDNo.Text = control.Text.Split('-')[0];
+                            object rangeAuthIDNo = BookAuthIDNo;
+                            oBDoc.Bookmarks.Add("MarkIntroPart1", ref rangeAuthIDNo);
+
+                            object ParaAuthIDNo2 = "MarkIntroPart2";
+                            Word.Range BookAuthIDNo2 = oBDoc.Bookmarks.get_Item(ref ParaAuthIDNo2).Range;
+                            BookAuthIDNo2.Text = control.Text.Split('-')[1]; 
+                            object rangeAuthIDNo2 = BookAuthIDNo2;
+                            oBDoc.Bookmarks.Add("MarkIntroPart2", ref rangeAuthIDNo2);
+                        }
+                        catch (Exception ex)
+                        {
+                            //    MessageBox.Show(control.Name); 
+                        }
+                    }
+                    else
+                    {
+                        try
+                        {
+                            object ParaAuthIDNo = control.Name;
+                            Word.Range BookAuthIDNo = oBDoc.Bookmarks.get_Item(ref ParaAuthIDNo).Range;
+                            BookAuthIDNo.Text = control.Text;
+                            object rangeAuthIDNo = BookAuthIDNo;
+                            oBDoc.Bookmarks.Add(control.Name, ref rangeAuthIDNo);
+                        }
+                        catch (Exception ex)
+                        {
+                            //    MessageBox.Show(control.Name); 
+                        }
+                    }
+                }
+            }
+
+            foreach (Control control in panelAuthRights.Controls)
+            {
+                if (control is TextBox)
+                {
+                    try
+                    {
+                        object ParaAuthIDNo = control.Name;
+                        Word.Range BookAuthIDNo = oBDoc.Bookmarks.get_Item(ref ParaAuthIDNo).Range;
+                        BookAuthIDNo.Text = control.Text;
+                        object rangeAuthIDNo = BookAuthIDNo;
+                        oBDoc.Bookmarks.Add(control.Name, ref rangeAuthIDNo);
+                    }
+                    catch (Exception ex)
+                    {
+                        //    MessageBox.Show(control.Name); 
+                    }
+                }
+            }
+
+            if (addNameIndex != 1)
+            {
+              Microsoft.Office.Interop.Word.Table table = oBDoc.Tables[1];
+                for (int x = 0; x < addNameIndex; x++)
+                {
+                    table.Rows.Add();
+                    table.Rows[x + 2].Cells[1].Range.Text = (x + 1).ToString();
+                    table.Rows[x + 2].Cells[2].Range.Text = مقدم_الطلب.Text.Split('_')[x];
+                    table.Rows[x + 2].Cells[3].Range.Text = رقم_الهوية.Text.Split('_')[x];
+                    table.Rows[x + 2].Cells[4].Range.Text = مكان_الإصدار.Text.Split('_')[x];
+                }                
+            }
+
+            oBDoc.SaveAs2(localCopy.Text);
+            oBDoc.Close(false, oBMiss);
+            oBMicroWord.Quit(false, false);
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(oBMicroWord);
+            System.Diagnostics.Process.Start(localCopy.Text);
+            object doNotSaveChanges = Word.WdSaveOptions.wdSaveChanges;
+
+
+            //object ParaAuthNo = "MarkAuthNo";
+            //object ParaHijriData = "MarkHijriData";
+            //object ParaGreData = "MarkGreData";
+            //object ParaAuthBody1part1 = "MarkAuthBody1part1";
+            //object ParaAuthBody1part2 = "MarkAuthBody1part2";
+            //object ParaAuthBody1part3 = "MarkAuthBody1part3";
+            //object ParaAuthBody2 = "MarkAuthBody2";
+
+
+
+            //object ParaWitName1 = "MarkWitName1";
+            //object ParaWitName2 = "MarkWitName2";
+            //object ParaWitPass1 = "MarkWitPass1";
+            //object ParaWitPass2 = "MarkWitPass2";
+
+
+
+            //Word.Range BookAuthNo = oBDoc.Bookmarks.get_Item(ref ParaAuthNo).Range;
+            //Word.Range BookHijriData = oBDoc.Bookmarks.get_Item(ref ParaHijriData).Range;
+            //Word.Range BookGreData = oBDoc.Bookmarks.get_Item(ref ParaGreData).Range;
+            //Word.Range BookAuthBody1part1 = oBDoc.Bookmarks.get_Item(ref ParaAuthBody1part1).Range;
+            //Word.Range BookAuthBody1part2 = oBDoc.Bookmarks.get_Item(ref ParaAuthBody1part2).Range;
+            //Word.Range BookAuthBody1part3 = oBDoc.Bookmarks.get_Item(ref ParaAuthBody1part3).Range;
+            //Word.Range BookAuthBody2 = oBDoc.Bookmarks.get_Item(ref ParaAuthBody2).Range;
+
+            //Word.Range BookWitName1 = oBDoc.Bookmarks.get_Item(ref ParaWitName1).Range;
+            //Word.Range BookWitName2 = oBDoc.Bookmarks.get_Item(ref ParaWitName2).Range;
+            //Word.Range BookWitPass1 = oBDoc.Bookmarks.get_Item(ref ParaWitPass1).Range;
+            //Word.Range BookWitPass2 = oBDoc.Bookmarks.get_Item(ref ParaWitPass2).Range;
+
+
+            //BookAuthNo.Text = رقم_التوكيل.Text;
+            //BookHijriData.Text = التاريخ_الهجري.Text;
+            //BookGreData.Text = التاريخ_الميلادي.Text;
+
+            //BookAuthBody1part1.Text = "";
+            //BookAuthBody1part2.Text = createAuthPart1();
+
+
+            ////BookAuthBody1part3.Text = userAuthText1.AuthList2Value.Replace("auth1", authList1);
+
+            //string[] strmandoub = new string[2];
+            ////strmandoub = mandoubName.Text.Split('-');
+
+
+
+            ////if (checkBox1.CheckState == CheckState.Unchecked)
+            ////{
+            ////    BookAuthBody2.Text = userAuthText1.txtAddRightValue.Text;
+            ////    BookAuthBody1part3.Text = userAuthText1.txtReviewValue.Text.Replace(authList1, "");
+            ////}
+            ////else
+            ////{
+            ////    BookAuthBody2.Text = strRights;
+            ////    //BookAuthBody1part3.Text = userAuthText1.txtReviewValue.Text;
+            ////    BookAuthBody1part3.Text = userAuthText1.AuthList2Value.Replace("aith1", authList1);
+            ////}
+
+
+
+            ////BookWitName1.Text = userApplicant1.strUAWitNessList[0];
+            ////BookWitName2.Text = userApplicant1.strUAWitNessList[1];
+            ////BookWitPass1.Text = userApplicant1.strUAWitNessList[2];
+            ////BookWitPass2.Text = userApplicant1.strUAWitNessList[3];
+
+            //object rangeAuthNo = BookAuthNo;
+            //object rangeHijriData = BookHijriData;
+            //object rangeGreData = BookGreData;
+            //object rangeAuthBody1part1 = BookAuthBody1part1;
+            //object rangeAuthBody1part2 = BookAuthBody1part2;
+            //object rangeAuthBody1part3 = BookAuthBody1part3;
+            //object rangeAuthBody2 = BookAuthBody2;
+
+
+
+            //object rangeWitName1 = BookWitName1;
+            //object rangeWitName2 = BookWitName2;
+            //object rangeWitPass1 = BookWitPass1;
+            //object rangeWitPass2 = BookWitPass2;
+
+
+
+            //if (ComboAuthDestin.Text == "جمهورية السودان" && !userAuthText1.comboBoxAuthValue.Text.Contains("أجنبية"))
+            //{
+            //    object ParaAuthKhartoum = "AuthKhartoum";
+
+            //    Word.Range BookAuthKhartoum = oBDoc.Bookmarks.get_Item(ref ParaAuthKhartoum).Range;
+            //    if (userAuthText1.comboBoxAuthValue.Text == "إقرار بالتنازل")
+            //        BookAuthKhartoum.Text = "لا يعتمد هذا الاقرار ما لم يتم توثيقه خلال عام من تاريخ إصدارة من خارجية جمهورية السودان";
+            //    else BookAuthKhartoum.Text = "لا يعتمد هذا التوكيل ما لم يتم توثيقه خلال عام من تاريخ إصدارة من خارجية جمهورية السودان";
+
+            //    object rangeAuthKhartoum = BookAuthKhartoum;
+
+            //    oBDoc.Bookmarks.Add("AuthKhartoum", ref rangeAuthKhartoum);
+
+            //}
+
+            //if (print)
+            //{
+
+            //    if (AppType.CheckState == CheckState.Checked)
+            //    {
+            //        object ParaAttendVC1 = "AuthAttendVC1";
+
+            //        Word.Range BookAttendVC1 = oBDoc.Bookmarks.get_Item(ref ParaAttendVC1).Range;
+
+            //        BookAttendVC1.Text = txtAttendVC.Text;
+
+            //        object rangeAttendVC1 = BookAttendVC1;
+            //        try
+            //        {
+            //            oBDoc.Bookmarks.Add("AuthAttendVC1", ref rangeAttendVC1);
+            //        }
+            //        catch (Exception e) { }
+
+            //    }
+
+            //    if (!userAuthText1.comboBoxAuthValue.Text.Contains("أجنبية"))
+            //    {
+            //        object ParaAttendVC2 = "MarkAttendVC2";
+            //        Word.Range BookAttendVC2 = oBDoc.Bookmarks.get_Item(ref ParaAttendVC2).Range;
+            //        BookAttendVC2.Text = txtAttendVC.Text;
+            //        object rangeAttendVC2 = BookAttendVC2;
+            //        oBDoc.Bookmarks.Add("MarkAttendVC2", ref rangeAttendVC2);
+
+            //        object ParaAuthorization = "MarkAuthorization";
+            //        Word.Range BookAuthorization = oBDoc.Bookmarks.get_Item(ref ParaAuthorization).Range;
+
+            //        if (userAuthText1.comboBoxAuthValue.Text == "إقرار بالتنازل")
+            //        {
+            //            BookAuthBody1part2.Text.Replace("السيد", "للسيد");
+            //            if (userApplicant1.strUAAuthPersonlCount > 1)
+            //                BookAuthBody1part2.Text.Replace("كل", "لكل");
+            //            BookAuthBody1part1.Text = preffix[Appcases, 11];
+            //            if (AppType.CheckState == CheckState.Checked)
+            //            {
+            //                BookAuthorization.Text = " المواطن" + preffix[Appcases, 6] + " المذكور" + preffix[Appcases, 6] + " أعلاه قد حضر" + preffix[Appcases, 3] + " أمامي ووقع" + preffix[Appcases, 3] + " بتوقيع" + preffix[Appcases, 4] + " على هذا الاقرار في حضور الشهود المذكورين أعلاه وذلك بعد تلاوته علي" + preffix[Appcases, 4] + " وبعد أن فهم" + preffix[Appcases, 3] + " مضمونه ومحتواه";
+            //            }
+            //            else
+            //            {
+            //                BookAuthorization.Text = " المواطن" + preffix[Appcases, 6] + " المذكور" + preffix[Appcases, 6] + " أعلاه قد حضر" + preffix[Appcases, 3] + " أمامي ووقع" + preffix[Appcases, 3] + " بتوقيع" + preffix[Appcases, 4] + " على هذا الاقرار في حضور الشهود المذكورين أعلاه " + " بعد تلاوته علي" + preffix[Appcases, 4] + " وبعد أن فهم" + preffix[Appcases, 3] + " مضمونه ومحتواه" + " وذلك أمام مندوب جالية منطقة " + strmandoub[1] + " السيد/ " + strmandoub[0] + " بموجب التفويض الممنوح له من القنصلية العامة ";
+            //            }
+            //        }
+            //        else
+            //        {
+            //            if (userAuthText1.comboBoxAuthValue.SelectedIndex != 6)
+            //                BookAuthBody1part1.Text = preffix[Appcases, 10];
+            //            else
+            //            {
+            //                BookAuthBody1part2.Text = BookAuthBody1part1.Text = "";
+
+            //            }
+            //            if (AppType.CheckState == CheckState.Checked)
+            //            {
+            //                BookAuthorization.Text = " المواطن" + preffix[Appcases, 6] + " المذكور" + preffix[Appcases, 6] + " أعلاه قد حضر" + preffix[Appcases, 3] + " ووقع" + preffix[Appcases, 3] + " بتوقيع" + preffix[Appcases, 4] + " على هذا التوكيل في حضور الشهود المذكورين أعلاه وذلك بعد تلاوته علي" + preffix[Appcases, 4] + " وبعد أن فهم" + preffix[Appcases, 3] + " مضمونه ومحتواه";
+            //            }
+            //            else
+            //            {
+            //                try
+            //                {
+            //                    BookAuthorization.Text = " المواطن" + preffix[Appcases, 6] + " المذكور" + preffix[Appcases, 6] + " أعلاه قد حضر" + preffix[Appcases, 3] + " ووقع" + preffix[Appcases, 3] + " بتوقيع" + preffix[Appcases, 4] + " على هذا التوكيل في حضور الشهود المذكورين أعلاه " + " بعد تلاوته علي" + preffix[Appcases, 4] + " وبعد أن فهم" + preffix[Appcases, 3] + " مضمونه ومحتواه" + " وذلك أمام مندوب جالية منطقة " + strmandoub[1] + " السيد/ " + strmandoub[0] + " بموجب التفويض الممنوح له من القنصلية العامة ";
+            //                }
+            //                catch (Exception ex) { }
+            //            }
+            //        }
+            //    object rangeAuthorization = BookAuthorization;
+            //    oBDoc.Bookmarks.Add("Markuthorization", ref rangeAuthorization);
+            ////}
+
+            //        oBDoc.Bookmarks.Add("MarkAuthNo", ref rangeAuthNo);
+            //        oBDoc.Bookmarks.Add("MarkHijriData", ref rangeHijriData);
+            //        oBDoc.Bookmarks.Add("MarkGreData", ref rangeGreData);
+            //        oBDoc.Bookmarks.Add("MarkAuthBody1part1", ref rangeAuthBody1part1);
+            //        oBDoc.Bookmarks.Add("MarkAuthBody1part2", ref rangeAuthBody1part2);
+            //        oBDoc.Bookmarks.Add("MarkAuthBody1part3", ref rangeAuthBody1part3);
+            //        oBDoc.Bookmarks.Add("MarkAuthBody2", ref rangeAuthBody2);
+
+
+            //        oBDoc.Bookmarks.Add("MarkWitName1", ref rangeWitName1);
+            //        oBDoc.Bookmarks.Add("MarkWitName2", ref rangeWitName2);
+            //        oBDoc.Bookmarks.Add("MarkWitPass1", ref rangeWitPass1);
+            //        oBDoc.Bookmarks.Add("MarkWitPass2", ref rangeWitPass2);
+
+
+            //        object ParaAuthIqrar = "AuthIqrar";
+
+            //        Word.Range BookAuthIqrar = oBDoc.Bookmarks.get_Item(ref ParaAuthIqrar).Range;
+
+            //        if (userAuthText1.comboBoxAuthValue.Text.Contains("أجنبية"))
+            //            BookAuthIqrar.Text = "AUTHORIZATION";
+            //        else if (userAuthText1.comboBoxAuthValue.Text == "إقرار بالتنازل")
+            //            BookAuthIqrar.Text = "إقرار بالتنازل";
+            //        else BookAuthIqrar.Text = "توكيل";
+
+            //object rangeAuthIqrar = BookAuthIqrar;
+            //oBDoc.Bookmarks.Add("AuthIqrar", ref rangeAuthIqrar);
+
+
+
+            //        addarchives(colIDs);
+            //}
+        }
+        public void ComboProcedure_Text()
+        {
+            
+        }
+        public void resetBoxes()
+        {
+            checkboxdt = new DataTable();
+            checkboxdt.Clear();
+            Nobox = 0;
+            strRights = "";
+            ColName = "Col0";
+
+            foreach (Control control in panelAuthOptions.Controls)
+            {
+                control.Visible = false;
+                //if (control is CheckBox)
+                //{
+                //    ((CheckBox)control).Visible = false;
+                //    ((CheckBox)control).CheckState = CheckState.Unchecked;
+                //    ((CheckBox)control).Tag = "dispoase";
+
+                //}
+
+                //if (control is PictureBox)
+                //{
+                //    ((PictureBox)control).Visible = false;
+                //}
+            }
+            txtReview.Text = "";
+            foreach (Control control in PanelItemsboxes.Controls)
+            {
+                control.Visible = false;
+                control.Text = "";
+                if (control is ComboBox)
+                {
+                    ((ComboBox)control).Items.Clear();
+                }
+                else if (control is CheckBox) ((CheckBox)control).CheckState = CheckState.Unchecked;
+            }
+        }
+
+        int listchecked = 0;
+        public void PopulateCheckBoxes(string col, string table, string dataSource)
+        {
+            LastCol = col;
+            if (col == "" || table == "" || dataSource == "") return;
+            string query = "SELECT ID," + col + " FROM " + table;
+            //MessageBox.Show(query);
+            using (SqlConnection con = new SqlConnection(dataSource))
+            {
+
+                using (SqlDataAdapter sda = new SqlDataAdapter(query, con))
+                {
+
+                    sda.Fill(checkboxdt);
+                    listchecked = checkboxdt.Rows.Count;
+                    Nobox = 0;
+                    foreach (DataRow row in checkboxdt.Rows)
+                    {
+                        if (checkboxdt.Rows[Nobox][col].ToString() == "" || checkboxdt.Rows[Nobox][col].ToString() == "null") return;
+                        //{
+                        CheckBox chk = new CheckBox();
+                        chk.TabIndex = Nobox;
+                        chk.Width = 80;
+                        chk.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        if (Nobox == 0) chk.Width = panelAuthOptions.Width - 100;
+                        else chk.Width = panelAuthOptions.Width - 130;
+                        chk.Height = 33;
+                        chk.CheckState = CheckState.Unchecked;
+                        chk.Location = new System.Drawing.Point(70, 3 + Nobox * 37);
+                        chk.Name = "checkBox" + Nobox.ToString();
+                        Text_statis = checkboxdt.Rows[Nobox][col].ToString().Split('_');
+
+                        string text = SuffPrefReplacements(Text_statis[0]);
+                        text = SuffPrefReplacements(text);
+                        text = SuffPrefReplacements(text);
+                        chk.Text = text;
+                        chk.Tag = "valid";
+                        chk.CheckedChanged += new System.EventHandler(this.chk_CheckedChanged);
+                        statistic[Nobox] = Convert.ToInt32(Text_statis[1]);
+                        times[Nobox] = Convert.ToInt32(Text_statis[2]);
+                        staticIndex[Nobox] = Convert.ToInt32(Text_statis[3]);
+                        if (Text_statis[4] == "Star")
+                            chk.CheckState = CheckState.Checked;
+                        
+
+                        panelAuthOptions.Controls.Add(chk);
+                        PictureBox picboxedit = new PictureBox();
+                        picboxedit.Image = global::PersAhwal.Properties.Resources.edit;
+                        picboxedit.Location = new System.Drawing.Point(55, Nobox * 37);
+                        picboxedit.Name = Nobox.ToString();
+                        picboxedit.Size = new System.Drawing.Size(24, 26);
+                        picboxedit.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+                        picboxedit.TabIndex = 175 + Nobox;
+                        picboxedit.TabStop = false;
+                        picboxedit.Click += new System.EventHandler(this.pictureBoxedit_Click);
+                        panelAuthOptions.Controls.Add(picboxedit);
+
+                        PictureBox picboxup = new PictureBox();
+                        picboxup.Image = global::PersAhwal.Properties.Resources.arrowup;
+                        picboxup.Location = new System.Drawing.Point(86, Nobox * 37);
+                        picboxup.Name = "Up";
+                        picboxup.Size = new System.Drawing.Size(24, 26);
+                        picboxup.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+                        picboxup.TabIndex = 176 + Nobox;
+                        picboxup.TabStop = false;
+                        picboxup.Click += new System.EventHandler(this.pictureBoxup_Click);
+                        if (Nobox == 0)
+                        {
+                            picboxup.Visible = false;
+                        }
+                        if (chk.Text.Contains("لمن يشهد والله خير الشاهدين")) picboxup.Visible = false;
+                        panelAuthOptions.Controls.Add(picboxup);
+
+                        PictureBox picboxdown = new PictureBox();
+                        picboxdown.Image = global::PersAhwal.Properties.Resources.arrowdown;
+                        picboxdown.Location = new System.Drawing.Point(55, Nobox * 37);
+                        picboxdown.Name = "Down";
+                        picboxdown.Size = new System.Drawing.Size(24, 26);
+                        picboxdown.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+                        picboxdown.TabIndex = 177 + Nobox;
+                        picboxdown.TabStop = false;
+                        picboxdown.Click += new System.EventHandler(this.pictureBoxdown_Click);
+                        if (chk.Text.Contains("ويعتبر التوكيل الصادر") || chk.Text.Contains("لمن يشهد والله خير الشاهدين"))
+                            picboxdown.Visible = false;
+                        panelAuthOptions.Controls.Add(picboxdown);
+                        LastID = Convert.ToInt32(checkboxdt.Rows[Nobox]["ID"].ToString());
+                        Nobox++;
+                        //}
+                    }
+                }
+            }
+        }
+
+        private void CreatestrAuthRight()
+        {
+
+            int xindex = 0;
+            حقوق_التوكيل.Text = "";
+            foreach (Control control in panelAuthOptions.Controls)
+            {
+                if (control is CheckBox)
+                {
+                    if (((CheckBox)control).CheckState == CheckState.Checked)
+                    {
+                        if (xindex == 0)
+                        {
+                            حقوق_التوكيل.Text = "1";
+                            قائمة_الحقوق.Text = ((CheckBox)control).Text;
+                        }
+                        else
+                        {
+                            حقوق_التوكيل.Text = حقوق_التوكيل.Text + "_1";
+                            قائمة_الحقوق.Text = قائمة_الحقوق.Text + " " + ((CheckBox)control).Text;
+                        }
+
+                    }
+                    xindex++;
+                }
+            }
+        }
+
+        private void chk_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox checkBox = (CheckBox)sender;
+            if (checkBox.Text.Contains("لاغ") && checkBox.Checked) 
+            {
+                panelRemove.Visible = true;
+                panelAuthOptions.Location = new System.Drawing.Point(312, 222);
+            }else panelAuthOptions.Location = new System.Drawing.Point(165, 222);
+        }
+        public void pictureBoxdown_Click(object sender, EventArgs e)
+        {
+            PictureBox picbox = (PictureBox)sender;
+
+            string st = "", nd = "";
+            bool statest = false, statend = false; bool FirstCase = false;
+            foreach (Control control in panelAuthOptions.Controls)
+            {
+                if (control is CheckBox)
+                {
+                    if (!((CheckBox)control).Text.Contains("والله خير الشاهدين"))
+                    {
+                        if (((CheckBox)control).TabIndex == picbox.TabIndex - 177)
+                        {
+                            st = ((CheckBox)control).Text;
+                            if (((CheckBox)control).CheckState == CheckState.Checked) statest = true;
+                            else statest = false;
+                        }
+                        if (((CheckBox)control).TabIndex == picbox.TabIndex - 176)
+                        {
+                            nd = ((CheckBox)control).Text;
+                            if (((CheckBox)control).CheckState == CheckState.Checked) statend = true;
+                            else statend = false;
+                        }
+                        FirstCase = true;
+                    }
+                    else FirstCase = false;
+                }
+            }
+            int x = 0, y = 0;
+
+            foreach (Control control in panelAuthOptions.Controls)
+            {
+                if (control is CheckBox)
+                {
+                    if (!((CheckBox)control).Text.Contains("والله خير الشاهدين"))
+                    {
+                        if (((CheckBox)control).TabIndex == picbox.TabIndex - 177)
+                        {
+                            ((CheckBox)control).Text = nd;
+                            if (statend) ((CheckBox)control).CheckState = CheckState.Checked;
+                            else ((CheckBox)control).CheckState = CheckState.Unchecked;
+                        }
+                        if (((CheckBox)control).TabIndex == picbox.TabIndex - 176)
+                        {
+                            ((CheckBox)control).Text = st;
+                            if (statest) ((CheckBox)control).CheckState = CheckState.Checked;
+                            else ((CheckBox)control).CheckState = CheckState.Unchecked;
+                            y = statistic[x];
+                            statistic[x] = statistic[x + 1];
+                            statistic[x + 1] = y;
+                            y = staticIndex[x];
+                            staticIndex[x] = staticIndex[x + 1];
+                            staticIndex[x + 1] = y;
+                        }
+                        x++;
+                    }
+                }
+
+            }
+        }
+
+        public void pictureBoxup_Click(object sender, EventArgs e)
+        {
+
+
+            PictureBox picbox = (PictureBox)sender;
+
+            string st = "", nd = "";
+            bool statest = false, statend = false;
+            bool FirstCase = false;
+
+            foreach (Control control in panelAuthOptions.Controls)
+            {
+
+                if (control is CheckBox)
+                {
+
+                    if (!((CheckBox)control).Text.Contains("والله خير الشاهدين"))
+                    {
+                        if (((CheckBox)control).TabIndex == picbox.TabIndex - 176)
+                        {
+                            st = ((CheckBox)control).Text;
+                            if (((CheckBox)control).CheckState == CheckState.Checked) statest = true;
+                            else statest = false;
+
+                        }
+                        if (((CheckBox)control).TabIndex == picbox.TabIndex - 177)
+                        {
+                            nd = ((CheckBox)control).Text;
+                            if (((CheckBox)control).CheckState == CheckState.Checked) statend = true;
+                            else statend = false;
+
+                        }
+                        FirstCase = true;
+                    }
+                    else FirstCase = false;
+
+                }
+            }
+            int x = 0;
+
+            foreach (Control control in panelAuthOptions.Controls)
+            {
+                if (control is CheckBox)
+                {
+                    if (!((CheckBox)control).Text.Contains("والله خير الشاهدين"))
+                    {
+                        if (((CheckBox)control).TabIndex == picbox.TabIndex - 176)
+                        {
+                            ((CheckBox)control).Text = nd;
+                            if (statend) ((CheckBox)control).CheckState = CheckState.Checked;
+                            else ((CheckBox)control).CheckState = CheckState.Unchecked;
+                            int y = 0;
+
+                            y = statistic[x];
+                            statistic[x] = statistic[x - 1];
+                            statistic[x - 1] = y;
+
+                            y = staticIndex[x];
+                            staticIndex[x] = staticIndex[x - 1];
+                            staticIndex[x - 1] = y;
+                        }
+                        if (((CheckBox)control).TabIndex == picbox.TabIndex - 177)
+                        {
+                            ((CheckBox)control).Text = st;
+                            if (statest) ((CheckBox)control).CheckState = CheckState.Checked;
+                            else ((CheckBox)control).CheckState = CheckState.Unchecked;
+                        }
+                        x++;
+                    }
+                }
+            }
+
+
+        }
+
+
+        public void pictureBoxedit_Click(object sender, EventArgs e)
+        {
+            //PictureBox picbox = (PictureBox)sender;
+            //foreach (Control control in panelAuthOptions.Controls)
+            //{
+            //    if (control is CheckBox)
+            //    {
+            //        if (((CheckBox)control).TabIndex == Convert.ToInt32(picbox.Name))
+            //        {
+            //            txtAddRight.Text = ((CheckBox)control).Text;
+            //            btnAddRight.Text = "تعديل";
+            //            LastTabIndex = ((CheckBox)control).TabIndex;
+
+            //        }
+            //    }
+            //}
+        }
+        //public void CreateBoxesWithData(string textdata, string textItems, bool database)
+
+        //{
+        //    if (dataGridView1.Rows.Count > 1)
+        //        for(int row = 0;row< dataGridView1.Rows.Count -1;row++)                
+        //        {
+        //            if (intID.ToString() == dataGridView1.Rows[row].Cells["ID"].Value.ToString())                    
+        //            {
+        //                foreach (Control Lcontrol in PanelItemsboxes.Controls)
+        //                    try
+        //                    {
+        //                        if (Lcontrol.Name.StartsWith("L"))
+        //                        {
+        //                            Lcontrol.Text = dr[Lcontrol.Name.Replace("L", "")].ToString();
+        //                            if (Lcontrol.Text != "")
+        //                            {
+        //                                Lcontrol.Visible = true;
+        //                                foreach (Control Vcontrol in PanelItemsboxes.Controls)
+        //                                {
+        //                                    if (Vcontrol.Name.Trim() == Lcontrol.Name.Replace("L", "V").Trim())
+        //                                    {
+        //                                        Vcontrol.Visible = true;
+        //                                        string size = dr[Lcontrol.Name.Replace("L", "") + "Length"].ToString();
+        //                                        Vcontrol.Width = Convert.ToInt32(size);
+        //                                        if (Convert.ToInt32(size) >= 700)
+        //                                        {
+        //                                            if (Vcontrol is TextBox) ((TextBox)Vcontrol).Multiline = true;
+        //                                            Vcontrol.Height = 150;
+        //                                        }
+        //                                    }
+        //                                    if (Vcontrol.Name.Contains(Lcontrol.Name.Replace("L", "V") + "V") || Vcontrol.Name.Contains(Lcontrol.Name.Replace("L", "V") + "L"))
+        //                                    {
+        //                                        Vcontrol.Visible = true;
+        //                                    }
+        //                                }
+        //                            }
+        //                        }
+        //                    }
+        //                    catch (Exception ex)
+        //                    {
+        //                        Console.WriteLine(Lcontrol.Name.Replace("L", ""));
+        //                    }
+        //                return;
+        //            }
+        //        }
+
+            //int x = 0;
+            //string[] str6Listcomb = new string[4] { "صفة الزوج", "السيد", "موكلي السيد", "" };
+            //string[] SI = new string[9];
+            //string text = "";
+            //pictureBox1.Visible = pictureBox2.Visible = false;
+            //x = 0;
+
+            //if (textItems.Contains("_")) SI = textItems.Split('_');
+
+
+            //if (ShowRowNo())
+            //{
+            //    ShowNewApp = true;
+            //    if (database && !ArchData)
+            //    {
+            //        if (!String.IsNullOrEmpty(textItems))
+            //        {
+            //            if (SI.Length == 10)
+            //                DetermineData(SI[0], SI[1], SI[2], SI[3], SI[4], SI[5], SI[6], SI[7], SI[8], SI[9]);
+            //            else
+            //                DetermineData(SI[0], SI[1], SI[2], SI[3], SI[4], SI[5], SI[6]);
+            //        }
+            //    }
+            //    return;
+            //}
+
+            //if (!String.IsNullOrEmpty(textItems))
+            //{
+            //    if (SI.Length == 10)
+            //        DetermineData(SI[0], SI[1], SI[2], SI[3], SI[4], SI[5], SI[6], SI[7], SI[8], SI[9]);
+            //    else
+            //        DetermineData(SI[0], SI[1], SI[2], SI[3], SI[4], SI[5], SI[6]);
+            //}
+            //if (ParentForm.ArchData) { ComboProcedure_Text(); }
+
+        //}
+        //public void DetermineData(string v1, string v2, string v3, string v4, string v5, string v6, string v7)
+        //{
+        //    Vitext1.Text = v1;
+        //    Vitext2.Text = v2;
+        //    Vitext3.Text = v3;
+        //    Vitext4.Text = v4;
+        //    Vitext5.Text = v5;
+        //    Vicheck1.Text = v6;
+        //    if (v7.Contains("-"))
+        //    {
+        //        VitxtDate1.Text = v7.Split('-')[0];
+        //        VitxtDate1VM.Text = v7.Split('-')[1];
+        //        VitxtDate1VY.Text = v7.Split('-')[2];
+        //    }
+        //    Vicombo1.Text = v7;
+
+        //}
+
+        //public void DetermineData(string v1, string v2, string v3, string v4, string v5, string v6, string v7, string v8, string v9, string v10)
+        //{
+        //    Vitext1.Text = v1;
+        //    Vitext2.Text = v2;
+        //    Vitext3.Text = v3;
+        //    Vitext4.Text = v4;
+        //    Vitext5.Text = v5;
+        //    Vicheck1.Text = v6;
+        //    if (v7.Contains("-"))
+        //    {
+        //        VitxtDate1.Text = v7.Split('-')[0];
+        //        VitxtDate1VM.Text = v7.Split('-')[1];
+        //        VitxtDate1VY.Text = v7.Split('-')[2];
+        //    }
+        //    Vicombo1.Text = v8;
+        //    Vicombo1.Text = v10;
+        //    LibtnAdd1.Text = v9;
+        //    //MessageBox.Show(v1);
+        //}
+
+        //private bool ShowRowNo()
+        //{
+        //    //label1,lenght1,label2,lenght2,label3,lenght3,label4,lenght4,label5,lenght5,
+        //    //labelcheck,optionscheck,12
+        //    //labelcomb1,optionscombo1,lenghtscombo1,labelcomb2,optionsVicombo2,lenghtsVicombo2,13
+        //    //labelbtn,lenghtsbtn,19
+        //    //dateYN,dateType,TextModel,ColRight,ColName 21
+
+        //    SqlConnection sqlCon = new SqlConnection(DataSource);
+        //    if (sqlCon.State == ConnectionState.Closed)
+        //        sqlCon.Open();
+        //    SqlDataAdapter sqlDa = new SqlDataAdapter("ContextViewSearch", sqlCon);
+        //    sqlDa.SelectCommand.CommandType = CommandType.StoredProcedure;
+        //    sqlDa.SelectCommand.Parameters.AddWithValue("@ColName", "");
+        //    DataTable dtbl = new DataTable();
+        //    sqlDa.Fill(dtbl);
+        //    dataGridView1.DataSource = dtbl;
+        //    //dataGridView1.Sort(dataGridView1.Columns["ID"], System.ComponentModel.ListSortDirection.Descending);
+        //    sqlCon.Close();
+        //    //MessageBox.Show(ComboProcedure.Text + "-" + CombAuthType.SelectedIndex.ToString());
+        //    //MessageBox.Show(ComboProcedure.Text + "-" + CombAuthType.SelectedIndex.ToString());
+        //    for (int id = 0; id < dataGridView1.Rows.Count - 1; id++)
+        //    {
+
+        //        if (dataGridView1.Rows[id].Cells[25].Value.ToString() == إجراء_التوكيل.Text + "-" + نوع_التوكيل.SelectedIndex.ToString())
+        //        {
+        //            for (int col = 0; col < 26; col++)
+        //            {
+        //                dataGrid[col] = dataGridView1.Rows[id].Cells[col].Value.ToString();
+        //            }
+
+        //            if (dataGrid[21] == "لا") dataGrid[21] = "";
+        //            ColName = dataGridView1.Rows[id].Cells[24].Value.ToString();
+        //            StrSpecPur = dataGridView1.Rows[id].Cells[23].Value.ToString();
+
+        //            int s1 = 50;
+        //            if (dataGrid[2] != "") s1 = Convert.ToInt32(dataGrid[2]);
+        //            int s2 = 50;
+        //            if (dataGrid[4] != "") s2 = Convert.ToInt32(dataGrid[4]);
+        //            int s3 = 50;
+        //            if (dataGrid[6] != "") s3 = Convert.ToInt32(dataGrid[6]);
+        //            int s4 = 50;
+        //            if (dataGrid[8] != "") s4 = Convert.ToInt32(dataGrid[8]);
+        //            int s5 = 50;
+        //            if (dataGrid[10] != "") s5 = Convert.ToInt32(dataGrid[10]);
+        //            idIndex = Convert.ToInt32(dataGridView1.Rows[id].Cells[0].Value.ToString());
+        //            flllPanelItemsboxes(idIndex);
+        //            return true;
+        //        }
+        //    }
+        //    return false;
+        //}
+
+        private void flllPanelItemsboxes(int idIndex)
+        {
+            if (dataGridView1.Rows.Count > 1)
+            {
+                for (int index = 0; index < dataGridView1.Rows.Count - 1; index++)
+                    if (idIndex == Convert.ToInt32(dataGridView1.Rows[index].Cells[0].Value.ToString()))
+                    {
+                        foreach (Control Lcontrol in PanelItemsboxes.Controls)
+                            try
+                            {
+                                if (Lcontrol.Name.StartsWith("L"))
+                                {
+                                    Lcontrol.Text = dataGridView1.Rows[index].Cells[Lcontrol.Name.Replace("L", "")].Value.ToString();
+                                    if (Lcontrol.Text != "")
+                                    {
+                                        Lcontrol.Visible = true;
+                                        foreach (Control Vcontrol in PanelItemsboxes.Controls)
+                                        {
+                                            //MessageBox.Show("View = " + Vcontrol.Name + " - Label=" + Lcontrol.Name.Replace("L", "V"));
+                                            if (Vcontrol.Name.Trim() == Lcontrol.Name.Replace("L", "V").Trim())
+                                            {
+                                                //MessageBox.Show(Lcontrol.Name + "Length");
+                                                Vcontrol.Visible = true;
+                                                string size = dataGridView1.Rows[index].Cells[Lcontrol.Name.Replace("L", "") + "Length"].Value.ToString();
+                                                Vcontrol.Width = Convert.ToInt32(size);
+                                                if (Convert.ToInt32(size) >= 700)
+                                                {
+                                                    if (Vcontrol is TextBox) ((TextBox)Vcontrol).Multiline = true;
+                                                    Vcontrol.Height = 150;
+                                                }
+                                                //MessageBox.Show(Lcontrol.Name + "Length");
+                                            }
+                                            if (Vcontrol.Name.Contains(Lcontrol.Name.Replace("L", "V") + "V") || Vcontrol.Name.Contains(Lcontrol.Name.Replace("L", "V") + "L"))
+                                            {
+                                                Vcontrol.Visible = true;
+
+                                                //MessageBox.Show(Vcontrol.Name + " - " + Lcontrol.Name.Replace("L", "V"));
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(Lcontrol.Name.Replace("L", ""));
+                            }
+
+                        for (int x = 1; x < 6; x++)
+                        {
+                            try
+                            {
+                                txtCheckOptions[x - 1] = dataGridView1.Rows[index].Cells["optionscheck" + x.ToString()].Value.ToString();
+                            }
+                            catch (Exception X)
+                            {
+                            }
+                        }
+                        if (txtComboOptions[0] != "") Vicheck1.Text = txtComboOptions[0].Split()[0];
+                        if (txtComboOptions[1] != "") Vicheck2.Text = txtComboOptions[1].Split()[0];
+                        if (txtComboOptions[2] != "") Vicheck3.Text = txtComboOptions[2].Split()[0];
+                        if (txtComboOptions[3] != "") Vicheck4.Text = txtComboOptions[3].Split()[0];
+                        if (txtComboOptions[4] != "") Vicheck5.Text = txtComboOptions[4].Split()[0];
+
+
+                        for (int x = 1; x < 6; x++)
+                        {
+                            try
+                            {
+                                txtComboOptions[x - 1] = dataGridView1.Rows[index].Cells["icomboOption" + x.ToString()].Value.ToString();
+                            }
+                            catch (Exception X)
+                            {
+                            }
+                        }
+                        if (txtComboOptions[0] != "")
+                        {
+                            Vicombo1.Items.Clear();
+                            for (int x = 0; x < txtComboOptions[0].Split('_').Length; x++)
+                                if (txtComboOptions[0].Split('_')[x] != "") Vicombo1.Items.Add(txtComboOptions[0].Split('_')[x]);
+                            Vicombo1.SelectedIndex = 0;
+                        }
+                        if (txtComboOptions[1] != "")
+                        {
+                            Vicombo2.Items.Clear();
+                            for (int x = 0; x < txtComboOptions[1].Split('_').Length; x++)
+                                if (txtComboOptions[1].Split('_')[x] != "") Vicombo2.Items.Add(txtComboOptions[1].Split('_')[x]);
+                            Vicombo2.SelectedIndex = 0;
+                        }
+                        if (txtComboOptions[2] != "")
+                        {
+                            Vicombo3.Items.Clear();
+                            for (int x = 0; x < txtComboOptions[2].Split('_').Length; x++)
+                                if (txtComboOptions[2].Split('_')[x] != "") Vicombo3.Items.Add(txtComboOptions[2].Split('_')[x]);
+                            Vicombo3.SelectedIndex = 0;
+                        }
+                        if (txtComboOptions[3] != "")
+                        {
+                            Vicombo4.Items.Clear();
+                            for (int x = 0; x < txtComboOptions[3].Split('_').Length; x++)
+                                if (txtComboOptions[3].Split('_')[x] != "") Vicombo4.Items.Add(txtComboOptions[3].Split('_')[x]);
+                            Vicombo4.SelectedIndex = 0;
+                        }
+                        if (txtComboOptions[4] != "")
+                        {
+                            Vicombo5.Items.Clear();
+                            for (int x = 0; x < txtComboOptions[4].Split('_').Length; x++)
+                                if (txtComboOptions[4].Split('_')[x] != "") Vicombo5.Items.Add(txtComboOptions[4].Split('_')[x]);
+                            Vicombo5.SelectedIndex = 0;
+                        }
+
+
+                    }
+            }
+
+
+        }
+
+        private void flllPanelItemsboxes(string rowID, string cellValue)
+        {
+            //MessageBox.Show("rowID = " + rowID + " - cellValue=" + cellValue);
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableAddContext where " + rowID + "=N'" + cellValue + "'", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+
+            //MessageBox.Show(dtbl.Rows.Count.ToString());
+            if (dtbl.Rows.Count > 0)
+            
+                foreach (DataRow dr in dtbl.Rows)
+                //if (cellValue == dataGridView1.Rows[index].Cells[rowID].Value.ToString())
+                {
+                    ColName = dr["ColName"].ToString();
+                    ColRight = dr["ColRight"].ToString();
+                    //MessageBox.Show("rowID = " + rowID + " - cellValue=" + cellValue);
+                    foreach (Control Lcontrol in PanelItemsboxes.Controls)
+                        try
+                        {
+                            if (Lcontrol.Name.StartsWith("L"))
+                            {
+                                Lcontrol.Text = dr[Lcontrol.Name.Replace("L", "")].ToString();
+                                if (Lcontrol.Text != "")
+                                {
+                                    Lcontrol.Visible = true;
+                                    foreach (Control Vcontrol in PanelItemsboxes.Controls)
+                                    {
+                                        if (Vcontrol.Name.Trim() == Lcontrol.Name.Replace("L", "V").Trim())
+                                        {
+                                            Vcontrol.Visible = true;
+                                            string size = dr[Lcontrol.Name.Replace("L", "") + "Length"].ToString();
+                                            Vcontrol.Width = Convert.ToInt32(size);
+                                            if (Convert.ToInt32(size) >= 700)
+                                            {
+                                                if (Vcontrol is TextBox) ((TextBox)Vcontrol).Multiline = true;
+                                                Vcontrol.Height = 150;
+                                            }
+                                        }
+                                        if (Vcontrol.Name.Contains(Lcontrol.Name.Replace("L", "V") + "V") || Vcontrol.Name.Contains(Lcontrol.Name.Replace("L", "V") + "L"))
+                                        {
+                                            Vcontrol.Visible = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(Lcontrol.Name.Replace("L", ""));
+                        }
+                    return;
+                }
+            
+        }
+
+        void FillContextView(string text)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableAddContext order by ID desc", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            dataGridView1.DataSource = dtbl;
+            dataGridView1.Sort(dataGridView1.Columns["ID"], System.ComponentModel.ListSortDirection.Descending);
+            dataGridView1.Columns["ID"].Visible = false;
+            dataGridView1.Columns["ColName"].Width = 250;
+            sqlCon.Close();
+        }
+        //private void btnAddLegacey_Click_1(object sender, EventArgs e)
+        //{
+        //    string str = "";
+        //    if (comboPropertyType.Text.Contains("مركبة"))
+        //    {
+
+        //        if (LegtextBox1.Text != "") str = "في السيارة من نوع " + LegtextBox1.Text;
+        //        if (LegtextBox5.Text != "") str = str + " موديل العام (" + LegtextBox5.Text + ")";
+        //        if (LegtextBox2.Text != "") str = str + "باللون " + LegtextBox2.Text;
+        //        if (LegtextBox3.Text != "") str = str + " ورقم لوحة (" + LegtextBox3.Text + " )";
+        //        if (LegtextBox4.Text != "") str = str + "وشاسيه بالرقم (" + LegtextBox4.Text + ") ";
+        //        if (LegaceyIndex == 0 || LegaceyPreStr == " في التركة المذكورة أعلاه")
+        //        {
+        //            LegaceyIndex = 0;
+        //            LegaceyPreStr = str;
+        //        }
+        //        else LegaceyPreStr = LegaceyPreStr + " و " + str;
+        //    }
+        //    else if (comboPropertyType.Text.Contains("عقار"))
+        //    {
+
+        //        if (LegtextBox1.Text != "") str = "في العقار بالرقم (" + LegtextBox1.Text;
+        //        if (LegtextBox2.Text != "") str = str + ") بمربع رقم (" + LegtextBox2.Text + ")";
+        //        if (LegtextBox3.Text != "") str = str + ") البالغ مساحتها(" + LegtextBox3.Text + "م.م)";
+        //        if (LegtextBox4.Text != "") str = str + " ب" + LegtextBox4.Text + "-" + LegtextBox5.Text + " )";
+        //        if (LegaceyIndex == 0 || LegaceyPreStr == " في التركة المذكورة أعلاه")
+        //        {
+        //            LegaceyIndex = 0;
+        //            LegaceyPreStr = str;
+        //        }
+        //        else LegaceyPreStr = LegaceyPreStr + " و " + str;
+        //    }
+        //    else if (comboPropertyType.Text.Contains("أخرى"))
+        //    {
+        //        if (LegaceyIndex == 0 || LegaceyPreStr == " في التركة المذكورة أعلاه")
+        //        {
+        //            LegaceyIndex = 0;
+        //            LegaceyPreStr = " في " + LegtxtBoxGeneral.Text;
+        //        }
+        //        else LegaceyPreStr = LegaceyPreStr + " وفي " + LegtxtBoxGeneral.Text;
+        //    }
+        //    else
+        //    {
+        //        LegaceyPreStr = " في التركة المذكورة أعلاه";
+        //    }
+        //    LegtextBox1.Text = LegtextBox2.Text = LegtextBox3.Text = LegtextBox4.Text = LegtextBox5.Text = LegtxtBoxGeneral.Text = "";
+        //    LegaceyIndex++;
+        //    //txtReviewBody();
+        //}
+
+
+        private string createAuthPart1()
+        {
+            string authDesc = "";
+            string authSexTag = "";
+            
+            if (addAuthticIndex == 1)
+            {
+                if (جنس_الموكَّل.Text == "أنثى")
+                    authSexTag = "ة";
+                authDesc = " السيد" + authSexTag + "/ " + الموكَّل.Text;
+
+                string authDocType = "إقامة رقم ";
+                if (جنسية_الموكل.Text.Contains("سعود"))
+                    authDocType = "هوية وطينة رقم ";
+
+                if (هوية_الموكل.Text != "")
+                    authDesc = " السيد" + authSexTag + "/ " + الموكَّل.Text + " (" + جنسية_الموكل.Text + ") حامل" + authSexTag + " " + authDocType + " " + هوية_الموكل.Text ;
+            }
+            else if (addAuthticIndex > 1)
+            {
+                try
+                {
+                    authSexTag = "";
+                    if (جنس_الموكَّل.Text.Split('_')[0] == "أنثى")
+                        authSexTag = "ة";
+                    authDesc = " كل من السيد" + authSexTag + "/ " + الموكَّل.Text.Split('_')[0];
+
+                    string authDocType = "إقامة رقم ";
+                    if (جنسية_الموكل.Text.Split('_')[0].Contains("سعود"))
+                        authDocType = "هوية وطينة رقم ";
+
+                    if (هوية_الموكل.Text.Split('_')[0] != "")
+                        authDesc = " السيد" + authSexTag + "/ " + الموكَّل.Text.Split('_')[0] + " (" + جنسية_الموكل.Text.Split('_')[0] + ") حامل" + authSexTag + " " + authDocType + " " + هوية_الموكل.Text.Split('_')[0];
+
+                    for (int x = 1; x < addAuthticIndex; x++)
+                    {
+                        authSexTag = "";
+                        if (جنس_الموكَّل.Text.Split('_')[x] == "أنثى")
+                            authSexTag = "ة";
+
+                        authDocType = "إقامة رقم ";
+                        if (جنسية_الموكل.Text.Split('_')[x].Contains("سعود"))
+                            authDocType = "هوية وطينة رقم";
+
+
+                        authDesc = authDesc + " والسيد" + authSexTag + "/ " + الموكَّل.Text.Split('_')[x] + " (" + جنسية_الموكل.Text.Split('_')[x] + ") حامل" + authSexTag + " " + authDocType + " " + هوية_الموكل.Text.Split('_')[x];
+                    }
+                }
+                catch (Exception ex) 
+                {
+                    
+                }
+            }
+            return authDesc;
+        }
+
+        //void getRowContext(string colName)
+        //{
+        //    SqlConnection sqlCon = new SqlConnection(DataSource);
+        //    if (sqlCon.State == ConnectionState.Closed)
+        //        sqlCon.Open();
+        //    SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableAddContext where ColName = N'"+colName+"'", sqlCon);
+        //    sqlDa.SelectCommand.CommandType = CommandType.Text;
+        //    DataTable dtbl = new DataTable();
+        //    sqlDa.Fill(dtbl);
+        //    dataGridView2.DataSource = dtbl;
+        //    dataGridView2.Sort(dataGridView2.Columns["ID"], System.ComponentModel.ListSortDirection.Descending);
+        //    sqlCon.Close();
+        //}
+
+        private void flllPanelItemsboxes()
+        {
+            if (dataGridView1.Rows.Count > 1)
+            {
+                for (int index = 0; index < dataGridView1.Rows.Count - 1; index++)
+                    if (idIndex == Convert.ToInt32(dataGridView1.Rows[index].Cells[0].Value.ToString()))
+                        foreach (Control Lcontrol in PanelItemsboxes.Controls)
+                            try
+                            {
+                                if (Lcontrol.Name.StartsWith("L"))
+                                {
+                                    Lcontrol.Text = dataGridView1.Rows[index].Cells[Lcontrol.Name.Replace("L", "")].Value.ToString();
+                                    if (Lcontrol.Text != "")
+                                    {
+                                        Lcontrol.Visible = true;
+                                        foreach (Control Vcontrol in PanelItemsboxes.Controls)
+                                        {
+                                            //MessageBox.Show("View = " + Vcontrol.Name + " - Label=" + Lcontrol.Name.Replace("L", "V"));
+                                            if (Vcontrol.Name.Trim() == Lcontrol.Name.Replace("L", "V").Trim())
+                                            {
+                                                //MessageBox.Show(Lcontrol.Name + "Length");
+                                                Vcontrol.Visible = true;
+                                                string size = dataGridView1.Rows[index].Cells[Lcontrol.Name.Replace("L", "") + "Length"].Value.ToString();
+                                                Vcontrol.Width = Convert.ToInt32(size);
+                                                if (Convert.ToInt32(size) >= 700)
+                                                {
+                                                    if (Vcontrol is TextBox) ((TextBox)Vcontrol).Multiline = true;
+                                                    Vcontrol.Height = 150;
+                                                }
+                                                //MessageBox.Show(Lcontrol.Name + "Length");
+                                            }
+                                            if (Vcontrol.Name.Contains(Lcontrol.Name.Replace("L", "V") + "V") || Vcontrol.Name.Contains(Lcontrol.Name.Replace("L", "V") + "L"))
+                                            {
+                                                Vcontrol.Visible = true;
+
+                                                //MessageBox.Show(Vcontrol.Name + " - " + Lcontrol.Name.Replace("L", "V"));
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(Lcontrol.Name.Replace("L", ""));
+                            }
+            }
+
+
+        }
+        private string SuffPrefReplacements(string text)
+        {
+            int appCaseIndex = Appcases(النوع, addNameIndex);
+            int intAuthcases = Appcases(جنس_الموكَّل, addAuthticIndex);
+            
+            //if (text.Contains("auth1"))
+            //    return text.Replace("auth1", ParentForm.authList1Value);
+
+            if (text.Contains("t1"))
+                return text.Replace("t1", Vitext1.Text);
+            if (text.Contains("t2"))
+                return text.Replace("t2", Vitext2.Text);
+            if (text.Contains("t3"))
+                return text.Replace("t3", Vitext3.Text);
+            if (text.Contains("t4"))
+                return text.Replace("t4", Vitext4.Text);
+
+            if (text.Contains("t5"))
+                return text.Replace("t5", Vitext5.Text);
+
+            if (text.Contains("c1"))
+                return text.Replace("c1", Vicheck1.Text);
+
+            if (text.Contains("m1"))
+                return text.Replace("m1", Vicombo1.Text);
+            if (text.Contains("m2"))
+                return text.Replace("m2", Vicombo2.Text);
+
+            if (text.Contains("a1"))
+                return text.Replace("a1", LibtnAdd1.Text);
+
+            if (text.Contains("n1"))
+                return text.Replace("n1", " " + VitxtDate1.Text +" ");
+            if (text.Contains("#*#"))
+                return text.Replace("#*#", preffix[appCaseIndex, 10]);
+
+            if (text.Contains("#1"))
+                return text.Replace("#1", preffix[appCaseIndex, 11]);
+
+            if (text.Contains("#2"))
+                return text.Replace("#2", preffix[appCaseIndex, 12]);
+            if (text.Contains("@*@"))
+            {
+                spacialCharacter = "@*@";
+                return text.Replace("@*@", "لدى  برقم الايبان ()");
+            }
+
+            if (text.Contains("#8"))
+                return text.Replace("#8", removedDocNo.Text);
+            if (text.Contains("#6"))
+                return text.Replace("#6", removedDocSource.Text);
+            if (text.Contains("#7"))
+                return text.Replace("#7", removedDocDate.Text);
+
+
+
+            if (text.Contains("#3"))
+                return text.Replace("#3", preffix[0, 7]);
+            if (text.Contains("#4"))
+                return text.Replace("#4", preffix[0, 8]);
+            if (text.Contains("#5"))
+                return text.Replace("#5", preffix[0, 9]);
+
+
+            if (text.Contains("#$#"))
+                return text.Replace("#$#", preffix[appCaseIndex, 13]);
+
+            if (text.Contains("$$$"))
+                return text.Replace("$$$", preffix[appCaseIndex, 0]);
+            if (text.Contains("&&&"))
+                return text.Replace("&&&", preffix[appCaseIndex, 1]);
+            if (text.Contains("^^^"))
+                return text.Replace("^^^", preffix[appCaseIndex, 2]);
+            if (text.Contains("###"))
+                return text.Replace("###", preffix[intAuthcases, 4]);
+            if (text.Contains("***"))
+                return text.Replace("***", preffix[intAuthcases, 3]);
+            else return text;
+        }
+
+
+        private void chooseDocxFile(){
+            string RouteFile;
+            if (طريقة_الطلب.Checked)
+                RouteFile = FilespathIn + @"Auth\AuthMulti.docx";
+            else
+                RouteFile = FilespathIn + @"Auth\MandoubAuthMulti.docx";
+
+            if (addNameIndex == 1 && طريقة_الطلب.Checked)
+            {
+                RouteFile = FilespathIn + @"Auth\AuthSingle.docx";
+                if (نوع_التوكيل.Text == "شهادة ميلاد")
+                    RouteFile = FilespathIn + @"Auth\newAuthbirth.docx";
+                else if (نوع_التوكيل.Text == "ورثة")
+                    RouteFile = FilespathIn + @"Auth\AuthSingleCopy.docx";
+            }
+            else if (addNameIndex == 1 && !طريقة_الطلب.Checked)
+            {
+                RouteFile = FilespathIn + @"Auth\MandoubAuthSingle.docx";
+            }
+            localCopy.Text = FilespathOut + مقدم_الطلب.Text.Split('_')[0] + DateTime.Now.ToString("mmss") + ".docx";
+            System.IO.File.Copy(RouteFile, localCopy.Text);
+            FileInfo fileInfo = new FileInfo(localCopy.Text);
+            if (fileInfo.IsReadOnly) fileInfo.IsReadOnly = false;
+            
+        }
+
+        private void fillInfo(FlowLayoutPanel panel, bool hide)
+        {
+            foreach (Control control in panel.Controls)
+            {
+                if(hide) control.Visible = false;
+                if (control.Name.Contains("."))
+                {
+                    control.Name = "unvalid_" + InvalidControl.ToString();
+                    InvalidControl++;
+                }
+                else
+                {
+                    //MessageBox.Show(control.Name); 
+                    panelFill(control);
+                }
+            }
+        }
+
+        private void btnNext_Click(object sender, EventArgs e)
+        {
+            if (currentPanelIndex <= 3) 
+                currentPanelIndex++;
+            else currentPanelIndex = 0;
+            panelShow(currentPanelIndex);
+
+           
+        }
+
+        private void btnPrevious_Click(object sender, EventArgs e)
+        {
+            if (currentPanelIndex > 0) currentPanelIndex--;
+            else currentPanelIndex = 3;
+            panelShow(currentPanelIndex);
+        }
+
+        private void pictureBox13_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void رقم_الهوية_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnPanelapp_Click(object sender, EventArgs e)
+        {
+            if (btnPanelapp.Height != 130)
+            {
+                btnPanelapp.Height = Panelapp.Height = 130 ;
+                btnPanelapp.Text = "عرض";
+            }
+            else
+            {
+                btnPanelapp.Height = Panelapp.Height = 130 * addNameIndex;
+                btnPanelapp.Text = "إخفاء";
+            }
+            
+        }
+
+        private void btnPanelAuthPers_Click(object sender, EventArgs e)
+        {
+            if (btnPanelAuthPers.Height != 90)
+            {
+                btnPanelAuthPers.Height = PanelAuthPers.Height = 90;
+                btnPanelAuthPers.Text = "عرض";
+            }
+            else
+            {
+                btnPanelAuthPers.Height = PanelAuthPers.Height = 90 * addAuthticIndex;
+                btnPanelAuthPers.Text = "إخفاء";
+            }
+        }
+
+        private void طريقة_الطلب_CheckedChanged(object sender, EventArgs e)
+        {
+            if (طريقة_الطلب.Checked)
+            {
+                طريقة_الطلب.Text = "حضور مباشرة إلى القنصلية";
+                mandoubLabel.Visible = اسم_المندوب.Visible = false;
+                اسم_المندوب.Text = "";
+            }
+            else
+            {
+                طريقة_الطلب.Text = "عن طريق أحد مندوبي القنصلية";
+                mandoubLabel.Visible = اسم_المندوب.Visible = true;
+                اسم_المندوب.SelectedIndex = 0;
+            }
+        }
+
+        
+
+        private void FormAuth_Load(object sender, EventArgs e)
+        {
+            fileComboBoxMan(اسم_المندوب, DataSource, "MandoubNames", "TableListCombo");
+            fileComboBox(نوع_التوكيل, DataSource, "AuthTypes", "TableListCombo");
+        }
+
+        private void fileComboBox(ComboBox combbox, string source, string comlumnName, string tableName)
+        {
+            //MessageBox.Show("source += "+source);
+            combbox.Visible = true;
+            //MessageBox.Show(source);
+            //MessageBox.Show(Server);
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                saConn.Open();
+
+                string query = "select " + comlumnName + " from " + tableName;
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.CommandType = CommandType.Text;
+
+
+                cmd.ExecuteNonQuery();
+                DataTable table = new DataTable();
+                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                dataAdapter.Fill(table);
+
+                foreach (DataRow dataRow in table.Rows)
+                {
+                    if (!String.IsNullOrEmpty(dataRow[comlumnName].ToString()))
+                        combbox.Items.Add(dataRow[comlumnName].ToString());
+                }
+                saConn.Close();
+            }
+            //if (combbox.Items.Count > 0) combbox.SelectedIndex = 0;
+        }
+
+        private void fileComboBoxMan(ComboBox combbox, string source, string comlumnName, string tableName)
+        {
+            combbox.Items.Clear();
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                saConn.Open();
+
+                string query = "select " + comlumnName + " from " + tableName;
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.CommandType = CommandType.Text;
+
+
+                cmd.ExecuteNonQuery();
+                DataTable table = new DataTable();
+                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                dataAdapter.Fill(table);
+
+                foreach (DataRow dataRow in table.Rows)
+                {
+                    if (!string.IsNullOrEmpty(dataRow[comlumnName].ToString()))
+                    {
+                        combbox.Items.Add(dataRow[comlumnName].ToString());
+                    }
+                }
+                saConn.Close();
+            }
+        }
+
+        private void txtReview_MouseHover(object sender, EventArgs e)
+        {
+            txtReviewBody();
+        }
+
+        private void txtReviewBody()
+        {            
+            int appCaseIndex = Appcases(النوع, addNameIndex);
+            int intAuthcases = Appcases(جنس_الموكَّل, addAuthticIndex);
+            string text = StrSpecPur + LegaceyPreStr;
+            for (int x = 0; x < 40; x++)
+                text = SuffPrefReplacements(text);
+
+            txtReview.Text = " ل" + preffix[intAuthcases, 7] + " ع" + preffix[appCaseIndex, 2] + " و" + preffix[intAuthcases, 8] + " مقام" + preffix[appCaseIndex, 0] + text;            
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var settings = new Settings("57", false, "", DataSource, false, FilespathIn, FilespathOut, FilespathOut, FilespathIn,إجراء_التوكيل.SelectedIndex.ToString() + "-"+ نوع_التوكيل.SelectedIndex.ToString());
+            settings.Show();
+        }
+
+        private void نوع_التوكيل_TextChanged(object sender, EventArgs e)
+        {
+            if (نوع_التوكيل.Text != "إختر نوع التوكيل") {
+                for (int item = 0; item< نوع_التوكيل.Items.Count; item++) {
+                    if (نوع_التوكيل.Items[item].ToString() == نوع_التوكيل.Text)
+                        نوع_التوكيل.SelectedIndex = item;
+                }
+                //MessageBox.Show(نوع_التوكيل.SelectedIndex.ToString());
+            }            
+        }
+
+        private void نوع_التوكيل_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (checkColumnName(نوع_التوكيل.Text.Replace(" ", "_")))
+            {
+                إجراء_التوكيل.Items.Clear();
+                newFillComboBox1(إجراء_التوكيل, DataSource, نوع_التوكيل.SelectedIndex.ToString(), "العربية");
+                if (نوع_التوكيل.SelectedIndex == 6)
+                {
+                    //label7.Visible = comboPropertyType.Visible = true;
+                    LegaceyPreStr = " في التركة المذكورة أعلاه";
+                }
+                else
+                {
+                    //PanelSubItemBox.Visible = label7.Visible = comboPropertyType.Visible = false;
+                    LegaceyPreStr = "";
+                }
+                
+                return;
+            }
+        }
+        private void newFillComboBox1(ComboBox combbox, string source, string id, string Language)
+        {
+            combbox.Visible = true;
+            combbox.Items.Clear();
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                saConn.Open();
+                string query = "select ColName,ColRight,Lang from TableAddContext";
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.CommandType = CommandType.Text;
+                cmd.ExecuteNonQuery();
+                DataTable table = new DataTable();
+                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                dataAdapter.Fill(table);
+                foreach (DataRow dataRow in table.Rows)
+                {
+                    if (dataRow["Lang"].ToString() == Language && dataRow["ColRight"].ToString() != "" && !String.IsNullOrEmpty(dataRow["ColName"].ToString()) && dataRow["ColName"].ToString().Contains("-"))
+                    {
+                        if (dataRow["ColName"].ToString().Split('-')[1].All(char.IsDigit))
+                        {
+                            try
+                            {
+                                if (id == dataRow["ColName"].ToString().Split('-')[1])
+                                {
+                                    combbox.Items.Add(dataRow["ColName"].ToString().Split('-')[0]);
+                                }
+                            }
+                            catch (Exception exp)
+                            {
+
+                            }
+                        }
+                    }
+                }
+                saConn.Close();
+            }
+            //if (combbox.Items.Count > 0) combbox.SelectedIndex = 0;
+        }
+        private bool checkColumnName(string colNo)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter("SP_COLUMNS TableListCombo", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                if (!string.IsNullOrEmpty(dataRow["COLUMN_NAME"].ToString()))
+                {
+                    if (dataRow["COLUMN_NAME"].ToString() == colNo)
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        private void إجراء_التوكيل_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            resetBoxes();
+            flllPanelItemsboxes("ColName", إجراء_التوكيل.Text + "-" + نوع_التوكيل.SelectedIndex.ToString());
+            PopulateCheckBoxes(ColRight, "TableAuthRight", DataSource);
+        }
+
+        private void إجراء_التوكيل_TextChanged(object sender, EventArgs e)
+        {
+            if (إجراء_التوكيل.Text != "إختر الإجراء")
+            {
+                for (int item = 0; item < إجراء_التوكيل.Items.Count; item++)
+                {
+                    if (إجراء_التوكيل.Items[item].ToString() == إجراء_التوكيل.Text)
+                        إجراء_التوكيل.SelectedIndex = item;
+                }
+                //MessageBox.Show(إجراء_التوكيل.SelectedIndex.ToString());
+            }
+        }
+
+        private void VitxtDate1VD_TextChanged(object sender, EventArgs e)
+        {
+            
+            if (VitxtDate1.Text.Length == 10)
+            {
+                int month = Convert.ToInt32(SpecificDigit(VitxtDate1.Text, 1, 2));
+                if (month > 12)
+                {
+                    MessageBox.Show("الشهر يحب أن يكون أقل من 12");
+                    //VitxtDate1.Text = "";
+                    VitxtDate1.Text = SpecificDigit(VitxtDate1.Text, 3, 10);
+                    return;
+                }
+            }
+
+            if (VitxtDate1.Text.Length == 11)
+            {
+                VitxtDate1.Text = lastInput2; return;
+            }
+            if (VitxtDate1.Text.Length == 10) return;
+            if (VitxtDate1.Text.Length == 4) VitxtDate1.Text = "-" + VitxtDate1.Text;
+            else if (VitxtDate1.Text.Length == 7) VitxtDate1.Text = "-" + VitxtDate1.Text;
+            lastInput2 = VitxtDate1.Text;
+        }
+
+        private string SpecificDigit(string text, int Firstdigits, int Lastdigits)
+        {
+            char[] characters = text.ToCharArray();
+            string firstNchar = "";
+            int z = 0;
+            for (int x = Firstdigits - 1; x < Lastdigits && x < text.Length; x++)
+            {
+                firstNchar = firstNchar + characters[x];
+
+            }
+            return firstNchar;
+        }
+
+        private void VitxtDate2_TextChanged(object sender, EventArgs e)
+        {
+            if (VitxtDate2.Text.Length == 10)
+            {
+                int month = Convert.ToInt32(SpecificDigit(VitxtDate2.Text, 1, 2));
+                if (month > 12)
+                {
+                    MessageBox.Show("الشهر يحب أن يكون أقل من 12");
+                    //VitxtDate2.Text = "";
+                    VitxtDate2.Text = SpecificDigit(VitxtDate2.Text, 3, 10);
+                    return;
+                }
+            }
+
+            if (VitxtDate2.Text.Length == 11)
+            {
+                VitxtDate2.Text = lastInput2; return;
+            }
+            if (VitxtDate2.Text.Length == 10) return;
+            if (VitxtDate2.Text.Length == 4) VitxtDate2.Text = "-" + VitxtDate2.Text;
+            else if (VitxtDate2.Text.Length == 7) VitxtDate2.Text = "-" + VitxtDate2.Text;
+            lastInput2 = VitxtDate2.Text;
+        }
+
+        private void VitxtDate3_TextChanged(object sender, EventArgs e)
+        {
+            if (VitxtDate3.Text.Length == 10)
+            {
+                int month = Convert.ToInt32(SpecificDigit(VitxtDate3.Text, 1, 2));
+                if (month > 12)
+                {
+                    MessageBox.Show("الشهر يحب أن يكون أقل من 12");
+                    //VitxtDate3.Text = "";
+                    VitxtDate3.Text = SpecificDigit(VitxtDate3.Text, 3, 10);
+                    return;
+                }
+            }
+
+            if (VitxtDate3.Text.Length == 11)
+            {
+                VitxtDate3.Text = lastInput3; return;
+            }
+            if (VitxtDate3.Text.Length == 10) return;
+            if (VitxtDate3.Text.Length == 4) VitxtDate3.Text = "-" + VitxtDate3.Text;
+            else if (VitxtDate3.Text.Length == 7) VitxtDate3.Text = "-" + VitxtDate3.Text;
+            lastInput3 = VitxtDate3.Text;
+        }
+
+        private void VitxtDate4_TextChanged(object sender, EventArgs e)
+        {
+            if (VitxtDate4.Text.Length == 10)
+            {
+                int month = Convert.ToInt32(SpecificDigit(VitxtDate4.Text, 1, 2));
+                if (month > 12)
+                {
+                    MessageBox.Show("الشهر يحب أن يكون أقل من 12");
+                    //VitxtDate4.Text = "";
+                    VitxtDate4.Text = SpecificDigit(VitxtDate4.Text, 3, 10);
+                    return;
+                }
+            }
+
+            if (VitxtDate4.Text.Length == 11)
+            {
+                VitxtDate4.Text = lastInput4; return;
+            }
+            if (VitxtDate4.Text.Length == 10) return;
+            if (VitxtDate4.Text.Length == 4) VitxtDate4.Text = "-" + VitxtDate4.Text;
+            else if (VitxtDate4.Text.Length == 7) VitxtDate4.Text = "-" + VitxtDate4.Text;
+            lastInput4 = VitxtDate4.Text;
+        }
+
+        private void VitxtDate5_TextChanged(object sender, EventArgs e)
+        {
+            if (VitxtDate5.Text.Length == 10)
+            {
+                int month = Convert.ToInt32(SpecificDigit(VitxtDate5.Text, 1, 2));
+                if (month > 12)
+                {
+                    MessageBox.Show("الشهر يحب أن يكون أقل من 12");
+                    //VitxtDate5.Text = "";
+                    VitxtDate5.Text = SpecificDigit(VitxtDate5.Text, 3, 10);
+                    return;
+                }
+            }
+
+            if (VitxtDate5.Text.Length == 11)
+            {
+                VitxtDate5.Text = lastInput3; return;
+            }
+            if (VitxtDate5.Text.Length == 10) return;
+            if (VitxtDate5.Text.Length == 4) VitxtDate5.Text = "-" + VitxtDate5.Text;
+            else if (VitxtDate5.Text.Length == 7) VitxtDate5.Text = "-" + VitxtDate5.Text;
+            lastInput3 = VitxtDate5.Text;
+        }
+
+        private void checkAutoUpdate_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkAutoUpdate.Checked)
+            {
+                checkAutoUpdate.Text = "تحديث تلقائي";
+                timer1.Enabled = true;
+            }
+            else
+            {
+                checkAutoUpdate.Text = "إيقاف التحديث";
+                timer1.Enabled = false;
+            }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            txtReviewBody();
+        }
+
+        private void موقع_التوكيل_TextUpdate(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void التوثيق_TextChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        public void FillDataGridView(string dataSource)
+        {
+            SqlConnection sqlCon = new SqlConnection(dataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableAuth", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            dataGridView1.DataSource = dtbl;
+            rowCount = dtbl.Rows.Count.ToString();
+            dataGridView1.Sort(dataGridView1.Columns["ID"], System.ComponentModel.ListSortDirection.Descending);
+            //dataGridView1.Columns[0].Visible = false ;
+            dataGridView1.Columns[1].Width = 200;
+            dataGridView1.Columns[3].Width = 50;
+            dataGridView1.Columns[8].Width = 50;
+            dataGridView1.Columns[9].Width = 170;
+            dataGridView1.Columns[7].Width = dataGridView1.Columns[2].Width = 200;
+            AuthNoPart2 = dataGridView1.Rows.Count.ToString();
+            sqlCon.Close();
+            int bre = 0;
+
+        }
+    }
+}
