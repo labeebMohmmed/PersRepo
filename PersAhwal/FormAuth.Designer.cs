@@ -292,7 +292,7 @@
             this.PanelFiles.Dock = System.Windows.Forms.DockStyle.Top;
             this.PanelFiles.Location = new System.Drawing.Point(0, 0);
             this.PanelFiles.Name = "PanelFiles";
-            this.PanelFiles.Size = new System.Drawing.Size(1028, 38);
+            this.PanelFiles.Size = new System.Drawing.Size(1335, 38);
             this.PanelFiles.TabIndex = 628;
             // 
             // btnSettings
@@ -1947,7 +1947,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1028, 749);
+            this.ClientSize = new System.Drawing.Size(1335, 595);
             this.Controls.Add(this.PanelFiles);
             this.Controls.Add(this.labDescribed);
             this.Controls.Add(this.btnNext);
