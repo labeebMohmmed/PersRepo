@@ -70,6 +70,8 @@ namespace PersAhwal
         string ColName = "";
         string ColRight = "Col0";
         Word.Document oBDoc;
+        object oBMiss;
+        Word.Application oBMicroWord;
         DataTable checkboxdt;
         int Nobox = 0, LastID = 0, LastTabIndex = 0;
         string LastCol = "";
@@ -92,84 +94,58 @@ namespace PersAhwal
         string lastInput3 = "";
         string lastInput4 = "";
         string lastInput5 = "";
-        
+        string[] foundList;
+        int appCaseIndex = 0;
+        int intAuthcases = 0;
+        string legaceyAuthInfo = "";
+        string archState = "new";
+        string Jobposition = "";
         public FormAuth(int Atvc, int rowid, string AuthNo, string datasource, string filespathIn, string filespathOut, string empName, string jobposition, string greDate, string hijriDate)
         {
             InitializeComponent();
             FilespathIn = filespathIn;
             FilespathOut = filespathOut;
             DataSource = datasource;
-            EmpName = empName; 
+            EmpName = empName;
+            Jobposition = jobposition;
+            التاريخ_الميلادي.Text = greDate;
+            التاريخ_الهجري.Text = hijriDate;
             genPreperations();
             FillDataGridView(DataSource);            
         }
 
-        public void panelShow(int panelIndex)
-        {
-            switch (panelIndex) { 
-                case 0:
-                    //DataGrid
-                    PanelDataGrid.Size = new System.Drawing.Size(1318, 648);
-                    PanelDataGrid.Location = new System.Drawing.Point(12, 38);                    
-                    PanelDataGrid.BringToFront();
-                    ListSearch.Visible = btnListView.Visible = PanelDataGrid.Visible = true;
-
-                    //false
-                    btnSettings.Visible = btnDelete.Visible = btnFile1.Visible = btnFile2.Visible = btnFile3.Visible = Panelapp.Visible = false;
-                    panelAuthRights.Visible = btnPrevious.Visible = btnNext.Visible = panelapplicationInfo.Visible = false;
-                    break;
-            case 1:
-                    //Basic Info
-                    panelapplicationInfo.Size = new System.Drawing.Size(821, 649);
-                    panelapplicationInfo.Location = new System.Drawing.Point(294, 38);
-                    panelapplicationInfo.BringToFront();
-                    btnPrevious.Visible = btnNext.Visible = panelapplicationInfo.Visible = true;
-                    //false
-                    ListSearch.Visible = btnListView.Visible = panelAuthRights.Visible = PanelDataGrid.Visible = false;
-                    btnDelete.Visible = btnFile1.Visible = btnFile2.Visible = btnFile3.Visible = Panelapp.Visible = true;
-                    break;
-            case 2:
-                    //AuthData
-                    chooseDocxFile();
-                    //MessageBox.Show("");
-                    boxesPreparations();
-                    
-                    btnSettings.Visible = panelAuthRights.Visible = true;
-                    panelAuthRights.BringToFront();
-
-                    //false
-                    PanelDataGrid.Visible = panelapplicationInfo.Visible = false;
-                    break;
-            case 3:
-                    fillDocFileStep1();
-                    break;
-            }
-        }
+        
         public void boxesPreparations() 
         {
-            int appCaseIndex = Appcases(النوع, addNameIndex);
-            //البداية
-            string firstPart = "أنا المواطن" + preffix[appCaseIndex, 5] + "/ ";
-            if (addNameIndex > 1)
-                firstPart = "نحن المواطن" + preffix[appCaseIndex, 5] + " الموقع" + preffix[appCaseIndex, 5] + " ";
-            
             //مقدم الطلب والوكيل
             if (addNameIndex == 1)
-                نص_مقدم_الطلب.Text = firstPart + مقدم_الطلب.Text + "، المقيم" + preffix[appCaseIndex, 5] + " بالمملكة العربية السعودية حامل" + preffix[appCaseIndex, 5] +" "+ نوع_الهوية.Text + " رقم " + رقم_الهوية.Text.Replace("p", "P") + " إصدار " + مكان_الإصدار.Text + "، بكامل قوا" + preffix[appCaseIndex, 12] + " العقلية وبطوع" + preffix[appCaseIndex, 12] + " واختيار" + preffix[appCaseIndex, 12] + " وحالت" + preffix[appCaseIndex, 12] + " المعتبرة شرعاً وقانوناً، بهذا فقد أوكلت" + createAuthPart1();
-            else
-                نص_مقدم_الطلب.Text = firstPart + "-" + "والمقيم" + preffix[appCaseIndex, 5] + " بالمملكة العربية السعودية بهذا فقد أوكل" + preffix[appCaseIndex, 1] + createAuthPart1() + " بكامل قوا" + preffix[appCaseIndex, 12] + " العقلية وبطوع" + preffix[appCaseIndex, 12] + " واختيار" + preffix[appCaseIndex, 12] + " وحالت" + preffix[appCaseIndex, 12] + " المعتبرة شرعاً وقانوناً";
+            {
+                if (نوع_التوكيل.Text.Contains("ورثة"))
+                {
+                    نص_مقدم_الطلب1.Text = "أنا المواطن" + preffix[appCaseIndex, 5] + "/ " + مقدم_الطلب.Text + "، المقيم" + preffix[appCaseIndex, 5] + " بالمملكة العربية السعودية حامل" + preffix[appCaseIndex, 5] + " " + نوع_الهوية.Text + " رقم " + رقم_الهوية.Text.Replace("p", "P") + " إصدار " + مكان_الإصدار.Text + "، بكامل قوا" + preffix[appCaseIndex, 12] + " العقلية وبطوع" + preffix[appCaseIndex, 12] + " واختيار" + preffix[appCaseIndex, 12] + " وحالت" + preffix[appCaseIndex, 12] + " المعتبرة شرعاً وقانوناً،";
+                    legaceyAuthInfo = " المعتبرة شرعاً وقانوناً، بهذا فقد أوكل" + preffix[appCaseIndex, 1] + createAuthPart1();
+                }
+                else نص_مقدم_الطلب1.Text = "أنا المواطن" + preffix[appCaseIndex, 5] + "/ " + مقدم_الطلب.Text + "، المقيم" + preffix[appCaseIndex, 5] + " بالمملكة العربية السعودية حامل" + preffix[appCaseIndex, 5] + " " + نوع_الهوية.Text + " رقم " + رقم_الهوية.Text.Replace("p", "P") + " إصدار " + مكان_الإصدار.Text + "، بكامل قوا" + preffix[appCaseIndex, 12] + " العقلية وبطوع" + preffix[appCaseIndex, 12] + " واختيار" + preffix[appCaseIndex, 12] + " وحالت" + preffix[appCaseIndex, 12] + " المعتبرة شرعاً وقانوناً، بهذا فقد أوكل"+ preffix[appCaseIndex, 1] + createAuthPart1();
+            }
+            else if (addNameIndex > 1)
+            {
+                نص_مقدم_الطلب0.Text = "نحن المواطن" + preffix[appCaseIndex, 5] + " الموقع" + preffix[appCaseIndex, 5] + " ";
+                نص_مقدم_الطلب1.Text = "والمقيم" + preffix[appCaseIndex, 5] + " بالمملكة العربية السعودية بهذا فقد أوكل" + preffix[appCaseIndex, 1] + createAuthPart1() + " بكامل قوا" + preffix[appCaseIndex, 12] + " العقلية وبطوع" + preffix[appCaseIndex, 12] + " واختيار" + preffix[appCaseIndex, 12] + " وحالت" + preffix[appCaseIndex, 12] + " المعتبرة شرعاً وقانوناً";
+            }
 
+            //MessageBox.Show(نص_مقدم_الطلب1.Text);
             //التوثيق
-            موقع_التوكيل1.Text = موقع_التوكيل.Text;
+            موقع_التوكيل1.Text = موقع_التوكيل.Text.Trim();
             التوقيع.Text = مقدم_الطلب.Text;
             string auth = " المواطن" + preffix[appCaseIndex, 5] + " المذكور" + preffix[appCaseIndex, 5] + " أعلاه قد حضر" + preffix[appCaseIndex, 3] + " ووقع" + preffix[appCaseIndex, 3] + " بتوقيع" + preffix[appCaseIndex, 4] + " على هذا التوكيل في حضور الشاهدين المذكورين أعلاه وذلك بعد تلاوته علي" + preffix[appCaseIndex, 4] + " وبعد أن فهم" + preffix[appCaseIndex, 3] + " مضمونه ومحتواه";    
             if(!طريقة_الطلب.Checked)
-                auth= " المواطن" + preffix[appCaseIndex, 5] + " المذكور" + preffix[appCaseIndex, 5] + " أعلاه قد حضر" + preffix[appCaseIndex, 5] + " ووقع" + preffix[appCaseIndex, 5] + " بتوقيع" + preffix[appCaseIndex, 5] + " على هذا التوكيل في حضور الشهود المذكورين أعلاه " + " بعد تلاوته علي" + preffix[appCaseIndex, 5] + " وبعد أن فهم" + preffix[appCaseIndex, 5] + " مضمونه ومحتواه" + " وذلك أمام مندوب جالية منطقة " + اسم_المندوب.Text.Split('_')[1] + " السيد/ " + اسم_المندوب.Text.Split('_')[0] + " بموجب التفويض الممنوح له من القنصلية العامة ";                
-            التوثيق.Text = " نائب قنصل بالقنصلية العامة لجمهورية السودان بجدة، بأن"+ auth + "، صدر تحت توقيعي وختم القنصلية العامة";
+                auth= " المواطن" + preffix[appCaseIndex, 5] + " المذكور" + preffix[appCaseIndex, 5] + " أعلاه قد حضر" + preffix[appCaseIndex, 3] + " ووقع" + preffix[appCaseIndex, 3] + " بتوقيع" + preffix[appCaseIndex, 4] + " على هذا التوكيل في حضور الشهود المذكورين أعلاه " + " بعد تلاوته علي" + preffix[appCaseIndex, 4] + " وبعد أن فهم" + preffix[appCaseIndex, 3] + " مضمونه ومحتواه" + " وذلك أمام مندوب جالية منطقة " + اسم_المندوب.Text.Split('_')[1] + " السيد/ " + اسم_المندوب.Text.Split('_')[0] + " بموجب التفويض الممنوح له من القنصلية العامة ";                
+            التوثيق.Text = " نائب قنصل بالقنصلية العامة لجمهورية السودان بجدة،بأن"+ auth + "، صدر تحت توقيعي وختم القنصلية العامة";
         }
 
         private void Suffex_preffixList()
         {
+
 
             preffix[0, 0] = "ي"; //$$$
             preffix[1, 0] = "ي";
@@ -178,12 +154,14 @@ namespace PersAhwal
             preffix[4, 0] = "ا";
             preffix[5, 0] = "ا";
 
+
             preffix[0, 1] = "ت";//&&&
             preffix[1, 1] = "ت";
             preffix[2, 1] = "نا";
             preffix[3, 1] = "نا";
             preffix[4, 1] = "نا";
             preffix[5, 1] = "نا";
+
 
             preffix[0, 2] = "ني";//^^^
             preffix[1, 2] = "ني";
@@ -192,12 +170,14 @@ namespace PersAhwal
             preffix[4, 2] = "نا";
             preffix[5, 2] = "نا";
 
+
             preffix[0, 3] = "";//***
             preffix[1, 3] = "ت";
             preffix[2, 3] = "ا";
             preffix[3, 3] = "تا";
             preffix[4, 3] = "ن";
             preffix[5, 3] = "وا";
+
 
             preffix[0, 4] = "ه";//###
             preffix[1, 4] = "ها";
@@ -206,6 +186,7 @@ namespace PersAhwal
             preffix[4, 4] = "هن";
             preffix[5, 4] = "هم";
 
+
             preffix[0, 5] = "";
             preffix[1, 5] = "ة";
             preffix[2, 5] = "ان";
@@ -213,12 +194,14 @@ namespace PersAhwal
             preffix[4, 5] = "ات";
             preffix[5, 5] = "ون";
 
-            preffix[0, 6] = "";
+
+            preffix[0, 6] = "";//#5
             preffix[1, 6] = "ة";
             preffix[2, 6] = "ين";
             preffix[3, 6] = "تين";
             preffix[4, 6] = "ات";
-            preffix[5, 6] = "ين";
+            preffix[5, 6] = "رين";
+            
 
             preffix[0, 7] = "ينوب";
             preffix[1, 7] = "تنوب";
@@ -227,26 +210,27 @@ namespace PersAhwal
             preffix[4, 7] = "ينبن";
             preffix[5, 7] = "ينوبوا";
 
+
             preffix[0, 8] = "يقوم";
             preffix[1, 8] = "تقوم";
             preffix[2, 8] = "يقوما";
             preffix[3, 8] = "تقوما";
             preffix[4, 8] = "يقمن";
             preffix[5, 8] = "يقوموا";
+            
 
-            preffix[0, 9] = "";
-            preffix[1, 9] = "ة";
-            preffix[2, 9] = "ين";
-            preffix[3, 9] = "ان";
-            preffix[4, 9] = "ات";
-            preffix[5, 9] = "ين";
+            preffix[0, 9] = "نصيبي";//#5
+            preffix[1, 9] = "نصيبي";
+            preffix[2, 9] = "نصيبينا";
+            preffix[3, 9] = "نصيبينا";
+            preffix[4, 9] = "أنصبتنا";
+            preffix[5, 9] = "أنصبتنا";
 
-            preffix[0, 10] = "أوكلت";//&&&
-            preffix[1, 10] = "أوكلت";
-            preffix[2, 10] = "أوكلنا";
-            preffix[3, 10] = "أوكلنا";
-            preffix[4, 10] = "أوكلنا";
-            preffix[5, 10] = "أوكلنا";
+
+            preffix[0, 10] = "ت";//#*#
+            preffix[1, 10] = "";
+
+            
 
             preffix[0, 11] = "تنازلت تنازلاً نهائياً";//&&&
             preffix[1, 11] = "تنازلت تنازلاً نهائياً";
@@ -255,6 +239,7 @@ namespace PersAhwal
             preffix[4, 11] = "تنازلنا تنازلاً نهائياً";
             preffix[5, 11] = "تنازلنا تنازلاً نهائياً";
 
+
             preffix[0, 12] = "ي";
             preffix[1, 12] = "ي";
             preffix[2, 12] = "نا";
@@ -262,12 +247,13 @@ namespace PersAhwal
             preffix[4, 12] = "نا";
             preffix[5, 12] = "نا";
 
-            preffix[0, 13] = "أنا";
-            preffix[1, 13] = "أنا";
-            preffix[2, 13] = "نحن";
-            preffix[3, 13] = "نحن";
-            preffix[4, 13] = "نحن";
-            preffix[5, 13] = "نحن";
+
+            preffix[0, 13] = "نت";//#$#
+            preffix[1, 13] = "نت";
+            preffix[2, 13] = "نا";
+            preffix[3, 13] = "نا";
+            preffix[4, 13] = "نا";
+            preffix[5, 13] = "نا";
 
         }
 
@@ -277,26 +263,211 @@ namespace PersAhwal
             {
                 if (control.Name.Replace("V","") == allList[col])
                 {
-                    control.Text = dataGridView1.CurrentRow.Cells[allList[col]].Value.ToString();
+                    if (dataGridView1.CurrentRow.Cells[allList[col]].Value.ToString() != "")
+                    {
+                        control.Text = dataGridView1.CurrentRow.Cells[allList[col]].Value.ToString();
+                    }
+                    
                 }
             }
         }
         public void genPreperations()
         {
+            string[] forbidCol = new string[20] { "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", };
+
+            forbidCol[0] = "المعالجة";
+            forbidCol[1] = "ارشفة_المستندات";
+            forbidCol[2] = "المكاتبة_النهائية";
+            forbidCol[3] = "specialData";
+            forbidCol[4] = "المكاتبات_الملغية";
+            forbidCol[5] = "توكيل_مرجعي";
+            forbidCol[6] = "رقم_هاتف1";
+            forbidCol[7] = "sms";
+            forbidCol[8] = "ID";
+            forbidCol[9] = "Extension1";
+            forbidCol[10] = "Extension2";
+            forbidCol[11] = "Extension3";
+            forbidCol[12] = "DocxData";
+            
             
             label36.Text = "الموظف:" + EmpName;
             dataGridView1.DefaultCellStyle.SelectionBackColor = Color.DarkTurquoise;
             dataGridView1.DefaultCellStyle.SelectionForeColor = Color.WhiteSmoke;
             dataGridView1.BackgroundColor = Color.White;
-            allList = getColList("TableAuth");
+            allList = getColList("TableAuth", forbidCol);
             PanelDataGrid.Size = new System.Drawing.Size(1318, 648);
             PanelDataGrid.Location = new System.Drawing.Point(12, 38);
             //
             PanelDataGrid.BringToFront();
             //
             Suffex_preffixList();
+            if (Jobposition.Contains("قنصل"))
+            {
+                btnDelete.Visible = true;
+
+            }
         }
-        private string[] getColList(string table)
+
+        private void ColorFulGrid9()
+        {
+
+            int genAuth = 0;
+            int arch = 0;
+            int unDesc = 0;
+            int inComb = 0;
+            int i = 0;
+            for (; i < dataGridView1.Rows.Count - 1; i++)
+            {
+                //dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.White;
+
+                if (dataGridView1.Rows[i].Cells[2].Value.ToString() == "")
+                {
+                    inComb++;
+                }
+                if (dataGridView1.Rows[i].Cells["طريقة_الطلب"].Value.ToString().Contains("مندوب"))
+                {
+                    // timerColor = false;
+                    dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightPink;
+
+                }
+                if (dataGridView1.Rows[i].Cells["حالة_الارشفة"].Value.ToString() == "مؤرشف نهائي")
+                {
+                    
+                    dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
+                    arch++;
+                }
+                
+                if (dataGridView1.Rows[i].Cells["نوع_التوكيل"].Value.ToString() == "طلاق" && (dataGridView1.Rows[i].Cells["تاريخ_الميلاد"].Value.ToString() == "" || dataGridView1.Rows[i].Cells["المهنة"].Value.ToString() == ""))
+                {
+                    dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightCoral;
+
+                }
+            }
+            labDescribed.Text = "عدد (" + i.ToString() + ") معاملة .. عدد (" + inComb.ToString() + ") غير مكتمل.. والمؤرشف منها عدد (" + arch.ToString() + ")...";
+            
+        }
+
+        private string checkList(Panel panel, string [] List,string table)
+        {
+            string updateValues = "";
+
+            foundList = new string[List.Length];
+            for (int f = 0; f < List.Length; f++)
+                foundList[f] = "";
+
+            int found = 0;
+            foreach (Control control in panel.Controls)
+            {
+                if (control is TextBox || control is ComboBox)
+                    for (int col = 0; col < List.Length; col++)
+                        if (control.Name == List[col])
+                        {
+                            foundList[found] = control.Name;
+                            if (found == 0)
+                            {
+                                updateValues = control.Name + "=@" + control.Name;
+                            }
+                            else
+                            {
+                                updateValues = updateValues + "," + control.Name + "=@" + control.Name;
+                            }
+                            found++;
+                        }
+            }
+            return updateAll = "UPDATE " + table + " SET " + updateValues + " where ID = @id";             
+        }
+        
+        private string checkList(FlowLayoutPanel panel, string [] List,string table)
+        {
+            string updateValues = "";
+
+            foundList = new string[List.Length];
+            for (int f = 0; f < List.Length; f++)
+                foundList[f] = "";
+
+            int found = 0;
+            foreach (Control control in panel.Controls)
+            {
+                string name = control.Name;
+                if (panel.Name == "PanelItemsboxes")
+                    name = name.Replace("V", "");
+                if (control is TextBox || control is ComboBox)
+                    for (int col = 0; col < List.Length; col++)
+                        if (name == List[col])
+                        {
+                            foundList[found] = name;
+                            if (found == 0)
+                            {
+                                updateValues = name + "=@" + name;
+                            }
+                            else
+                            {
+                                updateValues = updateValues + "," + name + "=@" + name;
+                            }
+                            found++;
+                        }
+            }
+            return updateAll = "UPDATE " + table + " SET " + updateValues + " where ID = @id";             
+        }
+         private bool save2DataBase(FlowLayoutPanel panel) 
+        {
+
+            string query = checkList(panel, allList, "TableAuth");
+            SqlConnection sqlConnection = new SqlConnection(DataSource);
+            if (sqlConnection.State == ConnectionState.Closed)
+                sqlConnection.Open();
+            SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.Parameters.AddWithValue("@id", intID);
+            for (int i = 0; i < foundList.Length; i++)
+            {
+                if (foundList[i] == "تعليق")
+                {
+                    sqlCommand.Parameters.AddWithValue("@" + foundList[i], commentInfo());
+                }
+                //else if (foundList[i] == "sms")
+                //{
+                //    sqlCommand.Parameters.AddWithValue("@" + foundList[i], "");
+                //}
+                else
+                    foreach (Control control in panel.Controls)
+                    {
+                        string name = control.Name;
+                        if (panel.Name == "PanelItemsboxes")
+                            name = name.Replace("V", "");
+                        
+                        if (name == foundList[i])
+                        {
+                            if (control.Text == "" && control.Visible)
+                            {
+                                control.BackColor = System.Drawing.Color.MistyRose;
+                                if (panel.Name == "Panelapp") { panel.Height = 130 * addNameIndex; }
+                                else if (panel.Name == "PanelAuthPers") { panel.Height = 90 * addAuthticIndex; }
+                                MessageBox.Show("لا يمكن المتابعة يرجى إضافة بيانات الحقل " + control.Name.Replace("_", " "));
+                                return false;
+                            }
+                            //else MessageBox.Show(control.Name.Replace("_", " "));
+
+                            sqlCommand.Parameters.AddWithValue("@" + foundList[i], control.Text);
+                            break;
+                        }
+                    }
+            }
+            sqlCommand.ExecuteNonQuery();
+            //try
+            //{
+
+            //}
+            //catch (Exception ex) {
+            //    MessageBox.Show(query);
+            //}
+            return true;
+        }
+        private void fillConInfo() { 
+            
+        }
+
+        private string[] getColList(string table, string[] forbidCol)
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
@@ -306,16 +477,27 @@ namespace PersAhwal
             DataTable dtbl = new DataTable();
             sqlDa.Fill(dtbl);
             sqlCon.Close();
+            
             string[] allList = new string[dtbl.Rows.Count];
+            for (int col = 0; col < dtbl.Rows.Count; col++)
+                allList[col] = "";
+
             int i = 0;
             string insertItems = "";
             string insertValues = "";
             string updateValues = "";
             foreach (DataRow row in dtbl.Rows)
             {
-
-                if (row["name"].ToString() != "ID" && !row["name"].ToString().Contains("data"))
+                bool forbidden = false;
+                for (int f = 0; forbidCol[f] != ""; f++)
+                    if (row["name"].ToString() == forbidCol[f])
+                    {
+                        forbidden = true;
+                        break;
+                    }
+                if (!forbidden)
                 {
+                    //MessageBox.Show(row["name"].ToString());
                     allList[i] = row["name"].ToString();
                     if (i == 0)
                     {
@@ -331,6 +513,46 @@ namespace PersAhwal
                     }
                     i++;
                 }
+            }
+            updateAll = "UPDATE " + table + " SET " + updateValues + " where ID = @id";
+            return allList;
+
+        }
+        private string[] getColList(string table)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT name FROM sys.columns WHERE object_id = OBJECT_ID('"+ table+"') and  name <> 'ID' and name not like 'Data%'", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            
+            string[] allList = new string[dtbl.Rows.Count];
+            for (int col = 0; col < dtbl.Rows.Count; col++)
+                allList[col] = "";
+
+            int i = 0;
+            string insertItems = "";
+            string insertValues = "";
+            string updateValues = "";
+            foreach (DataRow row in dtbl.Rows)
+            {
+                allList[i] = row["name"].ToString();
+                if (i == 0)
+                {
+                    insertItems = row["name"].ToString();
+                    insertValues = "@" + row["name"].ToString();
+                    updateValues = row["name"].ToString() + "=@" + row["name"].ToString();
+                }
+                else
+                {
+                    insertItems = insertItems + "," + row["name"].ToString();
+                    insertValues = insertValues + "," + "@" + row["name"].ToString();
+                    updateValues = updateValues + "," + row["name"].ToString() + "=@" + row["name"].ToString();
+                }
+                i++;
             }
             updateAll = "UPDATE " + table + " SET " + updateValues + " where ID = @id";
             return allList;
@@ -498,8 +720,8 @@ namespace PersAhwal
             PanelAuthPers.Controls.Add(removeAuthPic); 
             
             addAuthticIndex++;
-            
 
+            
         }
 
         private void txtAuthPersonsex1_CheckedChanged(object sender, EventArgs e)
@@ -960,10 +1182,17 @@ namespace PersAhwal
                         appBirth = appJob = "";
                     }
 
-                    if (مقدم_الطلب.Text.Split('_')[app] != "") 
+                    if (مقدم_الطلب.Text.Split('_')[app] != "")
+                    {
                         addName(مقدم_الطلب.Text.Split('_')[app], النوع.Text.Split('_')[app], نوع_الهوية.Text.Split('_')[app], رقم_الهوية.Text.Split('_')[app], مكان_الإصدار.Text.Split('_')[app], "العربية", appJob, appBirth);
-                    else 
-                        addName("", "ذكر", "جواز سفر", "P0","", "العربية", "", appBirth);
+                        archState = "old";
+                    }
+                    else
+                    {
+                        addName("", "ذكر", "جواز سفر", "P0", "", "العربية", "", appBirth);
+                        archState = "new";
+                        FillDatafromGenArch("data1", intID.ToString(), "TableAuth");
+                    }
                 }
 
                 for (int app = 0; app < الموكَّل.Text.Split('_').Length; app++)
@@ -1161,66 +1390,23 @@ namespace PersAhwal
             }
         }
 
-        private void fillDocFileStep1()
+        private void prepareDocxfile()
         {
-           
-            object oBMiss = System.Reflection.Missing.Value;
-            Word.Application oBMicroWord = new Word.Application();
+            timer2.Enabled = false;
+            oBMiss = System.Reflection.Missing.Value;
+            oBMicroWord = new Word.Application();
 
             object objCurrentCopy = localCopy.Text;
 
             oBDoc = oBMicroWord.Documents.Open(objCurrentCopy, oBMiss);
             oBMicroWord.Selection.Find.ClearFormatting();
             oBMicroWord.Selection.Find.Replacement.ClearFormatting();
-
-            foreach (Control control in panelapplicationInfo.Controls)
+            //fillDocFileStep(panelapplicationInfo);
+        }
+        private void fillDocFileInfo(FlowLayoutPanel panel) {
+            foreach (Control control in panel.Controls)
             {
                 if (control is TextBox || control is ComboBox)
-                {
-                    
-                    /// hash
-                    if (control.Name == "نص_مقدم_الطلب" && control.Text.Contains("-"))
-                    {
-                        try
-                        {
-                            object ParaAuthIDNo = "MarkIntroPart1";
-                            Word.Range BookAuthIDNo = oBDoc.Bookmarks.get_Item(ref ParaAuthIDNo).Range;
-                            BookAuthIDNo.Text = control.Text.Split('-')[0];
-                            object rangeAuthIDNo = BookAuthIDNo;
-                            oBDoc.Bookmarks.Add("MarkIntroPart1", ref rangeAuthIDNo);
-
-                            object ParaAuthIDNo2 = "MarkIntroPart2";
-                            Word.Range BookAuthIDNo2 = oBDoc.Bookmarks.get_Item(ref ParaAuthIDNo2).Range;
-                            BookAuthIDNo2.Text = control.Text.Split('-')[1]; 
-                            object rangeAuthIDNo2 = BookAuthIDNo2;
-                            oBDoc.Bookmarks.Add("MarkIntroPart2", ref rangeAuthIDNo2);
-                        }
-                        catch (Exception ex)
-                        {
-                            //    MessageBox.Show(control.Name); 
-                        }
-                    }
-                    else
-                    {
-                        try
-                        {
-                            object ParaAuthIDNo = control.Name;
-                            Word.Range BookAuthIDNo = oBDoc.Bookmarks.get_Item(ref ParaAuthIDNo).Range;
-                            BookAuthIDNo.Text = control.Text;
-                            object rangeAuthIDNo = BookAuthIDNo;
-                            oBDoc.Bookmarks.Add(control.Name, ref rangeAuthIDNo);
-                        }
-                        catch (Exception ex)
-                        {
-                            //    MessageBox.Show(control.Name); 
-                        }
-                    }
-                }
-            }
-
-            foreach (Control control in panelAuthRights.Controls)
-            {
-                if (control is TextBox)
                 {
                     try
                     {
@@ -1229,6 +1415,8 @@ namespace PersAhwal
                         BookAuthIDNo.Text = control.Text;
                         object rangeAuthIDNo = BookAuthIDNo;
                         oBDoc.Bookmarks.Add(control.Name, ref rangeAuthIDNo);
+
+                        //MessageBox.Show(control.Text);
                     }
                     catch (Exception ex)
                     {
@@ -1236,10 +1424,9 @@ namespace PersAhwal
                     }
                 }
             }
-
             if (addNameIndex != 1)
             {
-              Microsoft.Office.Interop.Word.Table table = oBDoc.Tables[1];
+                Microsoft.Office.Interop.Word.Table table = oBDoc.Tables[1];
                 for (int x = 0; x < addNameIndex; x++)
                 {
                     table.Rows.Add();
@@ -1247,218 +1434,50 @@ namespace PersAhwal
                     table.Rows[x + 2].Cells[2].Range.Text = مقدم_الطلب.Text.Split('_')[x];
                     table.Rows[x + 2].Cells[3].Range.Text = رقم_الهوية.Text.Split('_')[x];
                     table.Rows[x + 2].Cells[4].Range.Text = مكان_الإصدار.Text.Split('_')[x];
-                }                
+                }
             }
+        }
+        
+        private void fillDocFileInfo(Panel panel) {
+            foreach (Control control in panel.Controls)
+            {
+                if (control is TextBox || control is ComboBox)
+                {
+                    try
+                    {
+                        object ParaAuthIDNo = control.Name;
+                        Word.Range BookAuthIDNo = oBDoc.Bookmarks.get_Item(ref ParaAuthIDNo).Range;
+                        BookAuthIDNo.Text = control.Text;
+                        object rangeAuthIDNo = BookAuthIDNo;
+                        oBDoc.Bookmarks.Add(control.Name, ref rangeAuthIDNo);
 
+                        //MessageBox.Show(control.Text);
+                    }
+                    catch (Exception ex)
+                    {
+                        //    MessageBox.Show(control.Name); 
+                    }
+                }
+            }            
+        }
+        private void fillPrintDocx(string deleteDocxFile)
+        {
+            btnPrint.Enabled = false;
+            string pdfFile = localCopy.Text.Replace("docx", "pdf");
             oBDoc.SaveAs2(localCopy.Text);
+            if (deleteDocxFile == "no") 
+                oBDoc.ExportAsFixedFormat(pdfFile, Word.WdExportFormat.wdExportFormatPDF);
             oBDoc.Close(false, oBMiss);
             oBMicroWord.Quit(false, false);
             System.Runtime.InteropServices.Marshal.ReleaseComObject(oBMicroWord);
-            System.Diagnostics.Process.Start(localCopy.Text);
+            if (deleteDocxFile == "no")
+            {
+                System.Diagnostics.Process.Start(pdfFile);
+                File.Delete(localCopy.Text); 
+            }
+            else System.Diagnostics.Process.Start(localCopy.Text);            
             object doNotSaveChanges = Word.WdSaveOptions.wdSaveChanges;
-
-
-            //object ParaAuthNo = "MarkAuthNo";
-            //object ParaHijriData = "MarkHijriData";
-            //object ParaGreData = "MarkGreData";
-            //object ParaAuthBody1part1 = "MarkAuthBody1part1";
-            //object ParaAuthBody1part2 = "MarkAuthBody1part2";
-            //object ParaAuthBody1part3 = "MarkAuthBody1part3";
-            //object ParaAuthBody2 = "MarkAuthBody2";
-
-
-
-            //object ParaWitName1 = "MarkWitName1";
-            //object ParaWitName2 = "MarkWitName2";
-            //object ParaWitPass1 = "MarkWitPass1";
-            //object ParaWitPass2 = "MarkWitPass2";
-
-
-
-            //Word.Range BookAuthNo = oBDoc.Bookmarks.get_Item(ref ParaAuthNo).Range;
-            //Word.Range BookHijriData = oBDoc.Bookmarks.get_Item(ref ParaHijriData).Range;
-            //Word.Range BookGreData = oBDoc.Bookmarks.get_Item(ref ParaGreData).Range;
-            //Word.Range BookAuthBody1part1 = oBDoc.Bookmarks.get_Item(ref ParaAuthBody1part1).Range;
-            //Word.Range BookAuthBody1part2 = oBDoc.Bookmarks.get_Item(ref ParaAuthBody1part2).Range;
-            //Word.Range BookAuthBody1part3 = oBDoc.Bookmarks.get_Item(ref ParaAuthBody1part3).Range;
-            //Word.Range BookAuthBody2 = oBDoc.Bookmarks.get_Item(ref ParaAuthBody2).Range;
-
-            //Word.Range BookWitName1 = oBDoc.Bookmarks.get_Item(ref ParaWitName1).Range;
-            //Word.Range BookWitName2 = oBDoc.Bookmarks.get_Item(ref ParaWitName2).Range;
-            //Word.Range BookWitPass1 = oBDoc.Bookmarks.get_Item(ref ParaWitPass1).Range;
-            //Word.Range BookWitPass2 = oBDoc.Bookmarks.get_Item(ref ParaWitPass2).Range;
-
-
-            //BookAuthNo.Text = رقم_التوكيل.Text;
-            //BookHijriData.Text = التاريخ_الهجري.Text;
-            //BookGreData.Text = التاريخ_الميلادي.Text;
-
-            //BookAuthBody1part1.Text = "";
-            //BookAuthBody1part2.Text = createAuthPart1();
-
-
-            ////BookAuthBody1part3.Text = userAuthText1.AuthList2Value.Replace("auth1", authList1);
-
-            //string[] strmandoub = new string[2];
-            ////strmandoub = mandoubName.Text.Split('-');
-
-
-
-            ////if (checkBox1.CheckState == CheckState.Unchecked)
-            ////{
-            ////    BookAuthBody2.Text = userAuthText1.txtAddRightValue.Text;
-            ////    BookAuthBody1part3.Text = userAuthText1.txtReviewValue.Text.Replace(authList1, "");
-            ////}
-            ////else
-            ////{
-            ////    BookAuthBody2.Text = strRights;
-            ////    //BookAuthBody1part3.Text = userAuthText1.txtReviewValue.Text;
-            ////    BookAuthBody1part3.Text = userAuthText1.AuthList2Value.Replace("aith1", authList1);
-            ////}
-
-
-
-            ////BookWitName1.Text = userApplicant1.strUAWitNessList[0];
-            ////BookWitName2.Text = userApplicant1.strUAWitNessList[1];
-            ////BookWitPass1.Text = userApplicant1.strUAWitNessList[2];
-            ////BookWitPass2.Text = userApplicant1.strUAWitNessList[3];
-
-            //object rangeAuthNo = BookAuthNo;
-            //object rangeHijriData = BookHijriData;
-            //object rangeGreData = BookGreData;
-            //object rangeAuthBody1part1 = BookAuthBody1part1;
-            //object rangeAuthBody1part2 = BookAuthBody1part2;
-            //object rangeAuthBody1part3 = BookAuthBody1part3;
-            //object rangeAuthBody2 = BookAuthBody2;
-
-
-
-            //object rangeWitName1 = BookWitName1;
-            //object rangeWitName2 = BookWitName2;
-            //object rangeWitPass1 = BookWitPass1;
-            //object rangeWitPass2 = BookWitPass2;
-
-
-
-            //if (ComboAuthDestin.Text == "جمهورية السودان" && !userAuthText1.comboBoxAuthValue.Text.Contains("أجنبية"))
-            //{
-            //    object ParaAuthKhartoum = "AuthKhartoum";
-
-            //    Word.Range BookAuthKhartoum = oBDoc.Bookmarks.get_Item(ref ParaAuthKhartoum).Range;
-            //    if (userAuthText1.comboBoxAuthValue.Text == "إقرار بالتنازل")
-            //        BookAuthKhartoum.Text = "لا يعتمد هذا الاقرار ما لم يتم توثيقه خلال عام من تاريخ إصدارة من خارجية جمهورية السودان";
-            //    else BookAuthKhartoum.Text = "لا يعتمد هذا التوكيل ما لم يتم توثيقه خلال عام من تاريخ إصدارة من خارجية جمهورية السودان";
-
-            //    object rangeAuthKhartoum = BookAuthKhartoum;
-
-            //    oBDoc.Bookmarks.Add("AuthKhartoum", ref rangeAuthKhartoum);
-
-            //}
-
-            //if (print)
-            //{
-
-            //    if (AppType.CheckState == CheckState.Checked)
-            //    {
-            //        object ParaAttendVC1 = "AuthAttendVC1";
-
-            //        Word.Range BookAttendVC1 = oBDoc.Bookmarks.get_Item(ref ParaAttendVC1).Range;
-
-            //        BookAttendVC1.Text = txtAttendVC.Text;
-
-            //        object rangeAttendVC1 = BookAttendVC1;
-            //        try
-            //        {
-            //            oBDoc.Bookmarks.Add("AuthAttendVC1", ref rangeAttendVC1);
-            //        }
-            //        catch (Exception e) { }
-
-            //    }
-
-            //    if (!userAuthText1.comboBoxAuthValue.Text.Contains("أجنبية"))
-            //    {
-            //        object ParaAttendVC2 = "MarkAttendVC2";
-            //        Word.Range BookAttendVC2 = oBDoc.Bookmarks.get_Item(ref ParaAttendVC2).Range;
-            //        BookAttendVC2.Text = txtAttendVC.Text;
-            //        object rangeAttendVC2 = BookAttendVC2;
-            //        oBDoc.Bookmarks.Add("MarkAttendVC2", ref rangeAttendVC2);
-
-            //        object ParaAuthorization = "MarkAuthorization";
-            //        Word.Range BookAuthorization = oBDoc.Bookmarks.get_Item(ref ParaAuthorization).Range;
-
-            //        if (userAuthText1.comboBoxAuthValue.Text == "إقرار بالتنازل")
-            //        {
-            //            BookAuthBody1part2.Text.Replace("السيد", "للسيد");
-            //            if (userApplicant1.strUAAuthPersonlCount > 1)
-            //                BookAuthBody1part2.Text.Replace("كل", "لكل");
-            //            BookAuthBody1part1.Text = preffix[Appcases, 11];
-            //            if (AppType.CheckState == CheckState.Checked)
-            //            {
-            //                BookAuthorization.Text = " المواطن" + preffix[Appcases, 6] + " المذكور" + preffix[Appcases, 6] + " أعلاه قد حضر" + preffix[Appcases, 3] + " أمامي ووقع" + preffix[Appcases, 3] + " بتوقيع" + preffix[Appcases, 4] + " على هذا الاقرار في حضور الشهود المذكورين أعلاه وذلك بعد تلاوته علي" + preffix[Appcases, 4] + " وبعد أن فهم" + preffix[Appcases, 3] + " مضمونه ومحتواه";
-            //            }
-            //            else
-            //            {
-            //                BookAuthorization.Text = " المواطن" + preffix[Appcases, 6] + " المذكور" + preffix[Appcases, 6] + " أعلاه قد حضر" + preffix[Appcases, 3] + " أمامي ووقع" + preffix[Appcases, 3] + " بتوقيع" + preffix[Appcases, 4] + " على هذا الاقرار في حضور الشهود المذكورين أعلاه " + " بعد تلاوته علي" + preffix[Appcases, 4] + " وبعد أن فهم" + preffix[Appcases, 3] + " مضمونه ومحتواه" + " وذلك أمام مندوب جالية منطقة " + strmandoub[1] + " السيد/ " + strmandoub[0] + " بموجب التفويض الممنوح له من القنصلية العامة ";
-            //            }
-            //        }
-            //        else
-            //        {
-            //            if (userAuthText1.comboBoxAuthValue.SelectedIndex != 6)
-            //                BookAuthBody1part1.Text = preffix[Appcases, 10];
-            //            else
-            //            {
-            //                BookAuthBody1part2.Text = BookAuthBody1part1.Text = "";
-
-            //            }
-            //            if (AppType.CheckState == CheckState.Checked)
-            //            {
-            //                BookAuthorization.Text = " المواطن" + preffix[Appcases, 6] + " المذكور" + preffix[Appcases, 6] + " أعلاه قد حضر" + preffix[Appcases, 3] + " ووقع" + preffix[Appcases, 3] + " بتوقيع" + preffix[Appcases, 4] + " على هذا التوكيل في حضور الشهود المذكورين أعلاه وذلك بعد تلاوته علي" + preffix[Appcases, 4] + " وبعد أن فهم" + preffix[Appcases, 3] + " مضمونه ومحتواه";
-            //            }
-            //            else
-            //            {
-            //                try
-            //                {
-            //                    BookAuthorization.Text = " المواطن" + preffix[Appcases, 6] + " المذكور" + preffix[Appcases, 6] + " أعلاه قد حضر" + preffix[Appcases, 3] + " ووقع" + preffix[Appcases, 3] + " بتوقيع" + preffix[Appcases, 4] + " على هذا التوكيل في حضور الشهود المذكورين أعلاه " + " بعد تلاوته علي" + preffix[Appcases, 4] + " وبعد أن فهم" + preffix[Appcases, 3] + " مضمونه ومحتواه" + " وذلك أمام مندوب جالية منطقة " + strmandoub[1] + " السيد/ " + strmandoub[0] + " بموجب التفويض الممنوح له من القنصلية العامة ";
-            //                }
-            //                catch (Exception ex) { }
-            //            }
-            //        }
-            //    object rangeAuthorization = BookAuthorization;
-            //    oBDoc.Bookmarks.Add("Markuthorization", ref rangeAuthorization);
-            ////}
-
-            //        oBDoc.Bookmarks.Add("MarkAuthNo", ref rangeAuthNo);
-            //        oBDoc.Bookmarks.Add("MarkHijriData", ref rangeHijriData);
-            //        oBDoc.Bookmarks.Add("MarkGreData", ref rangeGreData);
-            //        oBDoc.Bookmarks.Add("MarkAuthBody1part1", ref rangeAuthBody1part1);
-            //        oBDoc.Bookmarks.Add("MarkAuthBody1part2", ref rangeAuthBody1part2);
-            //        oBDoc.Bookmarks.Add("MarkAuthBody1part3", ref rangeAuthBody1part3);
-            //        oBDoc.Bookmarks.Add("MarkAuthBody2", ref rangeAuthBody2);
-
-
-            //        oBDoc.Bookmarks.Add("MarkWitName1", ref rangeWitName1);
-            //        oBDoc.Bookmarks.Add("MarkWitName2", ref rangeWitName2);
-            //        oBDoc.Bookmarks.Add("MarkWitPass1", ref rangeWitPass1);
-            //        oBDoc.Bookmarks.Add("MarkWitPass2", ref rangeWitPass2);
-
-
-            //        object ParaAuthIqrar = "AuthIqrar";
-
-            //        Word.Range BookAuthIqrar = oBDoc.Bookmarks.get_Item(ref ParaAuthIqrar).Range;
-
-            //        if (userAuthText1.comboBoxAuthValue.Text.Contains("أجنبية"))
-            //            BookAuthIqrar.Text = "AUTHORIZATION";
-            //        else if (userAuthText1.comboBoxAuthValue.Text == "إقرار بالتنازل")
-            //            BookAuthIqrar.Text = "إقرار بالتنازل";
-            //        else BookAuthIqrar.Text = "توكيل";
-
-            //object rangeAuthIqrar = BookAuthIqrar;
-            //oBDoc.Bookmarks.Add("AuthIqrar", ref rangeAuthIqrar);
-
-
-
-            //        addarchives(colIDs);
-            //}
+            this.Close();
         }
         public void ComboProcedure_Text()
         {
@@ -1533,9 +1552,9 @@ namespace PersAhwal
                         chk.Name = "checkBox" + Nobox.ToString();
                         Text_statis = checkboxdt.Rows[Nobox][col].ToString().Split('_');
 
-                        string text = SuffPrefReplacements(Text_statis[0]);
-                        text = SuffPrefReplacements(text);
-                        text = SuffPrefReplacements(text);
+                        string text = SuffPrefReplacements(Text_statis[0], appCaseIndex,intAuthcases);
+                        for (int x = 0; x < 20; x++) { 
+                            text = SuffPrefReplacements(Text_statis[0], appCaseIndex, intAuthcases); }
                         chk.Text = text;
                         chk.Tag = "valid";
                         chk.CheckedChanged += new System.EventHandler(this.chk_CheckedChanged);
@@ -1625,11 +1644,16 @@ namespace PersAhwal
         private void chk_CheckedChanged(object sender, EventArgs e)
         {
             CheckBox checkBox = (CheckBox)sender;
-            if (checkBox.Text.Contains("لاغ") && checkBox.Checked) 
+            if (checkBox.Text.Contains("لاغ") && checkBox.Checked)
             {
                 panelRemove.Visible = true;
-                panelAuthOptions.Location = new System.Drawing.Point(312, 222);
-            }else panelAuthOptions.Location = new System.Drawing.Point(165, 222);
+                labeAuthLocation.Visible = false;
+            }
+            else
+            {
+                panelRemove.Visible = false;
+                labeAuthLocation.Visible = true;
+            }
         }
         public void pictureBoxdown_Click(object sender, EventArgs e)
         {
@@ -2095,6 +2119,7 @@ namespace PersAhwal
                 {
                     ColName = dr["ColName"].ToString();
                     ColRight = dr["ColRight"].ToString();
+                    StrSpecPur = dr["TextModel"].ToString();
                     //MessageBox.Show("rowID = " + rowID + " - cellValue=" + cellValue);
                     foreach (Control Lcontrol in PanelItemsboxes.Controls)
                         try
@@ -2320,13 +2345,12 @@ namespace PersAhwal
 
 
         }
-        private string SuffPrefReplacements(string text)
+        private string SuffPrefReplacements(string text, int appCaseIndex, int intAuthcases)
         {
-            int appCaseIndex = Appcases(النوع, addNameIndex);
-            int intAuthcases = Appcases(جنس_الموكَّل, addAuthticIndex);
-            
-            //if (text.Contains("auth1"))
-            //    return text.Replace("auth1", ParentForm.authList1Value);
+
+
+            if (text.Contains("auth1"))
+                return text.Replace("auth1", legaceyAuthInfo);
 
             if (text.Contains("t1"))
                 return text.Replace("t1", Vitext1.Text);
@@ -2401,26 +2425,26 @@ namespace PersAhwal
         }
 
 
-        private void chooseDocxFile(){
+        private void chooseDocxFile(string appName, string docId){
             string RouteFile;
-            if (طريقة_الطلب.Checked)
-                RouteFile = FilespathIn + @"Auth\AuthMulti.docx";
+            
+            if (addNameIndex == 1)
+            {
+                RouteFile = FilespathIn + "SingleAuth.docx";             
+            }
             else
-                RouteFile = FilespathIn + @"Auth\MandoubAuthMulti.docx";
+            {
+                RouteFile = FilespathIn + "MultiAuth.docx";               
+            }
 
-            if (addNameIndex == 1 && طريقة_الطلب.Checked)
-            {
-                RouteFile = FilespathIn + @"Auth\AuthSingle.docx";
-                if (نوع_التوكيل.Text == "شهادة ميلاد")
-                    RouteFile = FilespathIn + @"Auth\newAuthbirth.docx";
-                else if (نوع_التوكيل.Text == "ورثة")
-                    RouteFile = FilespathIn + @"Auth\AuthSingleCopy.docx";
-            }
-            else if (addNameIndex == 1 && !طريقة_الطلب.Checked)
-            {
-                RouteFile = FilespathIn + @"Auth\MandoubAuthSingle.docx";
-            }
-            localCopy.Text = FilespathOut + مقدم_الطلب.Text.Split('_')[0] + DateTime.Now.ToString("mmss") + ".docx";
+            if (نوع_التوكيل.Text == "شهادة ميلاد")
+                RouteFile = FilespathIn + "newAuthbirth.docx";
+
+            if (appName != "")
+                localCopy.Text = FilespathOut + appName + DateTime.Now.ToString("mmss") + ".docx";
+            else localCopy.Text = FilespathOut + docId.Replace("/","_") + DateTime.Now.ToString("mmss") + ".docx";
+
+            //MessageBox.Show(RouteFile);
             System.IO.File.Copy(RouteFile, localCopy.Text);
             FileInfo fileInfo = new FileInfo(localCopy.Text);
             if (fileInfo.IsReadOnly) fileInfo.IsReadOnly = false;
@@ -2447,9 +2471,9 @@ namespace PersAhwal
 
         private void btnNext_Click(object sender, EventArgs e)
         {
-            if (currentPanelIndex <= 3) 
+            if (currentPanelIndex <= 4) 
                 currentPanelIndex++;
-            else currentPanelIndex = 0;
+            else return;
             panelShow(currentPanelIndex);
 
            
@@ -2458,10 +2482,88 @@ namespace PersAhwal
         private void btnPrevious_Click(object sender, EventArgs e)
         {
             if (currentPanelIndex > 0) currentPanelIndex--;
-            else currentPanelIndex = 3;
+            else return;
             panelShow(currentPanelIndex);
         }
+        public void panelShow(int panelIndex)
+        {
+            switch (panelIndex)
+            {
+                case 0:
+                    //DataGrid
+                    PanelDataGrid.Size = new System.Drawing.Size(1318, 648);
+                    PanelDataGrid.Location = new System.Drawing.Point(12, 38);
+                    PanelDataGrid.BringToFront();
+                    ListSearch.Visible = btnListView.Visible = PanelDataGrid.Visible = labDescribed.Visible = true;
 
+                    //false
+                    btnSettings.Visible = btnDelete.Visible = btnFile1.Visible = btnFile2.Visible = btnFile3.Visible = Panelapp.Visible = false;
+                    panelAuthRights.Visible = panelAuthRights.Visible = btnPrevious.Visible = btnNext.Visible = panelapplicationInfo.Visible = false;
+                    break;
+                case 1:
+                    //Basic Info
+
+                    panelapplicationInfo.Size = new System.Drawing.Size(821, 649);
+                    panelapplicationInfo.Location = new System.Drawing.Point(294, 38);
+                    panelapplicationInfo.BringToFront();
+                    btnPrevious.Visible = panelapplicationInfo.Visible = true;
+                    //false
+                    panelAuthRights.Visible = ListSearch.Visible = btnListView.Visible = panelAuthRights.Visible = PanelDataGrid.Visible = labDescribed.Visible = false;
+                    btnDelete.Visible = btnFile1.Visible = btnFile2.Visible = btnFile3.Visible = Panelapp.Visible = true;
+                    timer2.Enabled = true;
+                    break;
+                case 2:
+                    //authrights
+                    if (!save2DataBase(Panelapp)) {
+                        currentPanelIndex--; return;
+                    }
+                    if (!save2DataBase(PanelAuthPers))
+                    {
+                        currentPanelIndex--; return;
+                    }
+                    if (!save2DataBase(panelapplicationInfo))
+                    {
+                        currentPanelIndex--; return;
+                    }
+
+                    appCaseIndex = Appcases(النوع, addNameIndex);
+                    intAuthcases = Appcases(جنس_الموكَّل, addAuthticIndex);
+                    //MessageBox.Show("intAuthcases " + intAuthcases.ToString() + " - addAuthticIndex " + addAuthticIndex.ToString());
+                    boxesPreparations();
+                    fillDocFileInfo(panelapplicationInfo);
+                    panelAuthRights.Size = new System.Drawing.Size(1315, 622);
+                    panelAuthRights.Location = new System.Drawing.Point(10, 36);
+                    panelAuthRights.BringToFront();
+                    panelAuthRights.Visible = true;
+                    PanelDataGrid.Visible = panelapplicationInfo.Visible = false;
+                    
+                    break;
+                case 3:
+                    //finalPanel
+                    if (!save2DataBase(PanelItemsboxes))
+                    {
+                        currentPanelIndex--; return;
+                    }
+                    if (!save2DataBase(panelAuthRights))
+                    {
+                        currentPanelIndex--; return;
+                    }
+                    if (panelRemove.Visible)
+                        if (!save2DataBase(panelRemove))
+                        {
+                            currentPanelIndex--; return;
+                        }
+                    CreatestrAuthRight();
+                    fillDocFileInfo(panelAuthRights);
+                    finalPanel.Size = new System.Drawing.Size(821, 649);
+                    finalPanel.Location = new System.Drawing.Point(294, 38);
+                    finalPanel.BringToFront();
+                    finalPanel.Visible = true;
+                    panelAuthRights.Visible = PanelDataGrid.Visible = panelapplicationInfo.Visible = false;
+                    
+                    break;
+            }
+        }
         private void pictureBox13_Click(object sender, EventArgs e)
         {
 
@@ -2521,8 +2623,11 @@ namespace PersAhwal
 
         private void FormAuth_Load(object sender, EventArgs e)
         {
+            fileComboBoxMan(موقع_التوكيل, DataSource, "ArabicAttendVC", "TableListCombo");
             fileComboBoxMan(اسم_المندوب, DataSource, "MandoubNames", "TableListCombo");
             fileComboBox(نوع_التوكيل, DataSource, "AuthTypes", "TableListCombo");
+            fileComboBox(وجهة_التوكيل, DataSource, "ArabCountries", "TableListCombo");
+            
         }
 
         private void fileComboBox(ComboBox combbox, string source, string comlumnName, string tableName)
@@ -2589,14 +2694,14 @@ namespace PersAhwal
         }
 
         private void txtReviewBody()
-        {            
-            int appCaseIndex = Appcases(النوع, addNameIndex);
-            int intAuthcases = Appcases(جنس_الموكَّل, addAuthticIndex);
+        {
+            
             string text = StrSpecPur + LegaceyPreStr;
             for (int x = 0; x < 40; x++)
-                text = SuffPrefReplacements(text);
-
-            txtReview.Text = " ل" + preffix[intAuthcases, 7] + " ع" + preffix[appCaseIndex, 2] + " و" + preffix[intAuthcases, 8] + " مقام" + preffix[appCaseIndex, 0] + text;            
+                text = SuffPrefReplacements(text, appCaseIndex, intAuthcases);
+            if (نوع_التوكيل.Text.Contains("ورثة"))
+                txtReview.Text = text;
+            else txtReview.Text = " ل" + preffix[intAuthcases, 7] + " ع" + preffix[appCaseIndex, 2] + " و" + preffix[intAuthcases, 8] + " مقام" + preffix[appCaseIndex, 0] + " "+text;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -2621,6 +2726,7 @@ namespace PersAhwal
             if (checkColumnName(نوع_التوكيل.Text.Replace(" ", "_")))
             {
                 إجراء_التوكيل.Items.Clear();
+                if (وجهة_التوكيل.Items.Count > 0) وجهة_التوكيل.SelectedIndex = 0;
                 newFillComboBox1(إجراء_التوكيل, DataSource, نوع_التوكيل.SelectedIndex.ToString(), "العربية");
                 if (نوع_التوكيل.SelectedIndex == 6)
                 {
@@ -2865,7 +2971,184 @@ namespace PersAhwal
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            
             txtReviewBody();
+            if (addNameIndex > 1) btnPanelapp.Enabled = true;
+            else btnPanelapp.Enabled = false;
+            
+            if (addAuthticIndex > 1) btnPanelAuthPers.Enabled = true;
+            else btnPanelAuthPers.Enabled = false;
+        }
+
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            chooseDocxFile(مقدم_الطلب.Text.Split('_')[0], رقم_التوكيل.Text);
+            prepareDocxfile();
+            btnNext.Visible = true;
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            fillDocFileInfo(finalPanel); 
+            edited.Text = "no";
+            var selectedOption = MessageBox.Show("طباعة نسخة قابلة للتعديل", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (selectedOption == DialogResult.Yes)
+            {
+                edited.Text = "yes";
+            }
+            fillPrintDocx(edited.Text);
+            addarchives();
+        }
+
+        private void addarchives()
+        {
+            colIDs[0] = رقم_التوكيل.Text;
+            colIDs[1] = intID.ToString();
+            colIDs[2] = التاريخ_الميلادي.Text;
+            colIDs[3] = مقدم_الطلب.Text.Split('_')[0];
+            colIDs[4] = EmpName;
+            colIDs[5] = طريقة_الطلب.Text;
+            colIDs[6] = اسم_المندوب.Text;
+            colIDs[7] = archState;
+
+            string[] allArchList = getColList("archives");
+            string strList = "";
+            for (int i = 1; i < allArchList.Length; i++)
+            {
+                if (i == 1) strList = "@" + allArchList[1];
+                else strList = strList + ",@" + allArchList[i];
+            }
+            SqlConnection sqlConnection = new SqlConnection(DataSource);
+            if (sqlConnection.State == ConnectionState.Closed)
+                sqlConnection.Open();
+            Console.WriteLine(strList);
+            SqlCommand sqlCommand = new SqlCommand("insert into archives values (" + strList + ")", sqlConnection);
+            sqlCommand.CommandType = CommandType.Text;
+            for (int i = 1; i < allArchList.Length; i++)
+            {
+
+                sqlCommand.Parameters.AddWithValue("@" + allArchList[i], colIDs[i - 1]);
+            }
+            try
+            {
+                sqlCommand.ExecuteNonQuery();
+            }
+            catch (Exception ex) { }
+        }
+
+        private string commentInfo()
+        {
+            string comment = "";
+            if (تعليق_جديد_Off.Text == "" && التعليقات_السابقة_Off.Text == "")
+                comment = "";
+
+            if (تعليق_جديد_Off.Text == "" && التعليقات_السابقة_Off.Text != "")
+                comment = التعليقات_السابقة_Off.Text;
+
+            if (تعليق_جديد_Off.Text != "" && التعليقات_السابقة_Off.Text == "")
+                comment = تعليق_جديد_Off.Text.Trim() + Environment.NewLine + التاريخ_الميلادي.Text + Environment.NewLine + "--------------" + Environment.NewLine;
+
+            if (تعليق_جديد_Off.Text != "" && التعليقات_السابقة_Off.Text != "")
+                comment = تعليق_جديد_Off.Text.Trim() + Environment.NewLine + التاريخ_الميلادي.Text + Environment.NewLine + "--------------" + Environment.NewLine + "*" + التعليقات_السابقة_Off.Text.Trim();
+
+            return comment;
+        }
+
+        private void وجهة_التوكيل_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (وجهة_التوكيل.SelectedIndex == 0)
+            {
+                if (نوع_التوكيل.Text == "إقرار بالتنازل")
+                    مدة_الاعتماد.Text = "لا يعتمد هذا الاقرار ما لم يتم توثيقه خلال عام من تاريخ إصدارة من وزارة خارجية جمهورية السودان";
+                else 
+                    مدة_الاعتماد.Text = "لا يعتمد هذا التوكيل ما لم يتم توثيقه خلال عام من تاريخ إصدارة من وزارة خارجية جمهورية السودان";
+            }
+            else مدة_الاعتماد.Text = "";
+        }
+
+        private void btnFile1_Click(object sender, EventArgs e)
+        {
+            btnFile1.Enabled = false;            
+            FillDatafromGenArch("data1", intID.ToString(), "TableAuth");
+            btnFile1.Enabled = true;
+        }
+        void FillDatafromGenArch(string doc, string id, string table)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableGeneralArch where  رقم_المرجع='" + id + "' and نوع_المستند='" + doc + "' and docTable='" + table + "'", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            foreach (DataRow reader in dtbl.Rows)
+            {
+                var name = reader["المستند"].ToString();
+                var Data = (byte[])reader["Data1"];
+                var ext = reader["Extension1"].ToString();
+                var NewFileName = name.Replace(ext, DateTime.Now.ToString("ddMMyyyyhhmmss")) + ext;
+                File.WriteAllBytes(NewFileName, Data);
+                System.Diagnostics.Process.Start(NewFileName);
+            }
+
+
+            sqlCon.Close();
+        }
+
+        private void btnFile2_Click(object sender, EventArgs e)
+        {
+            btnFile2.Enabled = false;
+            FillDatafromGenArch("data2", intID.ToString(), "TableAuth");
+            btnFile2.Enabled = true;
+        }
+
+        private void btnFile3_Click(object sender, EventArgs e)
+        {
+            btnFile3.Enabled = false;
+            FillDatafromGenArch("data3", intID.ToString(), "TableAuth");
+            btnFile3.Enabled = true;
+        }
+
+        private void ListSearch_TextChanged(object sender, EventArgs e)
+        {
+            BindingSource bs = new BindingSource();
+            bs.DataSource = dataGridView1.DataSource;
+            bs.Filter = dataGridView1.Columns[2].HeaderText.ToString() + " LIKE '" + ListSearch.Text + "%'";
+            dataGridView1.DataSource = bs;
+            ColorFulGrid9();
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            int ApplicantID = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value.ToString());
+            deleteRowsData(رقم_التوكيل.Text, "رقم_التوكيل", "TableAuth", DataSource);
+            deleteRowsData(رقم_التوكيل.Text, "docID", "archives", DataSource);
+            deleteRowsData(رقم_التوكيل.Text, "رقم_معاملة_القسم", "TableGeneralArch", DataSource);
+            
+            FillDataGridView(dataSource);
+        }
+        private void deleteRowsData(string docID, string docIDName, string v2, string source)
+        {
+            string query;
+            SqlConnection Con = new SqlConnection(source);
+            query = "DELETE FROM " + v2 + " where "+ docIDName+" = @" + docIDName;
+            if (Con.State == ConnectionState.Closed)
+                Con.Open();
+            SqlCommand sqlCmd = new SqlCommand(query, Con);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.Parameters.AddWithValue("@"+ docIDName, docID);
+            sqlCmd.ExecuteNonQuery();
+            Con.Close();
+            
+        }
+
+        private void timer3_Tick(object sender, EventArgs e)
+        {
+            if(labDescribed.Text != "الملخص") 
+                timer3.Enabled = false;
+            ColorFulGrid9();
+            Console.WriteLine("check color");
         }
 
         private void موقع_التوكيل_TextUpdate(object sender, EventArgs e)
@@ -2899,6 +3182,7 @@ namespace PersAhwal
             AuthNoPart2 = dataGridView1.Rows.Count.ToString();
             sqlCon.Close();
             int bre = 0;
+            ColorFulGrid9();
 
         }
     }

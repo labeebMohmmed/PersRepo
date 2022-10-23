@@ -1894,13 +1894,13 @@ namespace PersAhwal
                     drawBoxes(data2List[index], false, id2List[index]);                
             }
 
-            if (name == "مؤرشف نهائي")
-            {
-                //
-                requiredDocument.Size = new System.Drawing.Size(308, 85);
-                requiredDocument.Enabled = true; nameSave.Visible = true; 
-                return name; 
-            }
+            //if (name == "مؤرشف نهائي")
+            //{
+            //    //
+            //    requiredDocument.Size = new System.Drawing.Size(308, 85);
+            //    requiredDocument.Enabled = true; nameSave.Visible = true; 
+            //    return name; 
+            //}
 
             if (name == "" && data3check)
             {
@@ -3192,7 +3192,7 @@ namespace PersAhwal
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
-            string query = "update TableGeneralArch set الاسم=N'" + name + "' where رقم_معاملة_القسم = '" + idDoc + "'";
+            string query = "update TableGeneralArch set الاسم=N'" + name + "' where رقم_معاملة_القسم = N'" + idDoc + "'";
             SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();

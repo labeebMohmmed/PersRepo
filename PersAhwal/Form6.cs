@@ -682,8 +682,9 @@ namespace PersAhwal
         private void btnSavePrint_Click_1(object sender, EventArgs e)
         {
             if (txtPurpose.Text == "" || txtPurpose.Text == "إختر أو أكتب الغرض") { MessageBox.Show("يرجى توضيح الغرض من الإجراء ");return; }
-            CreateWordFile();
             Save2DataBase();
+            CreateWordFile();
+            
             btnSavePrint.Enabled = false;
             btnSavePrint.Text = "جاري المعالجة";
             

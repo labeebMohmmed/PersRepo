@@ -242,7 +242,7 @@ namespace PersAhwal
                         control.SendToBack();
                     }
                 }
-                Affbtn3.Visible = Affbtn5.Visible = false;
+                Affbtn3.Visible = Affbtn0.Visible = Affbtn5.Visible = false;
 
 
             }
@@ -4835,13 +4835,13 @@ namespace PersAhwal
             if (mangerArch.CheckState == CheckState.Checked)
             {
                 mangerArch.Text = "توزيع المهام";
-                persbtn2.Visible = false;
+                persbtn2.Visible = persbtn10.Visible = false;
                 perbtn1.Visible = true;
             }
             else
             {
                 mangerArch.Text = "ادخال البيانات";
-                persbtn2.Visible = true;
+                persbtn2.Visible = persbtn10.Visible = true;
                 perbtn1.Visible = false;
             }
         }
@@ -6808,6 +6808,16 @@ namespace PersAhwal
                     control.Text = "";
                 }
             }
+        }
+
+        private void persbtn10_Click(object sender, EventArgs e)
+        {
+            uploadDocx = false;
+            dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+            //MessageBox.Show(HijriDate);
+
+            FormAuth formAuth = new FormAuth(attendedVC.SelectedIndex, -1, "", DataSource, FilespathIn, FilespathOut, EmployeeName, UserJobposition, GregorianDate, HijriDate);
+            formAuth.ShowDialog();
         }
 
         private string[] getColList(string table)

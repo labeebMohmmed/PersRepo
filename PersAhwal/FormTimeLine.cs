@@ -620,7 +620,6 @@ namespace PersAhwal
                     MessageBox.Show("تعذر الارسال نسبة لعدم رقم هاتف صالح");
                     return;
                 }
-                //else MessageBox.Show(phone);
                 WebClient client = new WebClient();
                 Stream stream = client.OpenRead(apiText);
                 StreamReader streamsread = new StreamReader(stream);
@@ -1414,7 +1413,7 @@ namespace PersAhwal
                         break;
 
                     case "منتهية":
-                        dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.Green;
+                        dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.Red;
                         break;
 
                     case "مؤجلة":
@@ -1425,10 +1424,6 @@ namespace PersAhwal
                         dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.Violet;
                         break;
                 }
-                if(dataGridView1.Rows[i].Cells["نوع_الحالة"].Value.ToString() == "حرجة")
-                    dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightCoral;
-                if (dataGridView1.Rows[i].Cells["نوع_الحالة"].Value.ToString() == "خطرة")
-                    dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.Red;
             }
         }
 
@@ -1968,7 +1963,7 @@ namespace PersAhwal
 
         private void riskyCase()
         {
-            string text = "تم رصد حالة " + نوع_الحالة.Text + " برقم المتابعة " + رقم_المهمة.Text.Split('/')[4] + " من المواطن/" + اسم_المتصل.Text + "برقم الهاتف: " + رقم_الهاتف.Text+". الموظف:" + الموظف.Text;
+            string text = "تم رصد حالة " + نوع_الحالة.Text + " برقم المتابعة " + رقم_المهمة.Text + " من المواطن/" + اسم_المتصل.Text + "برقم الهاتف: " + رقم_الهاتف.Text;
             if (!JobPosition.Contains("قنصل") && (نوع_الحالة.Text.Contains("حرجة") || نوع_الحالة.Text.Contains("خطرة")))
             {
                 var selectedOption = MessageBox.Show("", "تنبيه المشرف برسالة؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);

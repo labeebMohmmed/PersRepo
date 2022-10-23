@@ -736,10 +736,10 @@ namespace PersAhwal
             this.Controls.Add(this.PanelFiles);
             this.Controls.Add(this.ConsulateEmployee);
             this.Controls.Add(this.checkedViewed);
-            this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.btnSavePrint);
             this.Controls.Add(this.btnprintOnly);
             this.Controls.Add(this.SaveOnly);
+            this.Controls.Add(this.dataGridView1);
             this.Name = "Form6";
             this.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.Text = "إفادة للإدلة الجنائية";
