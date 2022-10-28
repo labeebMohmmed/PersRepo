@@ -2158,6 +2158,11 @@ namespace PersAhwal
             }
         }
 
+        private void check1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
         void strAuth()
         {
             if (language.CheckState == CheckState.Unchecked)

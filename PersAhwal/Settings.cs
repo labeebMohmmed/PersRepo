@@ -10,6 +10,8 @@ using System.Windows.Forms;
 using System.Data.SqlClient;
 using System.IO;
 using System.Data.SqlTypes;
+using DocumentFormat.OpenXml.Drawing;
+using Path = System.IO.Path;
 
 namespace PersAhwal
 {
@@ -49,6 +51,8 @@ namespace PersAhwal
         int CombAuthTypeIndex = 1;
         string updateAll = "";
         string insertAll = "";
+        string[] errors ;
+        string[] editRights ;
         public Settings(string server, bool newSettings, string dataSource56, string dataSource57, bool setDataBase, string filepathIn, string filepathOut, string archFile, string formDataFile, string colName)
         {
             InitializeComponent();
@@ -559,7 +563,7 @@ namespace PersAhwal
                 foreach (DataRow dataRow in table.Rows)
                 {
 
-                    if (dataRow["Lang"].ToString() == Language && dataRow["ColRight"].ToString() != "" && !String.IsNullOrEmpty(dataRow["ColName"].ToString()) && dataRow["ColName"].ToString().Contains("-"))
+                    if (dataRow["Lang"].ToString() == Language && dataRow["ColRight"].ToString() != "" && dataRow["ColName"].ToString().Contains("-"))
                     {
 
                         if (dataRow["ColName"].ToString().Split('-')[1].All(char.IsDigit))
@@ -568,6 +572,7 @@ namespace PersAhwal
                             {
                                 if (id == dataRow["ColName"].ToString().Split('-')[1])
                                 {
+                                    //MessageBox.Show(dataRow["ColName"].ToString().Split('-')[0]);
                                     combbox.Items.Add(dataRow["ColName"].ToString().Split('-')[0]);
                                 }
                             }
@@ -1193,9 +1198,8 @@ namespace PersAhwal
         }
 
 
-
-
-        private void dataGridView1_CellClick_1(object sender, DataGridViewCellEventArgs e)
+        
+                        private void dataGridView1_CellClick_1(object sender, DataGridViewCellEventArgs e)
         {
             if (dataGridView1.Rows.Count > 1)
             {
@@ -1203,6 +1207,62 @@ namespace PersAhwal
                 langAuth.Text = dataGridView1.CurrentRow.Cells["Lang"].Value.ToString();
                 ColRight.Text = dataGridView1.CurrentRow.Cells["ColRight"].Value.ToString();
                 TextModel.Text = dataGridView1.CurrentRow.Cells["TextModel"].Value.ToString();
+                editRights = dataGridView1.CurrentRow.Cells["editRights"].Value.ToString().Split('،');
+                string error = dataGridView1.CurrentRow.Cells["errorList"].Value.ToString();
+                
+                if (error != "")
+                {
+                    panellError.Visible = true;
+                    panellError.BringToFront();
+                    errors = error.Split('_');
+                    //MessageBox.Show(error);MessageBox.Show(errors[0]);
+                    error1.Checked = Convert.ToBoolean(errors[0]);
+                    error2.Checked = Convert.ToBoolean(errors[1]);
+                    error3.Checked = Convert.ToBoolean(errors[2]);
+                    error4.Checked = Convert.ToBoolean(errors[3]);
+                    error5.Checked = Convert.ToBoolean(errors[4]);
+                    if (errors[5] == "False")
+                        labelError.Visible = otherError.Visible = error6.Checked = false;
+                    else
+                    {
+                        otherError.Visible = labelError.Visible = true;
+                        error6.Checked = true;
+                        otherError.Text = errors[5];
+                    }
+                    button22.Visible = true; 
+                    Nobox = 0;
+                    foreach (string str in editRights)
+                    {
+                        if (str != "")
+                        {
+                            //{
+                            CheckBox chk = new CheckBox();
+                            chk.TabIndex = Nobox;
+                            chk.Width = 80;
+                            chk.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                            if (Nobox == 0) chk.Width = panelAuthOptions.Width - 100;
+                            else chk.Width = panelAuthOptions.Width - 130;
+                            chk.Height = 33;
+                            chk.Location = new System.Drawing.Point(70, 3 + Nobox * 37);
+                            chk.Name = "checkBox" + Nobox.ToString();
+                            try
+                            {
+                                chk.Text = str.Split('_')[1] + "،";
+                                chk.Tag = "valid";                                
+                                if (str.Split('_')[0] == "1")
+                                    chk.CheckState = CheckState.Checked;
+                                else chk.CheckState = CheckState.Unchecked;
+                            }
+                            catch (Exception ex)
+                            {
+                                //MessageBox.Show(str);
+                            }
+                            Nobox++;
+                            panellError.Controls.Add(chk);
+                        }
+                    }
+                }
+
                 foreach (Control control in panelText.Controls)
                 {
                     for (int index = 0; index < allList.Length; index++)
@@ -2251,7 +2311,7 @@ namespace PersAhwal
             {
                 subTypeAuth.Items.Clear();
                 newFillComboBox1(subTypeAuth, DataSource, mainTypeAuth.SelectedIndex.ToString(), langAuth.Text);
-                //fileComboBox(ComboProcedure, DataSource, CombAuthType.Text.Replace(" ", "_"), "TableListCombo");
+                //fileComboBox(subTypeAuth, DataSource, mainTypeAuth.Text.Replace(" ", "_"), "TableListCombo");
                 NewColumn = false;
                 return;
             }
@@ -2325,6 +2385,26 @@ namespace PersAhwal
             //if (ComboProcedure.Items.Count > 0) ComboProcedure.SelectedIndex = 0;
         }
 
+        private void ColorFulGrid9()
+        {
+
+            int errorList = 0;
+            for (int i=0; i < dataGridView1.Rows.Count - 1; i++)
+            {
+                //
+
+                if (dataGridView1.Rows[i].Cells["errorList"].Value.ToString() != "")
+                {
+                    dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightCyan;
+                    errorList++;
+                }                
+            }
+            if (errorList > 0) labelarch.Visible = true;
+            else labelarch.Visible = false;
+            labelarch.Text = "عدد (" + errorList.ToString() + ") معاملة تحتاج إلى تصحيح ";
+
+        }
+
         private void ComboProcedure_SelectedIndexChanged_1(object sender, EventArgs e)
         {
             //if (!NewColumn) return;
@@ -2355,6 +2435,7 @@ namespace PersAhwal
 
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.Parameters.AddWithValue("@ID", idIndex);
+            sqlCmd.Parameters.AddWithValue("@errorList", "");
             addParameters(sqlCmd);
             sqlCmd.ExecuteNonQuery();
             sqlCon.Close();
@@ -2641,6 +2722,7 @@ namespace PersAhwal
             string primeryLink = @"D:\PrimariFiles\";
             if (!Directory.Exists(@"D:\"))
             {
+                ///وله بموجب هذا التوكيل الحق في استخراج الشهادة، ومقابلة كافة الجهات المختصة في كل من مصلحة الأراضي والتسجيلات والمساحة، والوقوف والمقاضاة نيابة عني أمام كافة المحاكم والنيابات بمختلف أنواعها ودرجاتها، والقيام بكافة الإجراءات التي تتطلب حضوري، والتوقيع نيابة عني على كافة الأوراق والمستندات اللازمة لذلك، وله الحق في توكيل الغير في بعض أو كل مما أوكل فيه، وحظر قطعة الارض وأذنت لمن يشهد والله خير الشاهدين
                 string appFileName = Environment.GetCommandLineArgs()[0];
                 string directory = Path.GetDirectoryName(appFileName);
                 directory = directory + @"\";
@@ -2910,14 +2992,14 @@ namespace PersAhwal
         }
         private void flllPanelItemsboxes(string rowID, string cellValue)
         {
-            
+            //MessageBox.Show("rowID = " + rowID + " - cellValue=" + cellValue);
             if (dataGridView1.Rows.Count > 1)
             {
                 for (int index = 0; index < dataGridView1.Rows.Count - 1; index++)
                     if (cellValue == dataGridView1.Rows[index].Cells[rowID].Value.ToString())
                     {
                         TextModel.Text = dataGridView1.Rows[index].Cells["TextModel"].Value.ToString();
-                        //MessageBox.Show("rowID = " + rowID + " - cellValue=" + cellValue);
+                        
                         foreach (Control Lcontrol in PanelItemsboxes.Controls)
                             try
                             {
@@ -3000,6 +3082,16 @@ namespace PersAhwal
             iOptions5.Text = "";
         }
 
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            ColorFulGrid9();
+        }
+
+        private void button22_Click(object sender, EventArgs e)
+        {
+            panellError.Visible = false;
+        }
+
         private void button116_Click(object sender, EventArgs e)
         {
             ColumnJobs();
@@ -3009,6 +3101,8 @@ namespace PersAhwal
                 sqlCon.Open();
             SqlCommand sqlCmd = new SqlCommand(insertAll, sqlCon);
             sqlCmd.CommandType = CommandType.Text;
+
+            sqlCmd.Parameters.AddWithValue("@errorList", "");
             addParameters(sqlCmd);
             sqlCmd.ExecuteNonQuery();
             sqlCon.Close();

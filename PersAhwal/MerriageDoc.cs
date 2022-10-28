@@ -175,9 +175,13 @@ namespace PersAhwal
                 foreach (Control control in PanelMain.Controls)
                 {
                     if ((control is TextBox || control is ComboBox || control is CheckBox) && !control.Name.Contains("Off"))
-                    {              
-                        if(!control.Name.Contains("التاريخ") && !control.Name.Contains("موظف"))
-                        control.Text = dataGridView1.CurrentRow.Cells[control.Name].Value.ToString();
+                    {
+                        if (!control.Name.Contains("التاريخ") && !control.Name.Contains("موظف"))
+                            try
+                            {
+                                control.Text = dataGridView1.CurrentRow.Cells[control.Name].Value.ToString();
+                            }
+                            catch (Exception ex) { }
                     }
                     
                 }
@@ -312,7 +316,7 @@ namespace PersAhwal
             {
                 if (dataRow["الصفة"].ToString().Contains("قسم الأحوال الشخصية"))
                 {
-                    string smsText = "تم إنهاء معاملة قسيمة زواج بالرقم  " + رقم_الوثيقة.Text + " للمواطن/ " + اسم_الزوج.Text + " بتاريخ:" + GregorianDate;
+                    string smsText = "تم إنهاء معاملة قسيمة زواج بالرقم  " + رقم_المعاملة.Text.Split('/')[4] + " للمواطن/ " + اسم_الزوج.Text + " بتاريخ:" + GregorianDate;
                     SendSms(dataRow["MandoubPhones"].ToString(), smsText);
                     SendSms(هاتف_الزوج.Text, smsText);
                     UpdateState(id, "sms", "sent", table);
@@ -461,7 +465,7 @@ namespace PersAhwal
             var selectedOption = MessageBox.Show("", "سيتم حذف بيانات الوثيقة وجميع الملفات المتعلقة بها؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (selectedOption == DialogResult.Yes)
             {
-                deleteRowsData(رقم_الوثيقة.Text, "TableMerrageDoc");
+                deleteRowsData(رقم_المعاملة.Text, "TableMerrageDoc");
                 //deleteRowsData(رقم_الوثيقة.Text, "TableGeneralArch");
                 //deleteRowsData(رقم_الوثيقة.Text, "archives");
             }
@@ -506,6 +510,11 @@ namespace PersAhwal
                 اسم_المندوب.Text = "";
                 اسم_المندوب.Visible = false;
             }
+        }
+
+        private void تاريخ_الميلاد_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

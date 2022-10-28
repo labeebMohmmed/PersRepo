@@ -606,7 +606,6 @@ namespace PersAhwal
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1370, 741);
-            this.Controls.Add(this.txtIDNo);
             this.Controls.Add(this.تاريخ_الميلاد);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.panel2);
@@ -629,6 +628,7 @@ namespace PersAhwal
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.Combo2);
+            this.Controls.Add(this.txtIDNo);
             this.Name = "FormPics";
             this.Text = "أرشفة الملفات";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormPics_FormClosed);

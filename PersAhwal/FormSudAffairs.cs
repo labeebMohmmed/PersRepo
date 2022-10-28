@@ -349,6 +349,7 @@ namespace PersAhwal
 
             lalCount.Text = dtbl.Rows.Count.ToString() + "/فرد";
             dataGridView1.Sort(dataGridView1.Columns["ID"], System.ComponentModel.ListSortDirection.Descending);
+
             sqlCon.Close();
             dataGridView1.Columns[7].Visible = false;
             dataGridView1.Columns[8].Visible = false;
@@ -522,6 +523,7 @@ namespace PersAhwal
             //}
             lalCount.Text = dtbl.Rows.Count.ToString() + "/فرد";
             dataGridView1.Sort(dataGridView1.Columns["ID"], System.ComponentModel.ListSortDirection.Descending);
+            dataGridView1.Sort(dataGridView1.Columns["ord"], System.ComponentModel.ListSortDirection.Ascending);
             sqlCon.Close();
 
             //foreach (DataRow dataRow in dtbl.Rows)
@@ -667,6 +669,7 @@ namespace PersAhwal
             
             sqlDa.Fill(dtblMain);
             dataGridView.DataSource = dtblMain;
+            dataGridView1.Sort(dataGridView1.Columns["ord"], System.ComponentModel.ListSortDirection.Ascending);
             int z = 0;
             string appName;
             int appID;
@@ -1221,19 +1224,21 @@ namespace PersAhwal
             table.Rows[1].Cells[4].Range.Text = "الحالة";
             if (PersToServed.CheckState == CheckState.Unchecked)
             {
-
+                int i = 0;
                 for (int x = 0; x < dataGridView1.RowCount-1; x++)
                 {
                     string AppNames = dataGridView1.Rows[x].Cells[2].Value.ToString();
-                    if (AppNames != "")
+                    string isReady =  dataGridView1.Rows[x].Cells["ready"].Value.ToString();
+                    if (AppNames != "" && isReady == "مكتمل")
                     {
                         table.Rows.Add();
+                        
+                        table.Rows[indexNo + 2].Cells[1].Range.Text = (indexNo + 1).ToString() + ".";
+                        table.Rows[indexNo + 2].Cells[2].Range.Text = AppNames;
+                        table.Rows[indexNo + 2].Cells[3].Range.Text = dataGridView1.Rows[x].Cells[5].Value.ToString(); //AppDocumentNo[x];
+                        table.Rows[indexNo + 2].Cells[4].Range.Text = dataGridView1.Rows[x].Cells["الحالة"].Value.ToString(); //status[x];
+                        table.Rows[indexNo + 2].Cells[5].Range.Text = dataGridView1.Rows[x].Cells["رقم_هاتف1"].Value.ToString(); //phone[x];
                         indexNo++;
-                        table.Rows[x + 2].Cells[1].Range.Text = (x + 1).ToString() + ".";
-                        table.Rows[x + 2].Cells[2].Range.Text = AppNames;
-                        table.Rows[x + 2].Cells[3].Range.Text = dataGridView1.Rows[x].Cells[5].Value.ToString(); //AppDocumentNo[x];
-                        table.Rows[x + 2].Cells[4].Range.Text = dataGridView1.Rows[x].Cells["الحالة"].Value.ToString(); //status[x];
-                        table.Rows[x + 2].Cells[5].Range.Text = dataGridView1.Rows[x].Cells["رقم_هاتف1"].Value.ToString(); //phone[x];
                     }
 
                 }
@@ -1531,6 +1536,159 @@ namespace PersAhwal
             oBDoc.Bookmarks.Add("MarkPurText", ref rangePurText);
             oBDoc.Bookmarks.Add("MarkViseConsul", ref rangevConsul);
 
+            string docxouput = FilesPathOut + ApplicantName.Text + DateTime.Now.ToString("ssmm") + ".docx";
+            string pdfouput = FilesPathOut + ApplicantName.Text + DateTime.Now.ToString("ssmm") + ".pdf";
+            oBDoc.SaveAs2(docxouput);
+            oBDoc.ExportAsFixedFormat(pdfouput, Word.WdExportFormat.wdExportFormatPDF);
+            oBDoc.Close(false, oBMiss);
+            oBMicroWord.Quit(false, false);
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(oBMicroWord);
+            System.Diagnostics.Process.Start(pdfouput);
+            File.Delete(docxouput);
+            object doNotSaveChanges = Word.WdSaveOptions.wdSaveChanges;
+        }
+        
+        private void CreateGroupFileJeddah1(string ActiveCopy, string fileNo, string destin)
+        {
+            string fileCount = (dataGridView1.RowCount - 1).ToString();
+            string FileNo = fileCount + fileNo + " (" + "جدة" + ")";
+
+            string ReportName = DateTime.Now.ToString("mmss");
+            string route = FilesPathIn + AffairIndex.ToString()+ ".docx";
+            if (AffairIndex == 1 || AffairIndex == 2)
+                route = FilesPathIn + "قائم للوافدين جدة1.docx";
+                System.IO.File.Copy(route, ActiveCopy);
+            object oBMiss = System.Reflection.Missing.Value;
+            Word.Application oBMicroWord = new Word.Application();
+            object Routseparameter = ActiveCopy;
+            Word.Document oBDoc = oBMicroWord.Documents.Open(Routseparameter, oBMiss);
+
+            object ParaGreData = "MarkGreData";
+            object ParafileCount = "MarkfileCount";
+            
+            object ParaHijriData = "MarkHijriData";
+            object ParaFileNo= "MarkFileNo";
+            object ParaDest = "MarkDest";
+            //object ParaPurpose = "MarkPurpose";//message لعناية ... note verbal فارغ
+            object ParaPurposeText = "MarkPurposeText";
+            
+            object ParavConsul = "MarkViseConsul";  //note verbal لتعرب       
+
+
+            Word.Range BookDestin = oBDoc.Bookmarks.get_Item(ref ParaDest).Range;
+            Word.Range BookfileCount = oBDoc.Bookmarks.get_Item(ref ParafileCount).Range;
+            Word.Range BookFileNo = oBDoc.Bookmarks.get_Item(ref ParaFileNo).Range;
+            Word.Range BookGreData = oBDoc.Bookmarks.get_Item(ref ParaGreData).Range;            
+            Word.Range BookHijriData = oBDoc.Bookmarks.get_Item(ref ParaHijriData).Range;
+            //Word.Range BookPurpose = oBDoc.Bookmarks.get_Item(ref ParaPurpose).Range;
+            Word.Range BookPurposeText = oBDoc.Bookmarks.get_Item(ref ParaPurposeText).Range;
+            
+            Word.Range BookvConsul = oBDoc.Bookmarks.get_Item(ref ParavConsul).Range;            
+            
+            BookDestin.Text = destin;
+            BookfileCount.Text = fileCount;
+
+            BookGreData.Text = GregorianDate.Text;
+            BookHijriData.Text = HijriDate.Text;            
+            BookPurposeText.Text = fileNo;            
+            BookvConsul.Text = AttendViceConsul.Text;
+            BookFileNo.Text = FileNo;
+            //BookPurpose.Text = fileCount;
+
+            object rangeDesin = BookDestin;
+            //object rangePurpose = BookPurpose;
+            object rangeFileNo = BookFileNo;
+            object rangeGreData = BookGreData;            
+            object rangeHijriData = BookHijriData;
+            object rangePurposeText = BookPurposeText;            
+            object rangevConsul = BookvConsul;
+            object rangefileCount = BookfileCount;
+            
+            
+
+            oBDoc.Bookmarks.Add("MarkDest", ref rangeDesin);
+            //oBDoc.Bookmarks.Add("MarkPurpose", ref rangePurpose);
+            oBDoc.Bookmarks.Add("MarkFileNo", ref rangeFileNo);
+            oBDoc.Bookmarks.Add("MarkGreData", ref rangeGreData);
+            oBDoc.Bookmarks.Add("MarkfileCount", ref rangefileCount);
+            
+            oBDoc.Bookmarks.Add("MarkHijriData", ref rangeHijriData);
+            oBDoc.Bookmarks.Add("MarkPurposeText", ref rangePurposeText);
+            oBDoc.Bookmarks.Add("MarkViseConsul", ref rangevConsul);
+
+            string docxouput = FilesPathOut + ApplicantName.Text + DateTime.Now.ToString("ssmm") + ".docx";
+            string pdfouput = FilesPathOut + ApplicantName.Text + DateTime.Now.ToString("ssmm") + ".pdf";
+            oBDoc.SaveAs2(docxouput);
+            oBDoc.ExportAsFixedFormat(pdfouput, Word.WdExportFormat.wdExportFormatPDF);
+            oBDoc.Close(false, oBMiss);
+            oBMicroWord.Quit(false, false);
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(oBMicroWord);
+            System.Diagnostics.Process.Start(pdfouput);
+            File.Delete(docxouput);
+            object doNotSaveChanges = Word.WdSaveOptions.wdSaveChanges;
+        }
+        private void CreateGroupFileJeddah2(string ActiveCopy, string fileNo)
+        {
+            string fileCount = (dataGridView1.RowCount - 1).ToString();
+            string ReportName = DateTime.Now.ToString("mmss");
+            string route = FilesPathIn + AffairIndex.ToString()+ ".docx";
+            if (AffairIndex == 1 || AffairIndex == 2)
+                route = FilesPathIn + "قائم للوافدين جدة2.docx";
+                System.IO.File.Copy(route, ActiveCopy);
+            object oBMiss = System.Reflection.Missing.Value;
+            Word.Application oBMicroWord = new Word.Application();
+            object Routseparameter = ActiveCopy;
+            Word.Document oBDoc = oBMicroWord.Documents.Open(Routseparameter, oBMiss);
+
+            object ParaGreData1 = "MarkGreDa1";
+            object ParaPurText = "MarkPurText";     
+
+
+            Word.Range BookGreData1 = oBDoc.Bookmarks.get_Item(ref ParaGreData1).Range;
+            Word.Range BookPurText = oBDoc.Bookmarks.get_Item(ref ParaPurText).Range;           
+            
+            BookGreData1.Text= GregorianDate.Text; 
+           
+            BookPurText.Text = fileNo; 
+            
+            object rangeGreData1 = BookGreData1;
+            object rangePurText = BookPurText;
+            int indexNo = 0;
+            
+            Microsoft.Office.Interop.Word.Table table = oBDoc.Tables[1];
+            for (int x = 0; x < dataGridView1.RowCount - 1; x++)
+            {
+                string AppNames = dataGridView1.Rows[x].Cells[2].Value.ToString();
+                if (AppNames != "")
+                {
+                    table.Rows.Add();
+                    indexNo++;
+                    table.Rows[x + 2].Cells[1].Range.Text = (x + 1).ToString() + ".";
+                    table.Rows[x + 2].Cells[2].Range.Text = AppNames;// AppNames[x];
+                    table.Rows[x + 2].Cells[3].Range.Text = dataGridView1.Rows[x].Cells[5].Value.ToString();
+
+                }
+
+            }
+
+            if (AffairIndex == 1)
+            {
+                string FileNo = indexNo.ToString() + fileNo + " (" + "جدة" + ")";
+               
+            }
+            else if (AffairIndex == 2)
+            {
+                string FileNo = indexNo.ToString() + fileNo + " (" + "مكة المكرمة" + ")";
+                
+            }
+            else if (AffairIndex == 3)
+            {
+                string FileNo = indexNo.ToString() + fileNo + " (" + "الترحيل" + ")";
+                
+            }
+            oBDoc.Bookmarks.Add("MarkGreDa1", ref rangeGreData1);
+            oBDoc.Bookmarks.Add("MarkPurText", ref rangePurText);
+            
             string docxouput = FilesPathOut + ApplicantName.Text + DateTime.Now.ToString("ssmm") + ".docx";
             string pdfouput = FilesPathOut + ApplicantName.Text + DateTime.Now.ToString("ssmm") + ".pdf";
             oBDoc.SaveAs2(docxouput);
@@ -2384,9 +2542,26 @@ namespace PersAhwal
 
                 }
             }
-            
-            Save2DataBase(Convert.ToInt32(combFileNo.Text), contractState); 
-            
+            /* 
+وثيقة سفر أضطرارية
+اقامة
+رقم حدود
+             */
+            Save2DataBase(Convert.ToInt32(combFileNo.Text), contractState);
+            int caseID= 1;
+            if (comboStatus.Text == "تغيب عن العمل" || DocType.Text == "اقامة") 
+                caseID = 1;
+            if (comboStatus.Text == "تغيب عن العمل" || DocType.Text == "رقم حدود")
+                caseID = 2;
+            if (comboStatus.Text == "تغيب عن العمل" || DocType.Text == "جواز سفر")
+                caseID = 3;
+            if (comboStatus.Text == "تغيب عن العمل" || DocType.Text == "وثيقة سفر أضطرارية")
+                caseID = 4; 
+            if (comboStatus.Text == "عمرة"|| comboStatus.Text == "حج") 
+                caseID = 5; 
+            else if (comboStatus.Text == "مجهول") 
+                caseID = 6;
+            updatecase(ApplicantID, getTable(AffairIndex), caseID);
             string activeCopy = FilesPathOut + ApplicantName.Text +"خطاب الوافدين" + DateTime.Now.ToString("mmss") + ".docx";
             if (DocDestin.SelectedIndex > 1)
                 CreateWordFile(activeCopy,"الحالة");
@@ -2735,6 +2910,33 @@ namespace PersAhwal
             {
                 sqlCon.Close();
             }
+        }
+
+        private void updatecase(int id, string table, int caseID)
+        {
+
+            string query = "update "+ table+" set ord = "+caseID.ToString()+" where ID = @id";
+            SqlConnection sqlConnection = new SqlConnection(DataSource);
+            if (sqlConnection.State == ConnectionState.Closed)
+                sqlConnection.Open();
+            SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.Parameters.AddWithValue("@id", id);
+                
+            sqlCommand.ExecuteNonQuery();
+        }
+        private void updateReadyCase(int id, string table, string  ready )
+        {
+
+            string query = "update "+ table+ " set ready  = N'" + ready+"' where ID = @id";
+            SqlConnection sqlConnection = new SqlConnection(DataSource);
+            if (sqlConnection.State == ConnectionState.Closed)
+                sqlConnection.Open();
+            SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.Parameters.AddWithValue("@id", id);
+                
+            sqlCommand.ExecuteNonQuery();
         }
 
         private void unfounddata(string tableList)
@@ -3250,6 +3452,12 @@ namespace PersAhwal
                     //if (ALLSmsIndex > 1) previous.Visible = next.Visible = true;
                     //else previous.Visible = next.Visible = false;
                     comFinalaPro.SelectedIndex = 0;
+                    ready.Text = dataGridView1.CurrentRow.Cells["ready"].Value.ToString();
+                    if (ready.Text == "مكتمل")
+                        ready.Checked = true;
+                    else ready.Checked= false;
+                        
+
                     if (dataGridView1.CurrentRow.Cells[7].Value.ToString() != "")
                     {
                         for (int x = 0; x < Names.Length; x++)
@@ -4177,6 +4385,7 @@ namespace PersAhwal
                 bs.DataSource = dataGridView1.DataSource;
                 bs.Filter = dataGridView1.Columns[30].HeaderText.ToString() + " LIKE '" + text + "%'";
                 dataGridView1.DataSource = bs;
+                dataGridView1.Sort(dataGridView1.Columns["ord"], System.ComponentModel.ListSortDirection.Ascending);
                 value = dataGridView1.Rows.Count - 1;
                 //
             }
@@ -5193,15 +5402,15 @@ namespace PersAhwal
                 loadPic.Location = new System.Drawing.Point(938, 583);
                 button10.Visible = reLoadPic.Visible = false;
             }
-            if (combFileNo.Text == "99")
-            {
-                comFinalaPro.Size = new System.Drawing.Size(210, 35);
-                comFinalaPro.Location = new System.Drawing.Point(191, 651);
-            }
-            else {
-                comFinalaPro.Size = new System.Drawing.Size(300, 35);
-                comFinalaPro.Location = new System.Drawing.Point(101, 651);
-            }
+            //if (combFileNo.Text == "99")
+            //{
+            //    comFinalaPro.Size = new System.Drawing.Size(210, 35);
+            //    comFinalaPro.Location = new System.Drawing.Point(191, 651);
+            //}
+            //else {
+            //    comFinalaPro.Size = new System.Drawing.Size(300, 35);
+            //    comFinalaPro.Location = new System.Drawing.Point(101, 651);
+            //}
             if (dataGridView1.Visible) comFinalaPro.SelectedIndex = 4;
             }
 
@@ -5393,8 +5602,16 @@ namespace PersAhwal
                         fileDest = "المقابل المالي";
                     }
 
-                    activeCopy = FilesPathOut +"قائمة " + Suddanese_Affair.Text + DateTime.Now.ToString("mmss") + ".docx";
-                    if (AffairIndex == 1 || AffairIndex == 2) {
+                    activeCopy = FilesPathOut +"قائمة " + Suddanese_Affair.Text + DateTime.Now.ToString("mmss") + "1.docx";
+                    if (AffairIndex == 1 ) {
+                        CreateGroupFileJeddah2(activeCopy, combFileNo.Text);
+                        activeCopy = FilesPathOut + "قائمة " + Suddanese_Affair.Text + DateTime.Now.ToString("mmss") + "2.docx";
+                        CreateGroupFileJeddah1(activeCopy, combFileNo.Text, " مدير إدارة الوافدين");
+                        activeCopy = FilesPathOut + "قائمة " + Suddanese_Affair.Text + DateTime.Now.ToString("mmss") + "3.docx";
+                        CreateGroupFileJeddah1(activeCopy, combFileNo.Text, "مدير مكتب العمل جدة");
+
+                    } else if(AffairIndex == 3)
+                    if (AffairIndex == 2) {
                         CreateGroupFile(activeCopy, combFileNo.Text);
                     } else if(AffairIndex == 3)
                     {
@@ -5628,6 +5845,15 @@ namespace PersAhwal
             //        getDocInfo(FileIDNo);
             //    }
             }
+
+        private void ready_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ready.Checked)
+                ready.Text = "مكتمل";
+            else
+                ready.Text = "غير مكتمل";
+            updateReadyCase(ApplicantID, getTable(AffairIndex), ready.Text);
+        }
 
         private void UpdateFileList(int iD, string filePath)
         {

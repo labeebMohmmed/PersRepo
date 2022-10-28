@@ -24,13 +24,13 @@ namespace PersAhwal
         string strRights = "", authList2 = "", NewAuthSubject = "", AuthSubjectValue = "", DPTitle = "المرحوم", LegaceyAttch = "";
         static int[] statistic = new int[100];
         public string specialDataSum = "";
+        public string Mentioned = "باسمي";
         public int birthindex = 0;
         public static string[] BirthName = new string[10];
         public static string[] BirthPlace = new string[10];
         public static string[] BirthDate = new string[10];
         public static string[] BirthMother = new string[10];
         public static string[] BirthDecs = new string[10];
-        public string Mentioned = "باسمي";
         int idShow = 0;
         bool ShowNewApp = false;
         string[] dataGrid = new string[50];
@@ -1853,6 +1853,11 @@ namespace PersAhwal
                             else checkBox.Text = optionscheck.Split('_')[0];
                         }
                     }
+        }
+
+        private void LibtnAdd1_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void txtReviewBody_TextChanged(object sender, EventArgs e)

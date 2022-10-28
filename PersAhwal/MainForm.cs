@@ -314,7 +314,55 @@ namespace PersAhwal
                 PrimariFiles = directory + @"PrimariFiles\";
             }
             Console.WriteLine(7);
+            backgroundWorker1.RunWorkerAsync();
 
+
+
+
+
+
+
+
+        }
+
+        private void backgroundWorker1_DoWork_1(object sender, DoWorkEventArgs e)
+        {
+
+            CultureInfo arSA = new CultureInfo("ar-SA");
+            arSA.DateTimeFormat.Calendar = new GregorianCalendar();
+            Thread.CurrentThread.CurrentCulture = arSA;
+            new System.Globalization.GregorianCalendar();
+            string date = DateTime.Now.ToString("dd/MM/yyyy");
+
+            string[] archFiles = Directory.GetFiles(FilespathOut);
+            foreach (string str in archFiles) {
+                FileInfo fileInfo = new FileInfo(str);
+                DateTime dt = fileInfo.LastWriteTime.Date;
+                
+                    Console.WriteLine (date + " - " + str +" date is "+dt.ToString().Split(' ')[0]);
+                try
+                {
+                    if (date != dt.ToString().Split(' ')[0]) File.Delete(str);
+                }
+                catch (Exception ex) { }
+            }
+            string DFile = @"D:\";
+            if (Directory.Exists(DFile))
+            {
+                archFiles = Directory.GetFiles(DFile);
+                foreach (string str in archFiles)
+                {
+                    FileInfo fileInfo = new FileInfo(str);
+                    DateTime dt = fileInfo.LastWriteTime.Date;
+
+                    Console.WriteLine(date + " - " + str + " date is " + dt.ToString().Split(' ')[0]);
+                    try
+                    {
+                        if (fileInfo.Name.Contains("ArchiveFiles") &&  date != dt.ToString().Split(' ')[0]) File.Delete(str);
+                    }
+                    catch (Exception ex) { }
+                }
+            }
         }
         //private string[] getColList(string table)
         //{
@@ -5947,37 +5995,37 @@ namespace PersAhwal
             SqlCommand sqlCmd1 = new SqlCommand("select Modelfilespath,TempOutput,ServerName,Serverlogin,ServerPass,serverDatabase,hijriday,hijrimonth,FileArchive  from TableSettings where ID=@id", Con);
             sqlCmd1.Parameters.Add("@id", SqlDbType.Int).Value = 1;
             try
+            {
+                if (Con.State == ConnectionState.Closed)
+                    Con.Open();
+
+                var reader = sqlCmd1.ExecuteReader();
+
+                if (reader.Read())
                 {
-                    if (Con.State == ConnectionState.Closed)
-                Con.Open();
-
-                    var reader = sqlCmd1.ExecuteReader();
-
-                    if (reader.Read())
-                    {
-                        Model = reader["Modelfilespath"].ToString();
-                        Output = reader["TempOutput"].ToString();
-                        ServerIP = reader["ServerName"].ToString();
-                        Login = reader["Serverlogin"].ToString();
-                        Pass = reader["ServerPass"].ToString();
-                        Database = reader["serverDatabase"].ToString();
-                        Hiday = Convert.ToInt32(reader["hijriday"].ToString());
-                        Himonth = Convert.ToInt32(reader["hijrimonth"].ToString());
-                        FileArch = reader["FileArchive"].ToString();
+                    Model = reader["Modelfilespath"].ToString();
+                    Output = reader["TempOutput"].ToString();
+                    ServerIP = reader["ServerName"].ToString();
+                    Login = reader["Serverlogin"].ToString();
+                    Pass = reader["ServerPass"].ToString();
+                    Database = reader["serverDatabase"].ToString();
+                    Hiday = Convert.ToInt32(reader["hijriday"].ToString());
+                    Himonth = Convert.ToInt32(reader["hijrimonth"].ToString());
+                    FileArch = reader["FileArchive"].ToString();
                     if (daychange)
-                        {
-                            if (day) Hiday++;
-                            else Hiday--;
-                        }
-                        if (monthchange)
-                        {
-                            if (month) Himonth++;
-                            else Himonth--;
-                        }
+                    {
+                        if (day) Hiday++;
+                        else Hiday--;
+                    }
+                    if (monthchange)
+                    {
+                        if (month) Himonth++;
+                        else Himonth--;
                     }
                 }
-                catch (Exception ex)
-                {
+            }
+            catch (Exception ex)
+            {
                 if (Server == "57")
                 {
                     MessageBox.Show("سيرفر قسم الاحوال الشخصية معطل أو غير متصل بالانترنت قم بإعادة تشغيل السيرفر أو التأكد من الاتصال بالانترنت");
@@ -5988,29 +6036,38 @@ namespace PersAhwal
                 }
                 Con.Close();
             }
-                finally
-                {
+            finally
+            {
                 Con.Close();
                 if (Con.State == ConnectionState.Closed)
-                    Con.Open();
-                SqlCommand sqlCmd = new SqlCommand("SettingsAddorEdit", Con);
-                    sqlCmd.CommandType = CommandType.StoredProcedure;
-                    sqlCmd.Parameters.AddWithValue("@ID", 1);
-                    sqlCmd.Parameters.AddWithValue("@mode", "Edit");
-                    sqlCmd.Parameters.AddWithValue("@Modelfilespath", Model);
-                    sqlCmd.Parameters.AddWithValue("@TempOutput", Output);
-                    sqlCmd.Parameters.AddWithValue("@ServerName", ServerIP);
-                    sqlCmd.Parameters.AddWithValue("@Serverlogin", Login);
-                    sqlCmd.Parameters.AddWithValue("@ServerPass", Pass);
-                    sqlCmd.Parameters.AddWithValue("@serverDatabase", Database);
-                    sqlCmd.Parameters.AddWithValue("@hijriday", Hiday);
-                    sqlCmd.Parameters.AddWithValue("@hijrimonth", Himonth);
-                    sqlCmd.Parameters.AddWithValue("@FileArchive", FileArch);
-                    labeldate.Text = "فرق اليوم الهجري " + Hiday.ToString();
-                    labelmonth.Text = "فرق الشهر الهجري " + Himonth.ToString();
-                    sqlCmd.ExecuteNonQuery();
-                    
+                {
+                    try
+                    {
+                        Con.Open();
+                        SqlCommand sqlCmd = new SqlCommand("SettingsAddorEdit", Con);
+                        sqlCmd.CommandType = CommandType.StoredProcedure;
+                        sqlCmd.Parameters.AddWithValue("@ID", 1);
+                        sqlCmd.Parameters.AddWithValue("@mode", "Edit");
+                        sqlCmd.Parameters.AddWithValue("@Modelfilespath", Model);
+                        sqlCmd.Parameters.AddWithValue("@TempOutput", Output);
+                        sqlCmd.Parameters.AddWithValue("@ServerName", ServerIP);
+                        sqlCmd.Parameters.AddWithValue("@Serverlogin", Login);
+                        sqlCmd.Parameters.AddWithValue("@ServerPass", Pass);
+                        sqlCmd.Parameters.AddWithValue("@serverDatabase", Database);
+                        sqlCmd.Parameters.AddWithValue("@hijriday", Hiday);
+                        sqlCmd.Parameters.AddWithValue("@hijrimonth", Himonth);
+                        sqlCmd.Parameters.AddWithValue("@FileArchive", FileArch);
+                        labeldate.Text = "فرق اليوم الهجري " + Hiday.ToString();
+                        labelmonth.Text = "فرق الشهر الهجري " + Himonth.ToString();
+                        sqlCmd.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("النظام متعطل يرجى التواصل مع مدير النظام");
+                    }
+
                 }
+            }
         }
 
         private int getMaxRange(string dataSource)
@@ -6819,6 +6876,8 @@ namespace PersAhwal
             FormAuth formAuth = new FormAuth(attendedVC.SelectedIndex, -1, "", DataSource, FilespathIn, FilespathOut, EmployeeName, UserJobposition, GregorianDate, HijriDate);
             formAuth.ShowDialog();
         }
+
+       
 
         private string[] getColList(string table)
     {
