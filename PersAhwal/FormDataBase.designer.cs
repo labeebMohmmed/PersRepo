@@ -47,24 +47,18 @@ namespace PersAhwal
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.green57 = new System.Windows.Forms.PictureBox();
             this.red57 = new System.Windows.Forms.PictureBox();
-            this.green56 = new System.Windows.Forms.PictureBox();
-            this.red56 = new System.Windows.Forms.PictureBox();
             this.labebserver57 = new System.Windows.Forms.Label();
-            this.labebserver56 = new System.Windows.Forms.Label();
             this.timer3 = new System.Windows.Forms.Timer(this.components);
             this.pass1 = new System.Windows.Forms.TextBox();
             this.pass2 = new System.Windows.Forms.TextBox();
             this.labelpass1 = new System.Windows.Forms.Label();
             this.labelpass2 = new System.Windows.Forms.Label();
             this.timer4 = new System.Windows.Forms.Timer(this.components);
-            this.copyFiles = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.green57)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.red57)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.green56)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.red56)).BeginInit();
             this.SuspendLayout();
             // 
             // labTitel
@@ -244,28 +238,6 @@ namespace PersAhwal
             this.red57.TabStop = false;
             this.red57.Visible = false;
             // 
-            // green56
-            // 
-            this.green56.Image = global::PersAhwal.Properties.Resources.green_circle;
-            this.green56.Location = new System.Drawing.Point(12, 224);
-            this.green56.Name = "green56";
-            this.green56.Size = new System.Drawing.Size(28, 28);
-            this.green56.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.green56.TabIndex = 28;
-            this.green56.TabStop = false;
-            this.green56.Visible = false;
-            // 
-            // red56
-            // 
-            this.red56.Image = global::PersAhwal.Properties.Resources.red;
-            this.red56.Location = new System.Drawing.Point(12, 224);
-            this.red56.Name = "red56";
-            this.red56.Size = new System.Drawing.Size(28, 28);
-            this.red56.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.red56.TabIndex = 27;
-            this.red56.TabStop = false;
-            this.red56.Visible = false;
-            // 
             // labebserver57
             // 
             this.labebserver57.AutoSize = true;
@@ -273,20 +245,9 @@ namespace PersAhwal
             this.labebserver57.Location = new System.Drawing.Point(46, 258);
             this.labebserver57.Name = "labebserver57";
             this.labebserver57.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.labebserver57.Size = new System.Drawing.Size(163, 27);
+            this.labebserver57.Size = new System.Drawing.Size(357, 27);
             this.labebserver57.TabIndex = 29;
-            this.labebserver57.Text = "مخدم قسم الاحوال الشخصية";
-            // 
-            // labebserver56
-            // 
-            this.labebserver56.AutoSize = true;
-            this.labebserver56.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labebserver56.Location = new System.Drawing.Point(46, 225);
-            this.labebserver56.Name = "labebserver56";
-            this.labebserver56.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.labebserver56.Size = new System.Drawing.Size(134, 27);
-            this.labebserver56.TabIndex = 30;
-            this.labebserver56.Text = "مخدم قسم شؤون الرعايا";
+            this.labebserver57.Text = "مخدم قسمي الاحوال الشخصية وشؤون الرعايا متصل بشكل صحيح";
             // 
             // timer3
             // 
@@ -346,28 +307,14 @@ namespace PersAhwal
             this.timer4.Enabled = true;
             this.timer4.Tick += new System.EventHandler(this.timer4_Tick);
             // 
-            // copyFiles
-            // 
-            this.copyFiles.AutoSize = true;
-            this.copyFiles.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.copyFiles.Location = new System.Drawing.Point(352, 259);
-            this.copyFiles.Name = "copyFiles";
-            this.copyFiles.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.copyFiles.Size = new System.Drawing.Size(273, 27);
-            this.copyFiles.TabIndex = 35;
-            this.copyFiles.Text = "يتم الان نسخ بعض الملفات الهامة.. يرجى الانتظار";
-            this.copyFiles.Visible = false;
-            // 
             // FormDataBase
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(941, 294);
-            this.Controls.Add(this.copyFiles);
             this.Controls.Add(this.labelpass2);
             this.Controls.Add(this.labelpass1);
             this.Controls.Add(this.pass2);
-            this.Controls.Add(this.labebserver56);
             this.Controls.Add(this.labebserver57);
             this.Controls.Add(this.appversion);
             this.Controls.Add(this.pictureBox2);
@@ -382,8 +329,6 @@ namespace PersAhwal
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnLog);
-            this.Controls.Add(this.green56);
-            this.Controls.Add(this.red56);
             this.Controls.Add(this.green57);
             this.Controls.Add(this.red57);
             this.Controls.Add(this.pass1);
@@ -399,8 +344,6 @@ namespace PersAhwal
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.green57)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.red57)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.green56)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.red56)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -425,16 +368,12 @@ namespace PersAhwal
         private System.Windows.Forms.Timer timer2;
         private System.Windows.Forms.PictureBox green57;
         private System.Windows.Forms.PictureBox red57;
-        private System.Windows.Forms.PictureBox green56;
-        private System.Windows.Forms.PictureBox red56;
         private System.Windows.Forms.Label labebserver57;
-        private System.Windows.Forms.Label labebserver56;
         private System.Windows.Forms.Timer timer3;
         private System.Windows.Forms.TextBox pass1;
         private System.Windows.Forms.TextBox pass2;
         private System.Windows.Forms.Label labelpass1;
         private System.Windows.Forms.Label labelpass2;
         private System.Windows.Forms.Timer timer4;
-        private System.Windows.Forms.Label copyFiles;
     }
 }

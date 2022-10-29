@@ -30,10 +30,10 @@ namespace PersAhwal
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
             this.labelarch = new System.Windows.Forms.Label();
             this.button12 = new System.Windows.Forms.Button();
             this.txtMessNo = new System.Windows.Forms.TextBox();
@@ -135,7 +135,6 @@ namespace PersAhwal
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.panel2 = new System.Windows.Forms.Panel();
-            this.empUpdate = new System.Windows.Forms.PictureBox();
             this.btnNewYear = new System.Windows.Forms.Button();
             this.picUpdate = new System.Windows.Forms.PictureBox();
             this.picVersio = new System.Windows.Forms.PictureBox();
@@ -179,8 +178,6 @@ namespace PersAhwal
             this.Combtn3 = new System.Windows.Forms.Button();
             this.PanelMandounb = new System.Windows.Forms.FlowLayoutPanel();
             this.dataGridView10 = new System.Windows.Forms.DataGridView();
-            this.labUpdate = new System.Windows.Forms.Label();
-            this.labEmp = new System.Windows.Forms.Label();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.persbtn6 = new System.Windows.Forms.ComboBox();
             this.persbtn5 = new System.Windows.Forms.ComboBox();
@@ -223,6 +220,8 @@ namespace PersAhwal
             this.Combtn5 = new System.Windows.Forms.Button();
             this.persbtn10 = new System.Windows.Forms.Button();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.backgroundWorker2 = new System.ComponentModel.BackgroundWorker();
+            this.empUpdate = new System.Windows.Forms.PictureBox();
             this.panelReceMess.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView4)).BeginInit();
             this.panelAuthAknow.SuspendLayout();
@@ -239,7 +238,6 @@ namespace PersAhwal
             this.SearchPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
             this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.empUpdate)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picUpdate)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picVersio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picaddmonth)).BeginInit();
@@ -257,6 +255,7 @@ namespace PersAhwal
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView10)).BeginInit();
             this.flowLayoutPanel3.SuspendLayout();
             this.repReqPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.empUpdate)).BeginInit();
             this.SuspendLayout();
             // 
             // labelarch
@@ -1510,8 +1509,6 @@ namespace PersAhwal
             this.panel2.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.panel2.Controls.Add(this.empUpdate);
             this.panel2.Controls.Add(this.btnNewYear);
-            this.panel2.Controls.Add(this.picUpdate);
-            this.panel2.Controls.Add(this.picVersio);
             this.panel2.Controls.Add(this.labversio);
             this.panel2.Controls.Add(this.button23);
             this.panel2.Controls.Add(this.button21);
@@ -1523,22 +1520,13 @@ namespace PersAhwal
             this.panel2.Controls.Add(this.picremove);
             this.panel2.Controls.Add(this.ConsulateEmployee);
             this.panel2.Controls.Add(this.labeldate);
+            this.panel2.Controls.Add(this.picUpdate);
+            this.panel2.Controls.Add(this.picVersio);
             this.panel2.Location = new System.Drawing.Point(5, 2);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(669, 82);
             this.panel2.TabIndex = 506;
             this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
-            // 
-            // empUpdate
-            // 
-            this.empUpdate.Image = global::PersAhwal.Properties.Resources.update1;
-            this.empUpdate.Location = new System.Drawing.Point(0, 35);
-            this.empUpdate.Name = "empUpdate";
-            this.empUpdate.Size = new System.Drawing.Size(35, 36);
-            this.empUpdate.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.empUpdate.TabIndex = 514;
-            this.empUpdate.TabStop = false;
-            this.empUpdate.Click += new System.EventHandler(this.empUpdate_Click);
             // 
             // btnNewYear
             // 
@@ -1556,18 +1544,19 @@ namespace PersAhwal
             // picUpdate
             // 
             this.picUpdate.Image = global::PersAhwal.Properties.Resources.update1;
-            this.picUpdate.Location = new System.Drawing.Point(0, 43);
+            this.picUpdate.Location = new System.Drawing.Point(156, 3);
             this.picUpdate.Name = "picUpdate";
             this.picUpdate.Size = new System.Drawing.Size(28, 30);
             this.picUpdate.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.picUpdate.TabIndex = 512;
             this.picUpdate.TabStop = false;
+            this.picUpdate.Visible = false;
             this.picUpdate.Click += new System.EventHandler(this.picUpdate_Click);
             // 
             // picVersio
             // 
             this.picVersio.Image = global::PersAhwal.Properties.Resources.add;
-            this.picVersio.Location = new System.Drawing.Point(41, 43);
+            this.picVersio.Location = new System.Drawing.Point(12, 46);
             this.picVersio.Name = "picVersio";
             this.picVersio.Size = new System.Drawing.Size(28, 30);
             this.picVersio.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -1580,7 +1569,7 @@ namespace PersAhwal
             // 
             this.labversio.AutoSize = true;
             this.labversio.Font = new System.Drawing.Font("Arabic Typesetting", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labversio.Location = new System.Drawing.Point(76, 46);
+            this.labversio.Location = new System.Drawing.Point(47, 49);
             this.labversio.Name = "labversio";
             this.labversio.Size = new System.Drawing.Size(83, 24);
             this.labversio.TabIndex = 511;
@@ -1739,25 +1728,25 @@ namespace PersAhwal
             // dataGridView8
             // 
             this.dataGridView8.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Arabic Typesetting", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView8.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle13.Font = new System.Drawing.Font("Arabic Typesetting", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView8.DefaultCellStyle = dataGridViewCellStyle13;
             this.dataGridView8.Location = new System.Drawing.Point(3, 14);
             this.dataGridView8.Name = "dataGridView8";
             this.dataGridView8.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Arabic Typesetting", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView8.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle14.Font = new System.Drawing.Font("Arabic Typesetting", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView8.RowHeadersDefaultCellStyle = dataGridViewCellStyle14;
             this.dataGridView8.Size = new System.Drawing.Size(565, 676);
             this.dataGridView8.TabIndex = 734;
             this.dataGridView8.Visible = false;
@@ -1777,25 +1766,25 @@ namespace PersAhwal
             // dataGridView11
             // 
             this.dataGridView11.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Arabic Typesetting", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView11.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle15.Font = new System.Drawing.Font("Arabic Typesetting", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView11.DefaultCellStyle = dataGridViewCellStyle15;
             this.dataGridView11.Location = new System.Drawing.Point(3, 15);
             this.dataGridView11.Name = "dataGridView11";
             this.dataGridView11.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Arabic Typesetting", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView11.RowHeadersDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle16.Font = new System.Drawing.Font("Arabic Typesetting", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView11.RowHeadersDefaultCellStyle = dataGridViewCellStyle16;
             this.dataGridView11.Size = new System.Drawing.Size(565, 676);
             this.dataGridView11.TabIndex = 816;
             this.dataGridView11.Visible = false;
@@ -2099,27 +2088,6 @@ namespace PersAhwal
             this.dataGridView10.Name = "dataGridView10";
             this.dataGridView10.Size = new System.Drawing.Size(398, 407);
             this.dataGridView10.TabIndex = 475;
-            // 
-            // labUpdate
-            // 
-            this.labUpdate.AutoSize = true;
-            this.labUpdate.Font = new System.Drawing.Font("Arabic Typesetting", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labUpdate.Location = new System.Drawing.Point(1, 712);
-            this.labUpdate.Name = "labUpdate";
-            this.labUpdate.Size = new System.Drawing.Size(76, 24);
-            this.labUpdate.TabIndex = 816;
-            this.labUpdate.Text = "آخر تحديث ";
-            // 
-            // labEmp
-            // 
-            this.labEmp.AutoSize = true;
-            this.labEmp.Font = new System.Drawing.Font("Arabic Typesetting", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labEmp.Location = new System.Drawing.Point(1171, 704);
-            this.labEmp.Name = "labEmp";
-            this.labEmp.Size = new System.Drawing.Size(84, 24);
-            this.labEmp.TabIndex = 817;
-            this.labEmp.Text = "عدد المعاملات";
-            this.labEmp.Visible = false;
             // 
             // flowLayoutPanel3
             // 
@@ -2615,6 +2583,21 @@ namespace PersAhwal
             // 
             this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork_1);
             // 
+            // backgroundWorker2
+            // 
+            this.backgroundWorker2.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker2_DoWork);
+            // 
+            // empUpdate
+            // 
+            this.empUpdate.Image = global::PersAhwal.Properties.Resources.update1;
+            this.empUpdate.Location = new System.Drawing.Point(12, 46);
+            this.empUpdate.Name = "empUpdate";
+            this.empUpdate.Size = new System.Drawing.Size(28, 30);
+            this.empUpdate.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.empUpdate.TabIndex = 514;
+            this.empUpdate.TabStop = false;
+            this.empUpdate.Click += new System.EventHandler(this.empUpdate_Click_1);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2625,7 +2608,6 @@ namespace PersAhwal
             this.Controls.Add(this.Affbtn4);
             this.Controls.Add(this.Combtn2);
             this.Controls.Add(this.persbtn8);
-            this.Controls.Add(this.labEmp);
             this.Controls.Add(this.Combtn3);
             this.Controls.Add(this.Combtn4);
             this.Controls.Add(this.label1);
@@ -2643,7 +2625,6 @@ namespace PersAhwal
             this.Controls.Add(this.Affbtn2);
             this.Controls.Add(this.Affbtn3);
             this.Controls.Add(this.Affbtn1);
-            this.Controls.Add(this.labUpdate);
             this.Controls.Add(this.Affbtn6);
             this.Controls.Add(this.Affbtn5);
             this.Controls.Add(this.Combtn0);
@@ -2688,7 +2669,6 @@ namespace PersAhwal
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.empUpdate)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picUpdate)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picVersio)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picaddmonth)).EndInit();
@@ -2709,6 +2689,7 @@ namespace PersAhwal
             this.flowLayoutPanel3.ResumeLayout(false);
             this.repReqPanel.ResumeLayout(false);
             this.repReqPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.empUpdate)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2855,9 +2836,7 @@ namespace PersAhwal
         private System.Windows.Forms.DataGridView dataGridView10;
         private System.Windows.Forms.ComboBox comboBox3;
         private System.Windows.Forms.TextBox reportpass;
-        private System.Windows.Forms.Label labUpdate;
         private System.Windows.Forms.ComboBox txtHAAuthentic;
-        private System.Windows.Forms.Label labEmp;
         private System.Windows.Forms.Button btnNewYear;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
         private System.Windows.Forms.ComboBox persbtn6;
@@ -2869,7 +2848,6 @@ namespace PersAhwal
         private System.Windows.Forms.Button btnReportSub;
         private System.Windows.Forms.TextBox txtReportSub;
         private System.Windows.Forms.DataGridView dataGridView11;
-        private System.Windows.Forms.PictureBox empUpdate;
         private System.Windows.Forms.Button Affbtn2;
         private System.Windows.Forms.Button Affbtn5;
         private System.Windows.Forms.Button Affbtn4;
@@ -2905,5 +2883,7 @@ namespace PersAhwal
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button persbtn10;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.ComponentModel.BackgroundWorker backgroundWorker2;
+        private System.Windows.Forms.PictureBox empUpdate;
     }
 }

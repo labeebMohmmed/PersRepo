@@ -138,43 +138,15 @@ namespace PersAhwal
             Console.WriteLine(Server);
             file = archFile + @"\dataSource.txt";
             
-
-            if (!green56.Visible)
-            {
-
-                fillDatagrid(userTable, DataSource56, green56, red56, labebserver56, "الاتصال مع مخدم قسم شؤون الرعايا غير متاح يرجى التواصل مع مشغل النظام");
-
-            }
             if (!green57.Visible)
             {
-                fillDatagrid(userTable, DataSource57, green57, red57, labebserver57, "الاتصال مع مخدم قسم الأحوال الشخصية غير متاح يرجى التواصل مع مشغل النظام");
+                fillDatagrid(userTable, DataSource57, green57, red57, labebserver57, "الاتصال مع مخدم قسمي الاحوال الشخصية وشؤون الرعايا غير متاح يرجى التواصل مع مشغل النظام");
             }
 
             username.Select();
 
             
-            if (!File.Exists(primeryLink + "files.txt")) {
-                
-                dataSourceWrite(primeryLink + "files.txt", "updated");
-                string[] serverfiles = Directory.GetFiles(ServerModelFiles);
-                for (int i = 0; i < serverfiles.Length; i++)
-                {
-                    //MessageBox.Show(serverfiles[i]);
-                    var fileinfo = new FileInfo(serverfiles[i]);
-                    string filename = fileinfo.Name;
-                    if (!File.Exists(LocalModelFiles + filename))
-                        System.IO.File.Copy(serverfiles[i], LocalModelFiles + filename);
-                }
-
-                string[] formfiles = Directory.GetFiles(ServerModelForms);
-                for (int i = 0; i < formfiles.Length; i++)
-                {
-                    var fileinfo = new FileInfo(formfiles[i]);
-                    string filename = fileinfo.Name;
-                    if (!File.Exists(localModelForms + filename))
-                        System.IO.File.Copy(formfiles[i], localModelForms + filename);
-                }
-            }
+            
         }
 
         public static void Copy(string sourceDirectory, string targetDirectory)
@@ -579,7 +551,7 @@ namespace PersAhwal
                         getModelOutFiles(DataSource);
                         Password.Clear();
                         int userID = userLogInfo(name, IP);
-                        MainForm mainForm = new MainForm(career,userID, Server, name, joposition, DataSource56, DataSource57, LocalModelFiles, FilepathOut, ArchFile, localModelForms, Pers_Peope, GregorianDate, HijriDate);
+                        MainForm mainForm = new MainForm(career,userID, Server, name, joposition, DataSource56, DataSource57, LocalModelFiles, FilepathOut, ArchFile, localModelForms, Pers_Peope, GregorianDate, HijriDate, ServerModelFiles, ServerModelForms);
                         mainForm.ShowDialog();
                         Console.WriteLine("pass login1");
                         //timer1.Enabled = false;
@@ -705,13 +677,9 @@ namespace PersAhwal
 
         private void timer3_Tick(object sender, EventArgs e)
         {
-            if (!green56.Visible) {
-
-                fillDatagrid(userTable, DataSource56, green56, red56, labebserver56,"الاتصال مع مخدم قسم شؤون الرعايا غير متاح يرجى التواصل مع مشغل النظام");
-                
-            }
+            
             if (!green57.Visible) {
-                fillDatagrid(userTable, DataSource57, green57, red57, labebserver57, "الاتصال مع مخدم قسم الأحوال الشخصية غير متاح يرجى التواصل مع مشغل النظام");
+                fillDatagrid(userTable, DataSource57, green57, red57, labebserver57, "الاتصال مع مخدم قسمي الاحوال الشخصية وشؤون الرعايا غير متاح يرجى التواصل مع مشغل النظام");
             }
         }
 

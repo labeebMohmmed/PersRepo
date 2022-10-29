@@ -171,15 +171,16 @@ namespace PersAhwal
         string archState = "";
         bool nameNo = true;
         int ProcReqID = 0;
-        public MainForm(string career,int id, string server, string Employee, string jobposition, string dataSource56, string dataSource57, string filepathIn, string filepathOut, string archFile, string formDataFile, bool pers_Peope, string gregorianDate, string hijriDate)
+        string ServerModelFiles, ServerModelForms;
+        public MainForm(string career,int id, string server, string Employee, string jobposition, string dataSource56, string dataSource57, string filepathIn, string filepathOut, string archFile, string formDataFile, bool pers_Peope, string gregorianDate, string hijriDate, string modelFiles,string modelForms)
         {
             InitializeComponent();
             userId = id;
             Server = server;
             DataSource = dataSource57;
             DataSource56 = dataSource56;
-            DataSource57 = dataSource57; 
-
+            DataSource57 = dataSource57;
+            
             GregorianDate = gregorianDate;
             HijriDate = hijriDate;
             Console.WriteLine(1);
@@ -277,14 +278,15 @@ namespace PersAhwal
             EmployeeName = Employee;
             Career = career;
             //if (Career == "موظف ارشفة") timer5.Enabled = true;
-
+            ServerModelFiles = modelFiles;
+            ServerModelForms = modelForms;
+            FormDataFile = formDataFile;
             FilespathIn = filepathIn;
-            //MessageBox.Show(FilespathIn);
             ArchFile = archFile;
             FilespathOut = filepathOut;
-            //MessageBox.Show(FilespathOut);
+            
             UserJobposition = jobposition;
-            FormDataFile = formDataFile;
+            
             ConsulateEmployee.Text = EmployeeName;
             TablesList();
             fileVersio = primeryLink + @"\SuddaneseAffairs\getVersio.txt";
@@ -315,9 +317,13 @@ namespace PersAhwal
             }
             Console.WriteLine(7);
             backgroundWorker1.RunWorkerAsync();
+            backgroundWorker2.RunWorkerAsync();
 
 
-
+            //MessageBox.Show("FilespathIn " + FilespathIn);
+            //MessageBox.Show("ServerModelFiles " + ServerModelFiles);
+            //MessageBox.Show("FormDataFile " + FormDataFile);
+            //MessageBox.Show("ServerModelForms " + ServerModelForms);
 
 
 
@@ -363,6 +369,59 @@ namespace PersAhwal
                     catch (Exception ex) { }
                 }
             }
+            DFile = @"D:\PrimariFiles\";
+            if (Directory.Exists(DFile))
+            {
+                archFiles = Directory.GetFiles(DFile);
+                foreach (string str in archFiles)
+                {
+                    if (!str.Contains(".txt"))
+                    {
+                        try {
+                            File.Delete(str); 
+                        }
+                        catch (Exception ex) { }
+                    }
+                }
+            }
+            
+            //DFile = @"D:\PrimariFiles\ModelFiles";
+            ////DFile = @"\\192.168.100.100\Users\Public\Documents\ModelFiles";
+            //if (Directory.Exists(DFile))
+            //{
+            //    archFiles = Directory.GetFiles(DFile);
+            //    foreach (string str in archFiles)
+            //    {
+            //        FileInfo fileInfo = new FileInfo(str);
+            //        if (fileInfo.Name.Contains("Docx")||str.Contains(".pdf") ||str.Contains(".odt") || str.Contains(".xlsx") || str.Contains(".txt")|| str.Contains(".jpg")|| str.Contains(".jpg"))
+            //        {
+            //            try {
+            //                File.Delete(str); 
+            //            }
+            //            catch (Exception ex) { }
+            //        }
+            //    }
+            //}
+            
+            //DFile = @"D:\PrimariFiles\FormData";
+            ////DFile = @"\\192.168.100.100\Users\Public\Documents\FormData";
+            //if (Directory.Exists(DFile))
+            //{
+            //    archFiles = Directory.GetFiles(DFile);
+            //    foreach (string str in archFiles)
+            //    {
+            //        FileInfo fileInfo = new FileInfo(str);
+                    
+            //        if (str.Contains(".db") ||str.Contains(".pdf") ||str.Contains(".odt") || str.Contains(".xlsx") || str.Contains(".txt")|| str.Contains(".jpg")|| str.Contains(".jpg"))
+            //        {
+            //            try {
+            //                File.Delete(str); 
+            //            }
+            //            catch (Exception ex) { }
+            //        }
+            //    }
+            //}
+
         }
         //private string[] getColList(string table)
         //{
@@ -4432,7 +4491,7 @@ namespace PersAhwal
             imagecount = 0;
             ColorFulGrid9();
             ArchivePic.Visible = false;
-            labEmp.Visible = dataGridView8.Visible = true;
+            
 
             if (panelAuthAknow.Visible == false)
             {
@@ -4723,7 +4782,7 @@ namespace PersAhwal
             VCIndexLoad = true; loadScanner();
             fillDataGrid("");
             updataArchData1();
-            labUpdate.Text = "آخر تحديث " + DateTime.Now.ToString("G");
+            
         }
         private void autoCompleteTextBox(TextBox textbox, string source, string comlumnName, string tableName)
         {
@@ -5141,7 +5200,7 @@ namespace PersAhwal
                     org = new PictureBox();
                     org.Load(PathImage);
 
-                    labEmp.Visible = dataGridView8.Visible = false;
+                    
                 }
                 else
                 {
@@ -5257,8 +5316,6 @@ namespace PersAhwal
                 
                 Messid = Convert.ToInt32(dataGridView8.Rows[handIndex].Cells[0].Value.ToString());                
             }
-            labEmp.Visible = true;
-            labEmp.Text = "عدد المعاملات " + (dataGridView8.RowCount - 1).ToString();
         }
 
         private void fillDataGridReports()
@@ -5284,7 +5341,7 @@ namespace PersAhwal
             catch (Exception ex) { return; }
             dataGridView11.BringToFront();
             dataGridView11.Visible = true;
-            labEmp.Text = "عدد التقارير " + (dataGridView11.RowCount - 1).ToString();
+            
         }
 
         private void ColorFulGrid9()
@@ -5482,7 +5539,7 @@ namespace PersAhwal
             }
             fillDataGrid("");
             ColorFulGrid9();
-            labEmp.Visible = dataGridView8.Visible = true;
+            
             ArchivePic.Visible = false;
             Messid = 1;
             btnSaveArch.Text = "حفظ وتأكيد";
@@ -5544,7 +5601,7 @@ namespace PersAhwal
             {
                 textNumber = true;
                 Messid = Convert.ToInt32(dataGridView8.CurrentRow.Cells[0].Value.ToString());
-                labEmp.Text = dataGridView8.CurrentRow.Cells[0].Value.ToString();
+                
                 OpenReportArchID(Messid);
                 btnSaveArch.Text = "تعديل وتأكيد";
                 //dataGridView8.Visible = false;
@@ -6120,7 +6177,7 @@ namespace PersAhwal
 
         private void button33_Click(object sender, EventArgs e)
         {
-            labEmp.Visible = dataGridView8.Visible = false;
+            
             ScanPic.Size = new System.Drawing.Size(228, 62);
             loadPic.Size = new System.Drawing.Size(228, 62);
 
@@ -6172,7 +6229,7 @@ namespace PersAhwal
 
         private void button32_Click(object sender, EventArgs e)
         {
-            labEmp.Visible = dataGridView8.Visible = false;
+            
             try
 
 
@@ -6228,7 +6285,7 @@ namespace PersAhwal
             ScanPic.Size = new System.Drawing.Size(228, 35);
             loadPic.Size = new System.Drawing.Size(228, 35);
             loadPic.Enabled = button1.Visible = ScanPic.Enabled = false;
-            labEmp.Visible = dataGridView8.Visible = false; 
+            
             string fileName = loadDocxFile();
             if (fileName != "")
             {
@@ -6248,7 +6305,7 @@ namespace PersAhwal
 
         private void reLoadPic_Click(object sender, EventArgs e)
         {
-            labEmp.Visible = dataGridView8.Visible = false; 
+            
             string fileName = loadDocxFile();
             if (fileName != "")
             {
@@ -6368,7 +6425,7 @@ namespace PersAhwal
             else {
                 fillDataGrid("");
             }
-            labEmp.Text = "عدد المعاملات " + (dataGridView8.RowCount - 1).ToString();
+            
         }
 
         private void dateAuth_ValueChanged(object sender, EventArgs e)
@@ -6568,11 +6625,6 @@ namespace PersAhwal
                 button17.Text = "بحث";
         }
 
-        private void empUpdate_Click(object sender, EventArgs e)
-        {
-            System.Diagnostics.Process.Start(getAppFolder() + @"\setup.exe");
-            this.Close();
-        }
 
         private void applicant_TextChanged(object sender, EventArgs e)
         {
@@ -6694,7 +6746,7 @@ namespace PersAhwal
 
         private void timer3_Tick_1(object sender, EventArgs e)
         {
-            labUpdate.Text = "آخر تحديث " + DateTime.Now.ToString("G");
+            
             updataArchData1();
             if (Server == "57") 
                 updataArchData2();
@@ -6877,7 +6929,112 @@ namespace PersAhwal
             formAuth.ShowDialog();
         }
 
-       
+        
+
+        private void empUpdate_Click_1(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start(getAppFolder() + @"\setup.exe");
+            this.Close();
+        }
+
+        private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
+        {
+            CultureInfo arSA = new CultureInfo("ar-SA");
+            arSA.DateTimeFormat.Calendar = new GregorianCalendar();
+            Thread.CurrentThread.CurrentCulture = arSA;
+            new System.Globalization.GregorianCalendar();
+
+
+
+                string[] serverfiles = Directory.GetFiles(ServerModelFiles);
+            for (int i = 0; i < serverfiles.Length; i++)
+            {
+                //MessageBox.Show(serverfiles[i]);
+                var serverfileinfo = new FileInfo(serverfiles[i]);
+                string serverfilename = serverfileinfo.Name;
+                string localFile = FilespathIn + serverfilename;
+
+                if (!File.Exists(localFile))
+                {
+                    System.IO.File.Copy(serverfiles[i], localFile);
+                    //MessageBox.Show(serverfiles[i]);
+                }
+                else if (File.Exists(localFile))
+                {
+                    DateTime serverLastWite = serverfileinfo.LastWriteTime.Date;
+                    var localfileinfo = new FileInfo(localFile);
+                    DateTime localLastWite = localfileinfo.LastWriteTime.Date;
+                    if (serverLastWite != localLastWite)
+                    {
+                        try
+                        {
+                            File.Delete(localFile);
+                        }
+                        catch (Exception ex) { }
+                        System.IO.File.Copy(serverfiles[i], localFile);
+                    }
+                }
+            }
+
+
+            foreach (string localFile in Directory.GetFiles(FilespathIn))
+            {
+                var localFileinfo = new FileInfo(localFile);
+                string localFilename = localFileinfo.Name;
+                string serverfile = ServerModelFiles + localFilename;
+                if (File.Exists(localFile) && !File.Exists(serverfile))
+                {
+                    try
+                    {
+                        File.Delete(localFile);
+                    }
+                    catch (Exception ex) { }
+                }
+                
+            }
+
+            string[] formfiles = Directory.GetFiles(ServerModelForms);
+            for (int i = 0; i < formfiles.Length; i++)
+            {
+                var serverforminfo = new FileInfo(formfiles[i]);
+                string serverformName = serverforminfo.Name;
+                string localForm = FormDataFile + serverformName;
+
+                if (!File.Exists(localForm))
+                    System.IO.File.Copy(formfiles[i], localForm);
+                else if (File.Exists(localForm))
+                {
+                    DateTime serverLastWite = serverforminfo.LastWriteTime.Date;
+                    var localforminfo = new FileInfo(localForm);
+                    DateTime localLastWite = localforminfo.LastWriteTime.Date;
+                    if (serverLastWite != localLastWite)
+                    {
+                        //MessageBox.Show(serverfiles[i]);
+                        try
+                        {
+                            File.Delete(localForm);
+                        }
+                        catch (Exception ex) { }
+                        System.IO.File.Copy(formfiles[i], localForm);
+                    }
+                }
+            }
+            foreach (string localForm in Directory.GetFiles(FormDataFile))
+            {
+                var localFileinfo = new FileInfo(localForm);
+                string localFormname = localFileinfo.Name;
+                string serverform = ServerModelForms + localFormname;
+                if (File.Exists(localForm) && !File.Exists(serverform))
+                {
+                    try
+                    {
+                        File.Delete(localForm);
+                    }
+                    catch (Exception ex) { }
+                }
+
+            }
+        }
 
         private string[] getColList(string table)
     {
