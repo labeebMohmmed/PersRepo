@@ -119,6 +119,7 @@ namespace PersAhwal
             this.label37 = new System.Windows.Forms.Label();
             this.comboPersonUnderPro = new System.Windows.Forms.ComboBox();
             this.label10 = new System.Windows.Forms.Label();
+            this.التاريخ_الميلادي_off = new System.Windows.Forms.TextBox();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -810,6 +811,7 @@ namespace PersAhwal
             this.التاريخ_الميلادي.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.التاريخ_الميلادي.Size = new System.Drawing.Size(257, 35);
             this.التاريخ_الميلادي.TabIndex = 473;
+            this.التاريخ_الميلادي.TextChanged += new System.EventHandler(this.التاريخ_الميلادي_TextChanged);
             // 
             // label12
             // 
@@ -1087,6 +1089,7 @@ namespace PersAhwal
             // 
             // PanelMain
             // 
+            this.PanelMain.Controls.Add(this.التاريخ_الميلادي_off);
             this.PanelMain.Controls.Add(this.button3);
             this.PanelMain.Controls.Add(this.button2);
             this.PanelMain.Controls.Add(this.تاريخ_الميلاد);
@@ -1284,6 +1287,17 @@ namespace PersAhwal
             this.label10.Text = "صفة القصود بالإجراء:";
             this.label10.Visible = false;
             // 
+            // التاريخ_الميلادي_off
+            // 
+            this.التاريخ_الميلادي_off.Enabled = false;
+            this.التاريخ_الميلادي_off.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.التاريخ_الميلادي_off.Location = new System.Drawing.Point(12, 334);
+            this.التاريخ_الميلادي_off.Name = "التاريخ_الميلادي_off";
+            this.التاريخ_الميلادي_off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.التاريخ_الميلادي_off.Size = new System.Drawing.Size(257, 35);
+            this.التاريخ_الميلادي_off.TabIndex = 852;
+            this.التاريخ_الميلادي_off.Visible = false;
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1399,5 +1413,6 @@ namespace PersAhwal
         private System.Windows.Forms.Label label37;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.TextBox التاريخ_الميلادي_off;
     }
 }

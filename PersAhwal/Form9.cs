@@ -382,7 +382,8 @@ namespace PersAhwal
                 Word.Range BookvConsul = oBDoc.Bookmarks.get_Item(ref ParavConsul).Range;
 
                 BookIqrarNo.Text = Iqrarid.Text;
-                BookGreData.Text = colIDs[2] = التاريخ_الميلادي.Text;
+                colIDs[2] = التاريخ_الميلادي.Text;
+                BookGreData.Text = التاريخ_الميلادي_off.Text;
                 BookHijriData.Text = التاريخ_الهجري.Text;
                 BookDocName.Text = colIDs[3] = AppDocName.Text;
                 colIDs[5] = AppType.Text;
@@ -537,7 +538,7 @@ namespace PersAhwal
                 Word.Range BookvConsul = oBDoc.Bookmarks.get_Item(ref ParavConsul).Range;
 
                 BookIqrarNo.Text = Iqrarid.Text;
-                BookGreData.Text = التاريخ_الميلادي.Text;
+                BookGreData.Text = التاريخ_الميلادي_off.Text;
                 BookHijriData.Text = التاريخ_الهجري.Text;
                 BookDocName.Text = AppDocName.Text;
                 BookDocType.Text = DocType.Text;
@@ -1263,6 +1264,11 @@ namespace PersAhwal
         private void iqamaissue_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void التاريخ_الميلادي_TextChanged(object sender, EventArgs e)
+        {
+            التاريخ_الميلادي_off.Text = التاريخ_الميلادي.Text.Split('-')[1] + " - " + التاريخ_الميلادي.Text.Split('-')[0] + " - " + التاريخ_الميلادي.Text.Split('-')[2];
         }
 
         private void printOnly_Click(object sender, EventArgs e)

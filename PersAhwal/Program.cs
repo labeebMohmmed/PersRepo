@@ -8,6 +8,7 @@ using System.Data;
 using System.IO;
 using DocumentFormat.OpenXml.Presentation;
 using DocumentFormat.OpenXml.Drawing.Spreadsheet;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace PersAhwal
 {
@@ -165,27 +166,28 @@ namespace PersAhwal
             //Application.Run(new MerriageDoc(dataSource100A,false, EmployeeName,2, "29-06-2022", "28-11-1443"));
             //Application.Run(new PassAway(2,dataSource100A,  @"D:\PrimariFiles\ModelFiles\", archFile, JobPossition,EmployeeName, "29-06-2022", "28-11-1443"));
             //Application.Run(new FormAuth(2, -1, "", dataSource100A, @"D:\PrimariFiles\ModelFiles\", archFile, EmployeeName, JobPossition, "10-26-2022", "28-11-1443"));
+            Application.Run(new FormCollection(2, -1, 0, EmployeeName,dataSource100A, @"D:\PrimariFiles\ModelFiles\", archFile, JobPossition, "10-26-2022", "28-11-1443"));
 
-            if (source56)
-            {
-                Console.WriteLine("server is 56");
-                //MessageBox.Show(Modelfilespath);
-                Application.Run(new FormDataBase("56", dataSource100S, dataSource100A, Modelfilespath + @"\", archFile, archFile, FormDataFile + @"\", newFiles));
-                //Application.Run(new MainForm(EmployeeName, JobPossition,  dataSource, Modelfilespath, FileArchive, FileArchive, FormDataFile, true));
-                //Application.Run(new FormSudAffairs(0, 0, 0, ulterdataSource, Modelfilespath + @"\", archFile + @"\", JobPossition));
-                //Application.Run(new FormTimeLine(Modelfilespath + @"\", dataSource, "تعيين محلي", filepathIn + @"\", archFile + @"\", EmployeeName));
-                //Application.Run(new Settings(false, dataSource, false, Modelfilespath + @"\", archFile + @"\", archFile + @"\", FormDataFile + @"\"));
-            }
-            else if (source57)
-            {
-                Console.WriteLine(dataSource100A);
-                //MessageBox.Show(Modelfilespath);
-                Application.Run(new FormDataBase("57", dataSource100S, dataSource100A, Modelfilespath + @"\", archFile, archFile, FormDataFile + @"\", newFiles));
-                //Application.Run(new MainForm(EmployeeName, JobPossition,  dataSource, Modelfilespath, FileArchive, FileArchive, FormDataFile, true));
-                //Application.Run(new FormSudAffairs(0, 0, 0, ulterdataSource, Modelfilespath + @"\", archFile + @"\", JobPossition));
-                //Application.Run(new FormTimeLine(Modelfilespath + @"\", dataSource, "تعيين محلي", filepathIn + @"\", archFile + @"\", EmployeeName));
-                //Application.Run(new Settings(false, dataSource, false, Modelfilespath + @"\", archFile + @"\", archFile + @"\", FormDataFile + @"\"));
-            }
+            //if (source56)
+            //{
+            //    Console.WriteLine("server is 56");
+            //    //MessageBox.Show(Modelfilespath);
+            //    Application.Run(new FormDataBase("56", dataSource100S, dataSource100A, Modelfilespath + @"\", archFile, archFile, FormDataFile + @"\", newFiles));
+            //    //Application.Run(new MainForm(EmployeeName, JobPossition,  dataSource, Modelfilespath, FileArchive, FileArchive, FormDataFile, true));
+            //    //Application.Run(new FormSudAffairs(0, 0, 0, ulterdataSource, Modelfilespath + @"\", archFile + @"\", JobPossition));
+            //    //Application.Run(new FormTimeLine(Modelfilespath + @"\", dataSource, "تعيين محلي", filepathIn + @"\", archFile + @"\", EmployeeName));
+            //    //Application.Run(new Settings(false, dataSource, false, Modelfilespath + @"\", archFile + @"\", archFile + @"\", FormDataFile + @"\"));
+            //}
+            //else if (source57)
+            //{
+            //    Console.WriteLine(dataSource100A);
+            //    //MessageBox.Show(Modelfilespath);
+            //    Application.Run(new FormDataBase("57", dataSource100S, dataSource100A, Modelfilespath + @"\", archFile, archFile, FormDataFile + @"\", newFiles));
+            //    //Application.Run(new MainForm(EmployeeName, JobPossition,  dataSource, Modelfilespath, FileArchive, FileArchive, FormDataFile, true));
+            //    //Application.Run(new FormSudAffairs(0, 0, 0, ulterdataSource, Modelfilespath + @"\", archFile + @"\", JobPossition));
+            //    //Application.Run(new FormTimeLine(Modelfilespath + @"\", dataSource, "تعيين محلي", filepathIn + @"\", archFile + @"\", EmployeeName));
+            //    //Application.Run(new Settings(false, dataSource, false, Modelfilespath + @"\", archFile + @"\", archFile + @"\", FormDataFile + @"\"));
+            //}
         }
     }
 }

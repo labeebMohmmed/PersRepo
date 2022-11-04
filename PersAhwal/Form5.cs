@@ -407,7 +407,8 @@ namespace PersAhwal
                     Word.Range BookAuthorization = oBDoc.Bookmarks.get_Item(ref ParaAuthorization).Range;
 
                     BookIqrarNo.Text = colIDs[0] = Iqrarid.Text;
-                    BookGreData.Text = colIDs[2] = التاريخ_الميلادي.Text;
+                    BookGreData.Text = التاريخ_الميلادي_off.Text;
+                    colIDs[2] = التاريخ_الميلادي.Text;
                     BookHijriData.Text = التاريخ_الهجري.Text;
                     Bookname2.Text = Bookname.Text = colIDs[3] = ApplicantName.Text;
                     colIDs[5] = AppType.Text;
@@ -1062,6 +1063,11 @@ namespace PersAhwal
                 fs.Write(info, 0, info.Length);
                 fs.Close();
             }
+        }
+
+        private void التاريخ_الميلادي_TextChanged(object sender, EventArgs e)
+        {
+            التاريخ_الميلادي_off.Text = التاريخ_الميلادي.Text.Split('-')[1] + " - " + التاريخ_الميلادي.Text.Split('-')[0] + " - " + التاريخ_الميلادي.Text.Split('-')[2];
         }
 
         private void btnEditID_Click(object sender, EventArgs e)

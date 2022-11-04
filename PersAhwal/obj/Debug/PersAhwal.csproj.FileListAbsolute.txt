@@ -1071,3 +1071,4 @@ D:\PersRepo\PersAhwal\obj\Debug\PersAhwal.application
 D:\PersRepo\PersAhwal\obj\Debug\PersAhwal.csproj.CopyComplete
 D:\PersRepo\PersAhwal\obj\Debug\PersAhwal.exe
 D:\PersRepo\PersAhwal\obj\Debug\PersAhwal.pdb
+D:\PersRepo\PersAhwal\obj\Debug\PersAhwal.FormCollection.resources

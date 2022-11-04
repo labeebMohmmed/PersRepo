@@ -163,8 +163,9 @@ namespace PersAhwal
             sqlDa.Fill(dtblMain);
             dataGridView1.DataSource = dtblMain;
             sqlCon.Close();
-
-
+            dataGridView1.Columns[0].Visible = false;
+            dataGridView1.Columns[1].Width = 170;
+            dataGridView1.Columns[2].Width = dataGridView1.Columns[3].Width = 200;
         }
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -329,7 +330,7 @@ namespace PersAhwal
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
-            SqlDataAdapter sqlDa = new SqlDataAdapter("select sms,الصفة from " + table+" where ID ='" + id.ToString() +"'", sqlCon);
+            SqlDataAdapter sqlDa = new SqlDataAdapter("select sms from " + table+" where ID ='" + id.ToString() +"'", sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
             sqlDa.Fill(dtbl);
@@ -466,6 +467,7 @@ namespace PersAhwal
             if (selectedOption == DialogResult.Yes)
             {
                 deleteRowsData(رقم_المعاملة.Text, "TableMerrageDoc");
+                this.Close();
                 //deleteRowsData(رقم_الوثيقة.Text, "TableGeneralArch");
                 //deleteRowsData(رقم_الوثيقة.Text, "archives");
             }
@@ -475,12 +477,12 @@ namespace PersAhwal
         {
             string query;
             SqlConnection Con = new SqlConnection(DataSource);
-            query = "DELETE FROM " + table + " where رقم_الوثيقة = @رقم_الوثيقة";
+            query = "DELETE FROM " + table + " where رقم_المعاملة = @رقم_المعاملة";
             if (Con.State == ConnectionState.Closed)
                 Con.Open();
             SqlCommand sqlCmd = new SqlCommand(query, Con);
             sqlCmd.CommandType = CommandType.Text;
-            sqlCmd.Parameters.AddWithValue("@رقم_الوثيقة", v1);
+            sqlCmd.Parameters.AddWithValue("@رقم_المعاملة", v1);
             sqlCmd.ExecuteNonQuery();
             Con.Close();
         }

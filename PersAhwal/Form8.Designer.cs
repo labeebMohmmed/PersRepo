@@ -85,6 +85,7 @@ namespace PersAhwal
             this.txtEditID2 = new System.Windows.Forms.TextBox();
             this.btnEditID = new System.Windows.Forms.Button();
             this.txtEditID1 = new System.Windows.Forms.TextBox();
+            this.التاريخ_الميلادي_off = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -573,6 +574,7 @@ namespace PersAhwal
             this.التاريخ_الميلادي.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.التاريخ_الميلادي.Size = new System.Drawing.Size(251, 35);
             this.التاريخ_الميلادي.TabIndex = 473;
+            this.التاريخ_الميلادي.TextChanged += new System.EventHandler(this.التاريخ_الميلادي_TextChanged);
             // 
             // label12
             // 
@@ -700,11 +702,23 @@ namespace PersAhwal
             this.txtEditID1.TabIndex = 856;
             this.txtEditID1.Visible = false;
             // 
+            // التاريخ_الميلادي_off
+            // 
+            this.التاريخ_الميلادي_off.Enabled = false;
+            this.التاريخ_الميلادي_off.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.التاريخ_الميلادي_off.Location = new System.Drawing.Point(819, 340);
+            this.التاريخ_الميلادي_off.Name = "التاريخ_الميلادي_off";
+            this.التاريخ_الميلادي_off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.التاريخ_الميلادي_off.Size = new System.Drawing.Size(257, 35);
+            this.التاريخ_الميلادي_off.TabIndex = 858;
+            this.التاريخ_الميلادي_off.Visible = false;
+            // 
             // Form8
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1335, 748);
+            this.Controls.Add(this.التاريخ_الميلادي_off);
             this.Controls.Add(this.txtEditID2);
             this.Controls.Add(this.btnEditID);
             this.Controls.Add(this.txtEditID1);
@@ -826,5 +840,6 @@ namespace PersAhwal
         private System.Windows.Forms.TextBox txtEditID2;
         private System.Windows.Forms.Button btnEditID;
         private System.Windows.Forms.TextBox txtEditID1;
+        private System.Windows.Forms.TextBox التاريخ_الميلادي_off;
     }
 }

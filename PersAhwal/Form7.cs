@@ -610,7 +610,8 @@ namespace PersAhwal
                 Word.Range BookAuthorization = oBDoc.Bookmarks.get_Item(ref ParaAuthorization).Range;
 
                 BookIqrarNo.Text = colIDs[0] = Iqrarid.Text;
-                BookGreData.Text = colIDs[2] = التاريخ_الميلادي.Text;
+                BookGreData.Text = التاريخ_الميلادي_off.Text;
+                colIDs[2] = التاريخ_الميلادي.Text;
                 BookHijriData.Text = التاريخ_الهجري.Text;
                 BookDocName.Text = BookDocName2.Text = colIDs[3] = ApplicantIdocName.Text;
                 colIDs[5] = AppType.Text;
@@ -1135,6 +1136,11 @@ namespace PersAhwal
             SearchFile.Visible = true;
             SearchFile.Text = dlg.FileName;
             if (SearchFile.Text != "") fileloaded = true;
+        }
+
+        private void التاريخ_الميلادي_TextChanged(object sender, EventArgs e)
+        {
+            التاريخ_الميلادي_off.Text = التاريخ_الميلادي.Text.Split('-')[1] + " - " + التاريخ_الميلادي.Text.Split('-')[0] + " - " + التاريخ_الميلادي.Text.Split('-')[2];
         }
 
         private void button2_Click_1(object sender, EventArgs e)

@@ -286,7 +286,7 @@ namespace PersAhwal
             FilespathOut = filepathOut;
             
             UserJobposition = jobposition;
-            
+            //persbtn2MessageBox.Show(UserJobposition);
             ConsulateEmployee.Text = EmployeeName;
             TablesList();
             fileVersio = primeryLink + @"\SuddaneseAffairs\getVersio.txt";
@@ -301,14 +301,22 @@ namespace PersAhwal
 
             Console.WriteLine(6);
             perbtn1.Visible = false;
-            persbtn2.Visible = true;
+            persbtn2.Visible = false;
+            persbtn2.SendToBack();
             if (UserJobposition.Contains("قنصل"))
             {
-                Affbtn0.Visible  = true;
+                Affbtn0.Visible = true;
+                empUpdate.Visible = false;
+                picVersio.BringToFront();
             }
-            else Aprove.Text = "تعديل بيانات الدخول";
+            else
+            {
+                Aprove.Text = "تعديل بيانات الدخول";
+                empUpdate.BringToFront();
+                    empUpdate.Visible = true;
+            }
 
-            if (!Directory.Exists(PrimariFiles))
+                if (!Directory.Exists(PrimariFiles))
             {
                 string appFileName = Environment.GetCommandLineArgs()[0];
                 string directory = Path.GetDirectoryName(appFileName);
@@ -316,8 +324,8 @@ namespace PersAhwal
                 PrimariFiles = directory + @"PrimariFiles\";
             }
             Console.WriteLine(7);
-            backgroundWorker1.RunWorkerAsync();
-            backgroundWorker2.RunWorkerAsync();
+            //backgroundWorker1.RunWorkerAsync();
+            //backgroundWorker2.RunWorkerAsync();
 
 
             //MessageBox.Show("FilespathIn " + FilespathIn);
@@ -352,38 +360,39 @@ namespace PersAhwal
                 }
                 catch (Exception ex) { }
             }
-            string DFile = @"D:\";
-            if (Directory.Exists(DFile))
-            {
-                archFiles = Directory.GetFiles(DFile);
-                foreach (string str in archFiles)
-                {
-                    FileInfo fileInfo = new FileInfo(str);
-                    DateTime dt = fileInfo.LastWriteTime.Date;
+            //string DFile = @"D:\";
+            //if (Directory.Exists(DFile))
+            //{
+            //    archFiles = Directory.GetFiles(DFile);
+            //    foreach (string str in archFiles)
+            //    {
+            //        FileInfo fileInfo = new FileInfo(str);
+            //        DateTime dt = fileInfo.LastWriteTime.Date;
 
-                    Console.WriteLine(date + " - " + str + " date is " + dt.ToString().Split(' ')[0]);
-                    try
-                    {
-                        if (fileInfo.Name.Contains("ArchiveFiles") &&  date != dt.ToString().Split(' ')[0]) File.Delete(str);
-                    }
-                    catch (Exception ex) { }
-                }
-            }
-            DFile = @"D:\PrimariFiles\";
-            if (Directory.Exists(DFile))
-            {
-                archFiles = Directory.GetFiles(DFile);
-                foreach (string str in archFiles)
-                {
-                    if (!str.Contains(".txt"))
-                    {
-                        try {
-                            File.Delete(str); 
-                        }
-                        catch (Exception ex) { }
-                    }
-                }
-            }
+            //        Console.WriteLine(date + " - " + str + " date is " + dt.ToString().Split(' ')[0]);
+            //        try
+            //        {
+            //            if (fileInfo.Name.Contains("ArchiveFiles") &&  date != dt.ToString().Split(' ')[0]) File.Delete(str);
+            //        }
+            //        catch (Exception ex) { }
+            //    }
+            //}
+            //string DFile = @"D:\PrimariFiles\";
+            //if (Directory.Exists(DFile))
+            //{
+            //    archFiles = Directory.GetFiles(DFile);
+            //    foreach (string str in archFiles)
+            //    {
+            //        if (!str.Contains(".txt"))
+            //        {
+            //            try
+            //            {
+            //                File.Delete(str);
+            //            }
+            //            catch (Exception ex) { }
+            //        }
+            //    }
+            //}
             
             //DFile = @"D:\PrimariFiles\ModelFiles";
             ////DFile = @"\\192.168.100.100\Users\Public\Documents\ModelFiles";
@@ -422,6 +431,31 @@ namespace PersAhwal
             //    }
             //}
 
+        }
+        protected virtual bool IsFileLocked(FileInfo file)
+        {
+            FileStream stream = null;
+
+            try
+            {
+                stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None);
+            }
+            catch (IOException)
+            {
+                //the file is unavailable because it is:
+                //still being written to
+                //or being processed by another thread
+                //or does not exist (has already been processed)
+                return true;
+            }
+            finally
+            {
+                if (stream != null)
+                    stream.Close();
+            }
+
+            //file is not locked
+            return false;
         }
         //private string[] getColList(string table)
         //{
@@ -5771,12 +5805,12 @@ namespace PersAhwal
 
             if (Convert.ToInt32(CurrentVersion.Split('.')[3]) < Convert.ToInt32(currentVersion.Split('.')[3]) && UserJobposition.Contains("قنصل"))
             {
-                picUpdate.Visible = true;
+                
                 empUpdate.Visible = false;
             }
             else
             {
-                picUpdate.Visible = false;
+                
                 empUpdate.Visible = true;
             }
             
@@ -5886,7 +5920,7 @@ namespace PersAhwal
 
         private void picUpdate_Click(object sender, EventArgs e)
         {            
-            upDateClose();
+            //upDateClose();
 
         }
 
@@ -6937,6 +6971,60 @@ namespace PersAhwal
             this.Close();
         }
 
+        private void picUpdate_Click_1(object sender, EventArgs e)
+        {
+            if (!backgroundWorker2.IsBusy) backgroundWorker2.RunWorkerAsync(); 
+            if (!backgroundWorker1.IsBusy) backgroundWorker1.RunWorkerAsync();            
+        }
+
+        private void persbtn11_Click(object sender, EventArgs e)
+        {
+            if (mangerArch.CheckState == CheckState.Checked)
+            {
+                dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                string[] str = new string[persbtn3.Items.Count];
+                for (int x = 0; x < persbtn3.Items.Count; x++) { str[x] = persbtn3.Items[x].ToString(); }
+                string[] strSub = fileStrSub(DataSource, "ArabicGenIgrar", "TableListCombo");
+                FormPics form2 = new FormPics(Server, EmployeeName, attendedVC.Text, UserJobposition, DataSource, 12, FormDataFile, FilespathOut, 10, str, strSub, true, MandoubM, GriDateM);
+                form2.ShowDialog();
+
+            }
+            else
+            {
+                dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                FormCollection formCollection = new FormCollection(attendedVC.SelectedIndex, IDNo, 0, EmployeeName, DataSource, FilespathIn, FilespathOut, UserJobposition, GregorianDate, HijriDate);
+                formCollection.ShowDialog();
+            }
+        }
+
+        private string[] fileStrSub(string source, string comlumnName, string tableName)
+        {
+            string[] strSub;
+            int i = 0;
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                saConn.Open();
+
+                string query = "select " + comlumnName + " from " + tableName + " where " + comlumnName +" is not null";
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.CommandType = CommandType.Text;
+
+
+                cmd.ExecuteNonQuery();
+                DataTable table = new DataTable();
+                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                dataAdapter.Fill(table);
+                strSub = new string[table.Rows.Count];
+                foreach (DataRow dataRow in table.Rows)
+                {
+                    if (!String.IsNullOrEmpty(dataRow[comlumnName].ToString()))
+                    { strSub[i] = dataRow[comlumnName].ToString();
+                        i++; }
+                }
+                saConn.Close();
+            }
+            return strSub;  
+        }
         private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
         {
             CultureInfo arSA = new CultureInfo("ar-SA");
@@ -6968,7 +7056,7 @@ namespace PersAhwal
                     {
                         try
                         {
-                            File.Delete(localFile);
+                           File.Delete(localFile);
                         }
                         catch (Exception ex) { }
                         System.IO.File.Copy(serverfiles[i], localFile);
@@ -7027,8 +7115,9 @@ namespace PersAhwal
                 if (File.Exists(localForm) && !File.Exists(serverform))
                 {
                     try
+
                     {
-                        File.Delete(localForm);
+                       File.Delete(localForm);
                     }
                     catch (Exception ex) { }
                 }

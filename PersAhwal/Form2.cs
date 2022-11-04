@@ -439,7 +439,8 @@ namespace PersAhwal
                 
                 BookAppiIssSource.Text = IssuedSource.Text;
                 BookPassIqama.Text = PassIqama.Text;
-                BookGreData.Text = colIDs[2] = التاريخ_الميلادي.Text;
+                BookGreData.Text = التاريخ_الميلادي_off.Text;
+                colIDs[2] = التاريخ_الميلادي.Text;
                 BookHijriData.Text = التاريخ_الهجري.Text;
 
 
@@ -541,7 +542,7 @@ namespace PersAhwal
                 if (ApplicantSex.CheckState == CheckState.Unchecked)
                     BookApliSex.Text = "المواطن";
                 else BookApliSex.Text = "المواطنة";
-                BookGregorDate2.Text = BookDateGre.Text = التاريخ_الميلادي.Text;
+                BookGregorDate2.Text = BookDateGre.Text = التاريخ_الميلادي_off.Text;
                 BookHijriDate.Text = التاريخ_الهجري.Text;
 
                 switch (ProcedureType.SelectedIndex)
@@ -737,7 +738,7 @@ namespace PersAhwal
                     BookDocType.Text = "إقرار مشفوع باليمين";
                 BookIqrarNo.Text = IqrarNo.Text;
                 BookHijriData.Text = التاريخ_الهجري.Text;
-                BookGreData.Text = التاريخ_الميلادي.Text;
+                BookGreData.Text = التاريخ_الميلادي_off.Text;
                 BookAppiIssSource.Text = IssuedSource.Text;
                 Bookname1.Text = Bookname2.Text = colIDs[3] = ApplicantName.Text;
                 Bookigama.Text = ApplicantIdoc.Text;
@@ -2139,6 +2140,11 @@ namespace PersAhwal
             {
                 button2.PerformClick();
             }
+        }
+
+        private void التاريخ_الميلادي_TextChanged(object sender, EventArgs e)
+        {
+            التاريخ_الميلادي_off.Text = التاريخ_الميلادي.Text.Split('-')[1] + " - " + التاريخ_الميلادي.Text.Split('-')[0] + " - " + التاريخ_الميلادي.Text.Split('-')[2];
         }
 
         private void btnEditID_Click(object sender, EventArgs e)

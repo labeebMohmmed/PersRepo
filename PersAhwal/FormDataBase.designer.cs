@@ -245,9 +245,9 @@ namespace PersAhwal
             this.labebserver57.Location = new System.Drawing.Point(46, 258);
             this.labebserver57.Name = "labebserver57";
             this.labebserver57.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.labebserver57.Size = new System.Drawing.Size(357, 27);
+            this.labebserver57.Size = new System.Drawing.Size(367, 27);
             this.labebserver57.TabIndex = 29;
-            this.labebserver57.Text = "مخدم قسمي الاحوال الشخصية وشؤون الرعايا متصل بشكل صحيح";
+            this.labebserver57.Text = "مخدم قسمي الاحوال الشخصية وشؤون الرعايا متصلان بشكل صحيح";
             // 
             // timer3
             // 

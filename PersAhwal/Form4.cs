@@ -1880,7 +1880,8 @@ namespace PersAhwal
 
 
             BookIqrarNo.Text = colIDs[0] = VisaAppId.Text;
-            BookGreData.Text = colIDs[2] = التاريخ_الميلادي.Text;
+            BookGreData.Text = التاريخ_الميلادي_off.Text;
+            colIDs[2] = التاريخ_الميلادي.Text;
             BookHijriData.Text = التاريخ_الهجري.Text;
             colIDs[5] = AppType.Text;
             colIDs[6] = mandoubName.Text;
@@ -1988,6 +1989,11 @@ namespace PersAhwal
         private void txtEditID1_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void التاريخ_الميلادي_TextChanged(object sender, EventArgs e)
+        {
+            التاريخ_الميلادي_off.Text = التاريخ_الميلادي.Text.Split('-')[1] + " - " + التاريخ_الميلادي.Text.Split('-')[0] + " - " + التاريخ_الميلادي.Text.Split('-')[2];
         }
 
         private void addarchives(string[] text)

@@ -141,6 +141,7 @@ namespace PersAhwal
             if (!green57.Visible)
             {
                 fillDatagrid(userTable, DataSource57, green57, red57, labebserver57, "الاتصال مع مخدم قسمي الاحوال الشخصية وشؤون الرعايا غير متاح يرجى التواصل مع مشغل النظام");
+                fillDatagrid(userTable, DataSource56, green57, red57, labebserver57, "الاتصال مع مخدم قسمي الاحوال الشخصية وشؤون الرعايا غير متاح يرجى التواصل مع مشغل النظام");
             }
 
             username.Select();
@@ -660,14 +661,28 @@ namespace PersAhwal
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            currentStatus = File.ReadAllText(primeryLink + @"\updatingSetup.txt");
-            string status = File.ReadAllText(primeryLink + @"\updatingStatus.txt");
-            //MessageBox.Show(currentStatus);
-            if (currentStatus == "updating" && status == "Allowed")
+            try
             {
-                dataSourceWrite(primeryLink + @"\updatingSetup.txt", "done");
-                this.Close();
+                if (!File.Exists(primeryLink + @"\updatingSetup.txt"))
+                {
+                    dataSourceWrite(primeryLink + @"\updatingSetup.txt", "done");
+                    currentStatus = "done";
+                }
+                else
+                    currentStatus = File.ReadAllText(primeryLink + @"\updatingSetup.txt");
             }
+            catch (Exception ex) { }
+            try
+            {
+                string status = File.ReadAllText(primeryLink + @"\updatingStatus.txt");
+                
+                if (currentStatus == "updating" && status == "Allowed")
+                {
+                    dataSourceWrite(primeryLink + @"\updatingSetup.txt", "done");
+                    this.Close();
+                }
+            }
+            catch (Exception ex) { }
         }
 
         private void Password_TextChanged(object sender, EventArgs e)
@@ -680,6 +695,7 @@ namespace PersAhwal
             
             if (!green57.Visible) {
                 fillDatagrid(userTable, DataSource57, green57, red57, labebserver57, "الاتصال مع مخدم قسمي الاحوال الشخصية وشؤون الرعايا غير متاح يرجى التواصل مع مشغل النظام");
+                fillDatagrid(userTable, DataSource56, green57, red57, labebserver57, "الاتصال مع مخدم قسمي الاحوال الشخصية وشؤون الرعايا غير متاح يرجى التواصل مع مشغل النظام");
             }
         }
 

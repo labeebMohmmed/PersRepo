@@ -52,7 +52,8 @@ namespace PersAhwal
         string updateAll = "";
         string insertAll = "";
         string[] errors ;
-        string[] editRights ;
+        string editRights ;
+        string errorList;
         public Settings(string server, bool newSettings, string dataSource56, string dataSource57, bool setDataBase, string filepathIn, string filepathOut, string archFile, string formDataFile, string colName)
         {
             InitializeComponent();
@@ -94,6 +95,7 @@ namespace PersAhwal
                 //FillDataGridView("");
                 //flllPanelItemsboxes("ColName", colName);
             }
+            Suffex_preffixList();
         }
 
         private string[] getColList(string table)
@@ -668,298 +670,7 @@ namespace PersAhwal
 
         }
 
-        private void ExtendedFillBox(string v1, int s1, string v2, int s2, string v3, int s3, string v4, int s4, string v5, int s5, string vE1, int sE1, string vE2, int sE2, string vE3, int sE3, string vE4, int sE4, string vE5, int sE5, string vE61, string vE62, string vE63, string vE64, string vE65, string vE71, string vE72, string vE73, string vE74, string vE75, string v81, string[] vE81, string v82, string[] vE82, string v83, string[] vE83, string v84, string[] vE84, string v85, string[] vE85, string button1, string button2, string button3, string button4, string button5)
-        {
-            restShowingItems();
-            if (v1 != "")
-            {
-                Litext1.Text = v1;
-                Litext1.Visible = true;
-
-                if (s1 < 700)
-                    Vitext1.Width = s1;
-                else
-                {
-                    Vitext1.Multiline = true;
-                    Vitext1.Size = new System.Drawing.Size(s1, 146);
-                }
-                Vitext1.Visible = true;
-            }
-            if (v2 != "")
-            {
-                Litext2.Text = v2;
-                Litext2.Visible = true;
-                if (s2 < 700)
-                    Vitext2.Width = s2;
-                else
-                {
-                    Vitext2.Multiline = true;
-                    Vitext2.Size = new System.Drawing.Size(s2, 146);
-                }
-                Vitext2.Visible = true;
-            }
-            if (v3 != "")
-            {
-                Litext3.Text = v3;
-                Litext3.Visible = true;
-                if (s3 < 700)
-                    Vitext3.Width = s3;
-                else
-                {
-                    Vitext3.Multiline = true;
-                    Vitext3.Size = new System.Drawing.Size(s3, 146);
-                }
-                Vitext3.Visible = true;
-            }
-            if (v4 != "")
-            {
-                Litext4.Text = v4;
-                Litext4.Visible = true;
-                if (s4 < 700)
-                    Vitext4.Width = s4;
-                else
-                {
-                    Vitext4.Multiline = true;
-                    Vitext4.Size = new System.Drawing.Size(s4, 146);
-                }
-                Vitext4.Visible = true;
-            }
-            if (v5 != "")
-            {
-                Litext5.Text = v5;
-                Litext5.Visible = true;
-                if (s5 < 700)
-                    Vitext5.Width = s5;
-                else
-                {
-                    Vitext5.Multiline = true;
-                    Vitext5.Size = new System.Drawing.Size(s5, 146);
-                }
-                Vitext5.Visible = true;
-            }
-
-
-
-            if (vE1 != "")
-            {
-                Litext6.Text = vE1;
-                Litext6.Visible = true;
-                Vitext6.Width = sE1;
-                Vitext6.Visible = true;
-            }
-            if (vE2 != "")
-            {
-                Litext7.Text = vE2;
-                Litext7.Visible = true;
-                Vitext7.Width = sE2;
-                Vitext7.Visible = true;
-            }
-            if (vE3 != "")
-            {
-                Litext8.Text = vE3;
-                Litext8.Visible = true;
-                Vitext8.Width = sE3;
-                Vitext8.Visible = true;
-            }
-            if (vE4 != "")
-            {
-                Litext9.Text = vE4;
-                Litext9.Visible = true;
-                Vitext9.Width = sE4;
-                Vitext9.Visible = true;
-            }
-            //if (vE5 != "")
-            //{
-            //    labeltxt10.Text = vE5;
-            //    labeltxt10.Visible = true;
-            //    txt10.Width = sE5;
-            //    txt10.Visible = true;
-            //}
-
-
-            if (vE61 != "")
-            {
-                Licheck1.Text = vE61;
-                Licheck1.Visible = true;
-                if (DPTitle[0].Contains("_")) Vicheck1.Text = DPTitle[0].Split('_')[0];
-                else Vicheck1.Text = DPTitle[0];
-                Vicheck1.Visible = true;
-            }
-            if (vE62 != "")
-            {
-                Licheck2.Text = vE62;
-                Licheck2.Visible = true;
-                if (DPTitle[1].Contains("_")) Vicheck2.Text = DPTitle[1].Split('_')[0];
-                else Vicheck2.Text = DPTitle[1];
-                Vicheck3.Visible = true;
-            }
-            if (vE63 != "")
-            {
-                Licheck3.Text = vE63;
-                Licheck3.Visible = true;
-                if (DPTitle[2].Contains("_")) Vicheck3.Text = DPTitle[2].Split('_')[0];
-                else Vicheck3.Text = DPTitle[2];
-                Vicheck3.Visible = true;
-            }
-            if (vE64 != "")
-            {
-                Licheck4.Text = vE64;
-                Licheck4.Visible = true;
-                if (DPTitle[3].Contains("_")) Vicheck4.Text = DPTitle[3].Split('_')[0];
-                else Vicheck4.Text = DPTitle[3];
-                Vicheck4.Visible = true;
-            }
-            if (vE65 != "")
-            {
-                Licheck5.Text = vE65;
-                Licheck5.Visible = true;
-                if (DPTitle[4].Contains("_")) Vicheck5.Text = DPTitle[4].Split('_')[0];
-                else Vicheck5.Text = DPTitle[4];
-                Vicheck5.Visible = true;
-            }
-
-            if (vE71 != "")
-            {
-                LitxtDate1.Text = vE71;
-                LitxtDate1.Visible = true;
-                VitxtDate1LD.Visible = true;
-                VitxtDate1VD.Visible = true;
-                VitxtDate1LM.Visible = true;
-                VitxtDate1VM.Visible = true;
-                VitxtDate1LY.Visible = true;
-                VitxtDate1VY.Visible = true;
-            }
-
-            if (vE72 != "")
-            {
-                LitxtDate2.Text = vE71;
-                LitxtDate2.Visible = true;
-                VitxtDate2LD.Visible = true;
-                VitxtDate2VD.Visible = true;
-                VitxtDate2LM.Visible = true;
-                VitxtDate2VM.Visible = true;
-                VitxtDate2LY.Visible = true;
-                VitxtDate2VY.Visible = true;
-            }
-            if (vE73 != "")
-            {
-                LitxtDate3.Text = vE71;
-                LitxtDate3.Visible = true;
-                VitxtDate3LD.Visible = true;
-                VitxtDate3VD.Visible = true;
-                VitxtDate3LM.Visible = true;
-                VitxtDate3VM.Visible = true;
-                VitxtDate3LY.Visible = true;
-                VitxtDate3VY.Visible = true;
-            }
-            if (vE74 != "")
-            {
-                LitxtDate4.Text = vE71;
-                LitxtDate4.Visible = true;
-                VitxtDate4LD.Visible = true;
-                VitxtDate4VD.Visible = true;
-                VitxtDate4LM.Visible = true;
-                VitxtDate4VM.Visible = true;
-                VitxtDate4LY.Visible = true;
-                VitxtDate4VY.Visible = true;
-            }
-            if (vE75 != "")
-            {
-                LitxtDate5.Text = vE71;
-                LitxtDate5.Visible = true;
-                VitxtDate5LD.Visible = true;
-                VitxtDate5VD.Visible = true;
-                lalM5.Visible = true;
-                VitxtDate5VM.Visible = true;
-                VitxtDate5LY.Visible = true;
-                VitxtDate5VY.Visible = true;
-            }
-
-            if (v81 != "")
-            {
-                Licombo1.Visible = true;
-                Vicombo1.Visible = true;
-                Licombo1.Text = v81;
-
-                Vicombo1.Items.Clear();
-                for (int x = 0; x < vE81.Length; x++)
-                    Vicombo1.Items.Add(vE81[x]);
-                Vicombo1.SelectedIndex = 0;
-            }
-
-            if (v82 != "")
-            {
-                Licombo2.Visible = true;
-                Vicombo1.Visible = true;
-                Licombo2.Text = v81;
-
-                Vicombo1.Items.Clear();
-                for (int x = 0; x < vE82.Length; x++)
-                    Vicombo1.Items.Add(vE82[x]);
-                Vicombo1.SelectedIndex = 0;
-            }
-
-            if (v83 != "")
-            {
-                Licombo3.Visible = true;
-                Vicombo1.Visible = true;
-                Licombo3.Text = v81;
-
-                Vicombo1.Items.Clear();
-                for (int x = 0; x < vE83.Length; x++)
-                    Vicombo1.Items.Add(vE83[x]);
-                Vicombo1.SelectedIndex = 0;
-            }
-
-            if (v84 != "")
-            {
-                Licombo4.Visible = true;
-                Vicombo1.Visible = true;
-                Licombo4.Text = v81;
-
-                Vicombo1.Items.Clear();
-                for (int x = 0; x < vE84.Length; x++)
-                    Vicombo1.Items.Add(vE84[x]);
-                Vicombo1.SelectedIndex = 0;
-            }
-
-            if (v85 != "")
-            {
-                Licombo5.Visible = true;
-                Vicombo1.Visible = true;
-                Licombo5.Text = v81;
-
-                Vicombo1.Items.Clear();
-                for (int x = 0; x < vE85.Length; x++)
-                    Vicombo1.Items.Add(vE85[x]);
-                Vicombo1.SelectedIndex = 0;
-            }
-            if (button1 != "")
-            {
-                LibtnAdd1.Text = button1;
-                LibtnAdd1.Visible = true;
-            }
-            if (button2 != "")
-            {
-                LibtnAdd2.Text = button2;
-                LibtnAdd2.Visible = true;
-            }
-            if (button3 != "")
-            {
-                LibtnAdd3.Text = button3;
-                LibtnAdd3.Visible = true;
-            }
-            if (button4 != "")
-            {
-                LibtnAdd4.Text = button4;
-                LibtnAdd4.Visible = true;
-            }
-            if (button5 != "")
-            {
-                LibtnAdd5.Text = button5;
-                LibtnAdd5.Visible = true;
-            }
-        }
+        
         private void restShowingItems()
         {
             foreach (Control control in PanelItemsboxes.Controls)
@@ -1207,14 +918,14 @@ namespace PersAhwal
                 langAuth.Text = dataGridView1.CurrentRow.Cells["Lang"].Value.ToString();
                 ColRight.Text = dataGridView1.CurrentRow.Cells["ColRight"].Value.ToString();
                 TextModel.Text = dataGridView1.CurrentRow.Cells["TextModel"].Value.ToString();
-                editRights = dataGridView1.CurrentRow.Cells["editRights"].Value.ToString().Split('،');
-                string error = dataGridView1.CurrentRow.Cells["errorList"].Value.ToString();
+                editRights = dataGridView1.CurrentRow.Cells["editRights"].Value.ToString();
+                errorList = dataGridView1.CurrentRow.Cells["errorList"].Value.ToString();
                 
-                if (error != "")
+                if (errorList != "")
                 {
                     panellError.Visible = true;
                     panellError.BringToFront();
-                    errors = error.Split('_');
+                    errors = errorList.Split('_');
                     //MessageBox.Show(error);MessageBox.Show(errors[0]);
                     error1.Checked = Convert.ToBoolean(errors[0]);
                     error2.Checked = Convert.ToBoolean(errors[1]);
@@ -1231,7 +942,7 @@ namespace PersAhwal
                     }
                     button22.Visible = true; 
                     Nobox = 0;
-                    foreach (string str in editRights)
+                    foreach (string str in editRights.Split('،'))
                     {
                         if (str != "")
                         {
@@ -1488,6 +1199,262 @@ namespace PersAhwal
             }
         }
 
+        private void dataGridView1_RowIndex(string colName)
+        {
+            for (int indEX = 0; indEX < dataGridView1.Rows.Count - 1; indEX++)
+                if (colName == dataGridView1.Rows[indEX].Cells["colName"].Value.ToString())
+                {
+                    idIndex = Convert.ToInt32(dataGridView1.Rows[indEX].Cells[0].Value.ToString());
+                    langAuth.Text = dataGridView1.Rows[indEX].Cells["Lang"].Value.ToString();
+                    ColRight.Text = dataGridView1.Rows[indEX].Cells["ColRight"].Value.ToString();
+                    TextModel.Text = dataGridView1.Rows[indEX].Cells["TextModel"].Value.ToString();
+                    editRights = dataGridView1.Rows[indEX].Cells["editRights"].Value.ToString();
+                    errorList = dataGridView1.Rows[indEX].Cells["errorList"].Value.ToString();
+
+                    if (errorList != "")
+                    {
+                        panellError.Visible = true;
+                        panellError.BringToFront();
+                        errors = errorList.Split('_');
+                        //MessageBox.Show(error);MessageBox.Show(errors[0]);
+                        error1.Checked = Convert.ToBoolean(errors[0]);
+                        error2.Checked = Convert.ToBoolean(errors[1]);
+                        error3.Checked = Convert.ToBoolean(errors[2]);
+                        error4.Checked = Convert.ToBoolean(errors[3]);
+                        error5.Checked = Convert.ToBoolean(errors[4]);
+                        if (errors[5] == "False")
+                            labelError.Visible = otherError.Visible = error6.Checked = false;
+                        else
+                        {
+                            otherError.Visible = labelError.Visible = true;
+                            error6.Checked = true;
+                            otherError.Text = errors[5];
+                        }
+                        button22.Visible = true;
+                        Nobox = 0;
+                        foreach (string str in editRights.Split('،'))
+                        {
+                            if (str != "")
+                            {
+                                //{
+                                CheckBox chk = new CheckBox();
+                                chk.TabIndex = Nobox;
+                                chk.Width = 80;
+                                chk.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                                if (Nobox == 0) chk.Width = panelAuthOptions.Width - 100;
+                                else chk.Width = panelAuthOptions.Width - 130;
+                                chk.Height = 33;
+                                chk.Location = new System.Drawing.Point(70, 3 + Nobox * 37);
+                                chk.Name = "checkBox" + Nobox.ToString();
+                                try
+                                {
+                                    chk.Text = str.Split('_')[1] + "،";
+                                    chk.Tag = "valid";
+                                    if (str.Split('_')[0] == "1")
+                                        chk.CheckState = CheckState.Checked;
+                                    else chk.CheckState = CheckState.Unchecked;
+                                }
+                                catch (Exception ex)
+                                {
+                                    //MessageBox.Show(str);
+                                }
+                                Nobox++;
+                                panellError.Controls.Add(chk);
+                            }
+                        }
+                    }
+
+                    foreach (Control control in panelText.Controls)
+                    {
+                        for (int index = 0; index < allList.Length; index++)
+                        {
+                            if (allList[index] == control.Name)
+                            {
+                                control.Text = dataGridView1.Rows[indEX].Cells[allList[index]].Value.ToString();
+                            }
+                        }
+                    }
+                    foreach (Control control in panelDate.Controls)
+                    {
+                        for (int index = 0; index < allList.Length; index++)
+                        {
+
+                            if (allList[index] == control.Name)
+                            {
+                                control.Text = dataGridView1.Rows[indEX].Cells[allList[index]].Value.ToString();
+
+                            }
+                        }
+                    }
+                    foreach (Control control in panelCombo.Controls)
+                    {
+                        for (int index = 0; index < allList.Length; index++)
+                        {
+                            if (allList[index] == control.Name)
+                            {
+                                control.Text = dataGridView1.Rows[indEX].Cells[allList[index]].Value.ToString();
+                            }
+                        }
+                    }
+                    foreach (Control control in panelButton.Controls)
+                    {
+                        for (int index = 0; index < allList.Length; index++)
+                        {
+                            if (allList[index] == control.Name)
+                            {
+                                control.Text = dataGridView1.Rows[indEX].Cells[allList[index]].Value.ToString();
+                            }
+                        }
+                    }
+                    foreach (Control control in panelCheck.Controls)
+                    {
+                        for (int index = 0; index < allList.Length; index++)
+                        {
+                            if (allList[index] == control.Name)
+                            {
+                                if (allList[index] == "optionscheck1")
+                                {
+                                    if (dataGridView1.Rows[indEX].Cells["optionscheck1"].Value.ToString().Trim() == "_")
+                                    {
+                                        icheckoption11.Text = icheckoption12.Text = "";
+                                    }
+                                    else if (dataGridView1.Rows[indEX].Cells["optionscheck1"].Value.ToString().Contains("_"))
+                                    {
+                                        icheckoption11.Text = dataGridView1.Rows[indEX].Cells["optionscheck1"].Value.ToString().Split('_')[0];
+                                        icheckoption12.Text = dataGridView1.Rows[indEX].Cells["optionscheck1"].Value.ToString().Split('_')[1];
+                                    }
+                                }
+                                else control.Text = dataGridView1.Rows[indEX].Cells[allList[index]].Value.ToString();
+                            }
+                        }
+                    }
+                    for (int index = 0; index < allList.Length; index++)
+                        for (int x = 1; x < 6; x++)
+                        {
+                            if (allList[index] == "icomboOption" + x.ToString())
+                            {
+                                txtComboOptions[x - 1] = dataGridView1.Rows[indEX].Cells[allList[index]].Value.ToString();
+                            }
+                        }
+                    if (txtComboOptions[0] != "")
+                    {
+                        Vicombo1.Items.Clear();
+                        for (int x = 0; x < txtComboOptions[0].Split('_').Length; x++)
+                            Vicombo1.Items.Add(txtComboOptions[0].Split('_')[x]);
+                        Vicombo1.SelectedIndex = 0;
+                    }
+                    if (txtComboOptions[1] != "")
+                    {
+                        Vicombo2.Items.Clear();
+                        for (int x = 0; x < txtComboOptions[1].Split('_').Length; x++)
+                            Vicombo2.Items.Add(txtComboOptions[1].Split('_')[x]);
+                        Vicombo2.SelectedIndex = 0;
+                    }
+                    if (txtComboOptions[2] != "")
+                    {
+                        Vicombo3.Items.Clear();
+                        for (int x = 0; x < txtComboOptions[2].Split('_').Length; x++)
+                            Vicombo3.Items.Add(txtComboOptions[2].Split('_')[x]);
+                        Vicombo3.SelectedIndex = 0;
+                    }
+                    if (txtComboOptions[3] != "")
+                    {
+                        Vicombo4.Items.Clear();
+                        for (int x = 0; x < txtComboOptions[3].Split('_').Length; x++)
+                            Vicombo4.Items.Add(txtComboOptions[3].Split('_')[x]);
+                        Vicombo4.SelectedIndex = 0;
+                    }
+                    if (txtComboOptions[4] != "")
+                    {
+                        Vicombo5.Items.Clear();
+                        for (int x = 0; x < txtComboOptions[4].Split('_').Length; x++)
+                            Vicombo5.Items.Add(txtComboOptions[4].Split('_')[x]);
+                        Vicombo5.SelectedIndex = 0;
+                    }
+
+
+
+                    //language.Text = dataGridView1.Rows[indEX].Cells[26].Value.ToString();
+                    if (langAuth.Text == "" || langAuth.Text == "العربية")
+                    {
+                        langAuth.CheckState = CheckState.Unchecked;
+                        langAuth.Text = "العربية";
+                        langIqrar.CheckState = CheckState.Unchecked;
+                        langIqrar.Text = "العربية";
+                    }
+                    else
+                    {
+                        langAuth.CheckState = CheckState.Checked;
+                        langAuth.Text = "الانجليزية";
+                        langIqrar.CheckState = CheckState.Checked;
+                        langIqrar.Text = "الانجليزية";
+                    }
+
+                    if (ColRight.Text != "")
+                    {
+                        string strColName = ColumnName = dataGridView1.Rows[indEX].Cells["ColName"].Value.ToString();
+
+
+                        if (ColumnName.Contains("-"))
+                        {
+                            if (ColumnName.Split('-')[1].All(char.IsDigit))
+                                try
+                                {
+                                    mainTypeAuth.SelectedIndex = Convert.ToInt32(ColumnName.Split('-')[1]);
+                                }
+                                catch (Exception exp)
+                                {
+                                }
+                            //MessageBox.Show(strColName);
+                            int x = 0;
+                            //MessageBox.Show(ComboProcedure.Items.Count.ToString());
+                            for (; x < subTypeAuth.Items.Count; x++)
+                            {
+                                //MessageBox.Show(x.ToString());
+                                if (subTypeAuth.Items[x].ToString().Trim() == strColName.Split('-')[0].Trim())
+                                {
+                                    //MessageBox.Show(ComboProcedure.Items[x].ToString().Trim() +" -- "+ strColName.Split('-')[0].Trim());
+                                    subTypeAuth.SelectedIndex = x;
+                                    break;
+                                }
+                            }
+
+                            //ComboProcedure.Text = ColumnName.Split('-')[0];
+                        }
+                        panelAuthInfo.Visible = true;
+                        panelIqrar.Visible = false;
+                    }
+                    else
+                    {
+                        ColumnName = dataGridView1.Rows[indEX].Cells[25].Value.ToString();
+                        if (ColumnName.Contains("-"))
+                        {
+                            if (ColumnName.Split('-')[1].All(char.IsDigit))
+                                try
+                                {
+                                    mainTypeIqrar.SelectedIndex = Convert.ToInt32(ColumnName.Split('-')[1]);
+                                }
+                                catch (Exception exp)
+                                {
+                                }
+
+                            subTypeIqrar.Text = ColumnName.Split('-')[0];
+                        }
+                        panelAuthInfo.Visible = false;
+                        panelIqrar.Visible = true;
+                    }
+                    dataGridView1.Visible = false;
+                    ContextPanel.Visible = true;
+                    button117.Enabled = true;
+                    //review1 = true;
+                    review1 = false;
+                    btnDelete.Visible = btnClear.Visible = true;
+                    DPTitle[0] = icheckoption11.Text + "_" + icheckoption12.Text;
+                    //ExtendedFillBox(itext1.Text, Convert.ToInt32(itxtlenght1.Text), itext2.Text, Convert.ToInt32(itxtlenght2.Text), itext3.Text, Convert.ToInt32(itxtlenght3.Text), itext4.Text, Convert.ToInt32(itxtlenght4.Text), itext5.Text, Convert.ToInt32(itxtlenght5.Text), "", 50, "", 50, "", 50, "", 50, "", 50, icheck1.Text, "", "", "", "", itxtDate1.Text, "", "", "", "", icombo1.Text, txtComboOptions[0].Split('_'), icombo2.Text, txtComboOptions[1].Split('_'), "", Empty, "", Empty, "", Empty, ibtnAdd1.Text, "", "", "", "");
+                    break;
+                }
+        }
+
         private void checkSexType_CheckedChanged_2(object sender, EventArgs e)
         {
 
@@ -1519,133 +1486,68 @@ namespace PersAhwal
             }
         }
 
-        private string SuffPrefReplacements(string text)
-        {
-            Suffex_preffixList();
-            //if (text.Contains("tN"))
-            //    return text.Replace("tN", ApplicantName.Text);
-            //if (text.Contains("tI"))
-            //    return text.Replace("tP", DocNo.Text);
-            //if (text.Contains("tS"))
-            //    return text.Replace("tS", DocSource.Text);
-            //if (text.Contains("tSS"))
-            //{
-            //    if (ApplicantSex.Text == "ذكر") return "";
-            //    return "ة";
-            //}
-            //if (text.Contains("tT"))
-            //    return text.Replace("tT", titleEng.Text);
-            //if (text.Contains("tD"))
-            //    return text.Replace("tD", DocType.Text);
-
-            if (text.Contains("t1"))
-                return text.Replace("t1", Vitext1.Text);
-            if (text.Contains("t2"))
-                return text.Replace("t2", Vitext2.Text);
-            if (text.Contains("t3"))
-                return text.Replace("t3", Vitext3.Text);
-            if (text.Contains("t4"))
-                return text.Replace("t4", Vitext4.Text);
-            if (text.Contains("t5"))
-                return text.Replace("t5", Vitext5.Text);
-
-            if (text.Contains("c1"))
-                return text.Replace("c1", icheck1.Text);
-
-            if (text.Contains("m1"))
-                return text.Replace("m1", Vicombo1.Text);
-            if (text.Contains("m2"))
-                return text.Replace("m2", Vicombo2.Text);
-
-            if (text.Contains("a1"))
-                return text.Replace("a1", ibtnAdd1.Text);
-
-            if (text.Contains("n1"))
-                return text.Replace("n1", " " + VitxtDate1VD.Text + "/" + VitxtDate1VM.Text + "/" + VitxtDate1VY.Text + " ");
-            if (text.Contains("#*#"))
-                return text.Replace("#*#", preffix[0, 10]);
-
-            if (text.Contains("#3"))
-                return text.Replace("#3", preffix[0, 7]);
-            if (text.Contains("#4"))
-                return text.Replace("#4", preffix[0, 8]);
-            if (text.Contains("#5"))
-                return text.Replace("#5", preffix[0, 9]);
-
-            if (text.Contains("#1"))
-                return text.Replace("#1", preffix[0, 11]);
-            if (text.Contains("#2"))
-                return text.Replace("#2", preffix[0, 12]);
-
-            if (text.Contains("@*@"))
-                return text.Replace("@*@", "لدى  برقم الايبان ()");
-            if (text.Contains("$$$"))
-                return text.Replace("$$$", preffix[0, 0]);
-            if (text.Contains("&&&"))
-                return text.Replace("&&&", preffix[0, 1]);
-            if (text.Contains("^^^"))
-                return text.Replace("^^^", preffix[0, 2]);
-            if (text.Contains("###"))
-                return text.Replace("###", preffix[0, 4]);
-            if (text.Contains("***"))
-                return text.Replace("***", preffix[0, 3]);
-            else return text;
-        }
-
-
+        
 
 
         private void Suffex_preffixList()
         {
 
-            preffix[0, 0] = "ي"; //$$$ "ي/نا";
-            preffix[1, 0] = "ي";
-            preffix[2, 0] = "نا";
-            preffix[3, 0] = "نا";
-            preffix[4, 0] = "نا";
-            preffix[5, 0] = "نا";
 
-            preffix[0, 1] = "ت";//&&& "ت/نا";
+            preffix[0, 0] = "ي"; //$$$
+            preffix[1, 0] = "ي";
+            preffix[2, 0] = "ا";
+            preffix[3, 0] = "ا";
+            preffix[4, 0] = "ا";
+            preffix[5, 0] = "ا";
+
+
+            preffix[0, 1] = "ت";//&&&
             preffix[1, 1] = "ت";
             preffix[2, 1] = "نا";
             preffix[3, 1] = "نا";
             preffix[4, 1] = "نا";
             preffix[5, 1] = "نا";
 
-            preffix[0, 2] = "ني";//^^^ "ني/نا";
+
+            preffix[0, 2] = "ني";//^^^
             preffix[1, 2] = "ني";
             preffix[2, 2] = "نا";
             preffix[3, 2] = "نا";
             preffix[4, 2] = "نا";
             preffix[5, 2] = "نا";
 
-            preffix[0, 3] = "";//*** "/ت/ا/تا/ن/وا                               
+
+            preffix[0, 3] = "";//***
             preffix[1, 3] = "ت";
             preffix[2, 3] = "ا";
             preffix[3, 3] = "تا";
             preffix[4, 3] = "ن";
             preffix[5, 3] = "وا";
 
-            preffix[0, 4] = "ه";//### "ه/ها/هما/هما/من/هم"
+
+            preffix[0, 4] = "ه";//###
             preffix[1, 4] = "ها";
             preffix[2, 4] = "هما";
             preffix[3, 4] = "هما";
             preffix[4, 4] = "هن";
             preffix[5, 4] = "هم";
 
-            preffix[0, 5] = ""; //
+
+            preffix[0, 5] = "";
             preffix[1, 5] = "ة";
             preffix[2, 5] = "ان";
             preffix[3, 5] = "تان";
             preffix[4, 5] = "ات";
             preffix[5, 5] = "ون";
 
-            preffix[0, 6] = "";
+
+            preffix[0, 6] = "";//#5
             preffix[1, 6] = "ة";
             preffix[2, 6] = "ين";
             preffix[3, 6] = "تين";
             preffix[4, 6] = "ات";
             preffix[5, 6] = "رين";
+
 
             preffix[0, 7] = "ينوب";
             preffix[1, 7] = "تنوب";
@@ -1654,6 +1556,7 @@ namespace PersAhwal
             preffix[4, 7] = "ينبن";
             preffix[5, 7] = "ينوبوا";
 
+
             preffix[0, 8] = "يقوم";
             preffix[1, 8] = "تقوم";
             preffix[2, 8] = "يقوما";
@@ -1661,27 +1564,51 @@ namespace PersAhwal
             preffix[4, 8] = "يقمن";
             preffix[5, 8] = "يقوموا";
 
-            preffix[0, 9] = "نصيبي";
+
+            preffix[0, 9] = "نصيبي";//#5
             preffix[1, 9] = "نصيبي";
             preffix[2, 9] = "نصيبينا";
             preffix[3, 9] = "نصيبينا";
             preffix[4, 9] = "أنصبتنا";
             preffix[5, 9] = "أنصبتنا";
 
+
             preffix[0, 10] = "ت";//#*#
             preffix[1, 10] = "";
 
-            preffix[0, 11] = "التي";//#1
-            preffix[1, 11] = "الذي";
 
-            preffix[0, 12] = "هو";//#2
-            preffix[1, 12] = "هي";
-            preffix[2, 12] = "هما";
-            preffix[3, 12] = "هما";
-            preffix[4, 12] = "هن";
-            preffix[5, 12] = "هم";
+
+            preffix[0, 11] = "تنازلت تنازلاً نهائياً";//&&&
+            preffix[1, 11] = "تنازلت تنازلاً نهائياً";
+            preffix[2, 11] = "تنازلنا تنازلاً نهائياً";
+            preffix[3, 11] = "تنازلنا تنازلاً نهائياً";
+            preffix[4, 11] = "تنازلنا تنازلاً نهائياً";
+            preffix[5, 11] = "تنازلنا تنازلاً نهائياً";
+
+
+            preffix[0, 12] = "ي";//"%&%
+            preffix[1, 12] = "ي";
+            preffix[2, 12] = "نا";
+            preffix[3, 12] = "نا";
+            preffix[4, 12] = "نا";
+            preffix[5, 12] = "نا";
+
+
+            preffix[0, 13] = "نت";//#$#
+            preffix[1, 13] = "نت";
+            preffix[2, 13] = "نا";
+            preffix[3, 13] = "نا";
+            preffix[4, 13] = "نا";
+            preffix[5, 13] = "نا";
+
+            preffix[0, 14] = "أ";//&^&
+            preffix[1, 14] = "إ";
+            preffix[2, 14] = "ن";
+            preffix[3, 14] = "ن";
+            preffix[4, 14] = "ن";
+            preffix[5, 14] = "ن";
+
         }
-
 
         public void PopulateCheckBoxes(string col, string table, string dataSource)
         {
@@ -2409,7 +2336,8 @@ namespace PersAhwal
         {
             //if (!NewColumn) return;
             FillDataGridView("");
-            flllPanelItemsboxes("ColName", subTypeAuth.Text + "-" + mainTypeAuth.SelectedIndex.ToString());
+            dataGridView1_RowIndex(subTypeAuth.Text + "-" + mainTypeAuth.SelectedIndex.ToString());
+            //flllPanelItemsboxes("ColName", subTypeAuth.Text + "-" + mainTypeAuth.SelectedIndex.ToString());
             //for (int id = 0; id < dataGridView1.Rows.Count - 1; id++)
             //{
             //    if (dataGridView1.Rows[id].Cells[25].Value.ToString() == subTypeAuth.Text + "-" + mainTypeAuth.SelectedIndex.ToString())
@@ -2755,18 +2683,18 @@ namespace PersAhwal
         private void ProFormType_SelectedIndexChanged(object sender, EventArgs e)
         {
             FillDataGridView("");
-            for (int id = 0; id < dataGridView1.Rows.Count - 1; id++)
-            {
-                if (dataGridView1.Rows[id].Cells[25].Value.ToString() == subTypeIqrar.Text + "-" + mainTypeIqrar.SelectedIndex.ToString())
-                {
-                    ShowRowNo(id);
-                    review1 = true;
-                    DPTitle[0] = icheckoption11.Text + "_" + icheckoption12.Text;
-                    ExtendedFillBox(itext1.Text, Convert.ToInt32(itext1Length.Text), itext2.Text, Convert.ToInt32(itext2Length.Text), itext3.Text, Convert.ToInt32(itext3Length.Text), itext4.Text, Convert.ToInt32(itext4Length.Text), itext5.Text, Convert.ToInt32(itext5Length.Text), "", 50, "", 50, "", 50, "", 50, "", 50, icheck1.Text, "", "", "", "", itxtDate1.Text, "", "", "", "", icombo1.Text, txtComboOptions[0].Split('_'), icombo2.Text, txtComboOptions[1].Split('_'), "", Empty, "", Empty, "", Empty, ibtnAdd1.Text, "", "", "", "");
-                    idIndex = Convert.ToInt32(dataGridView1.Rows[id].Cells[0].Value.ToString());
-                    button117.Enabled = button109.Enabled = true;
-                }
-            }
+            dataGridView1_RowIndex(subTypeIqrar.Text + "-" + mainTypeIqrar.SelectedIndex.ToString());
+            //for (int id = 0; id < dataGridView1.Rows.Count - 1; id++)
+            //{
+            //    if (dataGridView1.Rows[id].Cells[25].Value.ToString() == subTypeIqrar.Text + "-" + mainTypeIqrar.SelectedIndex.ToString())
+            //    {
+            //        ShowRowNo(id);
+            //        review1 = true;
+            //        DPTitle[0] = icheckoption11.Text + "_" + icheckoption12.Text;                    
+            //        idIndex = Convert.ToInt32(dataGridView1.Rows[id].Cells[0].Value.ToString());
+            //        button117.Enabled = button109.Enabled = true;
+            //    }
+            //}
         }
 
         private void btnClear_Click(object sender, EventArgs e)
@@ -2820,7 +2748,7 @@ namespace PersAhwal
             for (int index = 0; index < allList.Length; index++) 
                 for (int x = 1; x < 6; x++)
                     {
-                        if (allList[index] == "icomboOption" + x.ToString())
+                        if (allList[index] == "icombo" + x.ToString() + "Option")
                         {
                             sqlCmd.Parameters.AddWithValue("@" + allList[index], txtComboOptions[x - 1]);
                         }
@@ -2847,6 +2775,8 @@ namespace PersAhwal
                 }
             }
             sqlCmd.Parameters.AddWithValue("@TextModel", TextModel.Text);
+            sqlCmd.Parameters.AddWithValue("@editRights", editRights);
+            
 
             if (panelAuthInfo.Visible)
             {
@@ -2929,27 +2859,27 @@ namespace PersAhwal
                         if (control.Name.Contains("1"))
                         {
                             CreateColumn("icombo1Length", "TableAddContext");
-                            CreateColumn("icomboOption1", "TableAddContext");
+                            CreateColumn("icombo1Option", "TableAddContext");
                         }
                         else if (control.Name.Contains("2"))
                         {
                             CreateColumn("icombo2Length", "TableAddContext");
-                            CreateColumn("icomboOption2", "TableAddContext");
+                            CreateColumn("icombo2Option", "TableAddContext");
                         }
                         else if (control.Name.Contains("3"))
                         {
                             CreateColumn("icombo3Length", "TableAddContext");
-                            CreateColumn("icomboOption3", "TableAddContext");
+                            CreateColumn("icombo3Option", "TableAddContext");
                         }
                         else if (control.Name.Contains("4"))
                         {
                             CreateColumn("icombo4Length", "TableAddContext");
-                            CreateColumn("icomboOption4", "TableAddContext");
+                            CreateColumn("icombo4Option", "TableAddContext");
                         }
                         else if (control.Name.Contains("5"))
                         {
                             CreateColumn("icombo5Length", "TableAddContext");
-                            CreateColumn("icomboOption5", "TableAddContext");
+                            CreateColumn("icombo5Option", "TableAddContext");
                         }
                     }
             }
@@ -2989,6 +2919,86 @@ namespace PersAhwal
                             CreateColumn("ibtnAdd5Length", "TableAddContext");
                     }
             }
+        }
+
+        private string SuffPrefReplacements(string text, int appCaseIndex, int intAuthcases)
+        {
+            appCaseIndex = 0;
+            intAuthcases = 0;
+
+            if (text.Contains("t1"))
+                return text.Replace("t1", Vitext1.Text);
+            if (text.Contains("t2"))
+                return text.Replace("t2", Vitext2.Text);
+            if (text.Contains("t3"))
+                return text.Replace("t3", Vitext3.Text);
+            if (text.Contains("t4"))
+                return text.Replace("t4", Vitext4.Text);
+
+            if (text.Contains("t5"))
+                return text.Replace("t5", Vitext5.Text);
+
+            if (text.Contains("c1"))
+                return text.Replace("c1", Vicheck1.Text);
+
+            if (text.Contains("m1"))
+                return text.Replace("m1", Vicombo1.Text);
+            if (text.Contains("m2"))
+                return text.Replace("m2", Vicombo2.Text);
+
+            if (text.Contains("a1"))
+                return text.Replace("a1", LibtnAdd1.Text);
+
+            if (text.Contains("n1"))
+                return text.Replace("n1", " " + VitxtDate1.Text + " ");
+            if (text.Contains("#*#"))
+                return text.Replace("#*#", preffix[appCaseIndex, 10]);
+
+            if (text.Contains("#1"))
+                return text.Replace("#1", preffix[appCaseIndex, 11]);
+
+            if (text.Contains("#2"))
+                return text.Replace("#2", preffix[appCaseIndex, 12]);
+            //if (text.Contains("@*@"))
+            //{
+            //    spacialCharacter = "@*@";
+            //    return text.Replace("@*@", "لدى  برقم الايبان ()");
+            //}
+
+            //if (text.Contains("#8"))
+            //    return text.Replace("#8", removedDocNo.Text);
+            //if (text.Contains("#6"))
+            //    return text.Replace("#6", removedDocSource.Text);
+            //if (text.Contains("#7"))
+            //    return text.Replace("#7", removedDocDate.Text);
+
+
+
+            if (text.Contains("#3"))
+                return text.Replace("#3", preffix[0, 7]);
+            if (text.Contains("#4"))
+                return text.Replace("#4", preffix[0, 8]);
+            if (text.Contains("#5"))
+                return text.Replace("#5", preffix[0, 9]);
+
+
+
+            if (text.Contains("$$$"))
+                return text.Replace("$$$", preffix[appCaseIndex, 0]);
+            if (text.Contains("&&&"))
+                return text.Replace("&&&", preffix[appCaseIndex, 1]);
+            if (text.Contains("^^^"))
+                return text.Replace("^^^", preffix[appCaseIndex, 2]);
+            if (text.Contains("###"))
+                return text.Replace("###", preffix[intAuthcases, 4]);
+            if (text.Contains("***"))
+                return text.Replace("***", preffix[intAuthcases, 3]);
+            if (text.Contains("%&%"))
+                return text.Replace("%&%", preffix[appCaseIndex, 12]);
+            if (text.Contains("#$#"))
+                return text.Replace("#$#", preffix[appCaseIndex, 13]);
+
+            else return text;
         }
         private void flllPanelItemsboxes(string rowID, string cellValue)
         {

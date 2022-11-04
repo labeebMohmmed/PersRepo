@@ -570,7 +570,8 @@ namespace PersAhwal
                     BookvConsul.Text = AttendViceConsul.Text;
                     BookAppiIssSource.Text = IssuedSource.Text;
                     BookPassIqama.Text = PassIqama.Text;
-                    BookGreData.Text = colIDs[2] = التاريخ_الميلادي.Text;
+                    BookGreData.Text = التاريخ_الميلادي_off.Text;
+                    colIDs[2] = التاريخ_الميلادي.Text;
                     BookHijriData.Text = التاريخ_الهجري.Text;
                     if (IqrarPurpose.Text == "إعالة أسرية")
                     {
@@ -1389,6 +1390,11 @@ namespace PersAhwal
                 btnEditID.Text = "إجراء";
                 txtEditID1.Visible = txtEditID2.Visible = true;
             }
+        }
+
+        private void التاريخ_الميلادي_TextChanged(object sender, EventArgs e)
+        {
+            التاريخ_الميلادي_off.Text = التاريخ_الميلادي.Text.Split('-')[1] + " - " + التاريخ_الميلادي.Text.Split('-')[0] + " - " + التاريخ_الميلادي.Text.Split('-')[2];
         }
 
         private void button4_Click_1(object sender, EventArgs e)
