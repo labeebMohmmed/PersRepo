@@ -1608,6 +1608,21 @@ namespace PersAhwal
             preffix[4, 14] = "ن";
             preffix[5, 14] = "ن";
 
+            preffix[0, 15] = "ي";//&^^
+            preffix[1, 15] = "ت";
+            preffix[2, 15] = "ي";
+            preffix[3, 15] = "ت";
+            preffix[4, 15] = "ي";
+            preffix[5, 15] = "ي";
+
+            preffix[0, 16] = "";//*%*
+            preffix[1, 16] = "";
+            preffix[2, 17] = "ا";
+            preffix[3, 18] = "ا";
+            preffix[4, 19] = "ن";
+            preffix[5, 20] = "وا";
+
+
         }
 
         public void PopulateCheckBoxes(string col, string table, string dataSource)
@@ -2997,6 +3012,12 @@ namespace PersAhwal
                 return text.Replace("%&%", preffix[appCaseIndex, 12]);
             if (text.Contains("#$#"))
                 return text.Replace("#$#", preffix[appCaseIndex, 13]);
+            if (text.Contains("&^&"))
+                return text.Replace("&^&", preffix[appCaseIndex, 14]);
+            if (text.Contains("&^^"))
+                return text.Replace("&^^", preffix[appCaseIndex, 15]);
+            if (text.Contains("*%*"))
+                return text.Replace("*%*", preffix[appCaseIndex, 16]);
 
             else return text;
         }

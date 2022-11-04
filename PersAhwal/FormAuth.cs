@@ -2647,7 +2647,7 @@ namespace PersAhwal
                 return text.Replace("#5", preffix[0, 9]);
 
 
-            
+
             if (text.Contains("$$$"))
                 return text.Replace("$$$", preffix[appCaseIndex, 0]);
             if (text.Contains("&&&"))
@@ -2662,6 +2662,8 @@ namespace PersAhwal
                 return text.Replace("%&%", preffix[appCaseIndex, 12]);
             if (text.Contains("#$#"))
                 return text.Replace("#$#", preffix[appCaseIndex, 13]);
+            if (text.Contains("&^&"))
+                return text.Replace("&^&", preffix[appCaseIndex, 14]);
 
             else return text;
         }
