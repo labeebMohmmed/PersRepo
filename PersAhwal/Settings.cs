@@ -1617,10 +1617,10 @@ namespace PersAhwal
 
             preffix[0, 16] = "";//*%*
             preffix[1, 16] = "";
-            preffix[2, 17] = "ا";
-            preffix[3, 18] = "ا";
-            preffix[4, 19] = "ن";
-            preffix[5, 20] = "وا";
+            preffix[2, 16] = "ا";
+            preffix[3, 16] = "ا";
+            preffix[4, 16] = "ن";
+            preffix[5, 26] = "وا";
 
 
         }
