@@ -3699,7 +3699,11 @@ namespace PersAhwal
             if (e.Error != null)
             {
                 pictureBox1.Image = PersAhwal.Properties.Resources.noImage;
-                System.Diagnostics.Process.Start(picPath);
+                try
+                {
+                    System.Diagnostics.Process.Start(picPath);
+                }
+                catch (Exception ex) { }
             }
             
         }

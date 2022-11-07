@@ -97,7 +97,7 @@ namespace PersAhwal
         string lastInput5 = "";
         string[] foundList;
         int appCaseIndex = 0;
-        int intAuthcases = 0;
+        
         string legaceyAuthInfo = "";
         string archState = "new";
         string Jobposition = "";
@@ -118,6 +118,8 @@ namespace PersAhwal
         string oldText = "";
         string startText = "";
         bool notFiled = true;
+        string[] charac = new string[20];
+        string controlName = "";
         public FormAuth(int Atvc, int rowid, string AuthNo, string datasource, string filespathIn, string filespathOut, string empName, string jobposition, string greDate, string hijriDate)
         {
             InitializeComponent();
@@ -139,8 +141,8 @@ namespace PersAhwal
         public void boxesPreparations() 
         {
             appCaseIndex = Appcases(النوع, addNameIndex); 
-            intAuthcases = Appcases(جنس_الموكَّل, addAuthticIndex);
-            Console.WriteLine("boxesPreparations " + addNameIndex + appCaseIndex + addAuthticIndex + intAuthcases);
+            صفة_الموكل_off.SelectedIndex = Appcases(جنس_الموكَّل, addAuthticIndex);
+            Console.WriteLine("boxesPreparations " + addNameIndex + appCaseIndex + addAuthticIndex + صفة_الموكل_off.SelectedIndex);
             txtfinal.Text = "";
             //مقدم الطلب والوكيل
             if (addNameIndex == 1)
@@ -330,8 +332,16 @@ namespace PersAhwal
             forbidCol[10] = "Extension2";
             forbidCol[11] = "Extension3";
             forbidCol[12] = "DocxData";
-            
-            
+
+            charac[0] = "$$$";
+            charac[1] = "&&&";
+            charac[2] = "^^^";
+            charac[3] = "###";
+            charac[4] = "***";
+            charac[5] = "%&%";
+            charac[6] = "#$#";
+            charac[7] = "&^&";
+            صفة_الموكل_off.SelectedIndex = 0;
             label36.Text = "الموظف:" + EmpName;
             dataGridView1.DefaultCellStyle.SelectionBackColor = Color.DarkTurquoise;
             dataGridView1.DefaultCellStyle.SelectionForeColor = Color.WhiteSmoke;
@@ -757,7 +767,7 @@ namespace PersAhwal
             PictureBox addAuthPic = new PictureBox();
             addAuthPic.Image = global::PersAhwal.Properties.Resources.add;
             addAuthPic.Location = new System.Drawing.Point(115, 44);
-            addAuthPic.Name = "pictureBox11";
+            addAuthPic.Name = "pictureBox11_" + addAuthticIndex;
             addAuthPic.Size = new System.Drawing.Size(54, 35);
             addAuthPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             addAuthPic.TabIndex = 440;
@@ -769,7 +779,7 @@ namespace PersAhwal
             PictureBox removeAuthPic = new PictureBox();
             removeAuthPic .Image = global::PersAhwal.Properties.Resources.remove;
             removeAuthPic .Location = new System.Drawing.Point(55, 44);
-            removeAuthPic .Name = "pictureBox13";
+            removeAuthPic .Name = "pictureBox13_" + addAuthticIndex;
             removeAuthPic .Size = new System.Drawing.Size(54, 35);
             removeAuthPic .SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             removeAuthPic .TabIndex = 490;
@@ -789,8 +799,8 @@ namespace PersAhwal
             
             addAuthticIndex++;
 
-            intAuthcases = Appcases(جنس_الموكَّل, addAuthticIndex);
-            Console.WriteLine(addNameIndex + appCaseIndex + addAuthticIndex + intAuthcases);
+            //صفة_الموكل_off.SelectedIndex = Appcases(جنس_الموكَّل, addAuthticIndex);
+            Console.WriteLine(addNameIndex + appCaseIndex + addAuthticIndex + صفة_الموكل_off.SelectedIndex);
         }
 
         private void txtAuthPersonsex1_CheckedChanged(object sender, EventArgs e)
@@ -798,7 +808,7 @@ namespace PersAhwal
             CheckBox checkBox = (CheckBox)sender;
             if (checkBox.CheckState == CheckState.Unchecked) checkBox.Text = "أنثى";
             else checkBox.Text = "ذكر";
-            intAuthcases = Appcases(جنس_الموكَّل, addAuthticIndex);
+            //صفة_الموكل_off.SelectedIndex = Appcases(جنس_الموكَّل, addAuthticIndex);
             checkChanged(جنس_الموكَّل, PanelAuthPers);
         }
         private void nantionalityID_TextChanged(object sender, EventArgs e)
@@ -826,8 +836,9 @@ namespace PersAhwal
         private void removeAuthPic_Click(object sender, EventArgs e)
         {
             PictureBox pictureBox = (PictureBox)sender;
+            //MessageBox.Show(pictureBox.Name); 
             string rowID = pictureBox.Name.Split('_')[1];
-            // MessageBox.Show(pictureBox.Name);
+             
             foreach (Control control in PanelAuthPers.Controls)
             {
                 if (control.Visible && control.Name.Contains("_" + rowID) && control.Name.Contains("."))
@@ -840,15 +851,16 @@ namespace PersAhwal
             if (addAuthticIndex > 0)
             {
                 addAuthticIndex--;
-                Panelapp.Height = 90 * addAuthticIndex;
+                btnPanelAuthPers.Height = PanelAuthPers.Height = 90 * addAuthticIndex;
             }
             else
             {
                 PanelAuthPers.Height = 90;
                 addAuthenticPerson("", "ذكر", "سوداني الجنسية", "P0");
             }
-            intAuthcases = Appcases(جنس_الموكَّل, addAuthticIndex);
-            Console.WriteLine(addNameIndex + appCaseIndex + addAuthticIndex + intAuthcases);
+            
+            //صفة_الموكل_off.SelectedIndex = Appcases(جنس_الموكَّل, addAuthticIndex);
+            Console.WriteLine(addNameIndex + appCaseIndex + addAuthticIndex + صفة_الموكل_off.SelectedIndex);
             checkChanged(جنس_الموكَّل, PanelAuthPers);
             checkChanged(جنسية_الموكل, PanelAuthPers);
             checkChanged(الموكَّل, PanelAuthPers);
@@ -1105,12 +1117,12 @@ namespace PersAhwal
             Panelapp.Controls.Add(removeName);            
             addNameIndex++;
             appCaseIndex = Appcases(النوع, addNameIndex);
-            Console.WriteLine(addNameIndex + appCaseIndex + addAuthticIndex + intAuthcases);
+            Console.WriteLine(addNameIndex + appCaseIndex + addAuthticIndex + صفة_الموكل_off.SelectedIndex);
             //Panelapp.Height = 130 * (addNameIndex);
         }
         public int Appcases(TextBox text, int index)
         {
-            if (index == 1)
+            if (index == 0 || index == 1)
             {
                 if (text.Text == "ذكر")
                     return 0;//المقيم
@@ -1244,7 +1256,7 @@ namespace PersAhwal
 
             }
             appCaseIndex = Appcases(النوع, addNameIndex);
-            Console.WriteLine(addNameIndex + appCaseIndex + addAuthticIndex + intAuthcases);
+            Console.WriteLine(addNameIndex + appCaseIndex + addAuthticIndex + صفة_الموكل_off.SelectedIndex);
             checkChanged(مقدم_الطلب, Panelapp);
             checkChanged(النوع, Panelapp);
             checkChanged(نوع_الهوية, Panelapp);
@@ -1318,7 +1330,13 @@ namespace PersAhwal
                 if(مقدم_الطلب.Text=="") FillDatafromGenArch("data1", intID.ToString(), "TableAuth");
                 for (int app = 0; app < الموكَّل.Text.Split('_').Length; app++)
                 {
-                    if (مقدم_الطلب.Text.Split('_')[app] != "")
+                    string str = "";
+                    try
+                    {
+                        str = مقدم_الطلب.Text.Split('_')[app];
+                    }
+                    catch (Exception ex) { }
+                    if (str != "")
                         addAuthenticPerson(الموكَّل.Text.Split('_')[app], جنس_الموكَّل.Text.Split('_')[app], جنسية_الموكل.Text.Split('_')[app], هوية_الموكل.Text.Split('_')[app]); 
                     else
                         addAuthenticPerson("", "ذكر", "سوداني الجنسية", "P0");
@@ -1669,6 +1687,10 @@ namespace PersAhwal
             LastCol = col;
             if (col == "" || table == "" || dataSource == "") return;
             string query = "SELECT ID," + col + " FROM " + table;
+            appCaseIndex = Appcases(النوع, addNameIndex);
+            //صفة_الموكل_off.SelectedIndex = Appcases(جنس_الموكَّل, addAuthticIndex);
+            Console.WriteLine("PopulateCheckBoxes " + addNameIndex + appCaseIndex + addAuthticIndex + صفة_الموكل_off.SelectedIndex);
+
             //MessageBox.Show(query);
             using (SqlConnection con = new SqlConnection(dataSource))
             {
@@ -1683,10 +1705,10 @@ namespace PersAhwal
                     {
                         Text_statis = checkboxdt.Rows[Nobox][col].ToString().Split('_');
 
-                        string text = SuffPrefReplacements(Text_statis[0], appCaseIndex, intAuthcases);
+                        string text = SuffReplacements(Text_statis[0], appCaseIndex, صفة_الموكل_off.SelectedIndex);
                         for (int x = 0; x < 40; x++)
-                        {
-                            text = SuffPrefReplacements(Text_statis[0], appCaseIndex, intAuthcases);
+                        {                            
+                            text = SuffReplacements(text, appCaseIndex, صفة_الموكل_off.SelectedIndex);
                         }
                         if (checkboxdt.Rows[Nobox][col].ToString() == "" || checkboxdt.Rows[Nobox][col].ToString() == "null") return;
 
@@ -1810,40 +1832,29 @@ namespace PersAhwal
         {
             حقوق_التوكيل.Text = "1";
             int xindex = 0;
-            الحقوق_الممنوحة.Text = "";
+            قائمة_الحقوق.Text = الحقوق_الممنوحة.Text = "";
             if (نوع_التوكيل.SelectedIndex == 0)
             {                
                 الحقوق_الممنوحة.Text = قائمة_الحقوق.Text;
                 txtfinal.Text = txtfinal.Text + txtReview.Text + ", " + قائمة_الحقوق.Text;
                 return;
             }
+            string checked_unchecked = "1_";
             foreach (Control control in panelAuthOptions.Controls)
             {
-                if (control is CheckBox && !control.Text.Contains("(نص ملغي)") && !control.Text.Contains("تحديث تلقائي"))
+                if (control.Visible && control is CheckBox && !control.Text.Contains("(نص ملغي)") && !control.Text.Contains("تحديث تلقائي"))
                 {
-                    if (((CheckBox)control).Checked)
+                    if (((CheckBox)control).Checked) checked_unchecked = "1_";
+                    else checked_unchecked = "0_";
+                    if (xindex == 0)
                     {
-                        if (xindex == 0)
-                        {
-                            الحقوق_الممنوحة.Text = "1_" + ((CheckBox)control).Text;
-                            قائمة_الحقوق.Text = ((CheckBox)control).Text;
-                        }
-                        else
-                        {
-                            الحقوق_الممنوحة.Text = الحقوق_الممنوحة.Text +"1_" + ((CheckBox)control).Text;
-                            قائمة_الحقوق.Text = قائمة_الحقوق.Text + " " + ((CheckBox)control).Text;
-                        }
-                        
+                        الحقوق_الممنوحة.Text = checked_unchecked + ((CheckBox)control).Text;
+                        قائمة_الحقوق.Text = ((CheckBox)control).Text;
                     }
-                    else {
-                        if (xindex == 0)
-                        {
-                            الحقوق_الممنوحة.Text = "0_" + ((CheckBox)control).Text;                            
-                        }
-                        else
-                        {
-                            الحقوق_الممنوحة.Text = الحقوق_الممنوحة.Text + "0_" + ((CheckBox)control).Text;                            
-                        }
+                    else
+                    {
+                        الحقوق_الممنوحة.Text = الحقوق_الممنوحة.Text + checked_unchecked + ((CheckBox)control).Text;
+                        قائمة_الحقوق.Text = قائمة_الحقوق.Text + " " + ((CheckBox)control).Text;
                     }
                     xindex++;
                 }
@@ -2014,7 +2025,7 @@ namespace PersAhwal
                         btnAddRight.Text = "تعديل";
                         btnRemove.Enabled = true;
                         LastTabIndex = ((CheckBox)control).TabIndex;
-
+                        controlName = ((CheckBox)control).Name;
                     }
                 }
             }
@@ -2583,11 +2594,10 @@ namespace PersAhwal
 
 
         }
-        private string SuffPrefReplacements(string text, int appCaseIndex, int intAuthcases)
+        private string SuffReplacements(string text, int appCaseIndex, int intAuthcases)
         {
-            appCaseIndex = Appcases(النوع, addNameIndex);
-            intAuthcases = Appcases(جنس_الموكَّل, addAuthticIndex);
-            Console.WriteLine("SuffPrefReplacements " + addNameIndex + appCaseIndex + addAuthticIndex + intAuthcases);
+            
+            
             if (text.Contains("auth1"))
                 return text.Replace("auth1", legaceyAuthInfo);
 
@@ -2647,6 +2657,7 @@ namespace PersAhwal
                 return text.Replace("#5", preffix[0, 9]);
 
 
+            
 
             if (text.Contains("$$$"))
                 return text.Replace("$$$", preffix[appCaseIndex, 0]);
@@ -2655,9 +2666,9 @@ namespace PersAhwal
             if (text.Contains("^^^"))
                 return text.Replace("^^^", preffix[appCaseIndex, 2]);
             if (text.Contains("###"))
-                return text.Replace("###", preffix[intAuthcases, 4]);
+                return text.Replace("###", preffix[صفة_الموكل_off.SelectedIndex, 4]);
             if (text.Contains("***"))
-                return text.Replace("***", preffix[intAuthcases, 3]);
+                return text.Replace("***", preffix[صفة_الموكل_off.SelectedIndex, 3]);
             if (text.Contains("%&%"))
                 return text.Replace("%&%", preffix[appCaseIndex, 12]);
             if (text.Contains("#$#"))
@@ -2771,7 +2782,7 @@ namespace PersAhwal
                     break;
                 case 2:                    
                     //authrights
-                    panelAuthOptions.Size = new System.Drawing.Size(944, 368);
+                    panelAuthOptions.Size = new System.Drawing.Size(944, 328);
                     if (!save2DataBase(Panelapp)) {
                         currentPanelIndex--; return;
                     }
@@ -2785,7 +2796,7 @@ namespace PersAhwal
                     }
                     
                     
-                    //MessageBox.Show("intAuthcases " + intAuthcases.ToString() + " - addAuthticIndex " + addAuthticIndex.ToString());
+                    //MessageBox.Show("صفة_الموكل_off.SelectedIndex " + صفة_الموكل_off.SelectedIndex.ToString() + " - addAuthticIndex " + addAuthticIndex.ToString());
                     
                     boxesPreparations();
                     
@@ -2955,12 +2966,14 @@ namespace PersAhwal
         private void txtReviewBody()
         {
             
+            Console.WriteLine("SuffReplacements " + addNameIndex + appCaseIndex + addAuthticIndex + صفة_الموكل_off.SelectedIndex);
+
             string text = StrSpecPur + LegaceyPreStr;
             for (int x = 0; x < 50; x++)
-                text = SuffPrefReplacements(text, appCaseIndex, intAuthcases);
+                text = SuffReplacements(text, appCaseIndex, صفة_الموكل_off.SelectedIndex);
             if (نوع_التوكيل.Text.Contains("ورثة"))
                 txtReview.Text = text;
-            else txtReview.Text = " ل" + preffix[intAuthcases, 7] + " ع" + preffix[appCaseIndex, 2] + " و" + preffix[intAuthcases, 8] + " مقام" + preffix[appCaseIndex, 0] + " "+text;
+            else txtReview.Text = " ل" + preffix[صفة_الموكل_off.SelectedIndex, 7] + " ع" + preffix[appCaseIndex, 2] + " و" + preffix[صفة_الموكل_off.SelectedIndex, 8] + " مقام" + preffix[appCaseIndex, 0] + " "+text;
             if (txtRev.Text != "")
             {
                 checkAutoUpdate.Checked = false;
@@ -3089,13 +3102,14 @@ namespace PersAhwal
 
         private void checkBoxesJob() {
             appCaseIndex = Appcases(النوع, addNameIndex); 
-            intAuthcases = Appcases(جنس_الموكَّل, addAuthticIndex);
-            Console.WriteLine("checkBoxesJob " + addNameIndex + appCaseIndex + addAuthticIndex + intAuthcases);
+            //صفة_الموكل_off.SelectedIndex = Appcases(جنس_الموكَّل, addAuthticIndex);
+            Console.WriteLine("checkBoxesJob " + addNameIndex + appCaseIndex + addAuthticIndex + صفة_الموكل_off.SelectedIndex);
             resetBoxes();
             getRightsEarlier(DataSource);
 
 
-
+            //flllPanelItemsboxes("ColName", إجراء_التوكيل.Text + "-" + نوع_التوكيل.SelectedIndex.ToString());
+            //PopulateCheckBoxes(ColRight, "TableAuthRight", DataSource);
 
             if (الحقوق_الممنوحة.Text == "")
             {
@@ -3104,7 +3118,7 @@ namespace PersAhwal
             }
             else
             {
-                
+
                 flllPanelItemsboxes("ColName", إجراء_التوكيل.Text + "-" + نوع_التوكيل.SelectedIndex.ToString());
                 PopulateCheckBoxes(الحقوق_الممنوحة.Text.Split('،'));
             }
@@ -3816,13 +3830,18 @@ namespace PersAhwal
             {
                 foreach (Control control in panelAuthOptions.Controls)
                 {
-                    if (control is CheckBox)
+                    if (control is CheckBox && !txtAddRight.Text.Contains("نص ملغي") && txtAddRight.Text != "")
                     {
-                        if (((CheckBox)control).TabIndex == LastTabIndex)
+                        if (((CheckBox)control).Name == controlName)
                         {
+                            //MessageBox.Show(txtAddRight.Text);
                             ((CheckBox)control).Text = txtAddRight.Text;
                             btnAddRight.Text = "إضافة";
                             txtAddRight.Text = "";
+                            editsMade[1] = true;
+                            error4.Checked = true;
+                            error4.Enabled = false;
+                            return;
                         }
                     }
                 }
@@ -4002,6 +4021,21 @@ namespace PersAhwal
         {
             التاريخ_الميلادي_off.Text = التاريخ_الميلادي.Text.Split('-')[1] + " - " + التاريخ_الميلادي.Text.Split('-')[0] + " - " + التاريخ_الميلادي.Text.Split('-')[2];
             //MessageBox.Show(التاريخ_الميلادي_off.Text);
+        }
+
+        private void صفة_الموكل_off_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            resetBoxes();
+            getRightsEarlier(DataSource);
+
+
+            flllPanelItemsboxes("ColName", إجراء_التوكيل.Text + "-" + نوع_التوكيل.SelectedIndex.ToString());
+            PopulateCheckBoxes(ColRight, "TableAuthRight", DataSource);
+        }
+
+        private void txtAddRight_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)13) btnAddRight.PerformClick();
         }
 
         private void موقع_التوكيل_TextUpdate(object sender, EventArgs e)

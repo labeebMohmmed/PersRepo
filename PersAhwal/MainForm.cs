@@ -733,7 +733,7 @@ namespace PersAhwal
             queryNewYear[6] = "INSERT INTO TableTRName (DocID,GriDate) values (@DocID,@GriDate)";
             queryNewYear[7] = "INSERT INTO TableStudent (DocID,GriDate) values (@DocID,@GriDate)";
             queryNewYear[8] = "INSERT INTO TableMarriage (DocID,GriDate) values (@DocID,@GriDate)";
-            queryNewYear[9] = "INSERT INTO TableFreeForm (DocID,GriDate) values (@DocID,@GriDate)";
+            queryNewYear[9] = "INSERT INTO TableCollection (رقم_المعاملة,التاريخ_الميلادي) values (@رقم_المعاملة,@التاريخ_الميلادي)";
             queryNewYear[11] = "INSERT INTO TableAuth (التاريخ_الميلادي,رقم_التوكيل) values (@رقم_التوكيل,@التاريخ_الميلادي)";
             queryNewYear[12] = " update TableSettings set SudAffNo=@SudAffNo where ID = @id";
 
@@ -816,7 +816,7 @@ namespace PersAhwal
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
-            string settingData = "select SpecType from TableFreeForm where ID='1'";
+            string settingData = "select نوع_الإجراء from TableCollection where ID='1'";
             SqlDataAdapter sqlDa = new SqlDataAdapter(settingData, sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
@@ -990,7 +990,7 @@ namespace PersAhwal
             query[6] = "select ID,AppName,GriDate,Viewed,DataMandoubName,ArchivedState,FileName1,FileName2,Hijri,AtteVicCo,Gender,IqrarType  from TableTRName where DocID=@DocID";
             query[7] = "select ID,AppName,GriDate,Viewed,DataMandoubName,ArchivedState,FileName1,FileName2,Hijri,AtteVicCo,Gender  from TableStudent where DocID=@DocID";
             query[8] = "select ID,AppName,GriDate,Viewed,DataMandoubName,ArchivedState,FileName1,FileName2,Hijri,AtteVicCo,Gender  from TableMarriage where DocID=@DocID";
-            query[9] = "select ID,AppName,GriDate,Viewed,DataMandoubName,ArchivedState,FileName1,FileName2,Hijri,AtteVicCo,Gender,SpecType  from TableFreeForm where DocID=@DocID";
+            query[9] = "select ID,مقدم_الطلب,التاريخ_الميلادي,مقدم_الطلب,اسم_المندوب,حالة_الارشفة,مقدم_الطلب,مقدم_الطلب,التاريخ_الهجري,موقع_المعاملة,النوع,نوع_الإجراء  from TableCollection where رقم_المعاملة=@رقم_المعاملة";
             query[12] = "select ID,مقدم_الطلب,التاريخ_الميلادي,المعالجة,اسم_المندوب,حالة_الارشفة,ارشفة_المستندات,المكاتبة_النهائية,التاريخ_الهجري,موقع_التوكيل,النوع,وجهة_التوكيل,نوع_التوكيل  from TableAuth where رقم_التوكيل=@رقم_التوكيل";
             query[10] = "select ID,AppName,AuthName,AuthNo,Gender,Institute,GriDate,Viewed,FileName1,Comment,ArchivedState  from TableReceMess where DocID=@DocID";
             query[11] = "select ID,AppName,Gender,Institute,GriDate,Viewed,FileName1,Comment,ArchivedState,HandTime  from TableHandAuth where DocID=@DocID";
@@ -1015,7 +1015,7 @@ namespace PersAhwal
             queryVA[6] = "select ID,AppName,Viewed,ArchivedState,DocID,GriDate,DataInterType,FileName2,DataMandoubName,DataInterName  from TableTRName";
             queryVA[7] = "select ID,AppName,Viewed,ArchivedState,DocID,GriDate,DataInterType,FileName2,DataMandoubName,DataInterName  from TableStudent";
             queryVA[8] = "select ID,AppName,Viewed,ArchivedState,DocID,GriDate,DataInterType,FileName2,DataMandoubName,DataInterName  from TableMarriage";
-            queryVA[9] = "select ID,AppName,Viewed,ArchivedState,DocID,GriDate,DataInterType,FileName2,DataMandoubName,SpecType  from TableFreeForm";
+            queryVA[9] = "select ID,مقدم_الطلب,حالة_الارشفة,حالة_الارشفة,رقم_المعاملة,التاريخ_الميلادي,طريقة_الطلب,مقدم_الطلب,اسم_المندوب,نوع_الإجراء  from TableCollection";
             queryVA[10] = "";
             queryVA[11] = "select ID,مقدم_الطلب,المعالجة,حالة_الارشفة,رقم_التوكيل,التاريخ_الميلادي,DocxData,Extension3,طريقة_الطلب,المكاتبة_النهائية,اسم_المندوب,اسم_الموظف,fileUpload from TableAuth";
 
@@ -1029,7 +1029,7 @@ namespace PersAhwal
             queryuPDATE[6] = "update TableTRName set ArchivedState=@ArchivedState where ID=id";
             queryuPDATE[7] = "update TableStudent set ArchivedState=@ArchivedState where ID=id";
             queryuPDATE[8] = "update TableMarriage set ArchivedState=@ArchivedState where ID=id";
-            queryuPDATE[9] = "update TableFreeForm set ArchivedState=@ArchivedState where ID=id";
+            queryuPDATE[9] = "update TableCollection set حالة_الارشفة=@حالة_الارشفة where ID=id";
             queryuPDATE[10] = "";
             queryuPDATE[10] = "update TableAuth set حالة_الارشفة=@حالة_الارشفة where ID=id";
 
@@ -1042,7 +1042,7 @@ namespace PersAhwal
                 TableList[6] = "TableTRName";
                 TableList[7] = "TableStudent";
                 TableList[8] = "TableMarriage";
-                TableList[9] = "TableFreeForm";
+                TableList[9] = "TableCollection";
                 TableList[10] = "";
                 TableList[11] = "TableAuth";
                 TableList[12] = "TableWafid";
@@ -1087,7 +1087,7 @@ namespace PersAhwal
             queryTable[6] = "TableTRName";
             queryTable[7] = "TableStudent";
             queryTable[8] = "TableMarriage";
-            queryTable[9] = "TableFreeForm";
+            queryTable[9] = "TableCollection";
             queryTable[10] = "TableAuth";
 
             DuratioListquery[0] = "select ID  from TableDocIqrar where GriDate=@GriDate";
@@ -1099,7 +1099,7 @@ namespace PersAhwal
             DuratioListquery[6] = "select ID  from TableTRName where GriDate=@GriDate";
             DuratioListquery[7] = "select ID  from TableStudent where GriDate=@GriDate";
             DuratioListquery[8] = "select ID  from TableMarriage where GriDate=@GriDate";
-            DuratioListquery[9] = "select ID  from TableFreeForm where GriDate=@GriDate";
+            DuratioListquery[9] = "select ID  from TableCollection where التاريخ_الميلادي=@التاريخ_الميلادي";
             DuratioListquery[10] = "select ID,إجراء_التوكيل  from TableAuth where التاريخ_الميلادي=@التاريخ_الميلادي";
 
             reportItems[0] = "اقرار استخراج أوراق ثبوتية موافقة بالسفر";
@@ -1120,7 +1120,7 @@ namespace PersAhwal
             queryDateList[1] = "select AppName,ProType,DocID,ArchivedState,DataInterType,GriDate from TableTravIqrar where GriDate=@GriDate";
             queryDateList[2] = "select AppName,IqrarPurpose,DocID,ArchivedState,DataInterType,GriDate from TableMultiIqrar where GriDate=@GriDate";
             queryDateList[3] = "select AppName,IqrarType,DocID,ArchivedState,DataInterType,GriDate from TableTRName where GriDate=@GriDate";
-            queryDateList[4] = "select AppName,SpecType,DocID,ArchivedState,DataInterType,GriDate from TableFreeForm where GriDate=@GriDate";
+            queryDateList[4] = "select مقدم_الطلب,نوع_الإجراء,رقم_المعاملة,حالة_الارشفة,طريقة_الطلب,التاريخ_الميلادي from TableCollection where التاريخ_الميلادي=@التاريخ_الميلادي";
             queryDateList[5] = "select AppName,ProCase,DocID,ArchivedState,DataInterType,GriDate from TableFamilySponApp where GriDate=@GriDate";
             queryDateList[6] = "select مقدم_الطلب,إجراء_التوكيل,نوع_التوكيل,رقم_التوكيل,الموكَّل,حالة_الارشفة,طريقة_الطلب,نوع_التوكيل ,التاريخ_الميلادي from TableAuth where التاريخ_الميلادي=@التاريخ_الميلادي";
             queryDateList[7] = "select AppName,DocID,ArchivedState,DataInterType,GriDate from TableForensicApp where GriDate=@GriDate";
@@ -1142,7 +1142,7 @@ namespace PersAhwal
             querydatabase[6] = "select Data1, Extension1,FileName1,Data2,Extension2,FileName2  from TableTRName where ID=@id";
             querydatabase[7] = "select Data1, Extension1,FileName1,Data2,Extension2,FileName2  from TableStudent where ID=@id";
             querydatabase[8] = "select Data1, Extension1,FileName1,Data2,Extension2,FileName2  from TableMarriage where ID=@id";
-            querydatabase[9] = "select Data1, Extension1,FileName1,Data2,Extension2,FileName2  from TableFreeForm where ID=@id";
+            querydatabase[9] = "select Data1, Extension1,FileName1,Data2,Extension2,FileName2  from TableCollection where ID=@id";
 
 
             DocTypeVA[0] = "إقرار باستخراج أوراق ثبوتية";
@@ -1309,7 +1309,7 @@ namespace PersAhwal
                 {
                     int x = 0;
 
-                    if (TableIndex == 6)
+                    if (TableIndex == 6 )
                     {
                         SqlDataAdapter sqlDa1 = new SqlDataAdapter(queryDateList[TableIndex], sqlCon);
                         sqlDa1.SelectCommand.CommandType = CommandType.Text;
@@ -1336,8 +1336,11 @@ namespace PersAhwal
                     {
                         SqlDataAdapter sqlDa = new SqlDataAdapter(queryDateList[TableIndex], sqlCon);
                         sqlDa.SelectCommand.CommandType = CommandType.Text;
+                        if(TableIndex == 4) 
+                            sqlDa.SelectCommand.Parameters.AddWithValue("@التاريخ_الميلادي", dateFrom);
+                        else
+                            sqlDa.SelectCommand.Parameters.AddWithValue("@GriDate", dateFrom);
 
-                        sqlDa.SelectCommand.Parameters.AddWithValue("@GriDate", dateFrom);
                         sqlDa.Fill(dtbl);
                         string[] arrangeData = new string[5];
                         foreach (DataRow row in dtbl.Rows)
@@ -1427,8 +1430,8 @@ namespace PersAhwal
 
                                         break;
                                     case 4:
-                                        RetrievedNameAffadivit[totalrowsAffadivit] = row["AppName"].ToString();
-                                        RetrievedTypeAffadivit[totalrowsAffadivit] = row["SpecType"].ToString();
+                                        RetrievedNameAffadivit[totalrowsAffadivit] = row["مقدم_الطلب"].ToString();
+                                        RetrievedTypeAffadivit[totalrowsAffadivit] = row["نوع_الإجراء"].ToString();
                                         arrangeData = row["DocID"].ToString().Split('/');
                                         if (arrangeData.Length == 4)
                                             RetrievedNoAffadivit[totalrowsAffadivit] = arrangeData[3] + "/" + arrangeData[2] + "/" + arrangeData[1] + "/" + arrangeData[0];
@@ -3006,7 +3009,7 @@ namespace PersAhwal
                                         //query[6] = "select ID,AppName,GriDate,Viewed,DataMandoubName,ArchivedState,FileName1,FileName2,Hijri,AtteVicCo,Gender  from TableTRName where DocID=@DocID";
                                         //query[7] = "select ID,AppName,GriDate,Viewed,DataMandoubName,ArchivedState,FileName1,FileName2,Hijri,AtteVicCo,Gender,IqrarPurpose  from TableStudent where DocID=@DocID";
                                         //query[8] = "select ID,AppName,GriDate,Viewed,DataMandoubName,ArchivedState,FileName1,FileName2,Hijri,AtteVicCo,Gender  from TableMarriage where DocID=@DocID";
-                                        //query[9] = "select ID,AppName,GriDate,Viewed,DataMandoubName,ArchivedState,FileName1,FileName2,Hijri,AtteVicCo,Gender,SpecType  from TableFreeForm where DocID=@DocID";
+                                        //query[9] = "select ID,AppName,GriDate,Viewed,DataMandoubName,ArchivedState,FileName1,FileName2,Hijri,AtteVicCo,Gender,SpecType  from TableCollection where DocID=@DocID";
                                         //query[10] = "select ID,مقدم_الطلب,التاريخ_الميلادي,المعالجة,اسم_المندوب,حالة_الارشفة,ارشفة_المستندات,المكاتبة_النهائية,التاريخ_الهجري,موقع_التوكيل,النوع,وجهة_التوكيل,نوع_التوكيل  from TableAuth where رقم_التوكيل=@رقم_التوكيل";
 
 
@@ -5860,7 +5863,7 @@ namespace PersAhwal
 
                         if (partial)
                         {
-                            if (TableIndex != 11)
+                            if (TableIndex != 11 && TableIndex != 9)
                             {
 
                                 if (dataRow["AppName"].ToString() == "" && dataRow["GriDate"].ToString() != GregorianDate)
@@ -5884,7 +5887,7 @@ namespace PersAhwal
                             }
                         }
                         else {
-                            if (TableIndex != 11)
+                            if (TableIndex != 11 && TableIndex != 9)
                             {
                                 
                                 if (dataRow["AppName"].ToString() == "" )

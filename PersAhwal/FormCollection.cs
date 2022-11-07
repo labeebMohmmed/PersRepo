@@ -244,6 +244,10 @@ namespace PersAhwal
                     {
                         currentPanelIndex--; return;
                     }
+                    if (!save2DataBase(PaneltxtReview))
+                    {
+                        currentPanelIndex--; return;
+                    }
                     
                     if (panelRemove.Visible)
                         if (!save2DataBase(panelRemove))
@@ -382,8 +386,9 @@ namespace PersAhwal
         }
         private bool save2DataBase(FlowLayoutPanel panel)
         {
-            return true;
-            string query = checkList(panel, allList, "TableAuth");
+            string query = checkList(panel, allList, "TableCollection");
+            if (query == "UPDATE TableCollection SET  where ID = @id") return true;
+            Console.WriteLine(panel.Name +" - " +query);
             SqlConnection sqlConnection = new SqlConnection(DataSource);
             if (sqlConnection.State == ConnectionState.Closed)
                 sqlConnection.Open();
@@ -411,7 +416,7 @@ namespace PersAhwal
                                 MessageBox.Show("لا يمكن المتابعة يرجى إضافة بيانات الحقل اسم المندوب ومنطقة التغطية مفصولين");
                                 return false;
                             }
-                            if ((control is TextBox && control.Text == "") || (control is ComboBox && control.Text.Contains("إختر")))
+                            if (control.Visible && ((control is TextBox && control.Text == "") || (control is ComboBox && control.Text.Contains("إختر"))))
                                 foreach (Control Econtrol in panel.Controls)
                                 {
                                     if (Econtrol is TextBox && control.Text == "" || Econtrol is ComboBox)
@@ -425,7 +430,7 @@ namespace PersAhwal
                                                 MessageBox.Show("لا يمكن المتابعة يرجى إضافة بيانات الحقل اسم_المندوب ");
                                                 return false;
                                             }
-                                            else if (control.Name != "اسم_المندوب")
+                                            else if (control.Name != "اسم_المندوب"  && control.Name != "الشاهد_الأول" && control.Name != "الشاهد_الثاني")
                                             {
                                                 Econtrol.BackColor = System.Drawing.Color.MistyRose;
                                                 if (panel.Name == "Panelapp") { panel.Height = 130 * addNameIndex; }
@@ -450,7 +455,7 @@ namespace PersAhwal
                         }
                     }
             }
-            //sqlCommand.ExecuteNonQuery();
+            sqlCommand.ExecuteNonQuery();
             return true;
         }
         private string commentInfo()
@@ -703,6 +708,7 @@ namespace PersAhwal
                 }
             }
             updateAll = "UPDATE " + table + " SET " + updateValues + " where ID = @id";
+            //MessageBox.Show(updateAll);
             return allList;
 
         }
@@ -1333,7 +1339,7 @@ namespace PersAhwal
         {
             string proType = "";
             if(addNameIndex > 1) proType = " متعدد";
-            string RouteFile = RouteFile = FilespathIn + @"NewForm\" + docType + proType +".docx";
+            string RouteFile = RouteFile = FilespathIn + docType + proType +".docx";
             
             if (appName != "")
                 localCopy.Text = FilespathOut + appName + DateTime.Now.ToString("ddmmss") + ".docx";

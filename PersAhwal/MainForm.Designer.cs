@@ -135,6 +135,7 @@ namespace PersAhwal
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.panel2 = new System.Windows.Forms.Panel();
+            this.picUpdate = new System.Windows.Forms.PictureBox();
             this.btnNewYear = new System.Windows.Forms.Button();
             this.labversio = new System.Windows.Forms.Label();
             this.button23 = new System.Windows.Forms.Button();
@@ -143,8 +144,8 @@ namespace PersAhwal
             this.pictremovemonth = new System.Windows.Forms.PictureBox();
             this.picadd = new System.Windows.Forms.PictureBox();
             this.picremove = new System.Windows.Forms.PictureBox();
-            this.picVersio = new System.Windows.Forms.PictureBox();
             this.empUpdate = new System.Windows.Forms.PictureBox();
+            this.picVersio = new System.Windows.Forms.PictureBox();
             this.mangerArch = new System.Windows.Forms.CheckBox();
             this.Combtn2 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -155,7 +156,6 @@ namespace PersAhwal
             this.ArchivePic = new System.Windows.Forms.PictureBox();
             this.dataGridView11 = new System.Windows.Forms.DataGridView();
             this.timer4 = new System.Windows.Forms.Timer(this.components);
-            this.persbtn7 = new System.Windows.Forms.Button();
             this.Affbtn0 = new System.Windows.Forms.ComboBox();
             this.Affairsbtn7 = new System.Windows.Forms.ComboBox();
             this.fileManagePanel2 = new System.Windows.Forms.FlowLayoutPanel();
@@ -221,7 +221,6 @@ namespace PersAhwal
             this.persbtn10 = new System.Windows.Forms.Button();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.backgroundWorker2 = new System.ComponentModel.BackgroundWorker();
-            this.picUpdate = new System.Windows.Forms.PictureBox();
             this.persbtn11 = new System.Windows.Forms.Button();
             this.panelReceMess.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView4)).BeginInit();
@@ -239,12 +238,13 @@ namespace PersAhwal
             this.SearchPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
             this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picUpdate)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picaddmonth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictremovemonth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picadd)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picremove)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picVersio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.empUpdate)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picVersio)).BeginInit();
             this.panel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView8)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ArchivePic)).BeginInit();
@@ -256,7 +256,6 @@ namespace PersAhwal
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView10)).BeginInit();
             this.flowLayoutPanel3.SuspendLayout();
             this.repReqPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picUpdate)).BeginInit();
             this.SuspendLayout();
             // 
             // labelarch
@@ -1529,6 +1528,17 @@ namespace PersAhwal
             this.panel2.TabIndex = 506;
             this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
             // 
+            // picUpdate
+            // 
+            this.picUpdate.Image = global::PersAhwal.Properties.Resources.retacke;
+            this.picUpdate.Location = new System.Drawing.Point(5, 46);
+            this.picUpdate.Name = "picUpdate";
+            this.picUpdate.Size = new System.Drawing.Size(28, 30);
+            this.picUpdate.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picUpdate.TabIndex = 515;
+            this.picUpdate.TabStop = false;
+            this.picUpdate.Click += new System.EventHandler(this.picUpdate_Click_1);
+            // 
             // btnNewYear
             // 
             this.btnNewYear.Enabled = false;
@@ -1625,17 +1635,6 @@ namespace PersAhwal
             this.picremove.Visible = false;
             this.picremove.Click += new System.EventHandler(this.picremove_Click_1);
             // 
-            // picVersio
-            // 
-            this.picVersio.Image = global::PersAhwal.Properties.Resources.add;
-            this.picVersio.Location = new System.Drawing.Point(39, 46);
-            this.picVersio.Name = "picVersio";
-            this.picVersio.Size = new System.Drawing.Size(28, 30);
-            this.picVersio.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.picVersio.TabIndex = 510;
-            this.picVersio.TabStop = false;
-            this.picVersio.Click += new System.EventHandler(this.picVersio_Click);
-            // 
             // empUpdate
             // 
             this.empUpdate.Image = global::PersAhwal.Properties.Resources.update1;
@@ -1647,6 +1646,17 @@ namespace PersAhwal
             this.empUpdate.TabStop = false;
             this.empUpdate.Visible = false;
             this.empUpdate.Click += new System.EventHandler(this.empUpdate_Click_1);
+            // 
+            // picVersio
+            // 
+            this.picVersio.Image = global::PersAhwal.Properties.Resources.add;
+            this.picVersio.Location = new System.Drawing.Point(39, 46);
+            this.picVersio.Name = "picVersio";
+            this.picVersio.Size = new System.Drawing.Size(28, 30);
+            this.picVersio.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picVersio.TabIndex = 510;
+            this.picVersio.TabStop = false;
+            this.picVersio.Click += new System.EventHandler(this.picVersio_Click);
             // 
             // mangerArch
             // 
@@ -1794,18 +1804,6 @@ namespace PersAhwal
             this.timer4.Enabled = true;
             this.timer4.Interval = 1000;
             this.timer4.Tick += new System.EventHandler(this.timer4_Tick);
-            // 
-            // persbtn7
-            // 
-            this.persbtn7.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.persbtn7.Location = new System.Drawing.Point(427, 341);
-            this.persbtn7.Name = "persbtn7";
-            this.persbtn7.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.persbtn7.Size = new System.Drawing.Size(118, 37);
-            this.persbtn7.TabIndex = 802;
-            this.persbtn7.Text = "معاملات غير مدرجة";
-            this.persbtn7.UseVisualStyleBackColor = true;
-            this.persbtn7.Click += new System.EventHandler(this.button20_Click);
             // 
             // Affbtn0
             // 
@@ -2587,26 +2585,15 @@ namespace PersAhwal
             // 
             this.backgroundWorker2.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker2_DoWork);
             // 
-            // picUpdate
-            // 
-            this.picUpdate.Image = global::PersAhwal.Properties.Resources.retacke;
-            this.picUpdate.Location = new System.Drawing.Point(5, 46);
-            this.picUpdate.Name = "picUpdate";
-            this.picUpdate.Size = new System.Drawing.Size(28, 30);
-            this.picUpdate.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.picUpdate.TabIndex = 515;
-            this.picUpdate.TabStop = false;
-            this.picUpdate.Click += new System.EventHandler(this.picUpdate_Click_1);
-            // 
             // persbtn11
             // 
             this.persbtn11.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.persbtn11.Location = new System.Drawing.Point(551, 339);
+            this.persbtn11.Location = new System.Drawing.Point(427, 339);
             this.persbtn11.Name = "persbtn11";
             this.persbtn11.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.persbtn11.Size = new System.Drawing.Size(123, 37);
+            this.persbtn11.Size = new System.Drawing.Size(247, 37);
             this.persbtn11.TabIndex = 828;
-            this.persbtn11.Text = "معاملات غير مدرجة";
+            this.persbtn11.Text = "مجموع المعاملات";
             this.persbtn11.UseVisualStyleBackColor = true;
             this.persbtn11.Click += new System.EventHandler(this.persbtn11_Click);
             // 
@@ -2617,7 +2604,6 @@ namespace PersAhwal
             this.ClientSize = new System.Drawing.Size(1255, 745);
             this.Controls.Add(this.persbtn11);
             this.Controls.Add(this.persbtn10);
-            this.Controls.Add(this.persbtn7);
             this.Controls.Add(this.Combtn5);
             this.Controls.Add(this.Affbtn4);
             this.Controls.Add(this.Combtn2);
@@ -2682,12 +2668,13 @@ namespace PersAhwal
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picUpdate)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picaddmonth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictremovemonth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picadd)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picremove)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picVersio)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.empUpdate)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picVersio)).EndInit();
             this.panel4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView8)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ArchivePic)).EndInit();
@@ -2702,7 +2689,6 @@ namespace PersAhwal
             this.flowLayoutPanel3.ResumeLayout(false);
             this.repReqPanel.ResumeLayout(false);
             this.repReqPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picUpdate)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2812,7 +2798,6 @@ namespace PersAhwal
         private System.Windows.Forms.Label labelM;
         private System.Windows.Forms.PictureBox picVersio;
         private System.Windows.Forms.Label labversio;
-        private System.Windows.Forms.Button persbtn7;
         private System.Windows.Forms.ComboBox Affbtn0;
         private System.Windows.Forms.Button ScanPic;
         private System.Windows.Forms.Button RescanPic;

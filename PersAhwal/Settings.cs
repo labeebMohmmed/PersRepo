@@ -1620,7 +1620,7 @@ namespace PersAhwal
             preffix[2, 16] = "ا";
             preffix[3, 16] = "ا";
             preffix[4, 16] = "ن";
-            preffix[5, 26] = "وا";
+            preffix[5, 16] = "وا";
 
 
         }
