@@ -179,6 +179,7 @@ namespace PersAhwal
             this.Combo1.TabIndex = 609;
             this.Combo1.Text = "إختر نوع التوكيل";
             this.Combo1.SelectedIndexChanged += new System.EventHandler(this.CombAuthType_SelectedIndexChanged);
+            this.Combo1.TextChanged += new System.EventHandler(this.Combo1_TextChanged);
             // 
             // Combo2
             // 
@@ -247,7 +248,7 @@ namespace PersAhwal
             this.jpgFile.Location = new System.Drawing.Point(1161, 680);
             this.jpgFile.Name = "jpgFile";
             this.jpgFile.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.jpgFile.Size = new System.Drawing.Size(88, 17);
+            this.jpgFile.Size = new System.Drawing.Size(89, 17);
             this.jpgFile.TabIndex = 619;
             this.jpgFile.Text = "طباعة مباشرة";
             this.jpgFile.UseVisualStyleBackColor = true;
@@ -260,7 +261,7 @@ namespace PersAhwal
             this.wordFile.Location = new System.Drawing.Point(1061, 680);
             this.wordFile.Name = "wordFile";
             this.wordFile.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.wordFile.Size = new System.Drawing.Size(97, 17);
+            this.wordFile.Size = new System.Drawing.Size(102, 17);
             this.wordFile.TabIndex = 620;
             this.wordFile.TabStop = true;
             this.wordFile.Text = "عرض ملف Word";
@@ -623,12 +624,12 @@ namespace PersAhwal
             this.Controls.Add(this.mandoubName);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.dataGridView2);
-            this.Controls.Add(this.Combo1);
             this.Controls.Add(this.docId);
-            this.Controls.Add(this.button4);
-            this.Controls.Add(this.button3);
             this.Controls.Add(this.Combo2);
             this.Controls.Add(this.txtIDNo);
+            this.Controls.Add(this.button3);
+            this.Controls.Add(this.Combo1);
+            this.Controls.Add(this.button4);
             this.Name = "FormPics";
             this.Text = "أرشفة الملفات";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormPics_FormClosed);

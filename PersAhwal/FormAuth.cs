@@ -120,6 +120,7 @@ namespace PersAhwal
         bool notFiled = true;
         string[] charac = new string[20];
         string controlName = "";
+        string IBAN = "";
         public FormAuth(int Atvc, int rowid, string AuthNo, string datasource, string filespathIn, string filespathOut, string empName, string jobposition, string greDate, string hijriDate)
         {
             InitializeComponent();
@@ -1655,18 +1656,18 @@ namespace PersAhwal
             foreach (Control control in panelAuthOptions.Controls)
             {
                 control.Visible = false;
-                //if (control is CheckBox)
-                //{
-                //    ((CheckBox)control).Visible = false;
-                //    ((CheckBox)control).CheckState = CheckState.Unchecked;
-                //    ((CheckBox)control).Tag = "dispoase";
+                if (control is CheckBox)
+                {
+                    ((CheckBox)control).Visible = false;
+                    ((CheckBox)control).CheckState = CheckState.Unchecked;
+                    ((CheckBox)control).Tag = "dispoase";
 
-                //}
+                }
 
-                //if (control is PictureBox)
-                //{
-                //    ((PictureBox)control).Visible = false;
-                //}
+                if (control is PictureBox)
+                {
+                    ((PictureBox)control).Visible = false;
+                }
             }
             txtReview.Text = "";
             foreach (Control control in PanelItemsboxes.Controls)
@@ -1704,7 +1705,7 @@ namespace PersAhwal
                     foreach (DataRow row in checkboxdt.Rows)
                     {
                         Text_statis = checkboxdt.Rows[Nobox][col].ToString().Split('_');
-
+                        if (Text_statis[0].Contains("ايبان")) IBAN = Text_statis[0]+"_"+ Nobox.ToString();
                         string text = SuffReplacements(Text_statis[0], appCaseIndex, صفة_الموكل_off.SelectedIndex);
                         for (int x = 0; x < 40; x++)
                         {                            
@@ -1735,7 +1736,7 @@ namespace PersAhwal
             chk.Height = 33;
             chk.CheckState = CheckState.Unchecked;
             chk.Location = new System.Drawing.Point(130, 3 + idbox * 37);
-            chk.Name = "checkBox" + idbox.ToString();
+            chk.Name = "checkBox_" + idbox.ToString();
 
             chk.Text = txt;
             chk.Tag = "valid";
@@ -1799,6 +1800,31 @@ namespace PersAhwal
             //panelAuthOptions.Controls.Add(picboRemove);
 
         }
+
+        public void pictureBoxedit_Click(object sender, EventArgs e)
+        {
+            PictureBox picbox = (PictureBox)sender;
+            //MessageBox.Show(picbox.Name);
+            foreach (Control control in panelAuthOptions.Controls)
+            {
+                if (control is CheckBox)
+                {
+                    //MessageBox.Show(((CheckBox)control).Name);
+                    //if (((CheckBox)control).TabIndex == picbox.TabIndex - 177)
+                    if (((CheckBox)control).Name.Split('_')[1] == picbox.Name && ((CheckBox)control).Tag.ToString() == "valid")
+                        {
+                            txtAddRight.Text = ((CheckBox)control).Text;
+                            btnAddRight.Text = "تعديل";
+                            btnRemove.Enabled = true;
+                            LastTabIndex = ((CheckBox)control).TabIndex;
+                            controlName = ((CheckBox)control).Name;
+                        //MessageBox.Show(LastTabIndex +"_"+ controlName);
+                        return;
+                        }
+                }
+            }
+        }
+
         public void PopulateCheckBoxes(string[] textList)
         {
             listchecked = textList.Length;
@@ -2012,24 +2038,7 @@ namespace PersAhwal
         }
 
 
-        public void pictureBoxedit_Click(object sender, EventArgs e)
-        {
-            PictureBox picbox = (PictureBox)sender;
-            foreach (Control control in panelAuthOptions.Controls)
-            {
-                if (control is CheckBox)
-                {
-                    if (((CheckBox)control).TabIndex == Convert.ToInt32(picbox.Name))
-                    {
-                        txtAddRight.Text = ((CheckBox)control).Text;
-                        btnAddRight.Text = "تعديل";
-                        btnRemove.Enabled = true;
-                        LastTabIndex = ((CheckBox)control).TabIndex;
-                        controlName = ((CheckBox)control).Name;
-                    }
-                }
-            }
-        }
+        
         public void pictureRemove_Click(object sender, EventArgs e)
         {
             PictureBox picbox = (PictureBox)sender;
@@ -2637,7 +2646,7 @@ namespace PersAhwal
             if (text.Contains("@*@"))
             {
                 spacialCharacter = "@*@";
-                return text.Replace("@*@", "لدى  برقم الايبان ()");
+                return text.Replace("@*@", "لدى  برقم الايبان ("+ Vitext3.Text+")");
             }
 
             if (text.Contains("#8"))
@@ -3113,12 +3122,16 @@ namespace PersAhwal
 
             if (الحقوق_الممنوحة.Text == "")
             {
+                savedRights.Checked = false;
+                صفة_الموكل_off.Enabled = true;
                 flllPanelItemsboxes("ColName", إجراء_التوكيل.Text + "-" + نوع_التوكيل.SelectedIndex.ToString());
                 PopulateCheckBoxes(ColRight, "TableAuthRight", DataSource);
             }
             else
             {
-
+                //MessageBox.Show(الحقوق_الممنوحة.Text);
+                صفة_الموكل_off.Enabled = false;
+                savedRights.Checked = true;
                 flllPanelItemsboxes("ColName", إجراء_التوكيل.Text + "-" + نوع_التوكيل.SelectedIndex.ToString());
                 PopulateCheckBoxes(الحقوق_الممنوحة.Text.Split('،'));
             }
@@ -3293,8 +3306,15 @@ namespace PersAhwal
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (checkAutoUpdate.Checked && currentPanelIndex > 0) 
-            txtReviewBody();
+            if (checkAutoUpdate.Checked && currentPanelIndex > 0)
+            {
+                txtReviewBody();
+
+                //التواكيل المتعلقة بتعويض حوادث السير
+                //if (إجراء_التوكيل.Text == "استلام تأمين")
+                //{
+                //    IBAN}
+            }
             
             
         }
@@ -3775,7 +3795,7 @@ namespace PersAhwal
                 chk.Tag = "valid";
                 chk.CheckState = CheckState.Checked;
                 chk.Location = new System.Drawing.Point(60, 3 + Nobox * 37);
-                chk.Name = "checkBox" + Nobox.ToString();
+                chk.Name = "checkBox_" + Nobox.ToString();
                 chk.Text = txtAddRight.Text;
                 txtAddRight.Clear();
                 statistic[Nobox] = 1;
@@ -3830,25 +3850,65 @@ namespace PersAhwal
             {
                 foreach (Control control in panelAuthOptions.Controls)
                 {
-                    if (control is CheckBox && !txtAddRight.Text.Contains("نص ملغي") && txtAddRight.Text != "")
+                    if (control is CheckBox)
                     {
-                        if (((CheckBox)control).Name == controlName)
+                        //MessageBox.Show(control.Name +"_" +control.Tag);
+                        if (((CheckBox)control).Name == controlName && control.Tag.ToString() == "valid")
                         {
-                            //MessageBox.Show(txtAddRight.Text);
                             ((CheckBox)control).Text = txtAddRight.Text;
-                            btnAddRight.Text = "إضافة";
                             txtAddRight.Text = "";
+                            btnAddRight.Text = "إضافة";
+
                             editsMade[1] = true;
                             error4.Checked = true;
                             error4.Enabled = false;
-                            return;
+
                         }
                     }
                 }
+
+                //foreach (Control control in panelAuthOptions.Controls)
+                //{
+                //    if (control is CheckBox && !txtAddRight.Text.Contains("نص ملغي") && txtAddRight.Text != "")
+                //    {
+                //        if (((CheckBox)control).TabIndex == LastTabIndex)
+                //        {
+                //            control.Text = txtAddRight.Text;
+                //            btnAddRight.Text = "إضافة";
+
+                //            editsMade[1] = true;
+                //            error4.Checked = true;
+                //            error4.Enabled = false;
+                //            txtAddRight.Text = "";
+                //            return;
+                //        }
+                //    }
+                //}
             }
             editsMade[1] = true;
             error4.Checked = true;
             error4.Enabled = false;
+        }
+
+        private void editIBan(string iban) {
+            foreach (Control control in panelAuthOptions.Controls)
+            {
+                if (control is CheckBox)
+                {
+                    //MessageBox.Show(control.Name +"_" +control.Tag);
+                    if (((CheckBox)control).Name == "checkBox_"+iban.Split('_')[1] && control.Tag.ToString() == "valid")
+                    {
+                        ((CheckBox)control).Text = txtAddRight.Text;
+                        txtAddRight.Text = "";
+                        btnAddRight.Text = "إضافة";
+
+                        editsMade[1] = true;
+                        error4.Checked = true;
+                        error4.Enabled = false;
+
+                    }
+                }
+            }
         }
 
         private void ShowArrows(int tabindex, int indexMinus)
@@ -4037,6 +4097,13 @@ namespace PersAhwal
         {
             if (e.KeyChar == (char)13) btnAddRight.PerformClick();
         }
+
+        private void savedRights_CheckedChanged(object sender, EventArgs e)
+        {
+            if (savedRights.Checked) savedRights.Text = "قائمة الحقوق المحفوظة";
+            else savedRights.Text = "قائمة حقوق جديدة";
+        }
+
 
         private void موقع_التوكيل_TextUpdate(object sender, EventArgs e)
         {

@@ -228,6 +228,7 @@ namespace PersAhwal
             
             try
             {
+                File.Delete(primeryLink + "fileUpdate.txt");
                 System.Diagnostics.Process.Start(getAppFolder() + @"\setup.exe");
                 File.Delete(fileVersio);
                 File.Delete(primeryLink + @"\files.txt");

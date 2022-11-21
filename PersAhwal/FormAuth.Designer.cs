@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormAuth));
             this.labDescribed = new System.Windows.Forms.Button();
             this.btnNext = new System.Windows.Forms.Button();
@@ -118,7 +118,6 @@
             this.removedDocDate = new System.Windows.Forms.TextBox();
             this.checkAutoUpdate = new System.Windows.Forms.CheckBox();
             this.panelAuthOptions = new System.Windows.Forms.FlowLayoutPanel();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.radioSelectAll = new System.Windows.Forms.RadioButton();
             this.radiounSelectAll = new System.Windows.Forms.RadioButton();
@@ -219,6 +218,7 @@
             this.الحقوق_الممنوحة = new System.Windows.Forms.TextBox();
             this.timer3 = new System.Windows.Forms.Timer(this.components);
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.savedRights = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.PanelDataGrid.SuspendLayout();
             this.PanelFiles.SuspendLayout();
@@ -287,23 +287,23 @@
             this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle9;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle10;
             this.dataGridView1.Location = new System.Drawing.Point(3, 0);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -1312,7 +1312,6 @@
             this.panelAuthOptions.AutoScroll = true;
             this.panelAuthOptions.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.panelAuthOptions.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelAuthOptions.Controls.Add(this.checkBox1);
             this.panelAuthOptions.Controls.Add(this.pictureBox3);
             this.panelAuthOptions.Location = new System.Drawing.Point(175, 323);
             this.panelAuthOptions.Name = "panelAuthOptions";
@@ -1320,23 +1319,9 @@
             this.panelAuthOptions.Size = new System.Drawing.Size(944, 203);
             this.panelAuthOptions.TabIndex = 651;
             // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Checked = true;
-            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkBox1.Location = new System.Drawing.Point(840, 3);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.checkBox1.Size = new System.Drawing.Size(99, 31);
-            this.checkBox1.TabIndex = 665;
-            this.checkBox1.Text = "تحديث تلقائي";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            // 
             // pictureBox3
             // 
-            this.pictureBox3.Location = new System.Drawing.Point(734, 3);
+            this.pictureBox3.Location = new System.Drawing.Point(839, 3);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(100, 50);
             this.pictureBox3.TabIndex = 666;
@@ -2442,6 +2427,7 @@
             this.panelAuthRights.Controls.Add(this.radioSelectAll);
             this.panelAuthRights.Controls.Add(this.radiounSelectAll);
             this.panelAuthRights.Controls.Add(this.button8);
+            this.panelAuthRights.Controls.Add(this.savedRights);
             this.panelAuthRights.Controls.Add(this.صفة_الموكل_off);
             this.panelAuthRights.Controls.Add(this.button7);
             this.panelAuthRights.Controls.Add(this.panelAuthOptions);
@@ -2508,9 +2494,9 @@
             this.button8.FlatAppearance.BorderSize = 0;
             this.button8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button8.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button8.Location = new System.Drawing.Point(351, 282);
+            this.button8.Location = new System.Drawing.Point(488, 282);
             this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(234, 35);
+            this.button8.Size = new System.Drawing.Size(97, 35);
             this.button8.TabIndex = 674;
             this.button8.Text = "                                                  ";
             this.button8.UseVisualStyleBackColor = false;
@@ -2527,7 +2513,7 @@
             "مثنى مؤنث",
             "جمع مؤنث",
             "جمع مذكر ومؤنث"});
-            this.صفة_الموكل_off.Location = new System.Drawing.Point(16, 282);
+            this.صفة_الموكل_off.Location = new System.Drawing.Point(11, 282);
             this.صفة_الموكل_off.Name = "صفة_الموكل_off";
             this.صفة_الموكل_off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.صفة_الموكل_off.Size = new System.Drawing.Size(329, 35);
@@ -2547,7 +2533,6 @@
             this.button7.TabIndex = 673;
             this.button7.Text = "                                                  ";
             this.button7.UseVisualStyleBackColor = false;
-            this.button7.Visible = false;
             // 
             // الحقوق_الممنوحة
             // 
@@ -2569,6 +2554,21 @@
             // 
             this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
             // 
+            // savedRights
+            // 
+            this.savedRights.AutoSize = true;
+            this.savedRights.Checked = true;
+            this.savedRights.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.savedRights.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.savedRights.Location = new System.Drawing.Point(346, 282);
+            this.savedRights.Name = "savedRights";
+            this.savedRights.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.savedRights.Size = new System.Drawing.Size(136, 31);
+            this.savedRights.TabIndex = 677;
+            this.savedRights.Text = "قائمة الحقوق المحفوظة";
+            this.savedRights.UseVisualStyleBackColor = true;
+            this.savedRights.CheckedChanged += new System.EventHandler(this.savedRights_CheckedChanged);
+            // 
             // FormAuth
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2578,10 +2578,10 @@
             this.Controls.Add(this.btnNext);
             this.Controls.Add(this.btnPrevious);
             this.Controls.Add(this.labDescribed);
+            this.Controls.Add(this.panelapplicationInfo);
             this.Controls.Add(this.panelAuthRights);
             this.Controls.Add(this.PanelDataGrid);
             this.Controls.Add(this.finalPanel);
-            this.Controls.Add(this.panelapplicationInfo);
             this.Name = "FormAuth";
             this.Text = "توكيلات";
             this.Load += new System.EventHandler(this.FormAuth_Load);
@@ -2598,7 +2598,6 @@
             this.panelRemove.ResumeLayout(false);
             this.panelRemove.PerformLayout();
             this.panelAuthOptions.ResumeLayout(false);
-            this.panelAuthOptions.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.PanelItemsboxes.ResumeLayout(false);
             this.PanelItemsboxes.PerformLayout();
@@ -2797,7 +2796,6 @@
         private System.Windows.Forms.TextBox الحقوق_الممنوحة;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.TextBox حالة_الارشفة;
-        private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.Button button7;
@@ -2806,5 +2804,6 @@
         private System.Windows.Forms.TextBox توقيع_مقدم_الطلب;
         private System.Windows.Forms.TextBox التاريخ_الميلادي_off;
         private System.Windows.Forms.ComboBox صفة_الموكل_off;
+        private System.Windows.Forms.CheckBox savedRights;
     }
 }

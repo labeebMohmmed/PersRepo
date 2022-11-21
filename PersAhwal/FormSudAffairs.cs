@@ -28,6 +28,7 @@ using File = System.IO.File;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using Color = System.Drawing.Color;
 using Microsoft.Office.Core;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace PersAhwal
 {
@@ -560,6 +561,49 @@ namespace PersAhwal
             dataGridView1.Columns[2].Width = 200;
             dataGridView1.Columns[32].Width = 200;
             combFileNo.Text = fileN;
+        }
+        
+        private void filllExcelGrid(int index, string fileN)
+        {
+            Console.WriteLine("filllExcelGrid  " + index);
+            if (index != 1) return;
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            string strQuery = "select مقدم_الطلب,رقم_الهوية,الحالة,ord from TableWafidJed where رقم_الملف = '" + fileN + "'";
+            SqlDataAdapter sqlDa = new SqlDataAdapter(strQuery, sqlCon);
+
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+
+            sqlDa.Fill(dtbl);
+            gridExcel.DataSource = dtbl;
+            gridExcel.Sort(gridExcel.Columns["ord"], System.ComponentModel.ListSortDirection.Ascending);
+            sqlCon.Close();
+            string ReportName = DateTime.Now.ToString("mmss");
+            using (SaveFileDialog sfd = new SaveFileDialog() { Filter = "Excel workbook|*.xlsx" })
+            {
+                //sfd.FileName = FilesPathIn + "رقم الملف " + fileN +"_" +ReportName;
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        var fileinfo = new FileInfo(sfd.FileName);
+                        using (var package = new ExcelPackage(fileinfo))
+                        {
+                            ExcelWorksheet excelsheet = package.Workbook.Worksheets.Add("Rights");
+                            excelsheet.Cells.LoadFromDataTable(dtbl);
+                            package.Save();
+
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+
+                    System.Diagnostics.Process.Start(sfd.FileName);
+                }
+            }
         }
 
         private void updatetablesinGenArch(string tableId, string docID, string current)
@@ -1279,8 +1323,8 @@ namespace PersAhwal
             oBDoc.Close(false, oBMiss);
             oBMicroWord.Quit(false, false);
             System.Runtime.InteropServices.Marshal.ReleaseComObject(oBMicroWord);
-            System.Diagnostics.Process.Start(pdfouput);
-            File.Delete(docxouput);
+            System.Diagnostics.Process.Start(docxouput);
+            //File.Delete(docxouput);
             object doNotSaveChanges = Word.WdSaveOptions.wdSaveChanges;
         }private void CreateGroupFileTrans(string ActiveCopy, string fileNo, bool alldata)
         {
@@ -1431,8 +1475,8 @@ namespace PersAhwal
             oBDoc.Close(false, oBMiss);
             oBMicroWord.Quit(false, false);
             System.Runtime.InteropServices.Marshal.ReleaseComObject(oBMicroWord);
-            System.Diagnostics.Process.Start(pdfouput);
-            File.Delete(docxouput);
+            System.Diagnostics.Process.Start(docxouput);
+            //File.Delete(docxouput);
             object doNotSaveChanges = Word.WdSaveOptions.wdSaveChanges;
         }
         private void CreateGroupFile(string ActiveCopy, string fileNo)
@@ -1543,8 +1587,8 @@ namespace PersAhwal
             oBDoc.Close(false, oBMiss);
             oBMicroWord.Quit(false, false);
             System.Runtime.InteropServices.Marshal.ReleaseComObject(oBMicroWord);
-            System.Diagnostics.Process.Start(pdfouput);
-            File.Delete(docxouput);
+            System.Diagnostics.Process.Start(docxouput);
+            //File.Delete(docxouput);
             object doNotSaveChanges = Word.WdSaveOptions.wdSaveChanges;
         }
         
@@ -1623,8 +1667,8 @@ namespace PersAhwal
             oBDoc.Close(false, oBMiss);
             oBMicroWord.Quit(false, false);
             System.Runtime.InteropServices.Marshal.ReleaseComObject(oBMicroWord);
-            System.Diagnostics.Process.Start(pdfouput);
-            File.Delete(docxouput);
+            System.Diagnostics.Process.Start(docxouput);
+            //File.Delete(docxouput);
             object doNotSaveChanges = Word.WdSaveOptions.wdSaveChanges;
         }
         private void CreateGroupFileJeddah2(string ActiveCopy, string fileNo)
@@ -1696,8 +1740,8 @@ namespace PersAhwal
             oBDoc.Close(false, oBMiss);
             oBMicroWord.Quit(false, false);
             System.Runtime.InteropServices.Marshal.ReleaseComObject(oBMicroWord);
-            System.Diagnostics.Process.Start(pdfouput);
-            File.Delete(docxouput);
+            System.Diagnostics.Process.Start(docxouput);
+            //File.Delete(docxouput);
             object doNotSaveChanges = Word.WdSaveOptions.wdSaveChanges;
         }
 
@@ -1811,8 +1855,8 @@ namespace PersAhwal
             oBDoc.Close(false, oBMiss);
             oBMicroWord.Quit(false, false);
             System.Runtime.InteropServices.Marshal.ReleaseComObject(oBMicroWord);
-            System.Diagnostics.Process.Start(pdfouput);
-            File.Delete(docxouput);
+            System.Diagnostics.Process.Start(docxouput);
+            //File.Delete(docxouput);
             object doNotSaveChanges = Word.WdSaveOptions.wdSaveChanges;
         }
 
@@ -1885,8 +1929,8 @@ namespace PersAhwal
             oBDoc.Close(false, oBMiss);
             oBMicroWord.Quit(false, false);
             System.Runtime.InteropServices.Marshal.ReleaseComObject(oBMicroWord);
-            System.Diagnostics.Process.Start(pdfouput);
-            File.Delete(docxouput);
+            System.Diagnostics.Process.Start(docxouput);
+            //File.Delete(docxouput);
             object doNotSaveChanges = Word.WdSaveOptions.wdSaveChanges;
         }
 
@@ -2002,8 +2046,8 @@ namespace PersAhwal
             oBDoc.Close(false, oBMiss);
             oBMicroWord.Quit(false, false);
             System.Runtime.InteropServices.Marshal.ReleaseComObject(oBMicroWord);
-            System.Diagnostics.Process.Start(pdfouput);
-            File.Delete(docxouput);
+            System.Diagnostics.Process.Start(docxouput);
+            //File.Delete(docxouput);
             object doNotSaveChanges = Word.WdSaveOptions.wdSaveChanges;
         }
         private void CreateWokOffice(string ActiveCopy)
@@ -2070,8 +2114,8 @@ namespace PersAhwal
             oBDoc.Close(false, oBMiss);
             oBMicroWord.Quit(false, false);
             System.Runtime.InteropServices.Marshal.ReleaseComObject(oBMicroWord);
-            System.Diagnostics.Process.Start(pdfouput);
-            File.Delete(docxouput);
+            System.Diagnostics.Process.Start(docxouput);
+            //File.Delete(docxouput);
             object doNotSaveChanges = Word.WdSaveOptions.wdSaveChanges;
             return;
         }
@@ -4563,8 +4607,8 @@ namespace PersAhwal
             oBDoc.Close(false, oBMiss);
             oBMicroWord.Quit(false, false);
             System.Runtime.InteropServices.Marshal.ReleaseComObject(oBMicroWord);
-            System.Diagnostics.Process.Start(pdfouput);
-            File.Delete(docxouput);
+            System.Diagnostics.Process.Start(docxouput);
+            //File.Delete(docxouput);
             object doNotSaveChanges = Word.WdSaveOptions.wdSaveChanges;
 
 
@@ -5601,7 +5645,7 @@ namespace PersAhwal
                         fileNo = "TM" + combFileNo.Text;
                         fileDest = "المقابل المالي";
                     }
-
+                    //MessageBox.Show(AffairIndex.ToString());
                     activeCopy = FilesPathOut +"قائمة " + Suddanese_Affair.Text + DateTime.Now.ToString("mmss") + "1.docx";
                     if (AffairIndex == 1 ) {
                         CreateGroupFileJeddah2(activeCopy, combFileNo.Text);
@@ -5609,17 +5653,21 @@ namespace PersAhwal
                         CreateGroupFileJeddah1(activeCopy, combFileNo.Text, " مدير إدارة الوافدين");
                         activeCopy = FilesPathOut + "قائمة " + Suddanese_Affair.Text + DateTime.Now.ToString("mmss") + "3.docx";
                         CreateGroupFileJeddah1(activeCopy, combFileNo.Text, "مدير مكتب العمل جدة");
+                        filllExcelGrid(AffairIndex, combFileNo.Text);
 
-                    } else if(AffairIndex == 3)
-                    if (AffairIndex == 2) {
+                    } 
+                    
+                    else if (AffairIndex == 2) {
                         CreateGroupFile(activeCopy, combFileNo.Text);
                     } else if(AffairIndex == 3)
                     {
                         CreateGroupFileTarheel(activeCopy, combFileNo.Text);
                     }
+                    
                     else if(AffairIndex == 4)
                     {
-                        var selectedOption = MessageBox.Show("", "طباعة جميع القائمة؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                            //MessageBox.Show(fileDest + AffairIndex.ToString());
+                            var selectedOption = MessageBox.Show("", "طباعة جميع القائمة؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                         if (selectedOption == DialogResult.Yes)
                         {
                             CreateGroupFileTrans(activeCopy, combFileNo.Text,true);
@@ -5628,6 +5676,8 @@ namespace PersAhwal
                             CreateGroupFileTrans(activeCopy, combFileNo.Text, false);
                         }
                     }
+
+
                     if(AffairIndex > 0 && AffairIndex < 5)
                     {
                         var selectionMessage = MessageBox.Show("", "إضافة الملف إلى قائمة ملخص الملفات؟", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
@@ -5654,6 +5704,8 @@ namespace PersAhwal
             }
             finalPro.Enabled = true;
         }
+
+
         private bool checkExist(string documenNo, string TableFiles)
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);

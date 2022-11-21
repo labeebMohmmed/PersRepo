@@ -323,6 +323,13 @@ namespace PersAhwal
                 directory = directory + @"\";
                 PrimariFiles = directory + @"PrimariFiles\";
             }
+
+            if (!File.Exists(primeryLink + "fileUpdate.txt"))
+            {
+                if (!backgroundWorker2.IsBusy) backgroundWorker2.RunWorkerAsync();
+                if (!backgroundWorker1.IsBusy) backgroundWorker1.RunWorkerAsync();
+                dataSourceWrite(primeryLink + "fileUpdate.txt", "files are fully update");
+            }
             Console.WriteLine(7);
             //backgroundWorker1.RunWorkerAsync();
             //backgroundWorker2.RunWorkerAsync();
@@ -1258,7 +1265,7 @@ namespace PersAhwal
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
-            SqlDataAdapter sqlDa1 = new SqlDataAdapter("select نوع_التوكيل,إجراء_التوكيل,التاريخ_الميلادي, text1,text2,text3,text4,text5,check1,txtD1,combo1,combo2,addName1  from TableAuth", sqlCon);
+            SqlDataAdapter sqlDa1 = new SqlDataAdapter("select نوع_التوكيل,إجراء_التوكيل,التاريخ_الميلادي, itext1,itext2,itext3,itext4,itext5,icheck1,itxtDate1,icombo1,icombo2,ibtnAdd1  from TableAuth", sqlCon);
             sqlDa1.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
             sqlDa1.Fill(dtbl);
@@ -4520,7 +4527,7 @@ namespace PersAhwal
 
         private void button5_Click_1(object sender, EventArgs e)
         {
-            fileComboBox(txtHAAuthentic, DataSource, "AppName", "TableHandAuth");
+            fileComboBox(txtHAAuthentic, DataSource, "AppName", "TableHandAuth", true);
             //if(!autoCompleteMode) 
                 autoCompleteTextBox(txtHandAuthNo, DataSource, "DocID", "TableHandAuth");
             fillDataGrid("");
@@ -4810,11 +4817,13 @@ namespace PersAhwal
             checkYear(DataSource);
 
             autoCompleteTextBox(applicant, DataSource, "الاسم", "TableGeneralArch");
-            fileComboBox(AttendViceConsul, DataSource, "ArabicAttendVC", "TableListCombo");
-            fileComboBox(perbtn1, DataSource, "AuthTypes", "TableListCombo");
-            fileComboBox(attendedVC, DataSource, "ArabicAttendVC", "TableListCombo");
+            fileComboBox(AttendViceConsul, DataSource, "ArabicAttendVC", "TableListCombo", true);
+            fileComboBox(perbtn1, DataSource, "AuthTypes", "TableListCombo", true);
+            fileComboBox(attendedVC, DataSource, "ArabicAttendVC", "TableListCombo", true);
             if (attendedVC.Items.Count >= VCIndexData()) attendedVC.SelectedIndex = VCIndexData();
             if (AttendViceConsul.Items.Count >= VCIndexData()) AttendViceConsul.SelectedIndex = VCIndexData();
+            fileComboBox(docCollectCombo, DataSource, "ArabicGenIgrar", "TableListCombo", true);
+            fileComboBox(docCollectCombo, DataSource, "EnglishGenIgrar", "TableListCombo", false);
             
             VCIndexLoad = true; loadScanner();
             fillDataGrid("");
@@ -4875,10 +4884,10 @@ namespace PersAhwal
 
 
 
-        private void fileComboBox(ComboBox combbox, string source, string comlumnName, string tableName)
+        private void fileComboBox(ComboBox combbox, string source, string comlumnName, string tableName, bool clear)
         {
             
-            combbox.Items.Clear();
+            if(clear) combbox.Items.Clear();
             using (SqlConnection saConn = new SqlConnection(source))
             {
                 saConn.Open();
@@ -4980,13 +4989,15 @@ namespace PersAhwal
             {
                 mangerArch.Text = "توزيع المهام";
                 persbtn2.Visible = persbtn10.Visible = false;
-                perbtn1.Visible = true;
+                perbtn1.Visible = docCollectCombo.Visible = true;
+                docCollectCombo.BringToFront();
             }
             else
             {
+                docCollectCombo.SendToBack();
                 mangerArch.Text = "ادخال البيانات";
                 persbtn2.Visible = persbtn10.Visible = true;
-                perbtn1.Visible = false;
+                perbtn1.Visible = docCollectCombo.Visible = false;
             }
         }
 
@@ -5789,6 +5800,7 @@ namespace PersAhwal
             string version = getVersio();
             try
             {
+                File.Delete(primeryLink + "fileUpdate.txt");
                 System.Diagnostics.Process.Start(getAppFolder() + @"\setup.exe");
                 if(Server == "57")
                     dataSourceWrite(primeryLink + @"\Personnel\getVersio.txt", version);
@@ -6776,7 +6788,7 @@ namespace PersAhwal
 
         private void button3_Click(object sender, EventArgs e)
         {
-            fileComboBox(المعاملة, DataSource, "المعاملة", "TableProcReq"); 
+            fileComboBox(المعاملة, DataSource, "المعاملة", "TableProcReq", true); 
             repReqPanel.Visible = true;
             repReqPanel.BringToFront();
         }
@@ -6970,11 +6982,12 @@ namespace PersAhwal
 
         private void empUpdate_Click_1(object sender, EventArgs e)
         {
+            File.Delete(primeryLink + "fileUpdate.txt");
             System.Diagnostics.Process.Start(getAppFolder() + @"\setup.exe");
             this.Close();
         }
 
-        private void picUpdate_Click_1(object sender, EventArgs e)
+        private void fileUpdate_Click_1(object sender, EventArgs e)
         {
             if (!backgroundWorker2.IsBusy) backgroundWorker2.RunWorkerAsync(); 
             if (!backgroundWorker1.IsBusy) backgroundWorker1.RunWorkerAsync();            
@@ -7028,6 +7041,20 @@ namespace PersAhwal
             }
             return strSub;  
         }
+
+        private void docCollectCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string[] str = new string[docCollectCombo.Items.Count];
+            for (int x = 0; x < docCollectCombo.Items.Count; x++)
+            {
+                str[x] = docCollectCombo.Items[x].ToString();
+            }
+            string[] strSub = new string[1] { "" };
+            dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+            FormPics form2 = new FormPics(Server, EmployeeName, attendedVC.Text, UserJobposition, DataSource, docCollectCombo.SelectedIndex, FormDataFile, FilespathOut, 10, str, strSub, true, MandoubM, GriDateM);
+            form2.ShowDialog();
+        }
+
         private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
         {
             CultureInfo arSA = new CultureInfo("ar-SA");

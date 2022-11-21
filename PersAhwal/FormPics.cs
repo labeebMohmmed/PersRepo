@@ -41,6 +41,7 @@ using Path = System.IO.Path;
 using System.Runtime.InteropServices.ComTypes;
 using Aspose.Words.Settings;
 using DocumentFormat.OpenXml.Office2016.Drawing.Charts;
+using System.Text.RegularExpressions;
 
 namespace PersAhwal
 {
@@ -164,44 +165,52 @@ namespace PersAhwal
             {
                 DocType.Visible = button4.Visible = false;
             }
-
-            for (int x = 0; x < strData.Length; x++)
+            //المعاملات الأخرى
+            if (FormType != 10)
             {
-                if (strData[0] == "")
+                for (int x = 0; x < strData.Length; x++)
                 {
-
-                    docId.Enabled = true;
-                    Combo1.Visible = false;
-                    break;
-                }
-                Combo1.Items.Add(strData[x]);
-            }
-
-            if (index != 12 && Combo1.Items.Count > 0)
-                Combo1.SelectedIndex = index;
-
-            for (int x = 0; x < 100; x++)
-                PathImage[x] = "";
-            if (strSubData.Length > 0 && strSubData[0] != "")
-            {
-                Combo2.Visible = true;
-                Combo2.Items.Clear();
-                if (!checkColumnName(Combo1.Text.Replace(" ", "_")))
-                {
-                    CreateColumn(Combo1.Text.Replace(" ", "_"));
-                }
-
-                for (int x = 0; x < strSubData.Length; x++)
-                {
-                    if (!checkItemName(strSubData[x], Combo1.Text.Replace(" ", "_")))
+                    if (strData[0] == "")
                     {
-                        int id = lastValidID(Combo1.Text.Replace(" ", "_"));
-                        addItem(id, Combo1.Text.Replace(" ", "_"), strSubData[x]);
-                    }
-                    Combo2.Items.Add(strSubData[x]);
-                }
-            }
 
+                        docId.Enabled = true;
+                        Combo1.Visible = false;
+                        break;
+                    }
+                    Combo1.Items.Add(strData[x]);
+                }
+
+                if (index != 12 && Combo1.Items.Count > 0)
+                    Combo1.SelectedIndex = index;
+
+                for (int x = 0; x < 100; x++)
+                    PathImage[x] = "";
+                if (strSubData.Length > 0 && strSubData[0] != "")
+                {
+                    Combo2.Visible = true;
+                    Combo2.Items.Clear();
+                    if (!checkColumnName(Combo1.Text.Replace(" ", "_")))
+                    {
+                        CreateColumn(Combo1.Text.Replace(" ", "_"));
+                    }
+
+                    for (int x = 0; x < strSubData.Length; x++)
+                    {
+                        if (!checkItemName(strSubData[x], Combo1.Text.Replace(" ", "_")))
+                        {
+                            int id = lastValidID(Combo1.Text.Replace(" ", "_"));
+                            addItem(id, Combo1.Text.Replace(" ", "_"), strSubData[x]);
+                        }
+                        Combo2.Items.Add(strSubData[x]);
+                    }
+                }
+
+            }
+            else if (FormType == 10) {
+                Combo1.Enabled = false;
+                Combo1.Text = strData[index];
+
+            }
             if (ArchiveState)
             {
                 label5.Visible = تاريخ_الميلاد.Visible = true;
@@ -3742,6 +3751,20 @@ namespace PersAhwal
             UpdateNameState(Convert.ToInt32(FileIDNo), TableList, requiredDocument.Text);
             updateGenNameError(requiredDocument.Text, txtIDNo.Text);
             this.Close();   
+        }
+
+        private void Combo1_TextChanged(object sender, EventArgs e)
+        {
+            if (FormType == 10 ) {
+                fileComboBox(Combo2, DataSource, Combo1.Text.Replace(" ","_"), "TableListCombo");
+            }
+            
+            
+        }
+
+        public static bool IsRtl(string input)
+        {
+            return Regex.IsMatch(input, @"\p{IsArabic}");
         }
 
         private void button4_Click(object sender, EventArgs e)
