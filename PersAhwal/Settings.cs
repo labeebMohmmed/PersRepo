@@ -2655,11 +2655,32 @@ namespace PersAhwal
                     break;
             }
 
-
+            newFillComboBox1(subTypeIqrar, DataSource, mainTypeIqrar.Text.Replace(" ", "_"));
             //fileComboBox(ProFormType, DataSource, FormType.Text.Replace(" ", "_"), "TableListCombo");
-            newFillComboBox2(subTypeIqrar, DataSource, mainTypeIqrar.SelectedIndex.ToString(), langIqrar.Text);
+            //newFillComboBox2(subTypeIqrar, DataSource, mainTypeIqrar.SelectedIndex.ToString(), langIqrar.Text);
         }
-
+        private void newFillComboBox1(ComboBox combbox, string source, string colName)
+        {
+            combbox.Visible = true;
+            combbox.Items.Clear();
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                saConn.Open();
+                string query = "select " + colName + " from TableListCombo where " + colName + " is not null";
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.CommandType = CommandType.Text;
+                cmd.ExecuteNonQuery();
+                DataTable table = new DataTable();
+                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                dataAdapter.Fill(table);
+                foreach (DataRow dataRow in table.Rows)
+                {
+                    combbox.Items.Add(dataRow[colName].ToString());
+                }
+                saConn.Close();
+            }
+            //if (combbox.Items.Count > 0) combbox.SelectedIndex = 0;
+        }
         private void Settings_FormClosed(object sender, FormClosedEventArgs e)
         {
             string primeryLink = @"D:\PrimariFiles\";

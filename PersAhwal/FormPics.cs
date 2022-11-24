@@ -42,6 +42,7 @@ using System.Runtime.InteropServices.ComTypes;
 using Aspose.Words.Settings;
 using DocumentFormat.OpenXml.Office2016.Drawing.Charts;
 using System.Text.RegularExpressions;
+using static Azure.Core.HttpHeader;
 
 namespace PersAhwal
 {
@@ -106,6 +107,7 @@ namespace PersAhwal
         string[] allInsertNamesList;
         string[] allUpdateNamesList;
         string[] paraValues;
+        string[] comboCol = new string[3];
         //string[] insertList;// = new string[100];
         //string[] updateList;// = new string[dtbl.Rows.Count];
         int archCase = 0;
@@ -268,7 +270,7 @@ namespace PersAhwal
             PictureBox picRemReq1 = new PictureBox();
             PictureBox picUplReq1 = new PictureBox();
             Label label = new Label();
-            Button req1 = new Button();
+            
 
             // 
             // picAddReq1
@@ -311,6 +313,7 @@ namespace PersAhwal
             // 
             // req1
             // 
+            Button req1 = new Button();
             req1.Enabled = false;
             req1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             req1.Location = new System.Drawing.Point(101, 3 + (32 * hieght));
@@ -525,7 +528,7 @@ namespace PersAhwal
             
             int insexIndex = 0;
             int updateIndex = 0;
-            
+            int comboIndsex = 0;
             
             string insertItems = "";
             string insertValues = "";
@@ -542,6 +545,11 @@ namespace PersAhwal
                 {
                     updateIndex++;
                 }
+                //else if (row["name"].ToString().Contains("combo")) 
+                //{
+                //    comboCol[comboIndsex] = row["name"].ToString();
+                //    comboIndsex++;
+                //}
             }
             
             allInsertList = new string[insexIndex];
@@ -597,6 +605,9 @@ namespace PersAhwal
                 TableList = row["TableList"].ToString();
                 columnList = row["columnList"].ToString();
                 archCol = row["ArchCol"].ToString();
+                comboCol[0] = row["combo1"].ToString();
+                comboCol[1] = row["combo2"].ToString();
+                comboCol[2] = row["indexCombo"].ToString();
                 for (int rows = 0; rows < allInsertList.Length; rows++)
                 {
                     if (allInsertList[rows].Contains("insert") )
@@ -1129,6 +1140,27 @@ namespace PersAhwal
             }
             return found;
         }
+        
+        private bool checkMandounbPro(string docID)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter("select appOldNew from archives where docID=@docID", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            sqlDa.SelectCommand.Parameters.AddWithValue("@docID", docID);
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            foreach (DataRow dataRow in dtbl.Rows) 
+            {
+                if (dataRow["appOldNew"].ToString() == "في انتظار نسخة المواطن")
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         private void loadScanner()
         {
             try
@@ -1221,8 +1253,12 @@ namespace PersAhwal
                 SqlCommand cmd = new SqlCommand(query, saConn);
                 cmd.CommandType = CommandType.Text;
 
-
-                cmd.ExecuteNonQuery();
+                //MessageBox.Show(query);
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex) { return; }
                 DataTable table = new DataTable();
                 SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
                 dataAdapter.Fill(table);
@@ -1890,6 +1926,7 @@ namespace PersAhwal
                     }
                 }
             }
+            
             if (data1check)
             {
                 drawBoxesTitle("المستندات الأولية للإجراء", 60);
@@ -2116,7 +2153,8 @@ namespace PersAhwal
                 }
                 if ((mandoubName.Text != "حضور مباشرة إلى القنصلية" && finalArch)|| mandoubName.Text == "حضور مباشرة إلى القنصلية" || ServerType == "56" || SpecificDigit(docId.Text, 3, 4) == "06")
                 {
-                    deleteRowsData(txtIDNo.Text);
+                    deleteRowsData(docIDNumber, "archives", "docID");
+                    //deleteRowsData(txtIDNo.Text, allUpdateNamesList[2]);
                     MessageBox.Show("تمت الإضافة إلى الأرشفة النهائية");
                 }
                 else if (mandoubName.Text != "حضور مباشرة إلى القنصلية" && !finalArch)
@@ -2155,12 +2193,21 @@ namespace PersAhwal
                     //MessageBox.Show(smsPhoneNo);
                     SMS(Convert.ToInt32(FileIDNo), TableList);
                 }
+                if (checkMandounbPro(docIDNumber))
+                {
+                    //MessageBox.Show("remove");
+                    deleteRowsData(docIDNumber, "archives", "docID");
+                    //deleteRowsData(txtIDNo.Text, allUpdateNamesList[2]);
+
+                }
                 if ((mandoubName.Text != "حضور مباشرة إلى القنصلية" && finalArch) || mandoubName.Text == "حضور مباشرة إلى القنصلية" || ServerType == "56" || SpecificDigit(docId.Text, 3, 4) == "06")
                 {
-                    deleteRowsData(txtIDNo.Text);
-                    //MessageBox.Show("تمت الأرشفة النهائية");
+                    deleteRowsData(docIDNumber, "archives", "docID");
+                    //deleteRowsData(txtIDNo.Text, allUpdateNamesList[2]);
+                    MessageBox.Show("تمت الأرشفة النهائية");
                 }
-                else if (mandoubName.Text != "حضور مباشرة إلى القنصلية" && !finalArch)
+                
+                else if (mandoubName.Text != "حضور مباشرة إلى القنصلية" && !finalArch && !checkMandounbPro(docIDNumber))
                 {
                     UpdateMandoubState(txtIDNo.Text, "appOldNew", "في انتظار نسخة المواطن");
                     MessageBox.Show("تمت الأرشفة وفي انتظار نسخة المواطن بعد البصمة");
@@ -2205,16 +2252,16 @@ namespace PersAhwal
             sqlCon.Close();
         }
 
-        private void deleteRowsData(string v1)
+        private void deleteRowsData(string v1, string colName)
         {
             string query;
             SqlConnection Con = new SqlConnection(DataSource);
-            query = "DELETE FROM archives where docID = @docID";
+            query = "DELETE FROM archives where "+ colName+" = @docID";
             if (Con.State == ConnectionState.Closed)
                 Con.Open();
             SqlCommand sqlCmd = new SqlCommand(query, Con);
             sqlCmd.CommandType = CommandType.Text;
-            sqlCmd.Parameters.AddWithValue("@docID", v1);
+            sqlCmd.Parameters.AddWithValue("@"+ colName, v1);
             sqlCmd.ExecuteNonQuery();
             Con.Close();
         }
@@ -3075,8 +3122,21 @@ namespace PersAhwal
             }
             else
             {
-                picPath = FillDatafromGenArch(button.Name);
-                pictureBox1.ImageLocation = picPath;           
+                if (button.Name.Contains(FilespathIn))
+                {
+                    string wordOutFile = FilespathOut + Combo1.Text.Trim() + DateTime.Now.ToString("ssmm") + ".docx";
+                    string date = DateTime.Now.Day.ToString() + "-" + DateTime.Now.Month.ToString() + "-" + DateTime.Now.Year.ToString();
+                    string SubNo = "02";
+                    if (FormType < 10) SubNo = "0" + FormType.ToString();
+                    else SubNo = FormType.ToString();
+
+                    CreateAuth(date.Split('-')[2].Replace("20", "") + SubNo + rowCount + Environment.NewLine + date, button.Name, wordOutFile);
+                }
+                else
+                {
+                    picPath = FillDatafromGenArch(button.Name);
+                    pictureBox1.ImageLocation = picPath;
+                }
             }
         }
 
@@ -3341,18 +3401,83 @@ namespace PersAhwal
             if (ServerType == "56") 
                 index = SpecificDigit(noForm, 3, 3);
             //MessageBox.Show("index " + index);
-            getColList(noForm, ArchiveState, index);
-            getTableList(noForm);
-            
             
 
-            
-            
-            
-            checkBasicInfo(docIDNumber);            
+            getColList(noForm, ArchiveState, index);
+            if (FormType == 12)
+            {
+                //MessageBox.Show(comboCol[0] + "_"+ comboCol[1]);
+                getComboText(docIDNumber, comboCol[0], comboCol[1]);
+                //MessageBox.Show(Combo1.Text + "_"+ Combo2.Text);
+                getTableList(noForm);
+
+                string wordInFile = FilespathIn + Combo2.Text.Trim() + "-" + getComboIndex(comboCol[2], Combo1.Text) + ".docx";
+                string date = DateTime.Now.Day.ToString() + "-" + DateTime.Now.Month.ToString() + "-" + DateTime.Now.Year.ToString();
+                string wordOutFile = FilespathOut + Combo1.Text.Trim() + DateTime.Now.ToString("ssmm") + ".docx";
+                string SubNo = "02";
+                if (FormType < 10) SubNo = "0" + FormType.ToString();
+                else SubNo = FormType.ToString();
+
+                drawBoxesTitle("استمارة الطلب", 40);
+                drawBoxes(Combo2.Text, false, wordInFile);
+            }
+
+        //CreateAuth(date.Split('-')[2].Replace("20", "") + SubNo + rowCount + Environment.NewLine + date, wordInFile, wordOutFile);
+
+
+        //MessageBox.Show(Combo2.Text+ "-"+ getComboIndex(comboCol[2],Combo1.Text));
+
+
+
+
+
+        checkBasicInfo(docIDNumber);            
             string CheckState = checkArch(docIDNumber);
             requiredDocument.Text = CheckState; 
             paraValues[2] = docIDNumber;
+        }
+
+        private string getComboIndex(string col, string combo1)
+        {
+            string query = "SELECT " + col+ " FROM TableListCombo WHERE " + col + " is not null";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            //MessageBox.Show(query);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            int x = 0;
+            foreach (DataRow row in dtbl.Rows)
+            {
+                if (row[col].ToString() == combo1) return x.ToString();
+                x++;
+            }
+            return "-1";
+        }
+        
+        private string getComboText(string docIDNum, string col1, string col2)
+        {
+            string query = "SELECT " + col1 + "," + col2 + " FROM " + TableList + " WHERE " + allUpdateNamesList[2] + "=N'" + docIDNum + "'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            //MessageBox.Show(query);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            foreach (DataRow row in dtbl.Rows)
+            {
+                Combo1.Text = row[col1].ToString();
+                //MessageBox.Show(row[col1].ToString());
+                Combo2.Text = row[col2].ToString();
+                //MessageBox.Show(row[col2].ToString());
+            }
+            return TableList;
         }
 
         private void docId_KeyPress(object sender, KeyPressEventArgs e)
@@ -3479,7 +3604,7 @@ namespace PersAhwal
         {
             deleteRowsData(FileIDNo,TableList,"ID");
             deleteRowsData(docIDNumber, "TableGeneralArch", "رقم_معاملة_القسم");
-            deleteRowsData(txtIDNo.Text);
+            deleteRowsData(docIDNumber, "archives", "docID");
             btnDelete.Visible = btnArchived.Visible = btnExten.Visible = false;
             
         }
@@ -3532,7 +3657,7 @@ namespace PersAhwal
         {
             //MessageBox.Show(TableList);
             UpdateArchState(Convert.ToInt32(FileIDNo), TableList);
-            deleteRowsData(txtIDNo.Text);
+            deleteRowsData(docIDNumber, "archives", "docID");
             btnDelete.Visible = btnArchived.Visible = btnExten.Visible = false;
             this.Close();
         }

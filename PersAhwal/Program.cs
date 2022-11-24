@@ -168,6 +168,8 @@ namespace PersAhwal
             Application.Run(new FormAuth(2, -1, "", dataSource100A, @"D:\PrimariFiles\ModelFiles\", archFile, EmployeeName, JobPossition, "10-26-2022", "28-11-1443"));
             //Application.Run(new FormCollection(2, -1, 0, EmployeeName,dataSource100A, @"D:\PrimariFiles\ModelFiles\", archFile, JobPossition, "10-26-2022", "28-11-1443"));
             //Application.Run(new MainForm("موظف ارشفة", 3, "57", "لبيب محمد أحمد", "نائب قنصل", dataSource100S, dataSource100A, Modelfilespath + @"\", archFile, archFile, FormDataFile + @"\", true, "11-21-2022", "28-11-1443", Modelfilespath, FormDataFile));
+            //string[] str = new string[1] { ""};
+            //Application.Run(new FormPics("57", EmployeeName, "لبيب محمد أحمد", "نائب قنصل", dataSource100A, 0, FormDataFile, archFile, 3, str, str, false, str, str));
 
             //if (source56)
             //{

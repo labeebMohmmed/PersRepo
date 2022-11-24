@@ -61,6 +61,8 @@ namespace PersAhwal
         bool ArchData = false;
         string archState = "new";
         string[] foundList;
+        string[] checkOptions = new string[5];
+        int checkIndex = 0;
         int appCaseIndex = 0;
         string StrSpecPur = "";
         string ColName = "";
@@ -216,9 +218,10 @@ namespace PersAhwal
                     
                     break;
                 case 2:
-                    if(!backgroundWorker1.IsBusy) backgroundWorker1.RunWorkerAsync();
+                    
+                    if (!backgroundWorker1.IsBusy) backgroundWorker1.RunWorkerAsync();
                     //authrights
-                    if (!save2DataBase(Panelapp) || !save2DataBase(panelapplicationInfo))
+                    if (!save2DataBase(Panelapp) || !save2DataBase(panelapplicationInfo) ) 
                     {
                         currentPanelIndex--; return;
                     }
@@ -239,7 +242,7 @@ namespace PersAhwal
                     timer1.Enabled = false;
                     //finalPanel
                     //flowLayoutPanel2.Size = new System.Drawing.Size(940, 242);
-                    
+                    addNonEmptyFields(PanelItemsboxes);
                     if (!save2DataBase(PanelItemsboxes))
                     {
                         currentPanelIndex--; return;
@@ -290,7 +293,7 @@ namespace PersAhwal
                     if (index == 1)
                     {
                         نص_مقدم_الطلب0_off.Text = " Sudanese citizen ";
-                        نص_مقدم_الطلب1_off.Text = title.Text + ". " + مقدم_الطلب.Text + "holding a " + نوع_الهوية.Text + " No. " + نوع_الهوية.Text + " رقم " + رقم_الهوية.Text.Replace("p", "P") + " issued on " + مكان_الإصدار.Text;
+                        نص_مقدم_الطلب1_off.Text =  title.Text + ". " + مقدم_الطلب.Text + "holding a " + نوع_الهوية.Text + " No. " + نوع_الهوية.Text + " رقم " + رقم_الهوية.Text.Replace("p", "P") + " issued on " + مكان_الإصدار.Text;
                     }
                     else if (index > 1)
                     {
@@ -321,38 +324,43 @@ namespace PersAhwal
                     }
 
                     موقع_المعاملة_off.Text = "/" + موقع_المعاملة.Text.Trim();
+//                    MessageBox.Show(موقع_المعاملة_off.Text);
+                    التوقيع_off.Text = مقدم_الطلب.Text;
+  //                  MessageBox.Show(التوقيع_off.Text);
+                    
                     string auth = " المواطن" + preffix[appCaseIndex, 5] + " المذكور" + preffix[appCaseIndex, 5] + " أعلاه قد حضر" + preffix[appCaseIndex, 3] + " ووقع" + preffix[appCaseIndex, 3] + " بتوقيع" + preffix[appCaseIndex, 4] + " على هذا الإقرار، وذلك بعد تلاوته علي" + preffix[appCaseIndex, 4] + " وبعد أن فهم" + preffix[appCaseIndex, 3] + " مضمونه ومحتواه";
                     if (!طريقة_الطلب.Checked)
                         auth = " المواطن" + preffix[appCaseIndex, 5] + " المذكور" + preffix[appCaseIndex, 5] + " أعلاه قد حضر" + preffix[appCaseIndex, 3] + " ووقع" + preffix[appCaseIndex, 3] + " بتوقيع" + preffix[appCaseIndex, 4] + " على هذا الإقرار" + " بعد تلاوته علي" + preffix[appCaseIndex, 4] + " وبعد أن فهم" + preffix[appCaseIndex, 3] + " مضمونه ومحتواه" + " وذلك أمام مندوب جالية منطقة " + اسم_المندوب.Text.Split('_')[1] + " السيد/ " + اسم_المندوب.Text.Split('_')[0] + " بموجب التفويض الممنوح له من القنصلية العامة ";
                     التوثيق_off.Text = "نائب قنصل بالقنصلية العامة لجمهورية السودان بجدة، بأن" + auth + "، صدر تحت توقيعي وختم القنصلية العامة";
+                    
                     break;
                 case 2:
                     // افادة وشهادة لمن يهمه الامر
                     if (index == 1)
                     {
-                        نص_مقدم_الطلب0_off.Text = " المواطن" + preffix[appCaseIndex, 5] + " السواني" + preffix[appCaseIndex, 5] + " السيد" + preffix[appCaseIndex, 5];
-                        نص_مقدم_الطلب1_off.Text = "/ " + مقدم_الطلب.Text + "، المقيم" + preffix[appCaseIndex, 5] + " بالمملكة العربية السعودية حامل" + preffix[appCaseIndex, 5] + " " + نوع_الهوية.Text + " رقم " + رقم_الهوية.Text.Replace("p", "P") + " إصدار " + مكان_الإصدار.Text + "،";
+                        نص_مقدم_الطلب0_off.Text = "";// " المواطن" + preffix[appCaseIndex, 5] + " السواني" + preffix[appCaseIndex, 5] + " السيد" + preffix[appCaseIndex, 5];
+                        نص_مقدم_الطلب1_off.Text = "";// "/ " + مقدم_الطلب.Text + "، المقيم" + preffix[appCaseIndex, 5] + " بالمملكة العربية السعودية حامل" + preffix[appCaseIndex, 5] + " " + نوع_الهوية.Text + " رقم " + رقم_الهوية.Text.Replace("p", "P") + " إصدار " + مكان_الإصدار.Text + "،";
                     }
                     else if (index > 1)
                     {
-                        نص_مقدم_الطلب0_off.Text = " المواطن" + preffix[appCaseIndex, 5] + " السوداني" + preffix[appCaseIndex, 5] + " المذكور" + preffix[appCaseIndex, 5] + " أدناه:";
+                        نص_مقدم_الطلب0_off.Text = "";// المواطن" + preffix[appCaseIndex, 5] + " السوداني" + preffix[appCaseIndex, 5] + " المذكور" + preffix[appCaseIndex, 5] + " أدناه:";
                         نص_مقدم_الطلب1_off.Text = "";
                     }
-                    التوثيق_off.Text = "حررت هذه الإفادة بناء على طلب المذكور" + preffix[appCaseIndex, 5] + " لاستخدامها على الوجه المشروع";
+                    التوثيق_off.Text = "حررت هذه الإفادة بناء على طلب المذكور" + preffix[appCaseIndex, 5] + " أعلاه لاستخدامها على الوجه المشروع";
                     break;
                 case 3:
                     // افادة وشهادة لمن يهمه الامر
                     if (index == 1)
                     {
                         نص_مقدم_الطلب0_off.Text = "المواطن" + preffix[appCaseIndex, 5] + "السواني" + preffix[appCaseIndex, 5] + "السيد" + preffix[appCaseIndex, 5];
-                        نص_مقدم_الطلب1_off.Text = "/ " + مقدم_الطلب.Text + "، المقيم" + preffix[appCaseIndex, 5] + " بالمملكة العربية السعودية حامل" + preffix[appCaseIndex, 5] + " " + نوع_الهوية.Text + " رقم " + رقم_الهوية.Text.Replace("p", "P") + " إصدار " + مكان_الإصدار.Text + "،";
+                        نص_مقدم_الطلب1_off.Text = "";// "/ " + مقدم_الطلب.Text + "، المقيم" + preffix[appCaseIndex, 5] + " بالمملكة العربية السعودية حامل" + preffix[appCaseIndex, 5] + " " + نوع_الهوية.Text + " رقم " + رقم_الهوية.Text.Replace("p", "P") + " إصدار " + مكان_الإصدار.Text + "،";
                     }
                     else if (index > 1)
                     {
                         نص_مقدم_الطلب0_off.Text = "المواطن" + preffix[appCaseIndex, 5] + " السوداني" + preffix[appCaseIndex, 5] + " المذكور" + preffix[appCaseIndex, 5] + " أدناه:";
                         نص_مقدم_الطلب1_off.Text = "";
                     }
-                    التوثيق_off.Text = "حررت هذه الشهادة بناء على طلب المذكور" + preffix[appCaseIndex, 5] + " لاستخدامها على الوجه المشروع";
+                    التوثيق_off.Text = "حررت هذه الشهادة بناء على طلب المذكور" + preffix[appCaseIndex, 5] + " أعلاه لاستخدامها على الوجه المشروع";
                     break;
             }
         } 
@@ -384,9 +392,19 @@ namespace PersAhwal
 
             return 5;//المقيمون
         }
+        private void addNonEmptyFields(FlowLayoutPanel panel) {
+            foreach (Control Econtrol in panel.Controls)
+            {
+                if ((Econtrol is TextBox || Econtrol is ComboBox|| Econtrol is CheckBox) && Econtrol.Visible && !checkColumnName(Econtrol.Name, DataSource))
+                {
+                    CreateColumn(Econtrol.Name, DataSource);
+                }
+            }
+        }
         private bool save2DataBase(FlowLayoutPanel panel)
         {
             string query = checkList(panel, allList, "TableCollection");
+            //MessageBox.Show(query);
             if (query == "UPDATE TableCollection SET  where ID = @id") return true;
             Console.WriteLine(panel.Name +" - " +query);
             SqlConnection sqlConnection = new SqlConnection(DataSource);
@@ -398,6 +416,7 @@ namespace PersAhwal
             bool cont = true;
             for (int i = 0; i < foundList.Length; i++)
             {
+                
                 if (foundList[i] == "تعليق")
                 {
                     sqlCommand.Parameters.AddWithValue("@" + foundList[i], commentInfo());
@@ -406,20 +425,20 @@ namespace PersAhwal
                     foreach (Control control in panel.Controls)
                     {
                         string name = control.Name;
-                        if (panel.Name == "PanelItemsboxes")
-                            name = name.Replace("V", "");
+                        //if (panel.Name == "PanelItemsboxes")
+                        //    name = name.Replace("V", "");
                         if (name == foundList[i])
                         {
                             if (control.Name == "اسم_المندوب" && control.Visible && !control.Text.Contains("-"))
                             {
                                 control.BackColor = System.Drawing.Color.MistyRose;
-                                MessageBox.Show("لا يمكن المتابعة يرجى إضافة بيانات الحقل اسم المندوب ومنطقة التغطية مفصولين");
+                                MessageBox.Show("لا يمكن المتابعة يرجى إضافة بيانات الحقل اسم المندوب ومنطقة التغطية مفصولين بالعلامة -");
                                 return false;
                             }
                             if (control.Visible && ((control is TextBox && control.Text == "") || (control is ComboBox && control.Text.Contains("إختر"))))
                                 foreach (Control Econtrol in panel.Controls)
                                 {
-                                    if (Econtrol is TextBox && control.Text == "" || Econtrol is ComboBox)
+                                    if ((Econtrol is TextBox  || Econtrol is ComboBox) && control.Text == "")
                                         if (panel.Name != "PanelItemsboxes" || (Econtrol.Name != control.Name && Econtrol.Name.Contains(control.Name)) || Econtrol.Name == "اسم_المندوب")
                                         {
                                             //MessageBox.Show(Econtrol.Name + " - " + control.Name);
@@ -449,7 +468,7 @@ namespace PersAhwal
                                         }
                                 }
 
-
+                            //if (panel.Name == "PanelItemsboxes") MessageBox.Show(control.Text);
                             sqlCommand.Parameters.AddWithValue("@" + foundList[i], control.Text);
                             break;
                         }
@@ -488,6 +507,8 @@ namespace PersAhwal
             {
                 if (control is TextBox || control is ComboBox)
                     for (int col = 0; col < List.Length; col++)
+                    {
+                        //MessageBox.Show(List[col]);
                         if (control.Name == List[col])
                         {
                             foundList[found] = control.Name;
@@ -501,6 +522,7 @@ namespace PersAhwal
                             }
                             found++;
                         }
+                    }
             }
             return updateAll = "UPDATE " + table + " SET " + updateValues + " where ID = @id";
         }
@@ -517,13 +539,14 @@ namespace PersAhwal
             foreach (Control control in panel.Controls)
             {
                 string name = control.Name;
-                if (panel.Name == "PanelItemsboxes")
-                    name = name.Replace("V", "");
+                //if (panel.Name == "PanelItemsboxes")
+                //    name = name.Replace("V", "");
                 if (control is TextBox || control is ComboBox)
                     for (int col = 0; col < List.Length; col++)
                         if (name == List[col])
                         {
                             foundList[found] = name;
+                            //if (panel.Name == "PanelItemsboxes") MessageBox.Show(foundList[found]);
                             if (found == 0)
                             {
                                 updateValues = name + "=@" + name;
@@ -695,7 +718,9 @@ namespace PersAhwal
             {
                 if (row["name"].ToString() != "ID")
                 {
+
                     allList[i] = row["name"].ToString();
+                    //MessageBox.Show(allList[i]);
                     if (i == 0)
                     {
                         updateValues = row["name"].ToString() + "=@" + row["name"].ToString();
@@ -1278,6 +1303,15 @@ namespace PersAhwal
                     }
 
                 }
+                else if (control.Name == allList[col])
+                {
+                    if (dataGridView1.CurrentRow.Cells[allList[col]].Value.ToString() != "")
+                    {
+                         control.Text = dataGridView1.CurrentRow.Cells[allList[col]].Value.ToString();
+                        
+                    }
+
+                }
             }
         }
 
@@ -1846,6 +1880,14 @@ namespace PersAhwal
                 return text.Replace("t5", Vitext5.Text);
             if (text.Contains("c1"))
                 return text.Replace("c1", Vicheck1.Text);
+            if (text.Contains("c2"))
+                return text.Replace("c2", Vicheck2.Text);
+            if (text.Contains("c3"))
+                return text.Replace("c3", Vicheck3.Text);
+            if (text.Contains("c4"))
+                return text.Replace("c4", Vicheck4.Text);
+            if (text.Contains("c5"))
+                return text.Replace("c5", Vicheck5.Text);
 
             if (text.Contains("m1"))
                 return text.Replace("m1", Vicombo1.Text);
@@ -1895,6 +1937,7 @@ namespace PersAhwal
         {
             resetBoxes();
             flllPanelItemsboxes("ColName", نوع_الإجراء.Text + "-" + نوع_المعاملة.SelectedIndex.ToString());
+            fillInfo(PanelItemsboxes, false);
         }
         public void resetBoxes()
         {            
@@ -1913,15 +1956,16 @@ namespace PersAhwal
         private void flllPanelItemsboxes(string rowID, string cellValue)
         {
             //MessageBox.Show("rowID = " + rowID + " - cellValue=" + cellValue);
+            string query = "select * from TableAddContext where " + rowID + "=N'" + cellValue + "'";
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
-            SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableAddContext where " + rowID + "=N'" + cellValue + "'", sqlCon);
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
             sqlDa.Fill(dtbl);
-
-            //MessageBox.Show(dtbl.Rows.Count.ToString());
+            //MessageBox.Show(query);
+            Console.WriteLine(query + " - " +dtbl.Rows.Count.ToString());
             if (dtbl.Rows.Count > 0)
 
                 foreach (DataRow dr in dtbl.Rows)
@@ -1930,7 +1974,7 @@ namespace PersAhwal
                     ColName = dr["ColName"].ToString();
                     ColRight = dr["ColRight"].ToString();
                     StrSpecPur = dr["TextModel"].ToString();
-                    //MessageBox.Show("rowID = " + rowID + " - cellValue=" + cellValue);
+                    
                     foreach (Control Lcontrol in PanelItemsboxes.Controls)
                         try
                         {
@@ -1942,8 +1986,29 @@ namespace PersAhwal
                                     Lcontrol.Visible = true;
                                     foreach (Control Vcontrol in PanelItemsboxes.Controls)
                                     {
+                                        //MessageBox.Show(Vcontrol.Name);
                                         if (Vcontrol.Name.Trim() == Lcontrol.Name.Replace("L", "V").Trim())
                                         {
+                                            if (Vcontrol.Name.Contains("combo"))
+                                            {
+                                                //MessageBox.Show(dr[Lcontrol.Name.Replace("L", "") + "Option"].ToString());
+                                                //MessageBox.Show(Lcontrol.Name.Replace("L", "") + "Option");
+                                                ((ComboBox)Vcontrol).Items.Clear();
+
+                                                string[] items = dr[Lcontrol.Name.Replace("L", "") + "Option"].ToString().Split('_');
+
+                                                for (int x = 0; x < items.Length; x++)
+                                                    ((ComboBox)Vcontrol).Items.Add(items[x]);
+                                                if (((ComboBox)Vcontrol).Items.Count > 0) ((ComboBox)Vcontrol).SelectedIndex = 0;
+                                            }
+                                            if (Vcontrol.Name.Contains("check"))
+                                            {
+                                                //MessageBox.Show(dr[Lcontrol.Name.Replace("L", "") + "Option"].ToString());
+                                                //MessageBox.Show(Lcontrol.Name.Replace("L", "") + "Option");
+                                                Vcontrol.Text = dr[Lcontrol.Name.Replace("L", "") + "Option"].ToString().Split('_')[1];
+                                                checkOptions[checkIndex] = dr[Lcontrol.Name.Replace("L", "") + "Option"].ToString();
+                                                checkIndex++;
+                                            }
                                             Vcontrol.Visible = true;
                                             string size = dr[Lcontrol.Name.Replace("L", "") + "Length"].ToString();
                                             Vcontrol.Width = Convert.ToInt32(size);
@@ -1952,14 +2017,17 @@ namespace PersAhwal
                                                 if (Vcontrol is TextBox) ((TextBox)Vcontrol).Multiline = true;
                                                 Vcontrol.Height = 150;
                                             }
-                                            if (Vcontrol is ComboBox)
-                                            {
-                                                ((ComboBox)Vcontrol).Items.Clear();
-                                                string[] items = dr[Lcontrol.Name.Replace("L", "") + "Option"].ToString().Split('_');
+                                            
+                                            //if (Vcontrol.Name.Contains("combo"))
+                                            //{
+                                            //    MessageBox.Show(Vcontrol.Name.Replace("", "") + "Option");
+                                            //    ((ComboBox)Vcontrol).Items.Clear();
 
-                                                for (int x = 0; x < items.Length; x++)
-                                                    ((ComboBox)Vcontrol).Items.Add(items[x]);
-                                            }
+                                            //    string[] items = dr[Lcontrol.Name.Replace("", "") + "Option"].ToString().Split('_');
+
+                                            //    for (int x = 0; x < items.Length; x++)
+                                            //        ((ComboBox)Vcontrol).Items.Add(items[x]);
+                                            //}
                                         }
                                         if (Vcontrol.Name.Contains(Lcontrol.Name.Replace("L", "V") + "V") || Vcontrol.Name.Contains(Lcontrol.Name.Replace("L", "V") + "L"))
                                         {
@@ -2000,6 +2068,36 @@ namespace PersAhwal
         private void التاريخ_الميلادي_TextChanged(object sender, EventArgs e)
         {
             التاريخ_الميلادي_off.Text = التاريخ_الميلادي.Text.Split('-')[1] + " - " + التاريخ_الميلادي.Text.Split('-')[0] + " - " + التاريخ_الميلادي.Text.Split('-')[2];
+        }
+
+        private void Vicheck1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Vicheck1.Checked) Vicheck1.Text = checkOptions[0].Split('_')[0];
+            else Vicheck1.Text = checkOptions[0].Split('_')[1];
+        }
+
+        private void Vicheck2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Vicheck2.Checked) Vicheck2.Text = checkOptions[1].Split('_')[0];
+            else Vicheck2.Text = checkOptions[1].Split('_')[1];
+        }
+
+        private void Vicheck3_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Vicheck3.Checked) Vicheck3.Text = checkOptions[2].Split('_')[0];
+            else Vicheck3.Text = checkOptions[2].Split('_')[1];
+        }
+
+        private void Vicheck4_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Vicheck4.Checked) Vicheck4.Text = checkOptions[3].Split('_')[0];
+            else Vicheck4.Text = checkOptions[3].Split('_')[1];
+        }
+
+        private void Vicheck5_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Vicheck5.Checked) Vicheck5.Text = checkOptions[4].Split('_')[0];
+            else Vicheck5.Text = checkOptions[4].Split('_')[1];
         }
     }    
 }

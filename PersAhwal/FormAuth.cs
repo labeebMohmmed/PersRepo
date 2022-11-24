@@ -34,6 +34,7 @@ using System.Security.AccessControl;
 using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Office2019.Excel.ThreadedComments;
+using System.Text.RegularExpressions;
 
 namespace PersAhwal
 {
@@ -69,7 +70,7 @@ namespace PersAhwal
         string strRights = "";
         string strRightList = "";
         string ColName = "";
-        string ColRight = "Col0";
+        string ColRight = "Col";
         Word.Document oBDoc;
         object oBMiss;
         Word.Application oBMicroWord;
@@ -1550,7 +1551,8 @@ namespace PersAhwal
                 {
                     try
                     {
-                        if (control.Name == "التوقيع") MessageBox.Show(panel.Name + control.Text);
+                        //if (control.Name == "التوقيع") 
+                        //    MessageBox.Show(panel.Name + control.Text);
                         object ParaAuthIDNo = control.Name;
                         Word.Range BookAuthIDNo = oBDoc.Bookmarks.get_Item(ref ParaAuthIDNo).Range;
                         BookAuthIDNo.Text = control.Text;
@@ -1589,6 +1591,7 @@ namespace PersAhwal
                 for (int x = 0; x < birthindex; x++)
                 {
                     table.Rows.Add();
+                    MessageBox.Show(BirthName[x]);
                     table.Rows[x + 2].Cells[1].Range.Text = (x + 1).ToString();
                     table.Rows[x + 2].Cells[2].Range.Text = BirthName[x];
                     table.Rows[x + 2].Cells[3].Range.Text = BirthPlace[x];
@@ -1599,11 +1602,13 @@ namespace PersAhwal
         }
         
         private void fillDocFileInfo(Panel panel) {
+            //MessageBox.Show(panel.Name);
             foreach (Control control in panel.Controls)
             {
+                //MessageBox.Show(control.Text);
                 if (control is TextBox || control is ComboBox)
                 {
-                    if (control.Name == "التوقيع") MessageBox.Show(panel.Name +  control.Text);
+                    //if (control.Name == "التوقيع") MessageBox.Show(panel.Name +  control.Text);
                     try
                     {
                         object ParaAuthIDNo = control.Name;
@@ -1612,7 +1617,7 @@ namespace PersAhwal
                         object rangeAuthIDNo = BookAuthIDNo;
                         oBDoc.Bookmarks.Add(control.Name, ref rangeAuthIDNo);
 
-                        //MessageBox.Show(control.Text);
+                        
                     }
                     catch (Exception ex)
                     {
@@ -1685,13 +1690,13 @@ namespace PersAhwal
         int listchecked = 0;
         public void PopulateCheckBoxes(string col, string table, string dataSource)
         {
-            LastCol = col;
-            if (col == "" || table == "" || dataSource == "") return;
+            LastCol = col;            
+            if (col == "Col"|| col == "" || table == "" || dataSource == "") return;
             string query = "SELECT ID," + col + " FROM " + table;
             appCaseIndex = Appcases(النوع, addNameIndex);
             //صفة_الموكل_off.SelectedIndex = Appcases(جنس_الموكَّل, addAuthticIndex);
             Console.WriteLine("PopulateCheckBoxes " + addNameIndex + appCaseIndex + addAuthticIndex + صفة_الموكل_off.SelectedIndex);
-
+            //MessageBox.Show(query);
             //MessageBox.Show(query);
             using (SqlConnection con = new SqlConnection(dataSource))
             {
@@ -1705,7 +1710,6 @@ namespace PersAhwal
                     foreach (DataRow row in checkboxdt.Rows)
                     {
                         Text_statis = checkboxdt.Rows[Nobox][col].ToString().Split('_');
-                        if (Text_statis[0].Contains("ايبان")) IBAN = Text_statis[0]+"_"+ Nobox.ToString();
                         string text = SuffReplacements(Text_statis[0], appCaseIndex, صفة_الموكل_off.SelectedIndex);
                         for (int x = 0; x < 40; x++)
                         {                            
@@ -1725,6 +1729,35 @@ namespace PersAhwal
                     }
                 }
             }
+        }
+        
+        public string ibanText(string col, string table, string dataSource)
+        {
+            if (col == "Col" || col == "" || table == "" || dataSource == "") return "";
+            string query = "SELECT ID," + col + " FROM " + table;
+            //MessageBox.Show("query " + query);
+
+
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+
+            foreach (DataRow row in dtbl.Rows)
+            {
+                Text_statis = row[col].ToString().Split('_');
+                //MessageBox.Show("Text_statis " + Text_statis[0]);
+                if (Text_statis[0].Contains("إيداع "))
+                {
+                    //MessageBox.Show("إيداع " + Text_statis[0]);
+                    return Text_statis[0];
+                }
+            }
+
+            return "";
         }
         private void drawboxes(string txt, int idbox, bool check) {
             CheckBox chk = new CheckBox();
@@ -1870,18 +1903,31 @@ namespace PersAhwal
             {
                 if (control.Visible && control is CheckBox && !control.Text.Contains("(نص ملغي)") && !control.Text.Contains("تحديث تلقائي"))
                 {
-                    if (((CheckBox)control).Checked) checked_unchecked = "1_";
+                    if (((CheckBox)control).Checked)
+                    {
+                        checked_unchecked = "1_";
+                        if (xindex == 0)
+                        {
+                            قائمة_الحقوق.Text = ((CheckBox)control).Text;
+                        }
+                        else
+                        {
+                            قائمة_الحقوق.Text = قائمة_الحقوق.Text + " " + ((CheckBox)control).Text;
+                        }
+                    }
                     else checked_unchecked = "0_";
                     if (xindex == 0)
                     {
                         الحقوق_الممنوحة.Text = checked_unchecked + ((CheckBox)control).Text;
-                        قائمة_الحقوق.Text = ((CheckBox)control).Text;
+                        //قائمة_الحقوق.Text = ((CheckBox)control).Text;
                     }
                     else
                     {
                         الحقوق_الممنوحة.Text = الحقوق_الممنوحة.Text + checked_unchecked + ((CheckBox)control).Text;
-                        قائمة_الحقوق.Text = قائمة_الحقوق.Text + " " + ((CheckBox)control).Text;
+                        //قائمة_الحقوق.Text = قائمة_الحقوق.Text + " " + ((CheckBox)control).Text;
                     }
+                    
+                    
                     xindex++;
                 }
             }
@@ -2348,7 +2394,7 @@ namespace PersAhwal
 
         private void flllPanelItemsboxes(string rowID, string cellValue)
         {
-            //MessageBox.Show("rowID = " + rowID + " - cellValue=" + cellValue);
+//            MessageBox.Show("rowID = " + rowID + " - cellValue=" + cellValue);
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
@@ -2367,6 +2413,7 @@ namespace PersAhwal
                     ColRight = dr["ColRight"].ToString();
                     StrSpecPur = dr["TextModel"].ToString();
                     timer1.Enabled = true;
+                   // MessageBox.Show("ColRight = " + ColRight);
                     //MessageBox.Show(StrSpecPur);
                     foreach (Control Lcontrol in PanelItemsboxes.Controls)
                         try
@@ -2665,8 +2712,9 @@ namespace PersAhwal
             if (text.Contains("#5"))
                 return text.Replace("#5", preffix[0, 9]);
 
+           
 
-            
+
 
             if (text.Contains("$$$"))
                 return text.Replace("$$$", preffix[appCaseIndex, 0]);
@@ -3028,7 +3076,7 @@ namespace PersAhwal
                 if (وجهة_التوكيل.Items.Count > 0) وجهة_التوكيل.SelectedIndex = 0;
                 if (وجهة_التوكيل.Text == "إقرار بالتنازل") نوع_المعاملة.Text = "إقرار بالتنازل";
                 else نوع_المعاملة.Text = "توكيل";
-
+                //MessageBox.Show("نوع_التوكيل. = " + نوع_التوكيل.SelectedIndex.ToString());
                 newFillComboBox1(إجراء_التوكيل, DataSource, نوع_التوكيل.SelectedIndex.ToString(), "العربية");
                 if (نوع_التوكيل.SelectedIndex == 6)
                 {
@@ -3064,10 +3112,12 @@ namespace PersAhwal
                     {
                         if (dataRow["ColName"].ToString().Split('-')[1].All(char.IsDigit))
                         {
+                            
                             try
                             {
                                 if (id == dataRow["ColName"].ToString().Split('-')[1])
                                 {
+                                    //MessageBox.Show(dataRow["ColName"].ToString().Split('-')[0]);
                                     combbox.Items.Add(dataRow["ColName"].ToString().Split('-')[0]);
                                 }
                             }
@@ -3119,7 +3169,7 @@ namespace PersAhwal
 
             //flllPanelItemsboxes("ColName", إجراء_التوكيل.Text + "-" + نوع_التوكيل.SelectedIndex.ToString());
             //PopulateCheckBoxes(ColRight, "TableAuthRight", DataSource);
-
+            
             if (الحقوق_الممنوحة.Text == "")
             {
                 savedRights.Checked = false;
@@ -3135,6 +3185,8 @@ namespace PersAhwal
                 flllPanelItemsboxes("ColName", إجراء_التوكيل.Text + "-" + نوع_التوكيل.SelectedIndex.ToString());
                 PopulateCheckBoxes(الحقوق_الممنوحة.Text.Split('،'));
             }
+            IBAN = ibanText(ColRight, "TableAuthRight", DataSource);
+            //MessageBox.Show("IBAN " + IBAN);
             if (txtRev.Text != "") {
                 checkAutoUpdate.Checked = false;
                 txtReview.Text = txtRev.Text;
@@ -3304,19 +3356,47 @@ namespace PersAhwal
             }
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+        private bool specialChar(string text) {
+            string str = "#*@&%^$";
+            Char[] ca = text.ToCharArray();
+            foreach (Char c in ca)
+            {
+                if (str.Contains(c))
+                {
+                    //MessageBox.Show("char " + c.ToString());
+                    return true;
+                }
+            }
+            return false;
+        }
+    private void timer1_Tick(object sender, EventArgs e)
         {
             if (checkAutoUpdate.Checked && currentPanelIndex > 0)
             {
                 txtReviewBody();
 
                 //التواكيل المتعلقة بتعويض حوادث السير
-                //if (إجراء_التوكيل.Text == "استلام تأمين")
-                //{
-                //    IBAN}
+                if (IBAN =="") return;
+                if (إجراء_التوكيل.Text == "استلام تأمين")
+                {
+                    string iban = IBAN;
+                    if (specialChar(iban)) 
+                    while(specialChar(iban))
+                        iban = SuffReplacements(iban, appCaseIndex, صفة_الموكل_off.SelectedIndex);
+
+                    foreach (Control control in panelAuthOptions.Controls)
+                    {
+                        if (control is CheckBox)
+                        {
+                            if (((CheckBox)control).Text.Contains("إيداع") && ((CheckBox)control).Tag.ToString() == "valid")
+                            {
+                                ((CheckBox)control).Text = iban;
+                                return;
+                            }
+                        }
+                    }
+                }
             }
-            
-            
         }
        
         private void timer2_Tick(object sender, EventArgs e)
@@ -3330,15 +3410,18 @@ namespace PersAhwal
 
         private void button1_Click_1(object sender, EventArgs e)
         {
+            //توقيع_مقدم_الطلب
             int count = getEdited(GreDate);
-            if (notFiled)
-            {               
+            //if (notFiled)
+            //{               
+            //MessageBox.Show("hi");
+
                 fillDocFileInfo(panelapplicationInfo);
                 fillDocFileAppInfo(Panelapp);
                 fillDocFileInfo(panelAuthRights);
                 fillDocFileInfo(finalPanel);
                 notFiled = false;
-            }
+            //}
             edited.Text = "YES";
             حالة_الارشفة.Text = "غير مؤرشف";
             //if (!panellError.Visible)
@@ -3709,6 +3792,8 @@ namespace PersAhwal
             birthindex++;
             idShow = birthindex;
             LibtnAdd1.Text = "اضافة (" + idShow.ToString() + "/" + birthindex.ToString() + ")" + "   ";
+
+            MessageBox.Show(birthindex.ToString());
         }
 
         private void txtfinal_MouseClick(object sender, MouseEventArgs e)
