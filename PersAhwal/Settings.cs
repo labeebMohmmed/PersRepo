@@ -12,7 +12,9 @@ using System.IO;
 using System.Data.SqlTypes;
 using DocumentFormat.OpenXml.Drawing;
 using Path = System.IO.Path;
-
+using static Azure.Core.HttpHeader;
+using System.Runtime.InteropServices;
+using Excel = Microsoft.Office.Interop.Excel;
 namespace PersAhwal
 {
     public partial class Settings : Form
@@ -54,6 +56,20 @@ namespace PersAhwal
         string[] errors ;
         string editRights ;
         string errorList;
+        string CurrentFile = "";
+        bool readyToUpload = false;
+        int ProcReqID = 0;
+        Excel.Application xlApp;
+        Excel.Workbook xlWorkBook;
+        Excel.Worksheet xlWorkSheet;
+        Excel.Range range;
+        int rCnt;
+        int cCnt;
+        int rw = 0;
+        int cl = 0;
+        string revised = "";
+        bool checkIndex = false;
+        string formNo = "";
         public Settings(string server, bool newSettings, string dataSource56, string dataSource57, bool setDataBase, string filepathIn, string filepathOut, string archFile, string formDataFile, string colName)
         {
             InitializeComponent();
@@ -82,9 +98,9 @@ namespace PersAhwal
                     MessageBox.Show("لا توجد قاعدة بيانات مسجلة");
                 }
             }
-            fileComboBox(mainTypeAuth, DataSource, "AuthTypes", "TableListCombo");
+            fillSubComboBox(mainTypeAuth, DataSource, "AuthTypes", "TableListCombo",false);
             //autoCompleteTextBox(newCombAuthType, DataSource, "AuthTypes", "TableListCombo");
-            fileComboBox(mainTypeIqrar, DataSource, "ArabicGenIgrar", "TableListCombo");
+            fillSubComboBox(mainTypeIqrar, DataSource, "ArabicGenIgrar", "TableListCombo",false);
             newFillComboBox2(subTypeIqrar, DataSource, mainTypeIqrar.SelectedIndex.ToString(), langIqrar.Text);
             AddRightColumn();
             if (colName != "") 
@@ -96,13 +112,114 @@ namespace PersAhwal
                 //flllPanelItemsboxes("ColName", colName);
             }
             Suffex_preffixList();
+            for (int x = 0; x < mainTypeAuth.Items.Count; x++)
+            {
+                sunInfo(mainTypeAuth.Items[x].ToString().Replace(" ","_"), x);
+            }
+        }
+
+        private void insertRow(string ColName)
+        {
+            //MessageBox.Show(data[1]);
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            
+
+            string query = "INSERT INTO TableAddContext (ColName) values (@ColName)";
+
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { }
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.Parameters.AddWithValue("@ColName", ColName);
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
+        }
+
+
+        private bool PreReqFound(string proName)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            string query = "SELECT رقم_المعاملة FROM TableProcReq where المعاملة=N'" + proName + "'";
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return false; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            if (dtbl.Rows.Count > 0)
+                return true;
+            else return false;
+        }
+        
+        private void sunInfo(string colName, int index)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            string query = "select ["+ colName+"] from TableListCombo where ["+ colName+ "] is not null and ["+ colName+"] <> ''";
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            try
+            {
+                sqlDa.Fill(dtbl);
+                sqlCon.Close();
+                foreach (DataRow row in dtbl.Rows)
+                {
+                    string formNo2 = row[colName].ToString().Trim() + "-" + index.ToString();
+
+                    if (!TableAddContext(formNo2))
+                    {
+                        insertRow(formNo2);
+
+                    }
+                }
+            }
+            catch (Exception ex) { }
+        }
+        
+        private bool TableAddContext(string proName)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            string query = "SELECT ColName FROM TableAddContext where ColName=N'" + proName + "'";
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return false; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            if (dtbl.Rows.Count > 0)
+                return true;
+            else return false;
         }
 
         private string[] getColList(string table)
         {
             SqlConnection sqlCon = new SqlConnection(DataSource57);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return allList; }
             SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT name FROM sys.columns WHERE object_id = OBJECT_ID('" + table + "')", sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
@@ -156,8 +273,12 @@ namespace PersAhwal
         private bool checkColExist(string table, string colName)
         {
             SqlConnection sqlCon = new SqlConnection(DataSource57);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return false; }
             SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT name FROM sys.columns WHERE object_id = OBJECT_ID('" + table + "')", sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
@@ -251,8 +372,12 @@ namespace PersAhwal
         {
 
             SqlConnection sqlCon = new SqlConnection(DataSource);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return ; }
             SqlCommand sqlCmd = new SqlCommand("alter table "+tableName+" add " + Columnname + " nvarchar(150)", sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.ExecuteNonQuery();
@@ -264,8 +389,12 @@ namespace PersAhwal
         private string getAppFolder()
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return ""; }
             string settingData = "select FolderApp from TableSettings where ID='1'";
             SqlDataAdapter sqlDa = new SqlDataAdapter(settingData, sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
@@ -291,7 +420,7 @@ namespace PersAhwal
             }
             else
             {
-                dataGridView1.Visible = false;
+                txtSearch.Visible = button32.Visible = txtSearch.Visible = button32.Visible = dataGridView1.Visible = false;
                 flowLayoutPanel9.Visible = SettingsPanel.Visible = true;
                 ContextPanel.Visible = false;
             }
@@ -314,37 +443,88 @@ namespace PersAhwal
         }
 
         private void button36_Click(object sender, EventArgs e)
-        {
-           
+        {           
             if (dataGridView1.Visible)
             {
-                dataGridView1.Visible = false;
+                txtSearch.Visible = button32.Visible = dataGridView1.Visible = false;
                 flowLayoutPanel9.Visible = SettingsPanel.Visible = false;
+                dataGridView1.SendToBack();
+                ContextPanel.Visible = true;
+                ContextPanel.BringToFront();
             }
             else
             {
-                FillDataGridView("");
-                dataGridView1.Visible = true;
+                repReqPanel.Visible = false;
+                dataGridView1.BringToFront();
+                FillDataGridView("TableAddContext");
+                panelIqrar.Visible = panelAuthInfo.Visible = false;
+                txtSearch.Visible = button32.Visible = dataGridView1.Visible = true;
                 flowLayoutPanel9.Visible = SettingsPanel.Visible = false;
-                ContextPanel.Visible = false;
+                ContextPanel.Visible = true;
+                formsBtn.Visible = proFileBtn.Visible = btnRevised.Visible = true;
             }
         }
 
 
-        void FillDataGridView(string text)
+        void FillDataGridView(string table)
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
-            SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableAddContext order by ID desc", sqlCon);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return; }
+
+            SqlDataAdapter sqlDa = new SqlDataAdapter("select "+ getColumnNames(table)+" from " + table + " order by ID desc", sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
             sqlDa.Fill(dtbl);
             dataGridView1.DataSource = dtbl;
             dataGridView1.Sort(dataGridView1.Columns["ID"], System.ComponentModel.ListSortDirection.Descending);
-            dataGridView1.Columns["ID"].Visible = false;
-            dataGridView1.Columns["ColName"].Width = 250;
+            //dataGridView1.Columns["ID"].Visible = false;
+            try
+            {
+                dataGridView1.Columns[1].Width = 100;
+                dataGridView1.Columns[2].Width = 350;
+                dataGridView1.Columns[3].Width = 200;
+                dataGridView1.Columns[4].Width = 200;
+                dataGridView1.Columns[6].Width = 200;
+            }
+            catch (Exception ex) { }
             sqlCon.Close();
+        }
+
+        private string getColumnNames(string table)
+        {            
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return ""; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter("SP_COLUMNS " + table, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            string cols = "";
+            int index = 0;
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                if (!string.IsNullOrEmpty(dataRow["COLUMN_NAME"].ToString()))
+                {
+                    if (!dataRow["COLUMN_NAME"].ToString().Contains("Data1"))
+                    {
+                        if(index == 0) 
+                            cols = dataRow["COLUMN_NAME"].ToString();
+                        else cols = cols +","+ dataRow["COLUMN_NAME"].ToString();
+                        index++;
+                    }
+                }
+            }
+            return cols;
         }
 
         private void ShowRowNo(int id)
@@ -439,7 +619,7 @@ namespace PersAhwal
                     panelIqrar.Visible = true;
                 }
 
-                dataGridView1.Visible = false;
+                txtSearch.Visible = button32.Visible = dataGridView1.Visible = false;
                 ContextPanel.Visible = true;
 
                 review1 = false;
@@ -494,7 +674,7 @@ namespace PersAhwal
                 SqlCommand cmd = new SqlCommand(query, saConn);
                 cmd.CommandType = CommandType.Text;
 
-
+                MessageBox.Show(query);
                 cmd.ExecuteNonQuery();
                 DataTable table = new DataTable();
                 SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
@@ -515,7 +695,7 @@ namespace PersAhwal
             return 1;
         }
 
-        private void fileComboBox(ComboBox combbox, string source, string comlumnName, string tableName)
+        private void fillSubComboBox(ComboBox combbox, string source, string comlumnName, string tableName, bool select)
         {
             //MessageBox.Show("source += "+source);
             combbox.Visible = true;
@@ -529,20 +709,47 @@ namespace PersAhwal
                 SqlCommand cmd = new SqlCommand(query, saConn);
                 cmd.CommandType = CommandType.Text;
 
+                try
+                {
+                    cmd.ExecuteNonQuery();
 
-                cmd.ExecuteNonQuery();
-                DataTable table = new DataTable();
-                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
-                dataAdapter.Fill(table);
-
+                    DataTable table = new DataTable();
+                    SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                    dataAdapter.Fill(table);
                 foreach (DataRow dataRow in table.Rows)
                 {
                     if (!String.IsNullOrEmpty(dataRow[comlumnName].ToString()))
                         combbox.Items.Add(dataRow[comlumnName].ToString());
                 }
+                }
+                catch (Exception ex) { }
+                
                 saConn.Close();
             }
-            if (combbox.Items.Count > 0) combbox.SelectedIndex = 0;
+            if (select && combbox.Items.Count > 0) combbox.SelectedIndex = 0;
+        }
+        
+        private bool checkRequInfo(string proID)
+        {
+            
+            using (SqlConnection saConn = new SqlConnection(DataSource))
+            {
+                saConn.Open();
+
+                string query = "select ID from TableProcReq where المعاملة =N'" + proID + "'";
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.CommandType = CommandType.Text;
+                cmd.ExecuteNonQuery();
+
+                DataTable table = new DataTable();
+                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                dataAdapter.Fill(table);
+
+                saConn.Close();
+                if (table.Rows.Count > 0) return true;
+                else return false;
+            }
+            
         }
         private void newFillComboBox1(ComboBox combbox, string source, string id, string Language)
         {
@@ -712,85 +919,6 @@ namespace PersAhwal
         private void CombAuthType_SelectedIndexChanged(object sender, EventArgs e)
         {
 
-
-
-
-
-            if (checkColumnName(mainTypeAuth.Text.Replace(" ", "_")))
-            {
-                subTypeAuth.Items.Clear();
-                fileComboBox(subTypeAuth, DataSource, mainTypeAuth.Text.Replace(" ", "_"), "TableListCombo");
-                NewColumn = false;
-                return;
-            }
-            NewColumn = true;
-            if (mainTypeAuth.SelectedIndex >= 2 && mainTypeAuth.SelectedIndex <= 5)
-            {
-                subTypeAuth.Items.Clear();
-                subTypeAuth.Items.Add("إجراء جديد");
-                ColumnName = "Row1Attach";
-                fileComboBox(subTypeAuth, DataSource, ColumnName, "TableListCombo");
-            }
-            if (mainTypeAuth.Text.Contains("زواج"))
-            {
-                subTypeAuth.Items.Clear();
-                subTypeAuth.Items.Add("إجراء جديد");
-                ColumnName = "RowMerrageAttach";
-
-                fileComboBox(subTypeAuth, DataSource, "RowMerrageAttach", "TableListCombo");
-            }
-            if (mainTypeAuth.Text.Contains("ورثة"))
-            {
-                subTypeAuth.Items.Clear();
-                subTypeAuth.Items.Add("إجراء جديد");
-                ColumnName = "RowLegacyAttach";
-                fileComboBox(subTypeAuth, DataSource, "RowLegacyAttach", "TableListCombo");
-            }
-            if (mainTypeAuth.Text.Contains("سيارة"))
-            {
-                subTypeAuth.Items.Clear();
-                subTypeAuth.Items.Add("إجراء جديد");
-                ColumnName = "RowCarAttach";
-                fileComboBox(subTypeAuth, DataSource, "RowCarAttach", "TableListCombo");
-            }
-            if (mainTypeAuth.Text.Contains("طلاق"))
-            {
-                subTypeAuth.Items.Clear();
-                subTypeAuth.Items.Add("إجراء جديد");
-                ColumnName = "RowDeforceAttach";
-                fileComboBox(subTypeAuth, DataSource, "RowDeforceAttach", "TableListCombo");
-            }
-            if (mainTypeAuth.Text.Contains("جامعية"))
-            {
-                subTypeAuth.Items.Clear();
-                subTypeAuth.Items.Add("إجراء جديد");
-                ColumnName = "RowUniversityAttach";
-                fileComboBox(subTypeAuth, DataSource, "RowUniversityAttach", "TableListCombo");
-            }
-            if (mainTypeAuth.Text.Contains("ميلاد"))
-            {
-                subTypeAuth.Items.Clear();
-                subTypeAuth.Items.Add("إجراء جديد");
-                subTypeAuth.Items.Add("استخراج وتوثيق");
-                ColumnName = "";
-                subTypeAuth.Items.Add(" استخراج وتوثيق بدل فاقد");
-            }
-            if (mainTypeAuth.Text.Contains("بالتنازل"))
-            {
-                subTypeAuth.Items.Clear();
-                subTypeAuth.Items.Add("إجراء جديد");
-                ColumnName = "GiveAway";
-                fileComboBox(subTypeAuth, DataSource, "GiveAway", "TableListCombo");
-            }
-
-            if (mainTypeAuth.Text.Contains("تأمين"))
-            {
-                subTypeAuth.Items.Clear();
-                subTypeAuth.Items.Add("إجراء جديد");
-                subTypeAuth.Items.Add("استلام تأمين");
-                ColumnName = "";
-            }
-            //if (ComboProcedure.Items.Count > 0) ComboProcedure.SelectedIndex = 0;
         }
 
         private void ComboProcedure_SelectedIndexChanged(object sender, EventArgs e)
@@ -807,8 +935,12 @@ namespace PersAhwal
         private void addMainAuth(string colText)
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return; }
             SqlCommand sqlCmd = new SqlCommand("INSERT INTO TableListCombo (AuthTypes) values (@AuthTypes)", sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.Parameters.AddWithValue("@AuthTypes", colText);
@@ -819,8 +951,12 @@ namespace PersAhwal
         private bool checkColumnName(string colNo)
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return false; }
             SqlDataAdapter sqlDa = new SqlDataAdapter("SP_COLUMNS TableListCombo", sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
@@ -840,8 +976,12 @@ namespace PersAhwal
         private void getColumnName(string colNo)
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return; }
             SqlDataAdapter sqlDa = new SqlDataAdapter("SP_COLUMNS TableListCombo", sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
@@ -864,9 +1004,13 @@ namespace PersAhwal
         private void AddRightColumn()
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
-            SqlDataAdapter sqlDa = new SqlDataAdapter("SP_COLUMNS TableAuthRight", sqlCon);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter("SP_COLUMNS TableAuthRights", sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
             sqlDa.Fill(dtbl);
@@ -886,8 +1030,12 @@ namespace PersAhwal
 
             string str = "@" + ColName;
             SqlConnection sqlCon = new SqlConnection(DataSource);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return; }
             SqlCommand sqlCmd = new SqlCommand("update TableListCombo set " + ColName + "=" + str + " where ID=@ID", sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.Parameters.AddWithValue(str, colText);
@@ -899,8 +1047,12 @@ namespace PersAhwal
         private void FolderAppUpdate(string folderApp)
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return; }
             SqlCommand sqlCmd = new SqlCommand("update TableSettings set FolderApp=@FolderApp where ID='1'", sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.Parameters.AddWithValue("@FolderApp", folderApp);
@@ -910,216 +1062,74 @@ namespace PersAhwal
 
 
         
-                        private void dataGridView1_CellClick_1(object sender, DataGridViewCellEventArgs e)
+          private void dataGridView1_CellClick_1(object sender, DataGridViewCellEventArgs e)
         {
-            if (dataGridView1.Rows.Count > 1)
+            if (dataGridView1.Rows.Count > 1 && repReqPanel.Visible) {
+                المعاملة.Text = dataGridView1.CurrentRow.Cells["المعاملة"].Value.ToString();
+                OpenFile(المعاملة.Text, true, reviewForms);
+                //MessageBox.Show(CurrentFile);
+                string[] colList = new string[11];
+                colList[0] = "المعاملة";
+                colList[1] = "رقم_المعاملة";
+                colList[2] = "المطلوب_رقم1";
+                colList[3] = "المطلوب_رقم2";
+                colList[4] = "المطلوب_رقم3";
+                colList[5] = "المطلوب_رقم4";
+                colList[6] = "المطلوب_رقم5";
+                colList[7] = "المطلوب_رقم6";
+                colList[8] = "المطلوب_رقم7";
+                colList[9] = "المطلوب_رقم8";
+                colList[10] = "المطلوب_رقم9";
+                SqlConnection sqlCon = new SqlConnection(DataSource);
+                try
+                {
+                    if (sqlCon.State == ConnectionState.Closed)
+                        sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+                SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT * FROM TableProcReq where المعاملة=N'" + المعاملة.Text + "'", sqlCon);
+                sqlDa.SelectCommand.CommandType = CommandType.Text;
+                DataTable dtbl = new DataTable();
+                sqlDa.Fill(dtbl);
+                sqlCon.Close();
+                if (dtbl.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dtbl.Rows)
+                    {
+                        ProcReqID = Convert.ToInt32(row["ID"].ToString());
+                        for (int index = 1; index < 11; index++)
+                        {
+                            foreach (Control control in repReqPanel.Controls)
+                            {
+                                if (control.Name == colList[index])
+                                {
+                                    control.Text = row[colList[index]].ToString();
+                                }
+                            }
+                        }
+                    }
+                }
+                txtSearch.Visible = button32.Visible = dataGridView1.Visible = false;
+                repReqPanel.Visible = true;
+                repReqPanel.BringToFront();
+            }
+            else if (dataGridView1.Rows.Count > 1 && ContextPanel.Visible)
             {
-                idIndex = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value.ToString());
+                string colname = txtProName.Text = dataGridView1.CurrentRow.Cells["ColName"].Value.ToString();
+                revised = dataGridView1.CurrentRow.Cells["revised"].Value.ToString();
+                labID.Text = "rowID:" + dataGridView1.CurrentRow.Cells["ID"].Value.ToString();
+                idIndex = Convert.ToInt32(dataGridView1.CurrentRow.Cells["ID"].Value.ToString());
+
                 langAuth.Text = dataGridView1.CurrentRow.Cells["Lang"].Value.ToString();
-                ColRight.Text = dataGridView1.CurrentRow.Cells["ColRight"].Value.ToString();
+                ColRight.Text = dataGridView1.CurrentRow.Cells["ColName"].Value.ToString().Replace(" ", "_");
                 TextModel.Text = dataGridView1.CurrentRow.Cells["TextModel"].Value.ToString();
                 editRights = dataGridView1.CurrentRow.Cells["editRights"].Value.ToString();
                 errorList = dataGridView1.CurrentRow.Cells["errorList"].Value.ToString();
+
+                panelJob(dataGridView1.CurrentRow.Index);
+                //ColRight.Text = dataGridView1.CurrentRow.Cells["ColName"].Value.ToString();
+                //MessageBox.Show(dataGridView1.CurrentRow.Index.ToString());
                 
-                if (errorList != "")
-                {
-                    panellError.Visible = true;
-                    panellError.BringToFront();
-                    errors = errorList.Split('_');
-                    //MessageBox.Show(error);MessageBox.Show(errors[0]);
-                    error1.Checked = Convert.ToBoolean(errors[0]);
-                    error2.Checked = Convert.ToBoolean(errors[1]);
-                    error3.Checked = Convert.ToBoolean(errors[2]);
-                    error4.Checked = Convert.ToBoolean(errors[3]);
-                    error5.Checked = Convert.ToBoolean(errors[4]);
-                    if (errors[5] == "False")
-                        labelError.Visible = otherError.Visible = error6.Checked = false;
-                    else
-                    {
-                        otherError.Visible = labelError.Visible = true;
-                        error6.Checked = true;
-                        otherError.Text = errors[5];
-                    }
-                    button22.Visible = true; 
-                    Nobox = 0;
-                    foreach (string str in editRights.Split('،'))
-                    {
-                        if (str != "")
-                        {
-                            //{
-                            CheckBox chk = new CheckBox();
-                            chk.TabIndex = Nobox;
-                            chk.Width = 80;
-                            chk.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                            if (Nobox == 0) chk.Width = panelAuthOptions.Width - 100;
-                            else chk.Width = panelAuthOptions.Width - 130;
-                            chk.Height = 33;
-                            chk.Location = new System.Drawing.Point(70, 3 + Nobox * 37);
-                            chk.Name = "checkBox" + Nobox.ToString();
-                            try
-                            {
-                                chk.Text = str.Split('_')[1] + "،";
-                                chk.Tag = "valid";                                
-                                if (str.Split('_')[0] == "1")
-                                    chk.CheckState = CheckState.Checked;
-                                else chk.CheckState = CheckState.Unchecked;
-                            }
-                            catch (Exception ex)
-                            {
-                                //MessageBox.Show(str);
-                            }
-                            Nobox++;
-                            panellError.Controls.Add(chk);
-                        }
-                    }
-                }
-
-                foreach (Control control in panelText.Controls)
-                {
-                    for (int index = 0; index < allList.Length; index++)
-                    {
-                        if (allList[index] == control.Name)
-                        {
-                            control.Text = dataGridView1.CurrentRow.Cells[allList[index]].Value.ToString();
-                        }
-                    }
-                }
-                foreach (Control control in panelDate.Controls)
-                {
-                    for (int index = 0; index < allList.Length; index++)
-                    {
-                        
-                        if (allList[index] == control.Name)
-                        {
-                            control.Text = dataGridView1.CurrentRow.Cells[allList[index]].Value.ToString();
-                            
-                        }
-                    }
-                }
-                foreach (Control control in panelCombo.Controls)
-                {
-                    for (int index = 0; index < allList.Length; index++)
-                    {
-                        if (allList[index] == control.Name)
-                        {
-                            control.Text = dataGridView1.CurrentRow.Cells[allList[index]].Value.ToString();
-                        }
-                    }
-                }
-                foreach (Control control in panelButton.Controls)
-                {
-                    for (int index = 0; index < allList.Length; index++)
-                    {
-                        if (allList[index] == control.Name)
-                        {
-                            control.Text = dataGridView1.CurrentRow.Cells[allList[index]].Value.ToString();
-                        }
-                    }
-                }
-                foreach (Control control in panelCheck.Controls)
-                {
-                    for (int index = 0; index < allList.Length; index++)
-                    {
-                        if (allList[index] == control.Name)
-                        {
-                            if (allList[index] == "optionscheck1")
-                            {
-                                if (dataGridView1.CurrentRow.Cells["optionscheck1"].Value.ToString().Trim() == "_")
-                                {
-                                    icheckoption11.Text = icheckoption12.Text = "";
-                                }
-                                else if(dataGridView1.CurrentRow.Cells["optionscheck1"].Value.ToString().Contains("_"))
-                                {
-                                    icheckoption11.Text = dataGridView1.CurrentRow.Cells["optionscheck1"].Value.ToString().Split('_')[0];
-                                    icheckoption12.Text = dataGridView1.CurrentRow.Cells["optionscheck1"].Value.ToString().Split('_')[1];
-                                }
-                            }
-                            else control.Text = dataGridView1.CurrentRow.Cells[allList[index]].Value.ToString();
-                        }
-                    }
-                }
-                for (int index = 0; index < allList.Length; index++)
-                    for (int x = 1; x < 6; x++)
-                    {
-                        if (allList[index] == "icomboOption" + x.ToString())
-                        {
-                            txtComboOptions[x - 1] = dataGridView1.CurrentRow.Cells[allList[index]].Value.ToString();
-                        }
-                    }
-                if (txtComboOptions[0] != "")
-                {
-                    Vicombo1.Items.Clear();
-                    for (int x = 0; x < txtComboOptions[0].Split('_').Length; x++)
-                        Vicombo1.Items.Add(txtComboOptions[0].Split('_')[x]);
-                    Vicombo1.SelectedIndex = 0;
-                }
-                if (txtComboOptions[1] != "")
-                {
-                    Vicombo2.Items.Clear();
-                    for (int x = 0; x < txtComboOptions[1].Split('_').Length; x++)
-                        Vicombo2.Items.Add(txtComboOptions[1].Split('_')[x]);
-                    Vicombo2.SelectedIndex = 0;
-                }
-                if (txtComboOptions[2] != "")
-                {
-                    Vicombo3.Items.Clear();
-                    for (int x = 0; x < txtComboOptions[2].Split('_').Length; x++)
-                        Vicombo3.Items.Add(txtComboOptions[2].Split('_')[x]);
-                    Vicombo3.SelectedIndex = 0;
-                }
-                if (txtComboOptions[3] != "")
-                {
-                    Vicombo4.Items.Clear();
-                    for (int x = 0; x < txtComboOptions[3].Split('_').Length; x++)
-                        Vicombo4.Items.Add(txtComboOptions[3].Split('_')[x]);
-                    Vicombo4.SelectedIndex = 0;
-                }
-                if (txtComboOptions[4] != "")
-                {
-                    Vicombo5.Items.Clear();
-                    for (int x = 0; x < txtComboOptions[4].Split('_').Length; x++)
-                        Vicombo5.Items.Add(txtComboOptions[4].Split('_')[x]);
-                    Vicombo5.SelectedIndex = 0;
-                }
-
-
-                //label1,lenght1,label2,lenght2,label3,lenght3,label4,lenght4,label5,lenght5,labelcheck,optionscheck,labelcomb1,optionscombo1,lenghtscombo1     ,labelcomb2,optionscombo2,lenghtscombo2,labelbtn,lenghtsbtn,dateYN,dateType,TextModel,ColRight,ColName }
-
-                //itext1.Text = dataGridView1.CurrentRow.Cells[1].Value.ToString();
-
-                //itxtlenght1.Text = dataGridView1.CurrentRow.Cells[2].Value.ToString();
-                //itext2.Text = dataGridView1.CurrentRow.Cells[3].Value.ToString();
-                //itxtlenght2.Text = dataGridView1.CurrentRow.Cells[4].Value.ToString();
-                //itext3.Text = dataGridView1.CurrentRow.Cells[5].Value.ToString();
-                //itxtlenght3.Text = dataGridView1.CurrentRow.Cells[6].Value.ToString();
-                //itext4.Text = dataGridView1.CurrentRow.Cells[7].Value.ToString();
-                //itxtlenght4.Text = dataGridView1.CurrentRow.Cells[8].Value.ToString();
-                //itext5.Text = dataGridView1.CurrentRow.Cells[9].Value.ToString();
-                //itxtlenght5.Text = dataGridView1.CurrentRow.Cells[10].Value.ToString();
-                //icheck1.Text = dataGridView1.CurrentRow.Cells[11].Value.ToString();
-                //if (dataGridView1.CurrentRow.Cells[12].Value.ToString().Trim() == "_")
-                //{
-                //    icheckoption11.Text = icheckoption12.Text = "";
-                //}
-                //else
-                //{
-                //    icheckoption11.Text = dataGridView1.CurrentRow.Cells[12].Value.ToString().Split('_')[0];
-                //    icheckoption12.Text = dataGridView1.CurrentRow.Cells[12].Value.ToString().Split('_')[1];
-                //}
-                //icombo1.Text = dataGridView1.CurrentRow.Cells[13].Value.ToString();
-                //txtComboOptions1 = dataGridView1.CurrentRow.Cells[14].Value.ToString();
-                //icomboLength1.Text = dataGridView1.CurrentRow.Cells[15].Value.ToString();
-                //icombo2.Text = dataGridView1.CurrentRow.Cells[16].Value.ToString();
-                //txtComboOptions2 = dataGridView1.CurrentRow.Cells[17].Value.ToString();
-                //icomboLength2.Text = dataGridView1.CurrentRow.Cells[18].Value.ToString();
-                //ibtnAdd1.Text = dataGridView1.CurrentRow.Cells[19].Value.ToString();
-                //buttonLength1.Text = dataGridView1.CurrentRow.Cells[20].Value.ToString();
-                //itxtDate1.Text = dataGridView1.CurrentRow.Cells[21].Value.ToString();
-                //dateType1.Text = dataGridView1.CurrentRow.Cells[22].Value.ToString();
-                //txtModelData.Text = dataGridView1.CurrentRow.Cells[23].Value.ToString();
-                //comboRights.Text = dataGridView1.CurrentRow.Cells[24].Value.ToString();
-
-                //language.Text = dataGridView1.CurrentRow.Cells[26].Value.ToString();
                 if (langAuth.Text == "" || langAuth.Text == "العربية")
                 {
                     langAuth.CheckState = CheckState.Unchecked;
@@ -1134,79 +1144,61 @@ namespace PersAhwal
                     langIqrar.CheckState = CheckState.Checked;
                     langIqrar.Text = "الانجليزية";
                 }
-
+                
                 if (ColRight.Text != "")
                 {
-                    string strColName = ColumnName = dataGridView1.CurrentRow.Cells["ColName"].Value.ToString();
-
-
-                    if (ColumnName.Contains("-"))
-                    {
-                        if (ColumnName.Split('-')[1].All(char.IsDigit))
-                            try
-                            {
-                                mainTypeAuth.SelectedIndex = Convert.ToInt32(ColumnName.Split('-')[1]);
-                            }
-                            catch (Exception exp)
-                            {
-                            }
-                        //MessageBox.Show(strColName);
-                        int x = 0;
-                        //MessageBox.Show(ComboProcedure.Items.Count.ToString());
-                        for (; x < subTypeAuth.Items.Count; x++)
-                        {
-                            //MessageBox.Show(x.ToString());
-                            if (subTypeAuth.Items[x].ToString().Trim() == strColName.Split('-')[0].Trim())
-                            {
-                                //MessageBox.Show(ComboProcedure.Items[x].ToString().Trim() +" -- "+ strColName.Split('-')[0].Trim());
-                                subTypeAuth.SelectedIndex = x;
-                                break;
-                            }
-                        }
-
-                        //ComboProcedure.Text = ColumnName.Split('-')[0];
-                    }
                     panelAuthInfo.Visible = true;
                     panelIqrar.Visible = false;
+                    mainTypeAuth.SelectedIndex = Convert.ToInt32(colname.Split('-')[1]);
+                    subTypeAuth.Text = colname.Split('-')[0];
+                     formNo = mainTypeAuth.Text + "-" + subTypeAuth.Text.Trim();
                 }
                 else
                 {
-                    ColumnName = dataGridView1.CurrentRow.Cells[25].Value.ToString();
-                    if (ColumnName.Contains("-"))
-                    {
-                        if (ColumnName.Split('-')[1].All(char.IsDigit))
-                            try
-                            {
-                                mainTypeIqrar.SelectedIndex = Convert.ToInt32(ColumnName.Split('-')[1]);
-                            }
-                            catch (Exception exp)
-                            {
-                            }
-
-                        subTypeIqrar.Text = ColumnName.Split('-')[0];
-                    }
-                    panelAuthInfo.Visible = false;
                     panelIqrar.Visible = true;
+                    panelAuthInfo.Visible = false;
+                    mainTypeIqrar.SelectedIndex = Convert.ToInt32(colname.Split('-')[1]);
+                    subTypeIqrar.Text = colname.Split('-')[0];
+                     formNo = mainTypeAuth.Text + "-" + subTypeAuth.Text.Trim();
                 }
-                dataGridView1.Visible = false;
+
+                
+                
+                txtSearch.Visible = button32.Visible = dataGridView1.Visible = false;
+                ContextPanel.BringToFront();
+                labID.BringToFront();
+                if (checkRequInfo(formNo))
+                    OpenFile(formNo, false, formsBtn);
+                else
+                {
+                    repReqPanel.BringToFront();
+                    repReqPanel.Visible = true;
+                    المعاملة.Text = formNo;
+
+                    MessageBox.Show("لا يوجد قائمة بالمطلوبات الأولية للمعاملة، يرجى إضافتها");
+                }
+                if (!formsBtn.Enabled)
+                {
+                    formsBtn.Enabled = true;
+                    formsBtn.Text = "رفع الاستمارة الأولية";
+                }
                 ContextPanel.Visible = true;
                 button117.Enabled = true;
                 //review1 = true;
                 review1 = false;
                 btnDelete.Visible = btnClear.Visible = true;
                 DPTitle[0] = icheckoption11.Text + "_" + icheckoption12.Text;
-                //ExtendedFillBox(itext1.Text, Convert.ToInt32(itxtlenght1.Text), itext2.Text, Convert.ToInt32(itxtlenght2.Text), itext3.Text, Convert.ToInt32(itxtlenght3.Text), itext4.Text, Convert.ToInt32(itxtlenght4.Text), itext5.Text, Convert.ToInt32(itxtlenght5.Text), "", 50, "", 50, "", 50, "", 50, "", 50, icheck1.Text, "", "", "", "", itxtDate1.Text, "", "", "", "", icombo1.Text, txtComboOptions[0].Split('_'), icombo2.Text, txtComboOptions[1].Split('_'), "", Empty, "", Empty, "", Empty, ibtnAdd1.Text, "", "", "", "");
-            }
+}
         }
 
         private void dataGridView1_RowIndex(string colName)
         {
             for (int indEX = 0; indEX < dataGridView1.Rows.Count - 1; indEX++)
-                if (colName == dataGridView1.Rows[indEX].Cells["colName"].Value.ToString())
+                if (colName == dataGridView1.Rows[indEX].Cells["ColName"].Value.ToString())
                 {
                     idIndex = Convert.ToInt32(dataGridView1.Rows[indEX].Cells[0].Value.ToString());
                     langAuth.Text = dataGridView1.Rows[indEX].Cells["Lang"].Value.ToString();
-                    ColRight.Text = dataGridView1.Rows[indEX].Cells["ColRight"].Value.ToString();
+                    ColRight.Text = dataGridView1.Rows[indEX].Cells["ColName"].Value.ToString().Replace(" ","_");
                     TextModel.Text = dataGridView1.Rows[indEX].Cells["TextModel"].Value.ToString();
                     editRights = dataGridView1.Rows[indEX].Cells["editRights"].Value.ToString();
                     errorList = dataGridView1.Rows[indEX].Cells["errorList"].Value.ToString();
@@ -1264,200 +1256,126 @@ namespace PersAhwal
                         }
                     }
 
-                    foreach (Control control in panelText.Controls)
-                    {
-                        for (int index = 0; index < allList.Length; index++)
-                        {
-                            if (allList[index] == control.Name)
-                            {
-                                control.Text = dataGridView1.Rows[indEX].Cells[allList[index]].Value.ToString();
-                            }
-                        }
-                    }
-                    foreach (Control control in panelDate.Controls)
-                    {
-                        for (int index = 0; index < allList.Length; index++)
-                        {
-
-                            if (allList[index] == control.Name)
-                            {
-                                control.Text = dataGridView1.Rows[indEX].Cells[allList[index]].Value.ToString();
-
-                            }
-                        }
-                    }
-                    foreach (Control control in panelCombo.Controls)
-                    {
-                        for (int index = 0; index < allList.Length; index++)
-                        {
-                            if (allList[index] == control.Name)
-                            {
-                                control.Text = dataGridView1.Rows[indEX].Cells[allList[index]].Value.ToString();
-                            }
-                        }
-                    }
-                    foreach (Control control in panelButton.Controls)
-                    {
-                        for (int index = 0; index < allList.Length; index++)
-                        {
-                            if (allList[index] == control.Name)
-                            {
-                                control.Text = dataGridView1.Rows[indEX].Cells[allList[index]].Value.ToString();
-                            }
-                        }
-                    }
-                    foreach (Control control in panelCheck.Controls)
-                    {
-                        for (int index = 0; index < allList.Length; index++)
-                        {
-                            if (allList[index] == control.Name)
-                            {
-                                if (allList[index] == "optionscheck1")
-                                {
-                                    if (dataGridView1.Rows[indEX].Cells["optionscheck1"].Value.ToString().Trim() == "_")
-                                    {
-                                        icheckoption11.Text = icheckoption12.Text = "";
-                                    }
-                                    else if (dataGridView1.Rows[indEX].Cells["optionscheck1"].Value.ToString().Contains("_"))
-                                    {
-                                        icheckoption11.Text = dataGridView1.Rows[indEX].Cells["optionscheck1"].Value.ToString().Split('_')[0];
-                                        icheckoption12.Text = dataGridView1.Rows[indEX].Cells["optionscheck1"].Value.ToString().Split('_')[1];
-                                    }
-                                }
-                                else control.Text = dataGridView1.Rows[indEX].Cells[allList[index]].Value.ToString();
-                            }
-                        }
-                    }
-                    for (int index = 0; index < allList.Length; index++)
-                        for (int x = 1; x < 6; x++)
-                        {
-                            if (allList[index] == "icomboOption" + x.ToString())
-                            {
-                                txtComboOptions[x - 1] = dataGridView1.Rows[indEX].Cells[allList[index]].Value.ToString();
-                            }
-                        }
-                    if (txtComboOptions[0] != "")
-                    {
-                        Vicombo1.Items.Clear();
-                        for (int x = 0; x < txtComboOptions[0].Split('_').Length; x++)
-                            Vicombo1.Items.Add(txtComboOptions[0].Split('_')[x]);
-                        Vicombo1.SelectedIndex = 0;
-                    }
-                    if (txtComboOptions[1] != "")
-                    {
-                        Vicombo2.Items.Clear();
-                        for (int x = 0; x < txtComboOptions[1].Split('_').Length; x++)
-                            Vicombo2.Items.Add(txtComboOptions[1].Split('_')[x]);
-                        Vicombo2.SelectedIndex = 0;
-                    }
-                    if (txtComboOptions[2] != "")
-                    {
-                        Vicombo3.Items.Clear();
-                        for (int x = 0; x < txtComboOptions[2].Split('_').Length; x++)
-                            Vicombo3.Items.Add(txtComboOptions[2].Split('_')[x]);
-                        Vicombo3.SelectedIndex = 0;
-                    }
-                    if (txtComboOptions[3] != "")
-                    {
-                        Vicombo4.Items.Clear();
-                        for (int x = 0; x < txtComboOptions[3].Split('_').Length; x++)
-                            Vicombo4.Items.Add(txtComboOptions[3].Split('_')[x]);
-                        Vicombo4.SelectedIndex = 0;
-                    }
-                    if (txtComboOptions[4] != "")
-                    {
-                        Vicombo5.Items.Clear();
-                        for (int x = 0; x < txtComboOptions[4].Split('_').Length; x++)
-                            Vicombo5.Items.Add(txtComboOptions[4].Split('_')[x]);
-                        Vicombo5.SelectedIndex = 0;
-                    }
-
-
-
-                    //language.Text = dataGridView1.Rows[indEX].Cells[26].Value.ToString();
-                    if (langAuth.Text == "" || langAuth.Text == "العربية")
-                    {
-                        langAuth.CheckState = CheckState.Unchecked;
-                        langAuth.Text = "العربية";
-                        langIqrar.CheckState = CheckState.Unchecked;
-                        langIqrar.Text = "العربية";
-                    }
-                    else
-                    {
-                        langAuth.CheckState = CheckState.Checked;
-                        langAuth.Text = "الانجليزية";
-                        langIqrar.CheckState = CheckState.Checked;
-                        langIqrar.Text = "الانجليزية";
-                    }
-
-                    if (ColRight.Text != "")
-                    {
-                        string strColName = ColumnName = dataGridView1.Rows[indEX].Cells["ColName"].Value.ToString();
-
-
-                        if (ColumnName.Contains("-"))
-                        {
-                            if (ColumnName.Split('-')[1].All(char.IsDigit))
-                                try
-                                {
-                                    mainTypeAuth.SelectedIndex = Convert.ToInt32(ColumnName.Split('-')[1]);
-                                }
-                                catch (Exception exp)
-                                {
-                                }
-                            //MessageBox.Show(strColName);
-                            int x = 0;
-                            //MessageBox.Show(ComboProcedure.Items.Count.ToString());
-                            for (; x < subTypeAuth.Items.Count; x++)
-                            {
-                                //MessageBox.Show(x.ToString());
-                                if (subTypeAuth.Items[x].ToString().Trim() == strColName.Split('-')[0].Trim())
-                                {
-                                    //MessageBox.Show(ComboProcedure.Items[x].ToString().Trim() +" -- "+ strColName.Split('-')[0].Trim());
-                                    subTypeAuth.SelectedIndex = x;
-                                    break;
-                                }
-                            }
-
-                            //ComboProcedure.Text = ColumnName.Split('-')[0];
-                        }
-                        panelAuthInfo.Visible = true;
-                        panelIqrar.Visible = false;
-                    }
-                    else
-                    {
-                        ColumnName = dataGridView1.Rows[indEX].Cells[25].Value.ToString();
-                        if (ColumnName.Contains("-"))
-                        {
-                            if (ColumnName.Split('-')[1].All(char.IsDigit))
-                                try
-                                {
-                                    mainTypeIqrar.SelectedIndex = Convert.ToInt32(ColumnName.Split('-')[1]);
-                                }
-                                catch (Exception exp)
-                                {
-                                }
-
-                            subTypeIqrar.Text = ColumnName.Split('-')[0];
-                        }
-                        panelAuthInfo.Visible = false;
-                        panelIqrar.Visible = true;
-                    }
-                    dataGridView1.Visible = false;
-                    ContextPanel.Visible = true;
-                    button117.Enabled = true;
-                    //review1 = true;
-                    review1 = false;
-                    btnDelete.Visible = btnClear.Visible = true;
-                    DPTitle[0] = icheckoption11.Text + "_" + icheckoption12.Text;
-                    //ExtendedFillBox(itext1.Text, Convert.ToInt32(itxtlenght1.Text), itext2.Text, Convert.ToInt32(itxtlenght2.Text), itext3.Text, Convert.ToInt32(itxtlenght3.Text), itext4.Text, Convert.ToInt32(itxtlenght4.Text), itext5.Text, Convert.ToInt32(itxtlenght5.Text), "", 50, "", 50, "", 50, "", 50, "", 50, icheck1.Text, "", "", "", "", itxtDate1.Text, "", "", "", "", icombo1.Text, txtComboOptions[0].Split('_'), icombo2.Text, txtComboOptions[1].Split('_'), "", Empty, "", Empty, "", Empty, ibtnAdd1.Text, "", "", "", "");
-                    break;
+                    panelJob(indEX);
+                    
                 }
         }
 
         private void checkSexType_CheckedChanged_2(object sender, EventArgs e)
         {
 
+        }
+
+        private void panelJob(int indEX)
+        {
+            foreach (Control control in panelText.Controls)
+            {
+                for (int index = 0; index < allList.Length; index++)
+                {
+                    if (allList[index] == control.Name)
+                    {
+                        control.Text = dataGridView1.Rows[indEX].Cells[allList[index]].Value.ToString();
+                    }
+                }
+            }
+            foreach (Control control in panelDate.Controls)
+            {
+                for (int index = 0; index < allList.Length; index++)
+                {
+
+                    if (allList[index] == control.Name)
+                    {
+                        control.Text = dataGridView1.Rows[indEX].Cells[allList[index]].Value.ToString();
+
+                    }
+                }
+            }
+            foreach (Control control in panelCombo.Controls)
+            {
+                for (int index = 0; index < allList.Length; index++)
+                {
+                    if (allList[index] == control.Name)
+                    {
+                        control.Text = dataGridView1.Rows[indEX].Cells[allList[index]].Value.ToString();
+                    }
+                }
+            }
+            foreach (Control control in panelButton.Controls)
+            {
+                for (int index = 0; index < allList.Length; index++)
+                {
+                    if (allList[index] == control.Name)
+                    {
+                        control.Text = dataGridView1.Rows[indEX].Cells[allList[index]].Value.ToString();
+                    }
+                }
+            }
+            foreach (Control control in panelCheck.Controls)
+            {
+                for (int index = 0; index < allList.Length; index++)
+                {
+                    if (allList[index] == control.Name)
+                    {
+                        if (allList[index] == "optionscheck1")
+                        {
+                            if (dataGridView1.Rows[indEX].Cells["optionscheck1"].Value.ToString().Trim() == "_")
+                            {
+                                icheckoption11.Text = icheckoption12.Text = "";
+                            }
+                            else if (dataGridView1.Rows[indEX].Cells["optionscheck1"].Value.ToString().Contains("_"))
+                            {
+                                icheckoption11.Text = dataGridView1.Rows[indEX].Cells["optionscheck1"].Value.ToString().Split('_')[0];
+                                icheckoption12.Text = dataGridView1.Rows[indEX].Cells["optionscheck1"].Value.ToString().Split('_')[1];
+                            }
+                        }
+                        else control.Text = dataGridView1.Rows[indEX].Cells[allList[index]].Value.ToString();
+                    }
+                }
+            }
+            for (int index = 0; index < allList.Length; index++)
+                for (int x = 1; x < 6; x++)
+                {
+                    if (allList[index] == "icomboOption" + x.ToString())
+                    {
+                        txtComboOptions[x - 1] = dataGridView1.Rows[indEX].Cells[allList[index]].Value.ToString();
+                    }
+                }
+
+            if (txtComboOptions[0] != "")
+            {
+                Vicombo1.Items.Clear();
+                for (int x = 0; x < txtComboOptions[0].Split('_').Length; x++)
+                    Vicombo1.Items.Add(txtComboOptions[0].Split('_')[x]);
+                Vicombo1.SelectedIndex = 0;
+            }
+            if (txtComboOptions[1] != "")
+            {
+                Vicombo2.Items.Clear();
+                for (int x = 0; x < txtComboOptions[1].Split('_').Length; x++)
+                    Vicombo2.Items.Add(txtComboOptions[1].Split('_')[x]);
+                Vicombo2.SelectedIndex = 0;
+            }
+            if (txtComboOptions[2] != "")
+            {
+                Vicombo3.Items.Clear();
+                for (int x = 0; x < txtComboOptions[2].Split('_').Length; x++)
+                    Vicombo3.Items.Add(txtComboOptions[2].Split('_')[x]);
+                Vicombo3.SelectedIndex = 0;
+            }
+            if (txtComboOptions[3] != "")
+            {
+                Vicombo4.Items.Clear();
+                for (int x = 0; x < txtComboOptions[3].Split('_').Length; x++)
+                    Vicombo4.Items.Add(txtComboOptions[3].Split('_')[x]);
+                Vicombo4.SelectedIndex = 0;
+            }
+            if (txtComboOptions[4] != "")
+            {
+                Vicombo5.Items.Clear();
+                for (int x = 0; x < txtComboOptions[4].Split('_').Length; x++)
+                    Vicombo5.Items.Add(txtComboOptions[4].Split('_')[x]);
+                Vicombo5.SelectedIndex = 0;
+            }
         }
 
         private void comboRights_SelectedIndexChanged(object sender, EventArgs e)
@@ -1628,85 +1546,99 @@ namespace PersAhwal
         public void PopulateCheckBoxes(string col, string table, string dataSource)
         {
             if (col == "" || table == "" || dataSource == "") return;
+            col = col.Replace("-", "_");
+            col = col.Replace(" ", "_");
             string query = "SELECT ID," + col + " FROM " + table;
+            //MessageBox.Show(query);
             using (SqlConnection con = new SqlConnection(dataSource))
             {
 
                 using (SqlDataAdapter sda = new SqlDataAdapter(query, con))
                 {
-
-                    sda.Fill(checkboxdt);
-                    listchecked = checkboxdt.Rows.Count;
-                    Nobox = 0;
-                    foreach (DataRow row in checkboxdt.Rows)
+                    try
                     {
-                        if (checkboxdt.Rows[Nobox][col].ToString() == "" || checkboxdt.Rows[Nobox][col].ToString() == "null") return;
-                        //{
-                        CheckBox chk = new CheckBox();
-                        chk.TabIndex = Nobox;
-                        chk.Width = 80;
-                        chk.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        if (Nobox == 0) chk.Width = panelAuthOptions.Width - 100;
-                        else chk.Width = panelAuthOptions.Width - 130;
-                        chk.Height = 33;
-                        chk.CheckState = CheckState.Unchecked;
-                        chk.Location = new System.Drawing.Point(70, 3 + Nobox * 37);
-                        chk.Name = "checkBox" + Nobox.ToString();
-                        Text_statis = checkboxdt.Rows[Nobox][col].ToString().Split('_');
-                        statistic[Nobox] = Convert.ToInt32(Text_statis[1]);
-                        times[Nobox] = Convert.ToInt32(Text_statis[2]);
-                        staticIndex[Nobox] = Convert.ToInt32(Text_statis[3]);
-
-                        //string text = SuffPrefReplacements(Text_statis[0]);
-                        //text = SuffPrefReplacements(text);
-                        chk.Text = checkboxdt.Rows[Nobox][col].ToString();
-                        chk.Tag = "valid";
-                        if (Text_statis[4] == "Star")
-                            chk.CheckState = CheckState.Checked;
-
-                        panelAuthOptions.Controls.Add(chk);
-                        PictureBox picboxedit = new PictureBox();
-                        picboxedit.Image = global::PersAhwal.Properties.Resources.edit;
-                        picboxedit.Location = new System.Drawing.Point(55, Nobox * 37);
-                        picboxedit.Name = Nobox.ToString();
-                        picboxedit.Size = new System.Drawing.Size(24, 26);
-                        picboxedit.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-                        picboxedit.TabIndex = 175 + Nobox;
-                        picboxedit.TabStop = false;
-                        picboxedit.Click += new System.EventHandler(this.pictureBoxedit_Click);
-                        panelAuthOptions.Controls.Add(picboxedit);
-
-                        PictureBox picboxup = new PictureBox();
-                        picboxup.Image = global::PersAhwal.Properties.Resources.arrowup;
-                        picboxup.Location = new System.Drawing.Point(86, Nobox * 37);
-                        picboxup.Name = "Up";
-                        picboxup.Size = new System.Drawing.Size(24, 26);
-                        picboxup.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-                        picboxup.TabIndex = 176 + Nobox;
-                        picboxup.TabStop = false;
-                        picboxup.Click += new System.EventHandler(this.pictureBoxup_Click);
-                        if (Nobox == 0)
+                        sda.Fill(checkboxdt);
+                        listchecked = checkboxdt.Rows.Count;
+                        Nobox = 0;
+                        foreach (DataRow row in checkboxdt.Rows)
                         {
-                            picboxup.Visible = false;
+                            if (checkboxdt.Rows[Nobox][col].ToString() == "" || checkboxdt.Rows[Nobox][col].ToString() == "null") return;
+                            //{
+                            Text_statis = checkboxdt.Rows[Nobox][col].ToString().Split('_');
+                            //MessageBox.Show(checkboxdt.Rows[Nobox][col].ToString() + " ### "+ Text_statis.Length.ToString());
+                            if (Text_statis.Length == 5 && checkboxdt.Rows[Nobox]["ID"].ToString() != "1")
+                            {
+                                CheckBox chk = new CheckBox();
+                                chk.TabIndex = Nobox;
+                                chk.Width = 80;
+                                chk.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                                if (Nobox == 0) chk.Width = panelAuthOptions.Width - 100;
+                                else chk.Width = panelAuthOptions.Width - 130;
+                                chk.Height = 33;
+                                chk.CheckState = CheckState.Unchecked;
+                                chk.Location = new System.Drawing.Point(70, 3 + Nobox * 37);
+                                chk.Name = "checkBox" + Nobox.ToString();
+
+                                statistic[Nobox] = Convert.ToInt32(Text_statis[1]);
+                                times[Nobox] = Convert.ToInt32(Text_statis[2]);
+                                staticIndex[Nobox] = Convert.ToInt32(Text_statis[3]);
+
+                                //string text = SuffPrefReplacements(Text_statis[0]);
+                                //text = SuffPrefReplacements(text);
+                                chk.Text = checkboxdt.Rows[Nobox][col].ToString();
+                                chk.Tag = "valid";
+                                if (Text_statis[4] == "Star")
+                                    chk.CheckState = CheckState.Checked;
+
+                                panelAuthOptions.Controls.Add(chk);
+                                PictureBox picboxedit = new PictureBox();
+                                picboxedit.Image = global::PersAhwal.Properties.Resources.edit;
+                                picboxedit.Location = new System.Drawing.Point(55, Nobox * 37);
+                                picboxedit.Name = Nobox.ToString();
+                                picboxedit.Size = new System.Drawing.Size(24, 26);
+                                picboxedit.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+                                picboxedit.TabIndex = 175 + Nobox;
+                                picboxedit.TabStop = false;
+                                picboxedit.Click += new System.EventHandler(this.pictureBoxedit_Click);
+                                panelAuthOptions.Controls.Add(picboxedit);
+
+                                PictureBox picboxup = new PictureBox();
+                                picboxup.Image = global::PersAhwal.Properties.Resources.arrowup;
+                                picboxup.Location = new System.Drawing.Point(86, Nobox * 37);
+                                picboxup.Name = "Up";
+                                picboxup.Size = new System.Drawing.Size(24, 26);
+                                picboxup.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+                                picboxup.TabIndex = 176 + Nobox;
+                                picboxup.TabStop = false;
+                                picboxup.Click += new System.EventHandler(this.pictureBoxup_Click);
+                                if (Nobox == 0)
+                                {
+                                    picboxup.Visible = false;
+                                }
+                                if (chk.Text.Contains("لمن يشهد والله خير الشاهدين")||chk.Text.Contains("ويعتبر التوكيل")|| chk.Text.Contains("الحق في توكيل الغير") ) picboxup.Visible = false;
+                                panelAuthOptions.Controls.Add(picboxup);
+
+                                PictureBox picboxdown = new PictureBox();
+                                picboxdown.Image = global::PersAhwal.Properties.Resources.arrowdown;
+                                picboxdown.Location = new System.Drawing.Point(55, Nobox * 37);
+                                picboxdown.Name = "Down";
+                                picboxdown.Size = new System.Drawing.Size(24, 26);
+                                picboxdown.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+                                picboxdown.TabIndex = 177 + Nobox;
+                                picboxdown.TabStop = false;
+                                picboxdown.Click += new System.EventHandler(this.pictureBoxdown_Click);
+                                if (chk.Text.Contains("الحق في توكيل الغير") || chk.Text.Contains("لمن يشهد والله خير الشاهدين") || chk.Text.Contains("ويعتبر التوكيل")) picboxdown.Visible = false;
+
+                                panelAuthOptions.Controls.Add(picboxdown);
+                                LastID = Convert.ToInt32(checkboxdt.Rows[Nobox]["ID"].ToString());
+
+                            }
+                            Nobox++;
                         }
-                        if (chk.Text.Contains("لمن يشهد والله خير الشاهدين")) picboxup.Visible = false;
-                        panelAuthOptions.Controls.Add(picboxup);
-
-                        PictureBox picboxdown = new PictureBox();
-                        picboxdown.Image = global::PersAhwal.Properties.Resources.arrowdown;
-                        picboxdown.Location = new System.Drawing.Point(55, Nobox * 37);
-                        picboxdown.Name = "Down";
-                        picboxdown.Size = new System.Drawing.Size(24, 26);
-                        picboxdown.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-                        picboxdown.TabIndex = 177 + Nobox;
-                        picboxdown.TabStop = false;
-                        picboxdown.Click += new System.EventHandler(this.pictureBoxdown_Click);
-                        if (chk.Text.Contains("الحق في توكيل الغير") || chk.Text.Contains("لمن يشهد والله خير الشاهدين")) picboxdown.Visible = false;
-
-                        panelAuthOptions.Controls.Add(picboxdown);
-                        LastID = Convert.ToInt32(checkboxdt.Rows[Nobox]["ID"].ToString());
-                        Nobox++;
-                        //}
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("لا توجد قائمة حقوق بالاسم " + col);
                     }
                 }
             }
@@ -1949,12 +1881,16 @@ namespace PersAhwal
             SqlConnection sqlCon = new SqlConnection(source);
             string column = "@" + comlumnName;
             string qurey;
-            if (datatype) qurey = "INSERT INTO TableAuthRight (" + comlumnName + ") values(" + column + ")";
-            else qurey = "UPDATE TableAuthRight SET " + comlumnName + " = " + column + " WHERE ID = @ID";
+            if (datatype) qurey = "INSERT INTO TableAuthRights (" + comlumnName + ") values(" + column + ")";
+            else qurey = "UPDATE TableAuthRights SET " + comlumnName + " = " + column + " WHERE ID = @ID";
 
             SqlCommand sqlCmd = new SqlCommand(qurey, sqlCon);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return; }
             sqlCmd.CommandType = CommandType.Text;
 
             if (datatype)
@@ -2076,6 +2012,7 @@ namespace PersAhwal
                     {
                         txtRightEditAdd.Text = ((CheckBox)control).Text;
                         btnRightEditAdd.Text = "تعديل";
+                        remove.Visible = true;
                         LastTabIndex = ((CheckBox)control).TabIndex;
 
                     }
@@ -2107,7 +2044,7 @@ namespace PersAhwal
             }
             else
             {
-                dataGridView1.Visible = false;
+                txtSearch.Visible = button32.Visible = dataGridView1.Visible = false;
                 ContextPanel.Visible = false;
                 ContextPanel.Visible = true;
                 flowLayoutPanel9.Visible = SettingsPanel.Visible = false;
@@ -2252,9 +2189,10 @@ namespace PersAhwal
             if (checkColumnName(mainTypeAuth.Text.Replace(" ", "_")))
             {
                 subTypeAuth.Items.Clear();
-                newFillComboBox1(subTypeAuth, DataSource, mainTypeAuth.SelectedIndex.ToString(), langAuth.Text);
-                //fileComboBox(subTypeAuth, DataSource, mainTypeAuth.Text.Replace(" ", "_"), "TableListCombo");
+                //newFillComboBox1(subTypeAuth, DataSource, mainTypeAuth.SelectedIndex.ToString(), langAuth.Text);
+                fillSubComboBox(subTypeAuth, DataSource, mainTypeAuth.Text.Replace(" ", "_"), "TableListCombo",false);
                 NewColumn = false;
+                checkIndex = true;
                 return;
             }
             NewColumn = true;
@@ -2331,27 +2269,45 @@ namespace PersAhwal
         {
 
             int errorList = 0;
+            int authrevices = 0;
+            int allauth = 0;
             for (int i=0; i < dataGridView1.Rows.Count - 1; i++)
             {
                 //
 
-                if (dataGridView1.Rows[i].Cells["errorList"].Value.ToString() != "")
+                //if (dataGridView1.Rows[i].Cells["errorList"].Value.ToString() != "")
+                //{
+                //    dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightCyan;
+                //    errorList++;
+                //}
+                try
                 {
-                    dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightCyan;
-                    errorList++;
-                }                
+                    if (dataGridView1.Rows[i].Cells["revised"].Value.ToString() == "")
+                    {
+                        dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.White;
+                        if (dataGridView1.Rows[i].Cells["ColRight"].Value.ToString() != "") authrevices++;
+                    }
+                    else dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
+                    if (dataGridView1.Rows[i].Cells["ColRight"].Value.ToString() != "") allauth++;
+                }
+                catch (Exception ex) { }
             }
             if (errorList > 0) labelarch.Visible = true;
             else labelarch.Visible = false;
-            labelarch.Text = "عدد (" + errorList.ToString() + ") معاملة تحتاج إلى تصحيح ";
+            //labelarch.Text = "عدد (" + errorList.ToString() + ") معاملة تحتاج إلى تصحيح ";
+            labelarch.Text = "عدد (" + authrevices.ToString() + ") تم معاينتها من أصل ( " + allauth+") معاملة ";
 
         }
 
         private void ComboProcedure_SelectedIndexChanged_1(object sender, EventArgs e)
         {
             //if (!NewColumn) return;
-            FillDataGridView("");
+            //FillDataGridView("TableAddContext");
+            //MessageBox.Show(subTypeAuth.Text + "-" + mainTypeAuth.SelectedIndex.ToString());
             dataGridView1_RowIndex(subTypeAuth.Text + "-" + mainTypeAuth.SelectedIndex.ToString());
+                string formNo = mainTypeAuth.Text + "-" + subTypeAuth.Text.Trim();
+            checkIndex = false;
+            OpenFile(formNo, false, formsBtn);
             //flllPanelItemsboxes("ColName", subTypeAuth.Text + "-" + mainTypeAuth.SelectedIndex.ToString());
             //for (int id = 0; id < dataGridView1.Rows.Count - 1; id++)
             //{
@@ -2367,18 +2323,196 @@ namespace PersAhwal
             //}
         }
 
+
+        private string OpenFile(string documenNo, bool printOut, Button button)
+        {
+            string query = "SELECT ID, proForm1,Data1, Extension1 from TableProcReq where المعاملة=@المعاملة";
+            
+            SqlConnection Con = new SqlConnection(DataSource);
+            SqlCommand sqlCmd1 = new SqlCommand(query, Con);
+            sqlCmd1.Parameters.Add("@المعاملة", SqlDbType.NVarChar).Value = documenNo;
+            if (Con.State == ConnectionState.Closed)
+                Con.Open();
+            button.Enabled = false;
+           
+            var reader = sqlCmd1.ExecuteReader();
+            if (reader.Read())
+            {
+                string str = reader["proForm1"].ToString();
+                
+                try
+                {
+                    var Data = (byte[])reader["Data1"];
+                
+                CurrentFile = ArchFile + @"\formUpdated\" + str +".docx";
+                string filePath = ArchFile + @"\" + str +".docx";
+                if (File.Exists(CurrentFile) && !fileIsOpen(CurrentFile)) {
+                    File.Delete(CurrentFile);
+                }
+                
+                if (!File.Exists(CurrentFile))
+                {
+                    try
+                    {
+                        File.Delete(CurrentFile);
+
+                        button.Enabled = true;
+
+                        if (printOut)
+                        {
+                            File.WriteAllBytes(filePath, Data);
+
+                            System.IO.File.Copy(filePath, CurrentFile);
+
+                            FileInfo fileInfo = new FileInfo(CurrentFile);
+                            if (fileInfo.IsReadOnly) fileInfo.IsReadOnly = false;
+                            System.Diagnostics.Process.Start(CurrentFile);
+                        }
+                        return CurrentFile;
+                    }
+                    catch (Exception ex)
+                    {
+                        button.Enabled = false;
+                        return "";
+                    }
+
+                }
+                else if (File.Exists(CurrentFile) && fileIsOpen(CurrentFile))
+                {
+                    button.Enabled = false;
+                    MessageBox.Show("يرجى إغلاق الملف " + str + " أولا");
+                }
+                }
+                catch (Exception ex)
+                {
+                    button.Enabled = false;
+                    return "";
+                }
+            }
+            else button.Enabled = false;
+            Con.Close();
+            return "";
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            ColorFulGrid9();
+            if (CurrentFile == "" || !readyToUpload) return;
+            else if (File.Exists(CurrentFile) && !fileIsOpen(CurrentFile) && readyToUpload)
+            {
+                //Console.WriteLine("upload file " +CurrentFile);
+                uploadForms(CurrentFile);
+                readyToUpload = false;
+            }
+        }
+
+        private void uploadForms(string location)
+        {
+            if (location != "" && File.Exists(location) && !fileIsOpen(location))
+            {
+                using (Stream stream = File.OpenRead(location))
+                {
+                    byte[] buffer1 = new byte[stream.Length];
+                    stream.Read(buffer1, 0, buffer1.Length);
+                    var fileinfo1 = new FileInfo(location);
+                    string formNo = fileinfo1.Name.Replace(".docx","");
+                    string query = "UPDATE TableProcReq SET Data1=@Data1 WHERE المعاملة=N'" + formNo + "'";
+                    //MessageBox.Show(query);
+                    SqlConnection sqlCon = new SqlConnection(DataSource);
+                    try
+                    {
+                        if (sqlCon.State == ConnectionState.Closed)
+                            sqlCon.Open();
+                    }
+                    catch (Exception ex) { return; }
+                    SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+                    sqlCmd.CommandType = CommandType.Text;
+                    sqlCmd.Parameters.Add("@Data1", SqlDbType.VarBinary).Value = buffer1;
+                    sqlCmd.ExecuteNonQuery();
+                    sqlCon.Close();
+                    try
+                    {
+                        //File.Delete(CurrentFile);
+                    }
+                    catch (Exception ex) { CurrentFile = ""; }
+                    label1.Visible = true;
+                    return;
+                }
+            }
+        }
+        
+        private void uploadFormsReq(string location)
+        {
+            if (location != "" && File.Exists(location) && !fileIsOpen(location))
+            {
+                using (Stream stream = File.OpenRead(location))
+                {
+                    byte[] buffer1 = new byte[stream.Length];
+                    stream.Read(buffer1, 0, buffer1.Length);
+                    var fileinfo1 = new FileInfo(location);
+                    string query = "UPDATE TableProcReq SET Data1=@Data1,proForm1=@proForm1 WHERE المعاملة=N'" + formNo + "'";
+                    //MessageBox.Show(query);
+                    SqlConnection sqlCon = new SqlConnection(DataSource);
+                    try
+                    {
+                        if (sqlCon.State == ConnectionState.Closed)
+                            sqlCon.Open();
+                    }
+                    catch (Exception ex) { }
+                    SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+                    sqlCmd.CommandType = CommandType.Text;
+                    sqlCmd.Parameters.Add("@Data1", SqlDbType.VarBinary).Value = buffer1;
+                    sqlCmd.Parameters.Add("@proForm1", SqlDbType.NVarChar).Value = formNo;
+                    //MessageBox.Show(formNo);
+                    sqlCmd.ExecuteNonQuery();
+                    sqlCon.Close();
+                    
+                    label1.Visible = true;
+                    return;
+                }
+            }
+        }
+        public bool fileIsOpen(string path)
+        {
+            System.IO.FileStream a = null;
+
+            try
+            {
+                a = System.IO.File.Open(path,
+                System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.None);
+                return false;
+            }
+            catch (System.IO.IOException ex)
+            {
+                return true;
+            }
+
+            finally
+            {
+                if (a != null)
+                {
+                    a.Close();
+                    a.Dispose();
+                }
+            }
+        }
         private void button117_Click(object sender, EventArgs e)
         {
             ColumnJobs();
             createNewColContext();
             SqlConnection sqlCon = new SqlConnection(DataSource);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return; }
             SqlCommand sqlCmd = new SqlCommand(updateAll, sqlCon);
-
+            //MessageBox.Show(idIndex.ToString());
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.Parameters.AddWithValue("@ID", idIndex);
             sqlCmd.Parameters.AddWithValue("@errorList", "");
+            sqlCmd.Parameters.AddWithValue("@revised", revised);
             addParameters(sqlCmd);
             sqlCmd.ExecuteNonQuery();
             sqlCon.Close();
@@ -2393,14 +2527,14 @@ namespace PersAhwal
 
             {
                 langIqrar.Text = "الانجليزية";
-                fileComboBox(mainTypeIqrar, DataSource, "EnglishGenIgrar", "TableListCombo");
+                fileComboBox(mainTypeIqrar, DataSource, "EnglishGenIgrar", "TableListCombo",false);
                 newFillComboBox2(subTypeIqrar, DataSource, mainTypeIqrar.SelectedIndex.ToString(), langIqrar.Text);
                 PanelItemsboxes.RightToLeft = TextModel.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             }
             else
             {
                 langIqrar.Text = "العربية";
-                fileComboBox(mainTypeIqrar, DataSource, "ArabicGenIgrar", "TableListCombo");
+                fileComboBox(mainTypeIqrar, DataSource, "ArabicGenIgrar", "TableListCombo",false);
                 newFillComboBox2(subTypeIqrar, DataSource, mainTypeIqrar.SelectedIndex.ToString(), langIqrar.Text);
                 PanelItemsboxes.RightToLeft = TextModel.RightToLeft = System.Windows.Forms.RightToLeft.No;
             }
@@ -2431,9 +2565,10 @@ namespace PersAhwal
         {
 
             panelAuthOptions.Visible = true;
+            panelAuthOptions.BringToFront();
             TextModel.Text = "";
             deleteItemsAO(); RightColumnName = ColRight.Text;
-            PopulateCheckBoxes(ColRight.Text.Trim(), "TableAuthRight", DataSource);
+            PopulateCheckBoxes(ColRight.Text.Trim(), "TableAuthRights", DataSource);
             //ContextPanel.Visible = false;
         }
 
@@ -2482,6 +2617,7 @@ namespace PersAhwal
                 CombAuthTypeIndex = mainTypeAuth.Items.Count;
                 ColumnName = subTypeAuth.Text.Replace(" ", "_") + "-" + (mainTypeAuth.Items.Count).ToString();
                 int id = getLastID(DataSource, mainTypeAuth.Text.Replace(" ", "_"), "TableListCombo");
+                MessageBox.Show(id.ToString());
                 addSubAuth(id, subTypeAuth.Text, mainTypeAuth.Text.Replace(" ", "_"));                
             }
             else
@@ -2575,6 +2711,7 @@ namespace PersAhwal
                             ((CheckBox)control).Text = txtRightEditAdd.Text;
                             btnRightEditAdd.Text = "إضافة";
                             txtRightEditAdd.Text = "";
+                            remove.Visible = false;
                         }
                     }
                 }
@@ -2592,9 +2729,11 @@ namespace PersAhwal
             int rightIndex = 0;
             foreach (Control control in panelAuthOptions.Controls)
             {
-                if (control is CheckBox)
+                if (control is CheckBox && !control.Text.Contains("(محذوف)") && control.Visible)
                 {
+                    
                     rights[rightIndex] = ((CheckBox)control).Text;
+                    //MessageBox.Show(rights[rightIndex]); 
                     rightIndex++;
                 }
 
@@ -2604,20 +2743,24 @@ namespace PersAhwal
             {
 
                 if (rights[x] == "" || rights[x] == "Null") break;
-                UpdateColumn(DataSource, ColRight.Text.Trim(), x + 1, rights[x]);
+                UpdateColumn(DataSource, ColRight.Text.Trim().Replace("-","_"), x + 2, rights[x]);
             }
-            MessageBox.Show("تم تعديل القائمة");
+            //MessageBox.Show("تم تعديل القائمة");
             button37.PerformClick();
         }
         private void UpdateColumn(string source, string comlumnName, int id, string data)
         {
             SqlConnection sqlCon = new SqlConnection(source);
             string column = "@" + comlumnName;
-            string qurey = "UPDATE TableAuthRight SET " + comlumnName + " = " + column + " WHERE ID=@ID";
-
+            string qurey = "UPDATE TableAuthRights SET " + comlumnName + " = " + column + " WHERE ID=@ID";
+            //MessageBox.Show(qurey);
             SqlCommand sqlCmd = new SqlCommand(qurey, sqlCon);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return; }
             sqlCmd.CommandType = CommandType.Text;
 
             sqlCmd.Parameters.AddWithValue("@ID", id);
@@ -2634,6 +2777,7 @@ namespace PersAhwal
 
         private void FormType_SelectedIndexChanged(object sender, EventArgs e)
         {
+            checkIndex = true; 
             switch (mainTypeIqrar.SelectedIndex) {
                 case 0:
                     button109.Text = "أنا المواطن/";
@@ -2718,8 +2862,9 @@ namespace PersAhwal
 
         private void ProFormType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            FillDataGridView("");
+            FillDataGridView("TableAddContext");
             dataGridView1_RowIndex(subTypeIqrar.Text + "-" + mainTypeIqrar.SelectedIndex.ToString());
+            checkIndex = false;
             //for (int id = 0; id < dataGridView1.Rows.Count - 1; id++)
             //{
             //    if (dataGridView1.Rows[id].Cells[25].Value.ToString() == subTypeIqrar.Text + "-" + mainTypeIqrar.SelectedIndex.ToString())
@@ -2737,12 +2882,13 @@ namespace PersAhwal
         {
             if (dataGridView1.Visible)
             {
-                dataGridView1.Visible = false;
+                txtSearch.Visible = button32.Visible = dataGridView1.Visible = false;
                 flowLayoutPanel9.Visible = SettingsPanel.Visible = false;
             }
             else
             {
-                dataGridView1.Visible = true;
+                panelIqrar.Visible = panelAuthInfo.Visible = false;
+                txtSearch.Visible = button32.Visible = dataGridView1.Visible = true;
                 flowLayoutPanel9.Visible = SettingsPanel.Visible = false;
                 ContextPanel.Visible = false;
             }
@@ -2789,6 +2935,15 @@ namespace PersAhwal
                             sqlCmd.Parameters.AddWithValue("@" + allList[index], txtComboOptions[x - 1]);
                         }
                     }
+            
+            for (int index = 0; index < allList.Length; index++) 
+                for (int x = 1; x < 6; x++)
+                    {
+                        if (allList[index] == "icheck" + x.ToString() + "Option")
+                        {
+                            sqlCmd.Parameters.AddWithValue("@" + allList[index], txtComboOptions[x - 1]);
+                        }
+                    }
 
             foreach (Control control in panelButton.Controls)
             {
@@ -2812,21 +2967,22 @@ namespace PersAhwal
             }
             sqlCmd.Parameters.AddWithValue("@TextModel", TextModel.Text);
             sqlCmd.Parameters.AddWithValue("@editRights", editRights);
-            
-
+            sqlCmd.Parameters.AddWithValue("@ColName", txtProName.Text);
             if (panelAuthInfo.Visible)
             {
                 sqlCmd.Parameters.AddWithValue("@authIqrar", "auth");
                 sqlCmd.Parameters.AddWithValue("@Lang", langAuth.Text);
                 sqlCmd.Parameters.AddWithValue("@ColRight", ColRight.Text);
-                sqlCmd.Parameters.AddWithValue("@ColName", (subTypeAuth.Text + "-" + CombAuthTypeIndex.ToString()).Replace("--", "-"));
+                
+                //sqlCmd.Parameters.AddWithValue("@ColName", (subTypeAuth.Text + "-" + CombAuthTypeIndex.ToString()).Replace("--", "-"));
             }
             else
             {
                 sqlCmd.Parameters.AddWithValue("@authIqrar", "iqrar");
                 sqlCmd.Parameters.AddWithValue("@Lang", langIqrar.Text);
                 sqlCmd.Parameters.AddWithValue("@ColRight", "");
-                sqlCmd.Parameters.AddWithValue("@ColName", (subTypeIqrar.Text + "-" + mainTypeIqrar.SelectedIndex.ToString()).Replace("--", "-"));
+
+                //sqlCmd.Parameters.AddWithValue("@ColName", (subTypeIqrar.Text + "-" + mainTypeIqrar.SelectedIndex.ToString()).Replace("--", "-"));
             }
         }
         private void createNewColContext()
@@ -3134,14 +3290,557 @@ namespace PersAhwal
             iOptions5.Text = "";
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            ColorFulGrid9();
-        }
+        
 
         private void button22_Click(object sender, EventArgs e)
         {
             panellError.Visible = false;
+        }
+
+        private void formsBtn_Click(object sender, EventArgs e)
+        {
+            if (formsBtn.Text != "رفع الاستمارة الأولية")
+            {
+                OpenFile(formNo, true, formsBtn);
+                readyToUpload = true;
+            }
+            else {
+                OpenFileDialog dlg = new OpenFileDialog();
+                if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    CurrentFile = @dlg.FileName;
+                    //MessageBox.Show(CurrentFile);
+                    uploadFormsReq(CurrentFile);
+                    formsBtn.Text = "الاستمارة الأولية";
+                }
+            }
+        }
+
+        private void btnRevised_Click(object sender, EventArgs e)
+        {
+            string colName = subTypeAuth.Text.Trim() + "-" + mainTypeAuth.SelectedIndex.ToString();
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return; }
+            SqlCommand sqlCmd = new SqlCommand("update TableAddContext set revised=N'revised' where ColName=N'" + colName + "'", sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
+
+            dataGridView1.BringToFront();
+            FillDataGridView("TableAddContext");
+            panelIqrar.Visible = panelAuthInfo.Visible = false;
+            txtSearch.Visible = button32.Visible = dataGridView1.Visible = true;
+            flowLayoutPanel9.Visible = SettingsPanel.Visible = false;            
+            ContextPanel.Visible = true;
+        }
+
+        private void mainTypeAuth_TextChanged(object sender, EventArgs e)
+        {
+            //if (!checkIndex) return;
+            //if (mainTypeAuth.Text != "")
+            //{
+            //    for (int item = 0; item < mainTypeAuth.Items.Count; item++)
+            //    {
+            //        if (mainTypeAuth.Items[item].ToString() == mainTypeAuth.Text)
+            //        {
+            //            mainTypeAuth.SelectedIndex = item;
+            //            return;
+            //        }
+            //    }
+            //    //MessageBox.Show(نوع_التوكيل.SelectedIndex.ToString());
+            //}
+        }
+
+        private void subTypeAuth_TextChanged(object sender, EventArgs e)
+        {
+            //if (!checkIndex) return; 
+            //if (subTypeAuth.Text != "")
+            //{
+            //    for (int item = 0; item < subTypeAuth.Items.Count; item++)
+            //    {
+            //        if (subTypeAuth.Items[item].ToString() == subTypeAuth.Text)
+            //        {
+            //            subTypeAuth.SelectedIndex = item;
+            //            return;
+            //        }
+            //    }
+            //    //MessageBox.Show(نوع_التوكيل.SelectedIndex.ToString());
+            //}
+        }
+
+        private void mainTypeIqrar_TextChanged(object sender, EventArgs e)
+        {
+            //if (!checkIndex) return; 
+            //if (mainTypeIqrar.Text != "")
+            //{
+            //    for (int item = 0; item < mainTypeIqrar.Items.Count; item++)
+            //    {
+            //        if (mainTypeIqrar.Items[item].ToString() == mainTypeIqrar.Text)
+            //        {
+            //            mainTypeIqrar.SelectedIndex = item;
+            //            return;
+            //        }
+            //    }
+            //    //MessageBox.Show(نوع_التوكيل.SelectedIndex.ToString());
+            //}
+        }
+
+        private void subTypeIqrar_TextChanged(object sender, EventArgs e)
+        {
+            //if (!checkIndex) return; 
+            //if (subTypeIqrar.Text != "")
+            //{
+            //    for (int item = 0; item < subTypeIqrar.Items.Count; item++)
+            //    {
+            //        if (subTypeIqrar.Items[item].ToString() == subTypeIqrar.Text)
+            //        {
+            //            subTypeIqrar.SelectedIndex = item;
+            //            return;
+            //        }
+            //    }
+            //    //MessageBox.Show(نوع_التوكيل.SelectedIndex.ToString());
+            //}
+        }
+
+        private void remove_Click(object sender, EventArgs e)
+        {
+            foreach (Control control in panelAuthOptions.Controls)
+            {
+                if (control is CheckBox)
+                {
+                    if (!((CheckBox)control).Text.Contains("(محذوف)") && ((CheckBox)control).TabIndex == LastTabIndex)
+                    {
+                        ((CheckBox)control).Text = ((CheckBox)control).Text + " (محذوف)";
+                        remove.Visible = false;
+                    }
+                }
+            }
+        }
+
+        private void button23_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.Visible)
+            {
+                txtSearch.Visible = button32.Visible = dataGridView1.Visible = false;
+                flowLayoutPanel9.Visible = SettingsPanel.Visible = false;
+                dataGridView1.SendToBack();
+                repReqPanel.BringToFront();
+                
+            }
+            else
+            {
+                panelIqrar.Visible = panelAuthInfo.Visible = false;
+                txtSearch.Visible = button32.Visible = dataGridView1.Visible = true;
+                repReqPanel.Visible = true;
+                ContextPanel.Visible = false;
+                dataGridView1.BringToFront();
+                FillDataGridView("TableProcReq");
+                formsBtn.Visible = proFileBtn.Visible = btnRevised.Visible = false;
+                fileComboBox(المعاملة, DataSource, "المعاملة", "TableProcReq", true);
+                
+            }
+        }
+
+        private void fileComboBox(ComboBox combbox, string source, string comlumnName, string tableName, bool clear)
+        {
+
+            if (clear) combbox.Items.Clear();
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                saConn.Open();
+
+                string query = "select " + comlumnName + " from " + tableName;
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.CommandType = CommandType.Text;
+
+
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    DataTable table = new DataTable();
+                    SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                    dataAdapter.Fill(table);
+
+                    foreach (DataRow dataRow in table.Rows)
+                    {
+                        if (dataRow[comlumnName].ToString() != "")
+                        {
+                            bool found = false;
+                            for (int x = 0; x < combbox.Items.Count; x++)
+                            {
+                                if (combbox.Items[x].ToString() == dataRow[comlumnName].ToString()) found = true;
+                            }
+                            if (!found) combbox.Items.Add(dataRow[comlumnName].ToString());
+                        }
+                    }
+                }
+                catch (Exception ex) { }
+                saConn.Close();
+            }
+        }
+
+        private void uploadReqFiles_Click(object sender, EventArgs e)
+        {
+            uploadReqFiles.Enabled = false;
+            OpenFileDialog dlg = new OpenFileDialog();
+            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                xlApp = new Excel.Application();
+                xlWorkBook = xlApp.Workbooks.Open(@dlg.FileName, 0, true, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
+                xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
+
+                range = xlWorkSheet.UsedRange;
+                rw = range.Rows.Count;
+                cl = range.Columns.Count;
+                button23.Enabled = false;
+                string[] colList = new string[11];
+                colList[0] = "رقم_المعاملة";
+                colList[1] = "المعاملة";
+                colList[2] = "المطلوب_رقم1";
+                colList[3] = "المطلوب_رقم2";
+                colList[4] = "المطلوب_رقم3";
+                colList[5] = "المطلوب_رقم4";
+                colList[6] = "المطلوب_رقم5";
+                colList[7] = "المطلوب_رقم6";
+                colList[8] = "المطلوب_رقم7";
+                colList[9] = "المطلوب_رقم8";
+                colList[10] = "المطلوب_رقم9";
+
+
+                string[] strData = new string[11];
+                SqlConnection sqlCon = new SqlConnection(DataSource);
+                try
+                {
+                    if (sqlCon.State == ConnectionState.Closed)
+                        sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+                rCnt = cCnt = 1;
+                for (; rCnt <= 113; rCnt++)
+                {
+                    //if (string.IsNullOrEmpty((string)(range.Cells[rCnt, cCnt] as Excel.Range).Value2)) break;
+                    strData[6] = "غير مدرج";
+                    strData[7] = "غير مدرج";
+                    strData[8] = "غير مدرج";
+                    strData[9] = "غير مدرج";
+                    strData[10] = "غير مدرج";
+
+                    for (cCnt = 1; cCnt <= 6; cCnt++)
+                    {
+                        //if (string.IsNullOrEmpty((string)(range.Cells[rCnt, cCnt] as Excel.Range).Value2)) break;
+                        //MessageBox.Show(rCnt.ToString() + ","+ cCnt.ToString() + ","+ Convert.ToString((range.Cells[rCnt, cCnt] as Excel.Range).Value2));
+                        strData[cCnt - 1] = Convert.ToString((range.Cells[rCnt, cCnt] as Excel.Range).Value2);
+                    }
+                    if (strData[0].Length == 1) strData[0] = "0" + strData[0];
+                    insertRow(DataSource, strData);
+                    uploadReqFiles.Enabled = true;
+                }
+
+                sqlCon.Close();
+                xlWorkBook.Close(true, null, null);
+                xlApp.Quit();
+                Marshal.ReleaseComObject(xlWorkSheet);
+                Marshal.ReleaseComObject(xlWorkBook);
+                Marshal.ReleaseComObject(xlApp);
+            }
+            button23.Enabled = true;
+        }
+
+        private void insertRow(string source, string[] data)
+        {
+            SqlConnection sqlCon = new SqlConnection(source);
+            string[] colList = new string[11];
+            colList[0] = "رقم_المعاملة";
+            colList[1] = "المعاملة";
+            colList[2] = "المطلوب_رقم1";
+            colList[3] = "المطلوب_رقم2";
+            colList[4] = "المطلوب_رقم3";
+            colList[5] = "المطلوب_رقم4";
+            colList[6] = "المطلوب_رقم5";
+            colList[7] = "المطلوب_رقم6";
+            colList[8] = "المطلوب_رقم7";
+            colList[9] = "المطلوب_رقم8";
+            colList[10] = "المطلوب_رقم9";
+            string item = "رقم_المعاملة";
+            string value = "@رقم_المعاملة";
+            for (int col = 1; col < 11; col++)
+            {
+                item = item + "," + colList[col];
+                value = value + ",@" + colList[col];
+            }
+
+            string query = "INSERT INTO TableProcReq (" + item + ") values (" + value + ")";
+
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return; }
+            sqlCmd.CommandType = CommandType.Text;
+            for (int col = 0; col < 11; col++)
+            {
+                //MessageBox.Show(colList[col] + ","+data[col]);
+
+                sqlCmd.Parameters.AddWithValue(colList[col], data[col]);
+            }
+            try
+            {
+                sqlCmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+            }
+            sqlCon.Close();
+        }
+
+        private void button25_Click(object sender, EventArgs e)
+        {
+            string[] data = new string[11];
+            string[] colList = new string[11];
+            colList[0] = "رقم_المعاملة";
+            colList[1] = "المعاملة";
+            colList[2] = "المطلوب_رقم1";
+            colList[3] = "المطلوب_رقم2";
+            colList[4] = "المطلوب_رقم3";
+            colList[5] = "المطلوب_رقم4";
+            colList[6] = "المطلوب_رقم5";
+            colList[7] = "المطلوب_رقم6";
+            colList[8] = "المطلوب_رقم7";
+            colList[9] = "المطلوب_رقم8";
+            colList[10] = "المطلوب_رقم9";
+            for (int index = 0; index < 11; index++)
+            {
+                foreach (Control control in repReqPanel.Controls)
+                {
+                    if (control.Name == colList[index])
+                    {
+                        data[index] = control.Text;
+                    }
+                }
+            }
+            insertRow(DataSource, data);
+            foreach (Control control in repReqPanel.Controls)
+            {
+                if (control.Name.Contains("المطلوب_رقم") || control.Name.Contains("btnReq"))
+                {
+                    control.Text = "";
+                }
+            }
+            repReqPanel.SendToBack();
+            repReqPanel.Visible = false;
+            MessageBox.Show("تمت إضافة المعاملة بنجاح");
+            
+
+        }
+
+        private void button26_Click(object sender, EventArgs e)
+        {
+            string[] data = new string[11];
+            string[] colList = new string[11];
+            colList[0] = "رقم_المعاملة";
+            colList[1] = "المعاملة";
+            colList[2] = "المطلوب_رقم1";
+            colList[3] = "المطلوب_رقم2";
+            colList[4] = "المطلوب_رقم3";
+            colList[5] = "المطلوب_رقم4";
+            colList[6] = "المطلوب_رقم5";
+            colList[7] = "المطلوب_رقم6";
+            colList[8] = "المطلوب_رقم7";
+            colList[9] = "المطلوب_رقم8";
+            colList[10] = "المطلوب_رقم9";
+            for (int index = 0; index < 11; index++)
+            {
+                foreach (Control control in repReqPanel.Controls)
+                {
+                    if (control.Name == colList[index])
+                    {
+                        data[index] = control.Text;
+                    }
+                }
+            }
+            updatetRow(ProcReqID, DataSource, data);
+            foreach (Control control in repReqPanel.Controls)
+            {
+                if (control.Name.Contains("المطلوب_رقم") || control.Name.Contains("btnReq"))
+                {
+                    control.Text = "";
+                }
+            }
+        }
+        private void updatetRow(int id, string source, string[] data)
+        {
+            SqlConnection sqlCon = new SqlConnection(source);
+            string[] colList = new string[11];
+            colList[0] = "رقم_المعاملة";
+            colList[1] = "المعاملة";
+            colList[2] = "المطلوب_رقم1";
+            colList[3] = "المطلوب_رقم2";
+            colList[4] = "المطلوب_رقم3";
+            colList[5] = "المطلوب_رقم4";
+            colList[6] = "المطلوب_رقم5";
+            colList[7] = "المطلوب_رقم6";
+            colList[8] = "المطلوب_رقم7";
+            colList[9] = "المطلوب_رقم8";
+            colList[10] = "المطلوب_رقم9";
+            string item = "رقم_المعاملة=@رقم_المعاملة";
+            for (int col = 1; col < 11; col++)
+            {
+                item = item + "," + colList[col] + "=@" + colList[col];
+
+            }
+
+            string qurey = "UPDATE TableProcReq SET " + item + " WHERE ID=@ID";
+
+            SqlCommand sqlCmd = new SqlCommand(qurey, sqlCon);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return; }
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.Parameters.AddWithValue("@ID", id);
+            for (int col = 0; col < 11; col++)
+            {
+                sqlCmd.Parameters.AddWithValue(colList[col], data[col]);
+            }
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
+        }
+
+        private void button27_Click(object sender, EventArgs e)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            string qurey = "delete from TableProcReq WHERE ID=@ID";
+            SqlCommand sqlCmd = new SqlCommand(qurey, sqlCon);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return; }
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.Parameters.AddWithValue("@ID", ProcReqID);
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
+            foreach (Control control in repReqPanel.Controls)
+            {
+                if (control.Name.Contains("المطلوب_رقم") || control.Name.Contains("btnReq"))
+                {
+                    control.Text = "";
+                }
+            }
+        }
+
+        private void button32_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                CurrentFile = @dlg.FileName;
+                //MessageBox.Show(CurrentFile);
+                uploadFormsReq(CurrentFile);
+            }
+        }
+
+        private void reviewForms_Click(object sender, EventArgs e)
+        {
+            OpenFile(المعاملة.Text, true, reviewForms); 
+            reviewForms.Enabled = false;
+            readyToUpload = true;
+        }
+
+        private void المعاملة_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            المعاملة.Text = dataGridView1.CurrentRow.Cells["المعاملة"].Value.ToString();
+            
+            OpenFile(المعاملة.Text, true, reviewForms);
+            string[] colList = new string[11];
+            colList[0] = "المعاملة";
+            colList[1] = "رقم_المعاملة";
+            colList[2] = "المطلوب_رقم1";
+            colList[3] = "المطلوب_رقم2";
+            colList[4] = "المطلوب_رقم3";
+            colList[5] = "المطلوب_رقم4";
+            colList[6] = "المطلوب_رقم5";
+            colList[7] = "المطلوب_رقم6";
+            colList[8] = "المطلوب_رقم7";
+            colList[9] = "المطلوب_رقم8";
+            colList[10] = "المطلوب_رقم9";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT * FROM TableProcReq where المعاملة=N'" + المعاملة.Text + "'", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            if (dtbl.Rows.Count > 0)
+            {
+                foreach (DataRow row in dtbl.Rows)
+                {
+                    ProcReqID = Convert.ToInt32(row["ID"].ToString());
+                    for (int index = 1; index < 11; index++)
+                    {
+                        foreach (Control control in repReqPanel.Controls)
+                        {
+                            if (control.Name == colList[index])
+                            {
+                                control.Text = row[colList[index]].ToString();
+                            }
+                        }
+                    }
+                }
+            }
+            txtSearch.Visible = button32.Visible = dataGridView1.Visible = false;
+            repReqPanel.Visible = true;
+            repReqPanel.BringToFront();
+        }
+
+        private void button28_Click(object sender, EventArgs e)
+        {
+            string colName = subTypeAuth.Text.Trim() + "-" + mainTypeAuth.SelectedIndex.ToString();
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return; }
+            SqlCommand sqlCmd = new SqlCommand("update TableAddContext set ColName=N'" + txtProName.Text + "' where ID=N'" + idIndex.ToString() + "'", sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
+
+            dataGridView1.BringToFront();
+            FillDataGridView("TableAddContext");
+            panelIqrar.Visible = panelAuthInfo.Visible = false;
+            txtSearch.Visible = button32.Visible = dataGridView1.Visible = true;
+            flowLayoutPanel9.Visible = SettingsPanel.Visible = false;
+            ContextPanel.Visible = false;
+        }
+
+        private void txtSearch_TextChanged(object sender, EventArgs e)
+        {
+            if (txtSearch.Text.Length != 0)
+            {
+                BindingSource bs = new BindingSource();
+                bs.DataSource = dataGridView1.DataSource;
+                bs.Filter = dataGridView1.Columns[2].HeaderText.ToString() + " LIKE '" + txtSearch.Text + "%'";
+                dataGridView1.DataSource = bs;
+            }else FillDataGridView("TableAddContext");
+            ColorFulGrid9();
         }
 
         private void button116_Click(object sender, EventArgs e)
@@ -3149,8 +3848,12 @@ namespace PersAhwal
             ColumnJobs();
             createNewColContext();
             SqlConnection sqlCon = new SqlConnection(DataSource);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return; }
             SqlCommand sqlCmd = new SqlCommand(insertAll, sqlCon);
             sqlCmd.CommandType = CommandType.Text;
 
@@ -3232,7 +3935,7 @@ namespace PersAhwal
             sqlCmd.Parameters.AddWithValue("@ID", v1);
             sqlCmd.ExecuteNonQuery();
             Con.Close();
-            FillDataGridView("");
+            FillDataGridView("TableAddContext");
             btnDelete.Visible = btnClear.Visible = false;
         }
 

@@ -2421,10 +2421,10 @@
             this.Controls.Add(this.btnNext);
             this.Controls.Add(this.btnPrevious);
             this.Controls.Add(this.labDescribed);
-            this.Controls.Add(this.PanelDataGrid);
-            this.Controls.Add(this.finalPanel);
             this.Controls.Add(this.panelapplicationInfo);
             this.Controls.Add(this.panelAuthRights);
+            this.Controls.Add(this.PanelDataGrid);
+            this.Controls.Add(this.finalPanel);
             this.Name = "FormCollection";
             this.Text = "FormCollection";
             this.Load += new System.EventHandler(this.FormCollection_Load);

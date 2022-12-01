@@ -173,6 +173,9 @@ namespace PersAhwal
 
         public void genPreperations()
         {
+            System.Globalization.CultureInfo TypeOfLanguage = new System.Globalization.CultureInfo("ar-SA");
+            InputLanguage.CurrentInputLanguage = InputLanguage.FromCulture(TypeOfLanguage);
+
             allList = getColList("TableCollection");
             label36.Text = "الموظف:" + EmpName;
             dataGridView1.DefaultCellStyle.SelectionBackColor = Color.DarkTurquoise;

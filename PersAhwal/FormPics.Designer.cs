@@ -74,6 +74,8 @@ namespace PersAhwal
             this.nameSave = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.تاريخ_الميلاد = new System.Windows.Forms.TextBox();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.lalProType = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -82,6 +84,7 @@ namespace PersAhwal
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
             this.panelFinalArch.SuspendLayout();
             this.panel2.SuspendLayout();
+            this.panel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -158,7 +161,7 @@ namespace PersAhwal
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(25, 132);
+            this.button1.Location = new System.Drawing.Point(1061, 545);
             this.button1.Name = "button1";
             this.button1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.button1.Size = new System.Drawing.Size(275, 55);
@@ -169,7 +172,6 @@ namespace PersAhwal
             // 
             // Combo1
             // 
-            this.Combo1.Enabled = false;
             this.Combo1.Font = new System.Drawing.Font("Arabic Typesetting", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Combo1.FormattingEnabled = true;
             this.Combo1.Location = new System.Drawing.Point(1041, 111);
@@ -193,6 +195,7 @@ namespace PersAhwal
             this.Combo2.Text = "إختر الإجراء";
             this.Combo2.Visible = false;
             this.Combo2.SelectedIndexChanged += new System.EventHandler(this.Combo2_SelectedIndexChanged);
+            this.Combo2.TextChanged += new System.EventHandler(this.Combo2_TextChanged);
             // 
             // label1
             // 
@@ -245,7 +248,7 @@ namespace PersAhwal
             // jpgFile
             // 
             this.jpgFile.AutoSize = true;
-            this.jpgFile.Location = new System.Drawing.Point(1161, 680);
+            this.jpgFile.Location = new System.Drawing.Point(108, 72);
             this.jpgFile.Name = "jpgFile";
             this.jpgFile.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.jpgFile.Size = new System.Drawing.Size(89, 17);
@@ -258,7 +261,7 @@ namespace PersAhwal
             // 
             this.wordFile.AutoSize = true;
             this.wordFile.Checked = true;
-            this.wordFile.Location = new System.Drawing.Point(1061, 680);
+            this.wordFile.Location = new System.Drawing.Point(8, 72);
             this.wordFile.Name = "wordFile";
             this.wordFile.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.wordFile.Size = new System.Drawing.Size(102, 17);
@@ -298,7 +301,7 @@ namespace PersAhwal
             // 
             this.checkPrint.AutoSize = true;
             this.checkPrint.Font = new System.Drawing.Font("Arabic Typesetting", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkPrint.Location = new System.Drawing.Point(1255, 679);
+            this.checkPrint.Location = new System.Drawing.Point(202, 71);
             this.checkPrint.Name = "checkPrint";
             this.checkPrint.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.checkPrint.Size = new System.Drawing.Size(81, 25);
@@ -372,7 +375,7 @@ namespace PersAhwal
             this.DocType.Checked = true;
             this.DocType.CheckState = System.Windows.Forms.CheckState.Checked;
             this.DocType.Font = new System.Drawing.Font("Arabic Typesetting", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DocType.Location = new System.Drawing.Point(1255, 615);
+            this.DocType.Location = new System.Drawing.Point(202, 7);
             this.DocType.Name = "DocType";
             this.DocType.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.DocType.Size = new System.Drawing.Size(79, 25);
@@ -435,7 +438,7 @@ namespace PersAhwal
             // button5
             // 
             this.button5.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button5.Location = new System.Drawing.Point(1061, 639);
+            this.button5.Location = new System.Drawing.Point(8, 31);
             this.button5.Name = "button5";
             this.button5.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.button5.Size = new System.Drawing.Size(172, 34);
@@ -484,7 +487,7 @@ namespace PersAhwal
             // button6
             // 
             this.button6.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button6.Location = new System.Drawing.Point(1239, 639);
+            this.button6.Location = new System.Drawing.Point(186, 31);
             this.button6.Name = "button6";
             this.button6.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.button6.Size = new System.Drawing.Size(97, 34);
@@ -543,12 +546,11 @@ namespace PersAhwal
             // panelFinalArch
             // 
             this.panelFinalArch.AutoScroll = true;
-            this.panelFinalArch.Controls.Add(this.button1);
-            this.panelFinalArch.Controls.Add(this.btnAuth);
-            this.panelFinalArch.Controls.Add(this.button2);
             this.panelFinalArch.Controls.Add(this.loadPic);
+            this.panelFinalArch.Controls.Add(this.btnAuth);
             this.panelFinalArch.Controls.Add(this.reLoadPic);
-            this.panelFinalArch.Location = new System.Drawing.Point(1037, 413);
+            this.panelFinalArch.Controls.Add(this.button2);
+            this.panelFinalArch.Location = new System.Drawing.Point(1037, 410);
             this.panelFinalArch.Name = "panelFinalArch";
             this.panelFinalArch.Size = new System.Drawing.Size(332, 196);
             this.panelFinalArch.TabIndex = 840;
@@ -602,24 +604,48 @@ namespace PersAhwal
             this.تاريخ_الميلاد.Visible = false;
             this.تاريخ_الميلاد.TextChanged += new System.EventHandler(this.تاريخ_الميلاد_TextChanged);
             // 
+            // panel3
+            // 
+            this.panel3.AutoScroll = true;
+            this.panel3.Controls.Add(this.button5);
+            this.panel3.Controls.Add(this.DocType);
+            this.panel3.Controls.Add(this.jpgFile);
+            this.panel3.Controls.Add(this.checkPrint);
+            this.panel3.Controls.Add(this.wordFile);
+            this.panel3.Controls.Add(this.button6);
+            this.panel3.Location = new System.Drawing.Point(1056, 618);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(294, 100);
+            this.panel3.TabIndex = 844;
+            // 
+            // lalProType
+            // 
+            this.lalProType.AutoSize = true;
+            this.lalProType.Font = new System.Drawing.Font("Arabic Typesetting", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lalProType.ForeColor = System.Drawing.Color.Black;
+            this.lalProType.Location = new System.Drawing.Point(1236, 208);
+            this.lalProType.Name = "lalProType";
+            this.lalProType.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.lalProType.Size = new System.Drawing.Size(114, 31);
+            this.lalProType.TabIndex = 845;
+            this.lalProType.Text = "اختر آلية الأجراء:";
+            this.lalProType.Visible = false;
+            // 
             // FormPics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1370, 741);
+            this.Controls.Add(this.lalProType);
+            this.Controls.Add(this.panel3);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.تاريخ_الميلاد);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panelFinalArch);
-            this.Controls.Add(this.button6);
             this.Controls.Add(this.drawPic);
-            this.Controls.Add(this.button5);
-            this.Controls.Add(this.wordFile);
-            this.Controls.Add(this.checkPrint);
             this.Controls.Add(this.btnExten);
-            this.Controls.Add(this.jpgFile);
             this.Controls.Add(this.btnDelete);
-            this.Controls.Add(this.DocType);
             this.Controls.Add(this.btnArchived);
             this.Controls.Add(this.mandoubName);
             this.Controls.Add(this.panel1);
@@ -627,9 +653,9 @@ namespace PersAhwal
             this.Controls.Add(this.docId);
             this.Controls.Add(this.txtIDNo);
             this.Controls.Add(this.button3);
-            this.Controls.Add(this.button4);
             this.Controls.Add(this.Combo1);
             this.Controls.Add(this.Combo2);
+            this.Controls.Add(this.button4);
             this.Name = "FormPics";
             this.Text = "أرشفة الملفات";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormPics_FormClosed);
@@ -643,6 +669,8 @@ namespace PersAhwal
             this.panelFinalArch.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -687,5 +715,7 @@ namespace PersAhwal
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox تاريخ_الميلاد;
         private System.Windows.Forms.Button nameSave;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Label lalProType;
     }
 }

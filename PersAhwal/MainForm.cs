@@ -25,6 +25,7 @@ using WIA;
 using Image = System.Drawing.Image;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using Color = System.Drawing.Color;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace PersAhwal
 {
@@ -172,6 +173,7 @@ namespace PersAhwal
         bool nameNo = true;
         int ProcReqID = 0;
         string ServerModelFiles, ServerModelForms;
+        string[] rightColNames;
         public MainForm(string career,int id, string server, string Employee, string jobposition, string dataSource56, string dataSource57, string filepathIn, string filepathOut, string archFile, string formDataFile, bool pers_Peope, string gregorianDate, string hijriDate, string modelFiles,string modelForms)
         {
             InitializeComponent();
@@ -273,8 +275,7 @@ namespace PersAhwal
             Pers_Peope = pers_Peope;
             Affbtn6.Visible = !pers_Peope;
             uploadDocx = true;
-            timer1.Enabled = true;
-            timer2.Enabled = true;
+            
             EmployeeName = Employee;
             Career = career;
             //if (Career == "موظف ارشفة") timer5.Enabled = true;
@@ -326,8 +327,7 @@ namespace PersAhwal
 
             if (!File.Exists(primeryLink + "fileUpdate.txt"))
             {
-                if (!backgroundWorker2.IsBusy) backgroundWorker2.RunWorkerAsync();
-                if (!backgroundWorker1.IsBusy) backgroundWorker1.RunWorkerAsync();
+
                 dataSourceWrite(primeryLink + "fileUpdate.txt", "files are fully update");
             }
             Console.WriteLine(7);
@@ -556,8 +556,11 @@ namespace PersAhwal
         {
             SqlConnection sqlCon = new SqlConnection(DataSource57);
             if (sqlCon.State == ConnectionState.Closed)
-
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
 
             SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT ArabCountries from TableListCombo", sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
@@ -576,7 +579,11 @@ namespace PersAhwal
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
             SqlCommand sqlCmd = new SqlCommand("update TableListCombo set ArabCountries=@ArabCountries where ID=@id", sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.Parameters.AddWithValue("@id", id);
@@ -598,7 +605,11 @@ namespace PersAhwal
             {
                 SqlConnection sqlCon = new SqlConnection(source);
                 if (sqlCon.State == ConnectionState.Closed)
-                    sqlCon.Open();
+                    try
+                    {
+                        sqlCon.Open();
+                    }
+                    catch (Exception ex) { return; }
                 SqlCommand cmd = new SqlCommand(query, sqlCon);
                 cmd.ExecuteNonQuery();
                 MessageBox.Show("Backup is done !!");
@@ -649,7 +660,11 @@ namespace PersAhwal
         {
             SqlConnection sqlCon = new SqlConnection(source1);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return ""; }
             SqlDataAdapter sqlDa = new SqlDataAdapter("SP_COLUMNS " + table, sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
@@ -693,17 +708,25 @@ namespace PersAhwal
             //MessageBox.Show(query);
             SqlConnection sqlCon = new SqlConnection(source1);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
             SqlDataAdapter sqlDa = new SqlDataAdapter("select * from " + table, sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
             MessageBox.Show("select * from " + table);
             sqlDa.Fill(dtbl);
             sqlCon.Close();
-            MessageBox.Show("length " + query.Split('_')[1]);
+            //MessageBox.Show("length " + query.Split('_')[1]);
             sqlCon = new SqlConnection(source2);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
             SqlCommand sqlCmd = new SqlCommand(query.Split('_')[0], sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             foreach (DataRow dataRow in dtbl.Rows)
@@ -752,7 +775,11 @@ namespace PersAhwal
 
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
             SqlCommand sqlCmd = new SqlCommand(queryNewYear[FormType - 1], sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             if (FormType == 12)
@@ -781,7 +808,11 @@ namespace PersAhwal
             try
             {
                 if (sqlCon.State == ConnectionState.Closed)
-                    sqlCon.Open();
+                    try
+                    {
+                        sqlCon.Open();
+                    }
+                    catch (Exception ex) { return; }
                 SqlCommand sqlCmd = new SqlCommand("update TableUserLog set timeDateOut=@timeDateOut where ID=@id", sqlCon);
                 sqlCmd.CommandType = CommandType.Text;
                 sqlCmd.Parameters.AddWithValue("@id", userId);
@@ -797,7 +828,11 @@ namespace PersAhwal
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
             SqlCommand sqlCmd = new SqlCommand("update TableSettings set closeToUpdate=@closeToUpdate where ID=@id", sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.Parameters.AddWithValue("@id", 1);
@@ -810,7 +845,11 @@ namespace PersAhwal
         {
             SqlConnection sqlCon = new SqlConnection(DataSource56);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
             SqlCommand sqlCmd = new SqlCommand("update TableSettings set Version=@Version where ID='1'", sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.Parameters.AddWithValue("@Version", version);
@@ -822,7 +861,11 @@ namespace PersAhwal
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return ""; }
             string settingData = "select نوع_الإجراء from TableCollection where ID='1'";
             SqlDataAdapter sqlDa = new SqlDataAdapter(settingData, sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
@@ -844,7 +887,11 @@ namespace PersAhwal
             try
             {
                 if (sqlCon.State == ConnectionState.Closed)
-                    sqlCon.Open();
+                    try
+                    {
+                        sqlCon.Open();
+                    }
+                    catch (Exception ex) { return ""; }
                 string settingData = "select Version from TableSettings where ID='1'";
                 SqlDataAdapter sqlDa = new SqlDataAdapter(settingData, sqlCon);
                 sqlDa.SelectCommand.CommandType = CommandType.Text;
@@ -867,7 +914,11 @@ namespace PersAhwal
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return ""; }
             string settingData = "select FolderApp from TableSettings where ID='1'";
             SqlDataAdapter sqlDa = new SqlDataAdapter(settingData, sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
@@ -911,7 +962,11 @@ namespace PersAhwal
         {
             SqlConnection sqlCon = new SqlConnection(DataSource56);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
 
             SqlCommand sqlCmd = new SqlCommand("INSERT INTO TableSuitCase (رقم_لبرقية, تاريخ_لبرقية, مقدم_الطلب, القضية, تاريخ_الاستلام, تاريخ_الرفع, التاريخ_الميلادي, التاريخ_الهجري, مدير_القسم, اسم_الموظف, تعليق)  values (@رقم_لبرقية, @تاريخ_لبرقية, @مقدم_الطلب, @القضية, @تاريخ_الاستلام, @تاريخ_الرفع, @التاريخ_الميلادي, @التاريخ_الهجري, @مدير_القسم, @اسم_الموظف, @تعليق) ", sqlCon);
             sqlCmd.CommandType = CommandType.Text;
@@ -934,7 +989,11 @@ namespace PersAhwal
         {
             SqlConnection sqlCon = new SqlConnection(DataSource56);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
 
             SqlCommand sqlCmd = new SqlCommand("INSERT INTO TableListCombo (jobs)  values (@jobs) ", sqlCon);
             sqlCmd.CommandType = CommandType.Text;
@@ -1224,8 +1283,12 @@ namespace PersAhwal
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
-            SqlDataAdapter sqlDa1 = new SqlDataAdapter("select * from TableAuthRight", sqlCon);
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+            SqlDataAdapter sqlDa1 = new SqlDataAdapter("select * from TableAuthRights", sqlCon);
             sqlDa1.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
             sqlDa1.Fill(dtbl);
@@ -1264,7 +1327,11 @@ namespace PersAhwal
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
             SqlDataAdapter sqlDa1 = new SqlDataAdapter("select نوع_التوكيل,إجراء_التوكيل,التاريخ_الميلادي, itext1,itext2,itext3,itext4,itext5,icheck1,itxtDate1,icombo1,icombo2,ibtnAdd1  from TableAuth", sqlCon);
             sqlDa1.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
@@ -1311,7 +1378,12 @@ namespace PersAhwal
             if (sqlCon.State == ConnectionState.Closed)
             {
                 //label1.Text = "";
-                sqlCon.Open();
+                if (sqlCon.State == ConnectionState.Closed)
+                    try
+                    {
+                        sqlCon.Open();
+                    }
+                    catch (Exception ex) { return; }
                 for (TableIndex = 1; TableIndex <= 6; TableIndex++)
                 {
                     int x = 0;
@@ -1320,7 +1392,7 @@ namespace PersAhwal
                     {
                         SqlDataAdapter sqlDa1 = new SqlDataAdapter(queryDateList[TableIndex], sqlCon);
                         sqlDa1.SelectCommand.CommandType = CommandType.Text;
-
+                        //MessageBox.Show(dateFrom.Split('-')[1] +"-"+ dateFrom.Split('-')[0]+"-"+ dateFrom.Split('-')[2]);
                         sqlDa1.SelectCommand.Parameters.AddWithValue("@التاريخ_الميلادي", dateFrom);
                         sqlDa1.Fill(dtbl1);
                         dataGridView2.DataSource = dtbl1;
@@ -1439,7 +1511,7 @@ namespace PersAhwal
                                     case 4:
                                         RetrievedNameAffadivit[totalrowsAffadivit] = row["مقدم_الطلب"].ToString();
                                         RetrievedTypeAffadivit[totalrowsAffadivit] = row["نوع_الإجراء"].ToString();
-                                        arrangeData = row["DocID"].ToString().Split('/');
+                                        arrangeData = row["رقم_المعاملة"].ToString().Split('/');
                                         if (arrangeData.Length == 4)
                                             RetrievedNoAffadivit[totalrowsAffadivit] = arrangeData[3] + "/" + arrangeData[2] + "/" + arrangeData[1] + "/" + arrangeData[0];
                                         else if (arrangeData.Length == 5)
@@ -1536,7 +1608,12 @@ namespace PersAhwal
             DataTable dtbl1 = new DataTable();
             if (sqlCon.State == ConnectionState.Closed)
             {
-                sqlCon.Open();
+                if (sqlCon.State == ConnectionState.Closed)
+                    try
+                    {
+                        sqlCon.Open();
+                    }
+                    catch (Exception ex) { return 0; }
 
                 for (int y = yearS; y <= yearE; y++)
                 {
@@ -1594,7 +1671,11 @@ namespace PersAhwal
             DataTable dtbl = new DataTable();
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return 0; }
             SqlDataAdapter sqlDa = new SqlDataAdapter("select نوع_التوكيل from TableAuth", sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             sqlDa.Fill(dtbl);
@@ -1640,9 +1721,12 @@ namespace PersAhwal
             SqlConnection sqlCon = new SqlConnection(DataSource);
             DataTable dtbl = new DataTable();
             if (sqlCon.State == ConnectionState.Closed)
-            {
-                sqlCon.Open();
-                for (int T = 0; T < 100; T++)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return false; }
+            for (int T = 0; T < 100; T++)
                     for (int yy = 0; yy < 31; yy++)
                         DeepReport[T, yy] = 0;
                 int d;
@@ -1677,7 +1761,7 @@ namespace PersAhwal
                         type++;
                     }
                     dtbl.Rows.Clear();
-                }
+                
 
                 //rep1[month, 0] = monthS;
 
@@ -1745,13 +1829,16 @@ namespace PersAhwal
             DataTable dtbl1 = new DataTable();
             DataTable dtbl2 = new DataTable();
             if (sqlCon.State == ConnectionState.Closed)
-            {
-                sqlCon.Open();
-                //for (int y = yearS; y <= yearE; y++)
-                //{                    
-                //    for (int m = monthS; m <= monthE && m <= 12; m++)
-                //    {
-                for (int x = 0; x < 15; x++)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return false; }
+            //for (int y = yearS; y <= yearE; y++)
+            //{                    
+            //    for (int m = monthS; m <= monthE && m <= 12; m++)
+            //    {
+            for (int x = 0; x < 15; x++)
                     for (int yy = 0; yy < 31; yy++)
                         report1[x, yy] = 0;
                 int d;
@@ -1824,7 +1911,7 @@ namespace PersAhwal
                             dtbl1.Rows.Clear();
                         }
                     }   
-                }
+                
 
                 rep1[month, 0] = monthS;
 
@@ -2261,7 +2348,11 @@ namespace PersAhwal
             dataRowTable = new DataTable();
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
             SqlDataAdapter sqlDa = new SqlDataAdapter(queryInfo, sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             sqlDa.SelectCommand.Parameters.AddWithValue(column, "");
@@ -2698,7 +2789,12 @@ namespace PersAhwal
                 {
                     for (TableIndex = 1; TableIndex < 13; TableIndex++)
                     {
-                        sqlCon.Open();
+                        if (sqlCon.State == ConnectionState.Closed)
+                            try
+                            {
+                                sqlCon.Open();
+                            }
+                            catch (Exception ex) { return; }
                         SqlCommand sqlCmd1 = new SqlCommand(query[TableIndex], sqlCon);
                         if (TableIndex < 12)
                         {
@@ -2956,7 +3052,12 @@ namespace PersAhwal
                 {
                     for (TableIndex = 1; TableIndex < 13; TableIndex++)
                     {
-                        sqlCon.Open();
+                        if (sqlCon.State == ConnectionState.Closed)
+                            try
+                            {
+                                sqlCon.Open();
+                            }
+                            catch (Exception ex) { return; }
                         SqlCommand sqlCmd1 = new SqlCommand(query[TableIndex], sqlCon);
                         if (TableIndex < 12)
                         {
@@ -3216,7 +3317,11 @@ namespace PersAhwal
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
             SqlDataAdapter sqlDa = new SqlDataAdapter("select * from  archives where docID=@docID", sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             sqlDa.SelectCommand.Parameters.AddWithValue("@docID", docid);
@@ -3249,9 +3354,14 @@ namespace PersAhwal
 
                 if (txtSearch.Text != "")
                 {
-                    
-                        sqlCon.Open();
-                        SqlCommand sqlCmd1 = new SqlCommand("select * from TableGeneralArch where " + column + "=@col", sqlCon);
+
+                    if (sqlCon.State == ConnectionState.Closed)
+                        try
+                        {
+                            sqlCon.Open();
+                        }
+                        catch (Exception ex) { return; }
+                    SqlCommand sqlCmd1 = new SqlCommand("select * from TableGeneralArch where " + column + "=@col", sqlCon);
                         
 
                             sqlCmd1.Parameters.Add("@col", SqlDbType.NVarChar).Value = search;
@@ -3319,7 +3429,11 @@ namespace PersAhwal
            
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
             SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableGeneralArch where  رقم_معاملة_القسم=N'" + txtSearch.Text + "' and نوع_المستند='" + doc + "'", sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
@@ -3871,7 +3985,11 @@ namespace PersAhwal
             string query = "INSERT INTO TableGeneralArch (Data1,Extension1,نوع_المستند,رقم_معاملة_القسم,المستند,الموظف,التاريخ) values (@Data1,@Extension1,@نوع_المستند,@رقم_معاملة_القسم,@المستند,@الموظف,@التاريخ)";
             SqlConnection sqlCon = new SqlConnection(dataSource);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
             SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.Parameters.AddWithValue("@رقم_معاملة_القسم", messNo);
@@ -3906,9 +4024,13 @@ namespace PersAhwal
         }
 
         private void getDate()
-        {            
+        {
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();            
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
             if (Server == "57")
             {
                 for (TableIndex = 1; TableIndex < 12; TableIndex++)
@@ -4570,10 +4692,13 @@ namespace PersAhwal
 
         private void SubNameData(int id, string DocID, string AppName, string AuthName, string AuthNo, string Gender, string Institute, string GriDate, string filePath, string viewed)
         {
-            MessageBox.Show("filePath  " + filePath);
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            //MessageBox.Show("filePath  " + filePath);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
             SqlCommand sqlCmd = new SqlCommand("INSERT INTO TableReceMess ( DocID,AppName,AuthName,AuthNo,Gender,Institute,GriDate,Data1,Extension1,FileName1,ArchivedState,Viewed) values (@DocID,@AppName,@AuthName,@AuthNo,@Gender,@Institute,@GriDate,@Data1,@Extension1,@FileName1,@ArchivedState,@Viewed)", sqlCon);
             if (id != 1) sqlCmd = new SqlCommand("UPDATE TableReceMess SET   DocID=@DocID,AppName=@AppName,AuthName=@AuthName,AuthNo=@AuthNoGender=@Gender,Institute=@Institute,GriDate=@GriDate,Data1=@Data1,Extension1=@Extension1,FileName1=@FileName1,ArchivedState=@ArchivedState,Viewed=@Viewed where ID=@ID", sqlCon);
             sqlCmd.CommandType = CommandType.Text;
@@ -4612,7 +4737,11 @@ namespace PersAhwal
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
             SqlCommand sqlCmd = new SqlCommand("INSERT INTO TableHandAuth ( DocID,AppName,Gender,Institute,GriDate,Data1,Extension1,FileName1,ArchivedState,Viewed,HandTime,DocNo,Comment,AVConsule) values (@DocID,@AppName,@Gender,@Institute,@GriDate,@Data1,@Extension1,@FileName1,@ArchivedState,@Viewed,@HandTime,@DocNo,@Comment,@AVConsule)", sqlCon);
             if (id != 1) sqlCmd = new SqlCommand("UPDATE TableHandAuth SET  DocID=@DocID,AppName=@AppName,Gender=@Gender,Institute=@Institute,GriDate=@GriDate,Data1=@Data1,Extension1=@Extension1,FileName1=@FileName1,ArchivedState=@ArchivedState,Viewed=@Viewed,HandTime=@HandTime,DocNo=@DocNo,Comment=@Comment,AVConsule=@AVConsule where ID=@ID", sqlCon);
             sqlCmd.CommandType = CommandType.Text;
@@ -4711,7 +4840,11 @@ namespace PersAhwal
             {
                 SqlConnection sqlCon = new SqlConnection(DataSource);
                 if (sqlCon.State == ConnectionState.Closed)
-                    sqlCon.Open();
+                    try
+                    {
+                        sqlCon.Open();
+                    }
+                    catch (Exception ex) { return; }
                 SqlCommand sqlCmd = new SqlCommand("UPDATE TableReceMess SET Data1=@Data1,Extension1=@Extension1,FileName1=@FileName1 WHERE ID=@ID", sqlCon);
                 sqlCmd.CommandType = CommandType.Text;
                 sqlCmd.Parameters.AddWithValue("@ID", Messid);
@@ -5004,11 +5137,11 @@ namespace PersAhwal
         private void button21_Click(object sender, EventArgs e)
         {
             StaredColumns();
-            var selectedOption = MessageBox.Show("", "تحميل الاحصائيات؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (selectedOption == DialogResult.Yes)
-            {
-                StatisticInfo();
-            }
+            //var selectedOption = MessageBox.Show("", "تحميل الاحصائيات؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            //if (selectedOption == DialogResult.Yes)
+            //{
+            //    StatisticInfo();
+            //}
         }
 
         private void merriageTable()
@@ -5029,7 +5162,11 @@ namespace PersAhwal
 
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
             for (rCnt = 1; rCnt < 67; rCnt++)
             {
                 string strDate = (string)(range.Cells[rCnt, 1] as Excel.Range).Value2;
@@ -5063,10 +5200,36 @@ namespace PersAhwal
 
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
             SqlCommand sqlCmd = new SqlCommand("alter table TableAuthRight add " + Columnname.Replace(" ", "_") + " nvarchar(1000)", sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
+        }
+        
+        private void CreateColumns(string Columnname)
+        {
+
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+            SqlCommand sqlCmd = new SqlCommand("alter table TableAuthRights add " + Columnname.Replace(" ", "_") + " nvarchar(1000)", sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            try
+            {
+                sqlCmd.ExecuteNonQuery();
+            }
+            catch (Exception ex) {
+                MessageBox.Show(Columnname);
+            }
             sqlCon.Close();
         }
         private bool checkColumnName(string colNo)
@@ -5074,7 +5237,11 @@ namespace PersAhwal
             //MessageBox.Show(dataSource);
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return false ; }
             SqlDataAdapter sqlDa = new SqlDataAdapter("SP_COLUMNS TableAuthRight", sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
@@ -5094,8 +5261,220 @@ namespace PersAhwal
             //MessageBox.Show(colNo + "not found");
             return false;
         }
+        private bool checkColumnNames(string colNo)
+        {
+            //MessageBox.Show(colNo);
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return false; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter("SP_COLUMNS TableAuthRights", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                if (!string.IsNullOrEmpty(dataRow["COLUMN_NAME"].ToString()))
+                {
+                    //MessageBox.Show(dataRow["COLUMN_NAME"].ToString());
+                    if (dataRow["COLUMN_NAME"].ToString() == colNo.Replace(" ", "_"))
+                    {
+                        return true;
+                    }
+                }
+            }
+            //MessageBox.Show(colNo + "not found");
+            return false;
+        }
+        
+        private bool checkID(string id)
+        {
+            //MessageBox.Show(id);
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return false; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter("select ID from TableAuthRights", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                if (dataRow["ID"].ToString() == id)
+                {
+                    //MessageBox.Show(dataRow["ID"].ToString());
+                    return true;
+                }
+            }
+            //MessageBox.Show(id + " not found");
+            return false;
+        }
+        
+        private void ColumnNamesLoad()
+        {
+            bool found = false;
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter("SP_COLUMNS TableAuthRights", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            int colIndex = 0;
+            rightColNames = new string[dtbl.Rows.Count - 1];
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                if (dataRow["COLUMN_NAME"].ToString() != "" && dataRow["COLUMN_NAME"].ToString() != "ID")
+                {
+                    rightColNames[colIndex] = dataRow["COLUMN_NAME"].ToString();
+                    colIndex++;
+                }
+            }
+        }
         private void button23_Click(object sender, EventArgs e)
         {
+            //oldFun();
+            newFun();
+
+        }
+
+        private void newFun() {
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.ShowDialog();
+            xlApp = new Excel.Application();
+            xlWorkBook = xlApp.Workbooks.Open(@dlg.FileName, 0, true, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
+            xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
+
+            range = xlWorkSheet.UsedRange;
+            rw = range.Rows.Count;
+            cl = range.Columns.Count;
+            button23.Enabled = false;
+            string[] colName = getColName();
+            for (int col = 0; col < colName.Length; col++)
+            {
+                colName[col] = colName[col].Replace("-", "_");
+                colName[col] = colName[col].Replace(" ", "_");
+                if (!checkColumnNames(colName[col].Replace("-", "_")) && colName[col] != "")
+                {
+
+                    
+                    CreateColumns(colName[col].Replace("-", "_").Trim());
+                    if (checkID("1"))
+                        UpdateColumn(DataSource, colName[col], 1, colName[col], "TableAuthRights");
+                    else InsertColumn(DataSource, colName[col], 1, colName[col], "TableAuthRights");
+
+
+
+                }
+                //else if (!checkColumnNames(colName[col]) && colName[col] == "")
+                //{
+
+                //    //MessageBox.Show(colName);
+                //    CreateColumns(col[col]);
+                //    if (checkID("1"))
+                //        UpdateColumn(DataSource, col[col], 1, col, "TableAuthRights");
+                //    else InsertColumn(DataSource, col[col], 1, col, "TableAuthRights");
+
+
+
+                //}
+            }
+
+            ColumnNamesLoad();
+
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+            for (cCnt = 2; cCnt <= rightColNames.Length; cCnt++)
+            {
+                string colname = (string)(range.Cells[1, cCnt] as Excel.Range).Value2;
+                //MessageBox.Show(colname);
+                for (rCnt = 2; rCnt < rw; rCnt++)
+                {
+                    try
+                    {
+                        string strData = (string)(range.Cells[rCnt, cCnt] as Excel.Range).Value2;
+                        if (String.IsNullOrEmpty(strData)) strData = "";
+                        //MessageBox.Show(rCnt +"_" +strData);
+                        if (checkID(rCnt.ToString()))
+                            UpdateColumn(DataSource, colname, rCnt, strData, "TableAuthRights");
+                        else InsertColumn(DataSource, colname, rCnt, strData, "TableAuthRights");
+                    }
+                    catch (Exception ex) {
+                        //for (cCnt = 2; cCnt <= rightColNames.Length; cCnt++)
+                        //{
+                        //    col = rightColNames[cCnt - 2];
+
+                        //    for (rCnt = 1; rCnt < 24; rCnt++)
+                        //    {
+                        //        try
+                        //        {
+                        //            string strData = (string)(range.Cells[rCnt, cCnt] as Excel.Range).Value2;
+                        //            if (String.IsNullOrEmpty(strData)) strData = "";
+                        //            UpdateColumn(DataSource, col, rCnt, strData, "TableAuthRights");
+                        //        }
+                        //        catch (Exception e1x)
+                        //        {
+                        //        }
+                        //        //MessageBox.Show(rCnt.ToString());
+                        //    }
+                        //}
+                    }
+                    //MessageBox.Show(rCnt.ToString());
+                }
+            }
+
+            sqlCon.Close();
+            xlWorkBook.Close(true, null, null);
+            xlApp.Quit();
+            Marshal.ReleaseComObject(xlWorkSheet);
+            Marshal.ReleaseComObject(xlWorkBook);
+            Marshal.ReleaseComObject(xlApp);
+
+            button23.Enabled = true;
+        }
+        private string[] getColName()
+        {
+            string[] colName = new string[1];
+            SqlConnection sqlCon = new SqlConnection(DataSource57);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return colName; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter("select ColName from TableAddContext where ColRight <> '' and ColName is not null", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            colName = new string[dtbl.Rows.Count];
+            int index = 0;
+            foreach (DataRow row in dtbl.Rows)
+            {
+                colName[index] = row["ColName"].ToString();
+                index++;
+            }
+            return colName;
+        }
+        private void oldFun() {
             OpenFileDialog dlg = new OpenFileDialog();
             dlg.ShowDialog();
             xlApp = new Excel.Application();
@@ -5113,20 +5492,21 @@ namespace PersAhwal
                 if (!checkColumnName(col))
                     CreateColumn(col);
             }
-                
-            
+
+
 
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
-            for (cCnt = 1; cCnt <= cl; cCnt++) 
+            for (cCnt = 1; cCnt <= cl; cCnt++)
             {
-                col = "Col" + (cCnt-1).ToString();
-                
-                
-                    for (rCnt = 1; rCnt < 24; rCnt++) {                    
-                    string strData = (string)(range.Cells[rCnt, cCnt] as Excel.Range).Value2;                    
-                   if (String.IsNullOrEmpty(strData)) strData= "";
+                col = "Col" + (cCnt - 1).ToString();
+
+
+                for (rCnt = 1; rCnt < 24; rCnt++)
+                {
+                    string strData = (string)(range.Cells[rCnt, cCnt] as Excel.Range).Value2;
+                    if (String.IsNullOrEmpty(strData)) strData = "";
                     UpdateColumn(DataSource, col, rCnt, strData, "TableAuthRight");
                     //MessageBox.Show(rCnt.ToString());
                 }
@@ -5138,12 +5518,9 @@ namespace PersAhwal
             Marshal.ReleaseComObject(xlWorkSheet);
             Marshal.ReleaseComObject(xlWorkBook);
             Marshal.ReleaseComObject(xlApp);
-            
+
             button23.Enabled = true;
-
-
         }
-
         private void pictremovemonth_Click(object sender, EventArgs e)
         {
 
@@ -5174,7 +5551,11 @@ namespace PersAhwal
             if (!VCIndexLoad) return;
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
             SqlCommand sqlCmd = new SqlCommand("UPDATE TableSettings SET VCIndesx = @VCIndesx WHERE ID = @ID", sqlCon);
             if (!Pers_Peope)
             {
@@ -5194,7 +5575,11 @@ namespace PersAhwal
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return 0; }
             SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT VCIndesx,AttendVCAffairs FROM TableSettings", sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable table = new DataTable();
@@ -5322,7 +5707,11 @@ namespace PersAhwal
         {
             SqlConnection sqlCon = new SqlConnection(DataSource56);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
             SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT ID,MandoubNames,MandoubAreas,MandoubPhones FROM TableMandoudList", sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable table = new DataTable();
@@ -5341,10 +5730,10 @@ namespace PersAhwal
         private void fillDataGrid(string text)
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+            
             try
-            {
+            {if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
                 SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT ID,AppName,DocID,Institute,GriDate,Viewed,HandTime,DocNo,Comment,AVConsule FROM TableHandAuth", sqlCon);
                 if (text != "")
                     sqlDa = new SqlDataAdapter("SELECT ID,AppName,DocID,Institute,GriDate,Viewed,HandTime,DocNo,Comment,AVConsule  FROM TableHandAuth where Institute=@Institute", sqlCon);
@@ -5369,10 +5758,10 @@ namespace PersAhwal
         private void fillDataGridReports()
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+            
             try
-            {
+            {if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
                 SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT ID,التاريخ,الموظف,رقم_معاملة_القسم as موضوع_التقرير FROM TableGeneralArch where نوع_المستند=@نوع_المستند and الموظف=@الموظف", sqlCon);
                 sqlDa.SelectCommand.CommandType = CommandType.Text;
                 sqlDa.SelectCommand.Parameters.AddWithValue("@نوع_المستند", "تقرير");
@@ -5563,7 +5952,11 @@ namespace PersAhwal
             //TableAddContext
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
             SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT * FROM " + tableStr, sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable table = new DataTable();
@@ -5817,8 +6210,14 @@ namespace PersAhwal
         {
             UserLogOut();
             string currentVersion = getVersio();
-
-            if (Convert.ToInt32(CurrentVersion.Split('.')[3]) < Convert.ToInt32(currentVersion.Split('.')[3]) && UserJobposition.Contains("قنصل"))
+            try
+            {
+                int CV = Convert.ToInt32(CurrentVersion.Split('.')[3]);
+            
+                int cV = Convert.ToInt32(currentVersion.Split('.')[3]);
+        
+            
+            if (CV < cV && UserJobposition.Contains("قنصل"))
             {
                 
                 empUpdate.Visible = false;
@@ -5828,7 +6227,8 @@ namespace PersAhwal
                 
                 empUpdate.Visible = true;
             }
-            
+            }
+            catch (Exception ex) { return; }
             
 
             if (Convert.ToInt32(CurrentVersion.Split('.')[3]) < Convert.ToInt32(currentVersion.Split('.')[3]) && currentVersion.Split('.')[4] == "F" && !onUpdate)
@@ -5856,9 +6256,12 @@ namespace PersAhwal
             string year = DateTime.Now.Year.ToString().Replace("20", "");
 
             if (sqlCon.State == ConnectionState.Closed)
-            {
-                sqlCon.Open();
-                for (TableIndex = 1; TableIndex <= 11; TableIndex++)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+            for (TableIndex = 1; TableIndex <= 11; TableIndex++)
                 {
                     if (TableIndex == 10) continue;
                     //ID,AppName,Viewed,ArchivedState,DocID,GriDate,DataInterType,FileName2,DataMandoubName,SpecType
@@ -5927,7 +6330,7 @@ namespace PersAhwal
                     Console.WriteLine("finish deleting files.....");
 
                 }
-            }
+            
             parrtialAll = true;
         }
 
@@ -6597,7 +7000,11 @@ namespace PersAhwal
             string at2 = "@" + item2Name;
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
             SqlCommand sqlCmd = new SqlCommand("update TableSettings set "+ item1Name + "=@"+ item1Name +","+ item2Name + "=@" + item2Name + " where ID='1'", sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.Parameters.AddWithValue(at1, item1Value);
@@ -6628,7 +7035,11 @@ namespace PersAhwal
             SqlConnection sqlCon = new SqlConnection(DataSource);
             SqlCommand sqlCmd = new SqlCommand(qurey, sqlCon);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.Parameters.AddWithValue("@id", 1);
             sqlCmd.Parameters.AddWithValue("@CurrentYear", text);
@@ -6717,88 +7128,21 @@ namespace PersAhwal
             getInSettings(11);
         }
 
-        private void button38_Click_1(object sender, EventArgs e)
-        {
-            uploadReqFiles.Enabled = false;
-            OpenFileDialog dlg = new OpenFileDialog();
-            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                xlApp = new Excel.Application();
-                xlWorkBook = xlApp.Workbooks.Open(@dlg.FileName, 0, true, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
-                xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
-
-                range = xlWorkSheet.UsedRange;
-                rw = range.Rows.Count;
-                cl = range.Columns.Count;
-                button23.Enabled = false;
-                string[] colList = new string[11];
-                colList[0] = "رقم_المعاملة";
-                colList[1] = "المعاملة";
-                colList[2] = "المطلوب_رقم1";
-                colList[3] = "المطلوب_رقم2";
-                colList[4] = "المطلوب_رقم3";
-                colList[5] = "المطلوب_رقم4";
-                colList[6] = "المطلوب_رقم5";
-                colList[7] = "المطلوب_رقم6";
-                colList[8] = "المطلوب_رقم7";
-                colList[9] = "المطلوب_رقم8";
-                colList[10] = "المطلوب_رقم9";
-
-
-                string[] strData = new string[11];
-                SqlConnection sqlCon = new SqlConnection(DataSource);
-                if (sqlCon.State == ConnectionState.Closed)
-                    sqlCon.Open();
-                rCnt = cCnt = 1;
-                for (; rCnt <= 113; rCnt++)
-                {
-                    //if (string.IsNullOrEmpty((string)(range.Cells[rCnt, cCnt] as Excel.Range).Value2)) break;
-                    strData[6] = "غير مدرج";
-                    strData[7] = "غير مدرج";
-                    strData[8] = "غير مدرج";
-                    strData[9] = "غير مدرج";
-                    strData[10] = "غير مدرج";
-
-                    for (cCnt = 1; cCnt <= 6; cCnt++)
-                    {
-                        //if (string.IsNullOrEmpty((string)(range.Cells[rCnt, cCnt] as Excel.Range).Value2)) break;
-                        //MessageBox.Show(rCnt.ToString() + ","+ cCnt.ToString() + ","+ Convert.ToString((range.Cells[rCnt, cCnt] as Excel.Range).Value2));
-                        strData[cCnt - 1] = Convert.ToString((range.Cells[rCnt, cCnt] as Excel.Range).Value2);
-                    }
-                    if (strData[0].Length == 1) strData[0] = "0" + strData[0];
-                    insertRow(DataSource, strData);
-                    uploadReqFiles.Enabled = true;
-                }
-
-                sqlCon.Close();
-                xlWorkBook.Close(true, null, null);
-                xlApp.Quit();
-                Marshal.ReleaseComObject(xlWorkSheet);
-                Marshal.ReleaseComObject(xlWorkBook);
-                Marshal.ReleaseComObject(xlApp);
-            }
-            button23.Enabled = true;
-        }
+        
 
         private void timer5_Tick(object sender, EventArgs e)
         {
-            updataArchData1();
-            fillNonArchInfo();
+            //updataArchData1();
+            //fillNonArchInfo();
         }
 
-        private void button3_Click(object sender, EventArgs e)
-        {
-            fileComboBox(المعاملة, DataSource, "المعاملة", "TableProcReq", true); 
-            repReqPanel.Visible = true;
-            repReqPanel.BringToFront();
-        }
 
         private void timer3_Tick_1(object sender, EventArgs e)
         {
             
-            updataArchData1();
-            if (Server == "57") 
-                updataArchData2();
+            //updataArchData1();
+            //if (Server == "57") 
+            //    updataArchData2();
             
         }
 
@@ -6830,143 +7174,7 @@ namespace PersAhwal
         sqlCommand.ExecuteNonQuery();
     }
 
-        private void button5_Click(object sender, EventArgs e)
-        {
-            string[] data = new string[11];
-            string[] colList = new string[11];
-            colList[0] = "رقم_المعاملة";
-            colList[1] = "المعاملة";
-            colList[2] = "المطلوب_رقم1";
-            colList[3] = "المطلوب_رقم2";
-            colList[4] = "المطلوب_رقم3";
-            colList[5] = "المطلوب_رقم4";
-            colList[6] = "المطلوب_رقم5";
-            colList[7] = "المطلوب_رقم6";
-            colList[8] = "المطلوب_رقم7";
-            colList[9] = "المطلوب_رقم8";
-            colList[10] = "المطلوب_رقم9";
-            for (int index = 0; index < 11; index++)
-            {
-                foreach (Control control in repReqPanel.Controls)
-                {
-                    if (control.Name == colList[index])
-                    {
-                        data[index] = control.Text;
-                    }
-                }
-            }
-            updatetRow(ProcReqID, DataSource, data);
-            foreach (Control control in repReqPanel.Controls)
-            {
-                if (control.Name.Contains("المطلوب_رقم") || control.Name.Contains("btnReq"))
-                {
-                    control.Text = "";
-                }
-            }
-        }
-
-        private void المعاملة_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //foreach (Control control in repReqPanel.Controls)
-            //{
-            //    if (control.Name.Contains("المطلوب_رقم") || control.Name.Contains("btnReq"))
-            //    {
-            //        control.Visible = false;
-            //    }
-            //}
-
-            string[] colList = new string[11];
-            colList[0] = "المعاملة";
-            colList[1] = "رقم_المعاملة";
-            colList[2] = "المطلوب_رقم1";
-            colList[3] = "المطلوب_رقم2";
-            colList[4] = "المطلوب_رقم3";
-            colList[5] = "المطلوب_رقم4";
-            colList[6] = "المطلوب_رقم5";
-            colList[7] = "المطلوب_رقم6";
-            colList[8] = "المطلوب_رقم7";
-            colList[9] = "المطلوب_رقم8";
-            colList[10] = "المطلوب_رقم9";
-            SqlConnection sqlCon = new SqlConnection(DataSource);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
-            SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT * FROM TableProcReq where المعاملة=N'" + المعاملة .Text+ "'", sqlCon);
-            sqlDa.SelectCommand.CommandType = CommandType.Text;
-            DataTable dtbl = new DataTable();
-            sqlDa.Fill(dtbl);
-            sqlCon.Close();
-            if (dtbl.Rows.Count > 0) {
-                foreach (DataRow row in dtbl.Rows)
-                {
-                    ProcReqID  = Convert.ToInt32(row["ID"].ToString());
-                    for (int index = 1; index < 11; index++)
-                    {
-                        foreach (Control control in repReqPanel.Controls)
-                        {
-                            if (control.Name == colList[index])
-                            {
-                                control.Text = row[colList[index]].ToString();                                
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        private void button4_Click_2(object sender, EventArgs e)
-        {
-            string[] data = new string[11];
-            string[] colList = new string[11];
-            colList[0] = "رقم_المعاملة";
-            colList[1] = "المعاملة";
-            colList[2] = "المطلوب_رقم1";
-            colList[3] = "المطلوب_رقم2";
-            colList[4] = "المطلوب_رقم3";
-            colList[5] = "المطلوب_رقم4";
-            colList[6] = "المطلوب_رقم5";
-            colList[7] = "المطلوب_رقم6";
-            colList[8] = "المطلوب_رقم7";
-            colList[9] = "المطلوب_رقم8";
-            colList[10] = "المطلوب_رقم9";
-            for (int index = 0; index < 11; index++)
-            {
-                foreach (Control control in repReqPanel.Controls)
-                {
-                    if (control.Name == colList[index])
-                    {
-                        data[index] = control.Text;
-                    }
-                }
-            }
-            insertRow(DataSource, data);
-            foreach (Control control in repReqPanel.Controls)
-            {
-                if (control.Name.Contains("المطلوب_رقم") || control.Name.Contains("btnReq"))
-                {
-                    control.Text = "";
-                }
-            }
-        }
-
-        private void button3_Click_2(object sender, EventArgs e)
-        {
-            SqlConnection sqlCon = new SqlConnection(DataSource);
-            string qurey = "delete from TableProcReq WHERE ID=@ID";
-            SqlCommand sqlCmd = new SqlCommand(qurey, sqlCon);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
-            sqlCmd.CommandType = CommandType.Text;
-            sqlCmd.Parameters.AddWithValue("@ID", ProcReqID);            
-            sqlCmd.ExecuteNonQuery();
-            sqlCon.Close();
-            foreach (Control control in repReqPanel.Controls)
-            {
-                if (control.Name.Contains("المطلوب_رقم") || control.Name.Contains("btnReq"))
-                {
-                    control.Text = "";
-                }
-            }
-        }
+        
 
         private void persbtn10_Click(object sender, EventArgs e)
         {
@@ -7156,25 +7364,31 @@ namespace PersAhwal
         }
 
         private string[] getColList(string table)
-    {
-        SqlConnection sqlCon = new SqlConnection(DataSource);
-        if (sqlCon.State == ConnectionState.Closed)
-            sqlCon.Open();
-        SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT name FROM sys.columns WHERE object_id = OBJECT_ID('" + table + "')", sqlCon);
-        sqlDa.SelectCommand.CommandType = CommandType.Text;
-        DataTable dtbl = new DataTable();
-        sqlDa.Fill(dtbl);
-        sqlCon.Close();
-        string[] allList = new string[dtbl.Rows.Count];
-        int i = 0;
-        foreach (DataRow row in dtbl.Rows)
         {
-            allList[i] = row["name"].ToString();
-            i++;
-        }
-        return allList;
+            string[] allList = new string[1];
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return allList; }
 
-    }
+            SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT name FROM sys.columns WHERE object_id = OBJECT_ID('" + table + "')", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            allList = new string[dtbl.Rows.Count];
+            int i = 0;
+            foreach (DataRow row in dtbl.Rows)
+            {
+                allList[i] = row["name"].ToString();
+                i++;
+            }
+            return allList;
+
+        }
 
         private void updataArchData1()
         {
@@ -7187,7 +7401,11 @@ namespace PersAhwal
             try
             {
                 if (sqlCon.State == ConnectionState.Closed)
-                    sqlCon.Open();
+                    try
+                    {
+                        sqlCon.Open();
+                    }
+                    catch (Exception ex) { return ; }
 
                 SqlDataAdapter sqlDa = new SqlDataAdapter("select * from  archives", sqlCon);
                 sqlDa.SelectCommand.CommandType = CommandType.Text;
@@ -7315,10 +7533,11 @@ namespace PersAhwal
             string[] DocumentID = new string[40];
             string year = DateTime.Now.Year.ToString().Replace("20", "");
 
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
             try
             {
+                 
+            if (sqlCon.State == ConnectionState.Closed)
+                   sqlCon.Open();
                 SqlDataAdapter sqlDa = new SqlDataAdapter("select ID,المستند from TableGeneralArch where fileUpload='No'", sqlCon);
                 sqlDa.SelectCommand.CommandType = CommandType.Text;
                 DataTable dtbl = new DataTable();
@@ -7334,8 +7553,12 @@ namespace PersAhwal
                     {
                         if (File.Exists(DocxFileName) && !fileIsOpen(DocxFileName))
                         {
-                            FinalDataArch(DataSource, DocxFileName, Convert.ToInt32(dataGridView4.Rows[x].Cells[0].Value.ToString()));
-                            File.Delete(DocxFileName);
+                            try
+                            {
+                                FinalDataArch(DataSource, DocxFileName, Convert.ToInt32(dataGridView4.Rows[x].Cells[0].Value.ToString()));
+                                File.Delete(DocxFileName);
+                            }
+                            catch (Exception ex) { }
                         }
                     }
                 }
@@ -7535,7 +7758,11 @@ namespace PersAhwal
                 SqlConnection sqlCon = new SqlConnection(DataSource);
                 SqlCommand sqlCmd = new SqlCommand(qurey, sqlCon);
                 if (sqlCon.State == ConnectionState.Closed)
-                    sqlCon.Open();
+                    try
+                    {
+                        sqlCon.Open();
+                    }
+                    catch (Exception ex) { return ; }
                 sqlCmd.CommandType = CommandType.Text;
                 sqlCmd.Parameters.AddWithValue("@id", id);
                 sqlCmd.Parameters.AddWithValue(col, text1);
@@ -7554,7 +7781,11 @@ namespace PersAhwal
             SqlConnection sqlCon = new SqlConnection(DataSource);            
             SqlCommand sqlCmd = new SqlCommand(qurey, sqlCon);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.Parameters.AddWithValue("@id", id);            
             sqlCmd.Parameters.AddWithValue("@GriDate", text);
@@ -7570,7 +7801,11 @@ namespace PersAhwal
 
             SqlCommand sqlCmd = new SqlCommand(qurey, sqlCon);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
             sqlCmd.CommandType = CommandType.Text;
 
             sqlCmd.Parameters.AddWithValue("@ProType", type);
@@ -7587,13 +7822,38 @@ namespace PersAhwal
 
             SqlCommand sqlCmd = new SqlCommand(qurey, sqlCon);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
             sqlCmd.CommandType = CommandType.Text;
 
             sqlCmd.Parameters.AddWithValue("@ID", id);
                 sqlCmd.Parameters.AddWithValue(column, data.Trim());
+            try
+            {
                 sqlCmd.ExecuteNonQuery();
+            }
+            catch (Exception ex) { MessageBox.Show(column); }
             
+            sqlCon.Close();
+        }
+        
+        private void InsertColumn(string source, string comlumnName, int id, string data, string table)
+        {
+            SqlConnection sqlCon = new SqlConnection(source);
+            string column = "@" + comlumnName;
+            string qurey = "SET IDENTITY_INSERT dbo.TableAuthRights ON;  insert into " + table + " (ID," + comlumnName+") values ('"+id.ToString()+"', N'" + data + "')";
+            SqlCommand sqlCmd = new SqlCommand(qurey, sqlCon);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();
             sqlCon.Close();
         }
         
@@ -7623,7 +7883,11 @@ namespace PersAhwal
 
             SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
             sqlCmd.CommandType = CommandType.Text;
             for (int col = 0; col < 11; col++)
             {
@@ -7640,49 +7904,21 @@ namespace PersAhwal
             }
             sqlCon.Close();
         }
-        private void updatetRow(int id,string source, string[] data)
-        {
-            SqlConnection sqlCon = new SqlConnection(source);
-            string[] colList = new string[11];
-            colList[0] = "رقم_المعاملة";
-            colList[1] = "المعاملة";
-            colList[2] = "المطلوب_رقم1";
-            colList[3] = "المطلوب_رقم2";
-            colList[4] = "المطلوب_رقم3";
-            colList[5] = "المطلوب_رقم4";
-            colList[6] = "المطلوب_رقم5";
-            colList[7] = "المطلوب_رقم6";
-            colList[8] = "المطلوب_رقم7";
-            colList[9] = "المطلوب_رقم8";
-            colList[10] = "المطلوب_رقم9";
-            string item = "رقم_المعاملة=@رقم_المعاملة";
-            for (int col = 1; col < 11; col++) {
-                item = item + "," + colList[col] + "=@" + colList[col];
-                
-            }
-
-            string qurey = "UPDATE TableProcReq SET " + item + " WHERE ID=@ID";
-
-            SqlCommand sqlCmd = new SqlCommand(qurey, sqlCon);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
-            sqlCmd.CommandType = CommandType.Text;
-            sqlCmd.Parameters.AddWithValue("@ID", id);
-            for (int col = 0; col < 11; col++)
-            {
-                sqlCmd.Parameters.AddWithValue(colList[col], data[col]);
-            }
-            sqlCmd.ExecuteNonQuery();
-            sqlCon.Close();
-        }
+        
 
         private void AuthArchDocx(string source, int id, string filePath2, string name)
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
-            if (sqlCon.State == ConnectionState.Closed)
-                    sqlCon.Open();
+            
+                    
             try
             {
+                if (sqlCon.State == ConnectionState.Closed)
+                    try
+                    {
+                        sqlCon.Open();
+                    }
+                    catch (Exception ex) { return; }
                 SqlCommand sqlCmd = new SqlCommand("UPDATE TableAuth SET Data3=@Data3, المكاتبة_الاولية=@المكاتبة_الاولية  WHERE ID=@id", sqlCon);
                 sqlCmd.CommandType = CommandType.Text;
                 sqlCmd.Parameters.AddWithValue("@id", id);
@@ -7723,7 +7959,11 @@ namespace PersAhwal
 
             SqlCommand sqlCmd = new SqlCommand(qureyData[3], sqlCon);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.Parameters.AddWithValue("@ID", id);
             sqlCmd.Parameters.AddWithValue("@Data2", buffer2);
@@ -7731,7 +7971,11 @@ namespace PersAhwal
 
             sqlCmd = new SqlCommand(qureyData[4], sqlCon);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.Parameters.AddWithValue("@ID", id);
             sqlCmd.Parameters.AddWithValue("@Extension2", extn2);
@@ -7739,7 +7983,11 @@ namespace PersAhwal
 
             sqlCmd = new SqlCommand(qureyData[5], sqlCon);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.Parameters.AddWithValue("@ID", id);
             if (state)
@@ -7748,7 +7996,11 @@ namespace PersAhwal
             sqlCmd.ExecuteNonQuery();
             sqlCmd = new SqlCommand(qureyData[6], sqlCon);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.Parameters.AddWithValue("@ID", id);
             if (state)
@@ -7762,10 +8014,15 @@ namespace PersAhwal
         private void FinalDataArch(string dataSource, string filePath,int id)
         {
             SqlConnection sqlCon = new SqlConnection(dataSource);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+            
             try
             {
+                if (sqlCon.State == ConnectionState.Closed)
+                    try
+                    {
+                        sqlCon.Open();
+                    }
+                    catch (Exception ex) { return; }
                 SqlCommand sqlCmd = new SqlCommand("UPDATE TableGeneralArch SET Data1=@Data1,fileUpload=@fileUpload WHERE ID=@ID", sqlCon);
                 sqlCmd.CommandType = CommandType.Text;
                 sqlCmd.Parameters.Add("@ID", SqlDbType.Int).Value = id;
@@ -7855,7 +8112,7 @@ namespace PersAhwal
             else Currentmonth = m.ToString();
             if (d < 10) CurrentDay = "0" + d.ToString();
             else CurrentDay = d.ToString();
-            string selecteddate = CurrentDay.ToString() + "-" + Currentmonth.ToString() + "-" + year.ToString();
+            string selecteddate =  Currentmonth.ToString() + "-" + CurrentDay.ToString() + "-" +year.ToString();
             DailyList(selecteddate);
             if (ReportType.SelectedIndex == 2 && (totalrowsAuth > 0 || totalrowsAffadivit > 0))
             {
@@ -7921,7 +8178,11 @@ namespace PersAhwal
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return -1; }
             SqlDataAdapter sqlDa = new SqlDataAdapter("AuthViewOrSearch", sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.StoredProcedure;
             sqlDa.SelectCommand.Parameters.AddWithValue("@مقدم_الطلب", "");
