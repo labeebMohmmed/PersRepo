@@ -1714,9 +1714,13 @@ namespace PersAhwal
                 case 0:
                     if (addNameIndex == 1)
                     {
-                        Microsoft.Office.Interop.Word.Table table1 = oBDoc.Tables[1];
-                        if (الشاهد_الأول.Text == "")
-                            table1.Delete();
+                        try
+                        {
+                            Microsoft.Office.Interop.Word.Table table1 = oBDoc.Tables[1];
+                            if (الشاهد_الأول.Text == "")
+                                table1.Delete();
+                        }
+                        catch (Exception ex) { return; }
                     }
                     else
                     {

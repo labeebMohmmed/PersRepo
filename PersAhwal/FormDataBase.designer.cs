@@ -40,7 +40,6 @@ namespace PersAhwal
             this.username = new System.Windows.Forms.TextBox();
             this.SeePass = new System.Windows.Forms.CheckBox();
             this.button1 = new System.Windows.Forms.Button();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.appversion = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
@@ -55,7 +54,6 @@ namespace PersAhwal
             this.labelpass2 = new System.Windows.Forms.Label();
             this.timer4 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.green57)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.red57)).BeginInit();
@@ -172,17 +170,6 @@ namespace PersAhwal
             this.button1.Text = "تسجيل جديد";
             this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Image = global::PersAhwal.Properties.Resources.settings;
-            this.pictureBox2.Location = new System.Drawing.Point(3, 1);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(66, 40);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox2.TabIndex = 20;
-            this.pictureBox2.TabStop = false;
-            this.pictureBox2.Click += new System.EventHandler(this.pictureBox2_Click);
             // 
             // pictureBox1
             // 
@@ -317,7 +304,6 @@ namespace PersAhwal
             this.Controls.Add(this.pass2);
             this.Controls.Add(this.labebserver57);
             this.Controls.Add(this.appversion);
-            this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.SeePass);
             this.Controls.Add(this.pictureBox1);
@@ -340,7 +326,6 @@ namespace PersAhwal
             this.MouseEnter += new System.EventHandler(this.FormDataBase_MouseEnter_1);
             this.MouseHover += new System.EventHandler(this.FormDataBase_MouseHover);
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.green57)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.red57)).EndInit();
@@ -362,7 +347,6 @@ namespace PersAhwal
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.CheckBox SeePass;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Label appversion;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Timer timer2;

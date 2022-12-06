@@ -146,6 +146,7 @@ namespace PersAhwal
         string Model, Output, ServerIP, Login, Pass, Database, FileArch;
         int Hiday, Himonth;
         string[] travType = new string[2];
+        string[] IDList= new string[100];
         string[] travType1 = new string[5];
         string[] travType2 = new string[10];
         Excel.Application xlApp;
@@ -174,6 +175,8 @@ namespace PersAhwal
         int ProcReqID = 0;
         string ServerModelFiles, ServerModelForms;
         string[] rightColNames;
+        string LocalModelFiles = "";
+        string LocalModelForms = "";
         public MainForm(string career,int id, string server, string Employee, string jobposition, string dataSource56, string dataSource57, string filepathIn, string filepathOut, string archFile, string formDataFile, bool pers_Peope, string gregorianDate, string hijriDate, string modelFiles,string modelForms)
         {
             InitializeComponent();
@@ -182,7 +185,7 @@ namespace PersAhwal
             DataSource = dataSource57;
             DataSource56 = dataSource56;
             DataSource57 = dataSource57;
-            
+            //checkColumnNames("تقاضي_4");
             GregorianDate = gregorianDate;
             HijriDate = hijriDate;
             Console.WriteLine(1);
@@ -220,6 +223,10 @@ namespace PersAhwal
                 //else if (Server == "56")
                 //    primeryLink = directory + @"PrimariFiles\SuddaneseAffairs\";
             }
+
+            LocalModelFiles = primeryLink + @"ModelFiles\";
+            LocalModelForms = primeryLink + @"FormData\";
+
             Console.WriteLine(2);
             sqlCon = new SqlConnection(DataSource);
             Console.WriteLine(3);
@@ -306,12 +313,13 @@ namespace PersAhwal
             persbtn2.SendToBack();
             if (UserJobposition.Contains("قنصل"))
             {
-                Affbtn0.Visible = true;
+                picSettings.Visible = Affbtn0.Visible = true;
                 empUpdate.Visible = false;
                 picVersio.BringToFront();
             }
             else
             {
+                picSettings.Visible = false;
                 Aprove.Text = "تعديل بيانات الدخول";
                 empUpdate.BringToFront();
                     empUpdate.Visible = true;
@@ -340,9 +348,17 @@ namespace PersAhwal
             //MessageBox.Show("FormDataFile " + FormDataFile);
             //MessageBox.Show("ServerModelForms " + ServerModelForms);
 
+            quorterS[0] = "-01-01-";
+            quorterE[0] = "-01-31-";
+            quorterS[1] = "-02-01-";
+            quorterE[1] = "-02-29-";
+            quorterS[2] = "-011-01";
+            quorterE[2] = "-12-31";
 
-
-
+            //string from = "2022" + quorterS[2];
+            //string to = "2022" + quorterE[2];
+            //DailyListcustm(from, to, 11);
+            //PrintReport.PerformClick();
 
         }
 
@@ -1805,7 +1821,7 @@ namespace PersAhwal
             dateS = Convert.ToInt16(YearMonthDayS[2]);
             DateTime dateValue = new DateTime(yearS, monthS, dateS);
 
-            //MessageBox.Show("Y=" + yearS.ToString() + "M=" + monthS.ToString() + "D=" + dateS.ToString());
+            //MessageBox.Show("dateFrom=" + dateFrom + " dateTo=" + dateTo.ToString() );
             int dayeofWeek = ((int)dateValue.DayOfWeek);
 
             if (dayeofWeek == 0) { startofNextWeek = dateS + 7; }
@@ -1839,8 +1855,10 @@ namespace PersAhwal
             //    for (int m = monthS; m <= monthE && m <= 12; m++)
             //    {
             for (int x = 0; x < 15; x++)
-                    for (int yy = 0; yy < 31; yy++)
-                        report1[x, yy] = 0;
+            {
+                for (int yy = 0; yy < 31; yy++)
+                { report1[x, yy] = 0; }
+            }
                 int d;
                 int m = monthS;
                 int y = yearS;
@@ -1851,20 +1869,20 @@ namespace PersAhwal
                     else Currentmonth = m.ToString();
                     if (d < 10) CurrentDay = "0" + d.ToString();
                     else CurrentDay = d.ToString();
-                    CurrentDate = CurrentDay + "-" + Currentmonth + "-" + y.ToString();
+                    CurrentDate = Currentmonth+ "-" + CurrentDay + "-" + y.ToString();
                     if (Server == "57")
                     {
                         for (TableIndex = 1; TableIndex < 15; TableIndex++)
                         {
                             SqlDataAdapter sqlDa1 = new SqlDataAdapter(queryDateList[TableIndex], sqlCon);
-                            Console.WriteLine(TableIndex);
-                            if (TableIndex == 6 || TableIndex > 11)
+                            //Console.WriteLine(TableIndex);
+                            if (TableIndex == 4 ||TableIndex == 6 || TableIndex > 11)
                             {
                                 sqlDa1.SelectCommand.CommandType = CommandType.Text;
                                 sqlDa1.SelectCommand.Parameters.AddWithValue("@التاريخ_الميلادي", CurrentDate);
                                 sqlDa1.Fill(dtbl1);
                                 report1[TableIndex, d] = dtbl1.Rows.Count;
-                                //Console.WriteLine(d.ToString() + "-" + dtbl1.Rows.Count.ToString());
+                                //Console.WriteLine(CurrentDate.ToString() + "-" + queryDateList[TableIndex].Split(' ')[3] + "-" + report1[TableIndex, d].ToString());
                             }
                             else if (TableIndex == 11)
                             {
@@ -1881,16 +1899,18 @@ namespace PersAhwal
                                     }
                                 }
                                 report1[TableIndex, d] = AuthCount;
-                                //Console.WriteLine(d.ToString() + "-" + dtbl2.Rows.Count.ToString());
-                            }
+                            //Console.WriteLine(CurrentDate.ToString() + "-" + queryDateList[TableIndex].Split(' ')[3] + "-" + report1[TableIndex, d].ToString());
+                            //Console.WriteLine(d.ToString() + "-" + dtbl2.Rows.Count.ToString());
+                        }
                             else
                             {
                                 sqlDa1.SelectCommand.CommandType = CommandType.Text;
                                 sqlDa1.SelectCommand.Parameters.AddWithValue("@GriDate", CurrentDate);
                                 sqlDa1.Fill(dtbl);
                                 report1[TableIndex, d] = dtbl.Rows.Count;
+                            //Console.WriteLine(CurrentDate.ToString() + "-" + queryDateList[TableIndex].Split(' ')[3] + "-" + report1[TableIndex, d].ToString());
 
-                            }
+                        }
                             dtbl.Rows.Clear();
                             dtbl1.Rows.Clear();
                             dtbl2.Rows.Clear();
@@ -1913,8 +1933,11 @@ namespace PersAhwal
                     }   
                 
 
-                rep1[month, 0] = monthS;
+                
 
+            }
+rep1[month, 0] = monthS;
+                Console.WriteLine("--------------------------------"+ month.ToString()+"---------------------------------");
                 int[] tempX = new int[15];
                 for (int x = 1; x < 15; x++)
                 {
@@ -1922,15 +1945,13 @@ namespace PersAhwal
                     for (int yy = 0; yy <= 31; yy++)
                     {
                         tempdatat = tempdatat + report1[x, yy];
+                        Console.WriteLine(queryDateList[x].ToString().Split(' ')[3] + "-" + yy.ToString() + "-" + report1[x, yy].ToString());
                         report1[x, yy] = 0;
                         if (tempdatat != 0)
                             foundData = true;
                     }
                     rep1[month, x] = tempdatat;
                 }
-
-            }
-
 
             if (foundData)
                 totalRowDuration = 1;
@@ -4035,8 +4056,8 @@ namespace PersAhwal
             {
                 for (TableIndex = 1; TableIndex < 12; TableIndex++)
                 {
-                    //MessageBox.Show(TableIndex.ToString());
-                    if (TableIndex == 6)
+                    Console.WriteLine("TableIndex " + queryDateList[TableIndex]);
+                    if (TableIndex == 6||TableIndex == 4)
                     {
                         fillDate(queryDateList[TableIndex], "التاريخ_الميلادي");                         
                     }
@@ -4657,8 +4678,9 @@ namespace PersAhwal
             imagecount = 0;
             ColorFulGrid9();
             ArchivePic.Visible = false;
-            
 
+            dataGridView8.Visible = true;
+            dataGridView8.BringToFront();
             if (panelAuthAknow.Visible == false)
             {
                 flowLayoutPanel1.Visible = false;
@@ -5213,22 +5235,24 @@ namespace PersAhwal
         
         private void CreateColumns(string Columnname)
         {
-
+            string query = "alter table TableAuthRights add " + Columnname + " nvarchar(1000)";
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 try
                 {
                     sqlCon.Open();
                 }
-                catch (Exception ex) { return; }
-            SqlCommand sqlCmd = new SqlCommand("alter table TableAuthRights add " + Columnname.Replace(" ", "_") + " nvarchar(1000)", sqlCon);
+                catch (Exception ex) { MessageBox.Show("query " + query + "DataSource " + DataSource); return; }
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
             sqlCmd.CommandType = CommandType.Text;
+            //MessageBox.Show(Columnname);
             try
             {
                 sqlCmd.ExecuteNonQuery();
+                //MessageBox.Show(Columnname);
             }
             catch (Exception ex) {
-                MessageBox.Show(Columnname);
+                // MessageBox.Show("query " + query + "DataSource " + DataSource);
             }
             sqlCon.Close();
         }
@@ -5261,9 +5285,11 @@ namespace PersAhwal
             //MessageBox.Show(colNo + "not found");
             return false;
         }
-        private bool checkColumnNames(string colNo)
+        private bool checkColumnNames(string colNo, string id)
         {
-            //MessageBox.Show(colNo);
+            
+            string query = "select " + colNo + " from TableAuthRights";
+            
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 try
@@ -5271,24 +5297,37 @@ namespace PersAhwal
                     sqlCon.Open();
                 }
                 catch (Exception ex) { return false; }
-            SqlDataAdapter sqlDa = new SqlDataAdapter("SP_COLUMNS TableAuthRights", sqlCon);
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
-            sqlDa.Fill(dtbl);
+            try
+            {
+                sqlDa.Fill(dtbl);
+            }
+            catch (Exception ex)
+            {
+                //MessageBox.Show(id.ToString() + " - " + colNo + "not found");
+                return false;
+            }
+            
+            
+            
             sqlCon.Close();
+            
             foreach (DataRow dataRow in dtbl.Rows)
             {
-                if (!string.IsNullOrEmpty(dataRow["COLUMN_NAME"].ToString()))
+                try
                 {
-                    //MessageBox.Show(dataRow["COLUMN_NAME"].ToString());
-                    if (dataRow["COLUMN_NAME"].ToString() == colNo.Replace(" ", "_"))
-                    {
-                        return true;
-                    }
+                    //Console.WriteLine("dataRow " + dataRow[colNo].ToString().TrimEnd().TrimStart() + " == colNo" + colNo);
+                }
+                catch (Exception ex)
+                {
+                    //MessageBox.Show(id.ToString() + " - "+colNo + "not found");
+                    return false;
                 }
             }
-            //MessageBox.Show(colNo + "not found");
-            return false;
+            //else MessageBox.Show(colNo + "found");
+            return true;
         }
         
         private bool checkID(string id)
@@ -5347,8 +5386,22 @@ namespace PersAhwal
         private void button23_Click(object sender, EventArgs e)
         {
             //oldFun();
-            newFun();
+            //
 
+            string[] colName = getColName();
+            for (int col = 0; col < colName.Length; col++)
+            {
+                //MessageBox.Show(colName[col]);
+                if (!checkColumnNames(colName[col].Replace("-", "_"), IDList[col]))
+                {
+                    //MessageBox.Show("colName " +colName[col]);
+                    CreateColumns(colName[col].Replace("-", "_"));
+                    if (checkID("1"))
+                        UpdateColumn(DataSource, colName[col].Replace("-","_"), 1, colName[col], "TableAuthRights");
+                    else InsertColumn(DataSource, colName[col].Replace("-", "_"), 1, colName[col], "TableAuthRights");
+                }
+            }
+            newFun();
         }
 
         private void newFun() {
@@ -5362,37 +5415,6 @@ namespace PersAhwal
             rw = range.Rows.Count;
             cl = range.Columns.Count;
             button23.Enabled = false;
-            string[] colName = getColName();
-            for (int col = 0; col < colName.Length; col++)
-            {
-                colName[col] = colName[col].Replace("-", "_");
-                colName[col] = colName[col].Replace(" ", "_");
-                if (!checkColumnNames(colName[col].Replace("-", "_")) && colName[col] != "")
-                {
-
-                    
-                    CreateColumns(colName[col].Replace("-", "_").Trim());
-                    if (checkID("1"))
-                        UpdateColumn(DataSource, colName[col], 1, colName[col], "TableAuthRights");
-                    else InsertColumn(DataSource, colName[col], 1, colName[col], "TableAuthRights");
-
-
-
-                }
-                //else if (!checkColumnNames(colName[col]) && colName[col] == "")
-                //{
-
-                //    //MessageBox.Show(colName);
-                //    CreateColumns(col[col]);
-                //    if (checkID("1"))
-                //        UpdateColumn(DataSource, col[col], 1, col, "TableAuthRights");
-                //    else InsertColumn(DataSource, col[col], 1, col, "TableAuthRights");
-
-
-
-                //}
-            }
-
             ColumnNamesLoad();
 
             SqlConnection sqlCon = new SqlConnection(DataSource);
@@ -5402,43 +5424,62 @@ namespace PersAhwal
                     sqlCon.Open();
                 }
                 catch (Exception ex) { return; }
-            for (cCnt = 2; cCnt <= rightColNames.Length; cCnt++)
+            for (cCnt = 2; cCnt <= cl; cCnt++)
             {
-                string colname = (string)(range.Cells[1, cCnt] as Excel.Range).Value2;
-                //MessageBox.Show(colname);
-                for (rCnt = 2; rCnt < rw; rCnt++)
+                Console.WriteLine("rightColNames " + rightColNames.Length.ToString() + " cCnt " + cCnt.ToString());
+                string cols = "";
+                try
                 {
-                    try
-                    {
-                        string strData = (string)(range.Cells[rCnt, cCnt] as Excel.Range).Value2;
-                        if (String.IsNullOrEmpty(strData)) strData = "";
-                        //MessageBox.Show(rCnt +"_" +strData);
-                        if (checkID(rCnt.ToString()))
-                            UpdateColumn(DataSource, colname, rCnt, strData, "TableAuthRights");
-                        else InsertColumn(DataSource, colname, rCnt, strData, "TableAuthRights");
-                    }
-                    catch (Exception ex) {
-                        //for (cCnt = 2; cCnt <= rightColNames.Length; cCnt++)
-                        //{
-                        //    col = rightColNames[cCnt - 2];
+                    string colname = (string)(range.Cells[1, cCnt] as Excel.Range).Value2;
 
-                        //    for (rCnt = 1; rCnt < 24; rCnt++)
-                        //    {
-                        //        try
-                        //        {
-                        //            string strData = (string)(range.Cells[rCnt, cCnt] as Excel.Range).Value2;
-                        //            if (String.IsNullOrEmpty(strData)) strData = "";
-                        //            UpdateColumn(DataSource, col, rCnt, strData, "TableAuthRights");
-                        //        }
-                        //        catch (Exception e1x)
-                        //        {
-                        //        }
-                        //        //MessageBox.Show(rCnt.ToString());
-                        //    }
-                        //}
+                    if (string.IsNullOrEmpty(colname)) continue;
+
+                     cols = colname.Replace(" ", "_").Replace("-", "_");
+                    if (!checkColumnNames(cols, ""))
+                    {
+                        //MessageBox.Show(colname + "-"+colname);
+                        CreateColumns(cols);
+                        if (checkID("1"))
+                            UpdateColumn(DataSource, cols, 1, cols, "TableAuthRights");
+                        else InsertColumn(DataSource, cols, 1, cols, "TableAuthRights");
                     }
-                    //MessageBox.Show(rCnt.ToString());
+                    //MessageBox.Show(colname);
+                    for (rCnt = 2; rCnt < rw; rCnt++)
+                    {
+                        try
+                        {
+                            string strData = (string)(range.Cells[rCnt, cCnt] as Excel.Range).Value2;
+                            if (String.IsNullOrEmpty(strData)) strData = "";
+                            //MessageBox.Show(rCnt +"_" +strData);
+                            if (checkID(rCnt.ToString()))
+                                UpdateColumn(DataSource, cols, rCnt, strData, "TableAuthRights");
+                            else InsertColumn(DataSource, cols, rCnt, strData, "TableAuthRights");
+                        }
+                        catch (Exception ex)
+                        {
+                            //for (cCnt = 2; cCnt <= rightColNames.Length; cCnt++)
+                            //{
+                            //    col = rightColNames[cCnt - 2];
+
+                            //    for (rCnt = 1; rCnt < 24; rCnt++)
+                            //    {
+                            //        try
+                            //        {
+                            //            string strData = (string)(range.Cells[rCnt, cCnt] as Excel.Range).Value2;
+                            //            if (String.IsNullOrEmpty(strData)) strData = "";
+                            //            UpdateColumn(DataSource, col, rCnt, strData, "TableAuthRights");
+                            //        }
+                            //        catch (Exception e1x)
+                            //        {
+                            //        }
+                            //        //MessageBox.Show(rCnt.ToString());
+                            //    }
+                            //}
+                        }
+                        //MessageBox.Show(rCnt.ToString());
+                    }
                 }
+                catch (Exception ex) { MessageBox.Show(cols); }
             }
 
             sqlCon.Close();
@@ -5460,7 +5501,7 @@ namespace PersAhwal
                     sqlCon.Open();
                 }
                 catch (Exception ex) { return colName; }
-            SqlDataAdapter sqlDa = new SqlDataAdapter("select ColName from TableAddContext where ColRight <> '' and ColName is not null", sqlCon);
+            SqlDataAdapter sqlDa = new SqlDataAdapter("select ID, ColName from TableAddContext where ColRight <> '' and ColName is not null", sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
             sqlDa.Fill(dtbl);
@@ -5469,7 +5510,10 @@ namespace PersAhwal
             int index = 0;
             foreach (DataRow row in dtbl.Rows)
             {
-                colName[index] = row["ColName"].ToString();
+                colName[index] = row["ColName"].ToString().Replace("-", "_").TrimEnd().TrimStart();
+                colName[index] = colName[index].Replace(" ", "_");
+                IDList[index] = row["ID"].ToString();
+                Console.WriteLine("colName["+ index.ToString()+"] " + colName[index]);
                 index++;
             }
             return colName;
@@ -6630,8 +6674,8 @@ namespace PersAhwal
         private void button33_Click(object sender, EventArgs e)
         {
             
-            ScanPic.Size = new System.Drawing.Size(228, 62);
-            loadPic.Size = new System.Drawing.Size(228, 62);
+            ScanPic.Size = new System.Drawing.Size(228, 35);
+            loadPic.Size = new System.Drawing.Size(228, 35);
 
             //228, 62
             loadPic.Enabled = button1.Visible = ScanPic.Enabled = false;
@@ -6658,7 +6702,7 @@ namespace PersAhwal
                     }
                     imgFile.SaveFile(PathImages[imagecount]);
                     ArchivePic.ImageLocation = PathImages[imagecount];
-
+                    dataGridView8.Visible = false;
                     ArchivePic.Visible = true;
                     imagecount++;
                 }
@@ -6751,6 +6795,7 @@ namespace PersAhwal
                 reLoadPic.Enabled = RescanPic.Visible = true;
 
             }
+            dataGridView8.Visible = false;
             loadPic.Enabled = ScanPic.Enabled = true;
             reLoadPic.Visible = RescanPic.Visible = true;
         }
@@ -7261,6 +7306,12 @@ namespace PersAhwal
             dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
             FormPics form2 = new FormPics(Server, EmployeeName, attendedVC.Text, UserJobposition, DataSource, docCollectCombo.SelectedIndex, FormDataFile, FilespathOut, 10, str, strSub, true, MandoubM, GriDateM);
             form2.ShowDialog();
+        }
+
+        private void pictureBox4_Click(object sender, EventArgs e)
+        {
+            var settings = new Settings(Server, false, DataSource56, DataSource57, false, LocalModelFiles, ArchFile, ArchFile, LocalModelForms, "");
+            settings.Show();
         }
 
         private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
@@ -7835,7 +7886,7 @@ namespace PersAhwal
             {
                 sqlCmd.ExecuteNonQuery();
             }
-            catch (Exception ex) { MessageBox.Show(column); }
+            catch (Exception ex) { MessageBox.Show(column +"-"+ data); }
             
             sqlCon.Close();
         }

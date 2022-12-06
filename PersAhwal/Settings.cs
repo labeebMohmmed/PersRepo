@@ -22,7 +22,7 @@ namespace PersAhwal
         private string DataSource56, DataSource57, FilepathIn, FilepathOut, ArchFile, FormDataFile;
         private static bool NewSettings = false;
         string comboBoxOptions1 = "", comboBoxOptions2 = "";
-        string[] txtComboOptions = new string[5] { "","","","",""};
+        string[] txtComboOptions = new string[5] { "", "", "", "", "" };
         string[] DPTitle = new string[5];
         int pTextHieght = 42;
         int pComboHieght = 42;
@@ -32,7 +32,7 @@ namespace PersAhwal
         string ColumnName = "";
         bool NewColumn = false;
         string AuthBody1 = "لينوب عني ويقوم مقامي في ";
-        int combo1index = 0, combo2index = 0,combo3index = 0, combo4index = 0,combo5index = 0;
+        int combo1index = 0, combo2index = 0, combo3index = 0, combo4index = 0, combo5index = 0;
         int id = 0;
         int idIndex = 1;
         bool review1 = false;
@@ -53,8 +53,8 @@ namespace PersAhwal
         int CombAuthTypeIndex = 1;
         string updateAll = "";
         string insertAll = "";
-        string[] errors ;
-        string editRights ;
+        string[] errors;
+        string editRights;
         string errorList;
         string CurrentFile = "";
         bool readyToUpload = false;
@@ -70,6 +70,9 @@ namespace PersAhwal
         string revised = "";
         bool checkIndex = false;
         string formNo = "";
+        string[] itemsicheck1 = new string[5];
+        bool AuthType = true;
+        
         public Settings(string server, bool newSettings, string dataSource56, string dataSource57, bool setDataBase, string filepathIn, string filepathOut, string archFile, string formDataFile, string colName)
         {
             InitializeComponent();
@@ -98,12 +101,12 @@ namespace PersAhwal
                     MessageBox.Show("لا توجد قاعدة بيانات مسجلة");
                 }
             }
-            fillSubComboBox(mainTypeAuth, DataSource, "AuthTypes", "TableListCombo",false);
+            fillSubComboBox(mainTypeAuth, DataSource, "AuthTypes", "TableListCombo", false);
             //autoCompleteTextBox(newCombAuthType, DataSource, "AuthTypes", "TableListCombo");
-            fillSubComboBox(mainTypeIqrar, DataSource, "ArabicGenIgrar", "TableListCombo",false);
+            fillSubComboBox(mainTypeIqrar, DataSource, "ArabicGenIgrar", "TableListCombo", false);
             newFillComboBox2(subTypeIqrar, DataSource, mainTypeIqrar.SelectedIndex.ToString(), langIqrar.Text);
             AddRightColumn();
-            if (colName != "") 
+            if (colName != "")
             {
                 //MessageBox.Show(colName);
                 mainTypeAuth.SelectedIndex = Convert.ToInt32(colName.Split('-')[1]);
@@ -114,7 +117,7 @@ namespace PersAhwal
             Suffex_preffixList();
             for (int x = 0; x < mainTypeAuth.Items.Count; x++)
             {
-                sunInfo(mainTypeAuth.Items[x].ToString().Replace(" ","_"), x);
+                sunInfo(mainTypeAuth.Items[x].ToString().Replace(" ", "_"), x);
             }
         }
 
@@ -122,7 +125,7 @@ namespace PersAhwal
         {
             //MessageBox.Show(data[1]);
             SqlConnection sqlCon = new SqlConnection(DataSource);
-            
+
 
             string query = "INSERT INTO TableAddContext (ColName) values (@ColName)";
 
@@ -159,11 +162,11 @@ namespace PersAhwal
                 return true;
             else return false;
         }
-        
+
         private void sunInfo(string colName, int index)
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
-            string query = "select ["+ colName+"] from TableListCombo where ["+ colName+ "] is not null and ["+ colName+"] <> ''";
+            string query = "select [" + colName + "] from TableListCombo where [" + colName + "] is not null and [" + colName + "] <> ''";
             try
             {
                 if (sqlCon.State == ConnectionState.Closed)
@@ -190,7 +193,7 @@ namespace PersAhwal
             }
             catch (Exception ex) { }
         }
-        
+
         private bool TableAddContext(string proName)
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
@@ -377,10 +380,13 @@ namespace PersAhwal
                 if (sqlCon.State == ConnectionState.Closed)
                     sqlCon.Open();
             }
-            catch (Exception ex) { return ; }
-            SqlCommand sqlCmd = new SqlCommand("alter table "+tableName+" add " + Columnname + " nvarchar(150)", sqlCon);
+            catch (Exception ex) { return; }
+            SqlCommand sqlCmd = new SqlCommand("alter table " + tableName + " add " + Columnname + " nvarchar(150)", sqlCon);
             sqlCmd.CommandType = CommandType.Text;
-            sqlCmd.ExecuteNonQuery();
+            try
+            {
+                sqlCmd.ExecuteNonQuery();
+            }catch (Exception ex) { return; }   
             sqlCon.Close();
         }
 
@@ -420,7 +426,7 @@ namespace PersAhwal
             }
             else
             {
-                txtSearch.Visible = button32.Visible = txtSearch.Visible = button32.Visible = dataGridView1.Visible = false;
+                txtSearch.Visible = button32.Visible = txtSearch.Visible = button32.Visible = label1.Visible = dataGridView1.Visible = false;
                 flowLayoutPanel9.Visible = SettingsPanel.Visible = true;
                 ContextPanel.Visible = false;
             }
@@ -443,30 +449,32 @@ namespace PersAhwal
         }
 
         private void button36_Click(object sender, EventArgs e)
-        {           
-            if (dataGridView1.Visible)
+        {
+            AuthType = true;
+                if(dataGridView1.Visible)
             {
-                txtSearch.Visible = button32.Visible = dataGridView1.Visible = false;
+                txtSearch.Visible = button32.Visible = label1.Visible = dataGridView1.Visible = false;
                 flowLayoutPanel9.Visible = SettingsPanel.Visible = false;
                 dataGridView1.SendToBack();
-                ContextPanel.Visible = true;
+                panelLowButtons.Visible = ContextPanel.Visible = true;
                 ContextPanel.BringToFront();
             }
             else
             {
+                
                 repReqPanel.Visible = false;
                 dataGridView1.BringToFront();
-                FillDataGridView("TableAddContext");
-                panelIqrar.Visible = panelAuthInfo.Visible = false;
-                txtSearch.Visible = button32.Visible = dataGridView1.Visible = true;
+                FillDataGridView("TableAddContext", AuthType);
+                panelLowButtons.Visible = panelIqrar.Visible = panelAuthInfo.Visible = false;
+                txtSearch.Visible = button32.Visible = label1.Visible = dataGridView1.Visible = true;
                 flowLayoutPanel9.Visible = SettingsPanel.Visible = false;
-                ContextPanel.Visible = true;
+                panelLowButtons.Visible = ContextPanel.Visible = true;
                 formsBtn.Visible = proFileBtn.Visible = btnRevised.Visible = true;
             }
         }
 
 
-        void FillDataGridView(string table)
+        void FillDataGridView(string table, bool auth)
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
             try
@@ -476,7 +484,39 @@ namespace PersAhwal
             }
             catch (Exception ex) { return; }
 
-            SqlDataAdapter sqlDa = new SqlDataAdapter("select "+ getColumnNames(table)+" from " + table + " order by ID desc", sqlCon);
+            SqlDataAdapter sqlDa = new SqlDataAdapter("select " + getColumnNames(table) + " from " + table + " order by ID desc", sqlCon);
+            //SqlDataAdapter sqlDa = new SqlDataAdapter("select " + getColumnNames(table) + " from " + table + " where ColRight <> '' order by ID desc", sqlCon);
+            //if(!auth)
+            //    sqlDa = new SqlDataAdapter("select " + getColumnNames(table) + " from " + table + " where ColRight = '' order by ID desc", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            dataGridView1.DataSource = dtbl;
+            dataGridView1.Sort(dataGridView1.Columns["ID"], System.ComponentModel.ListSortDirection.Descending);
+            //dataGridView1.Columns["ID"].Visible = false;
+            try
+            {
+                dataGridView1.Columns[1].Width = 100;
+                dataGridView1.Columns[2].Width = 350;
+                dataGridView1.Columns[3].Width = 200;
+                dataGridView1.Columns[4].Width = 200;
+                dataGridView1.Columns[6].Width = 200;
+            }
+            catch (Exception ex) { }
+            sqlCon.Close();
+        }
+        
+        void FillDataGridViewReq(string table)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return; }
+
+            SqlDataAdapter sqlDa = new SqlDataAdapter("select " + getColumnNames(table) + " from " + table + " order by ID desc", sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
             sqlDa.Fill(dtbl);
@@ -496,7 +536,7 @@ namespace PersAhwal
         }
 
         private string getColumnNames(string table)
-        {            
+        {
             SqlConnection sqlCon = new SqlConnection(DataSource);
             try
             {
@@ -517,9 +557,9 @@ namespace PersAhwal
                 {
                     if (!dataRow["COLUMN_NAME"].ToString().Contains("Data1"))
                     {
-                        if(index == 0) 
+                        if (index == 0)
                             cols = dataRow["COLUMN_NAME"].ToString();
-                        else cols = cols +","+ dataRow["COLUMN_NAME"].ToString();
+                        else cols = cols + "," + dataRow["COLUMN_NAME"].ToString();
                         index++;
                     }
                 }
@@ -527,104 +567,7 @@ namespace PersAhwal
             return cols;
         }
 
-        private void ShowRowNo(int id)
-        {
-            if (dataGridView1.Rows.Count > 1 && id < dataGridView1.Rows.Count && id >= 0)
-            {
-                //label1,lenght1,label2,lenght2,label3,lenght3,label4,lenght4,label5,lenght5,1
-                //labelcheck,optionscheck,11
-                //labelcomb1,optionscombo1,lenghtscombo1,labelcomb2,optionscombo2,lenghtscombo2,13
-                //labelbtn,lenghtsbtn,19
-                //dateYN,dateType,TextModel,ColRight,ColName 21
-                itext1.Text = dataGridView1.Rows[id].Cells[1].Value.ToString();
-                itext1Length.Text = dataGridView1.Rows[id].Cells[2].Value.ToString();
-                itext2.Text = dataGridView1.Rows[id].Cells[3].Value.ToString();
-                itext2Length.Text = dataGridView1.Rows[id].Cells[4].Value.ToString();
-                itext3.Text = dataGridView1.Rows[id].Cells[5].Value.ToString();
-                itext3Length.Text = dataGridView1.Rows[id].Cells[6].Value.ToString();
-                itext4.Text = dataGridView1.Rows[id].Cells[7].Value.ToString();
-                itext4Length.Text = dataGridView1.Rows[id].Cells[8].Value.ToString();
-                itext5.Text = dataGridView1.Rows[id].Cells[9].Value.ToString();
-                itext5Length.Text = dataGridView1.Rows[id].Cells[10].Value.ToString();
-                icheck1.Text = dataGridView1.Rows[id].Cells[11].Value.ToString();
-                if (dataGridView1.Rows[id].Cells[12].Value.ToString().Trim() == "_") { icheckoption11.Text = icheckoption12.Text = ""; }
-                else
-                {
-                    icheckoption11.Text = dataGridView1.Rows[id].Cells[12].Value.ToString().Split('_')[0];
-                    icheckoption12.Text = dataGridView1.Rows[id].Cells[12].Value.ToString().Split('_')[1];
-                }
-                icombo1.Text = dataGridView1.Rows[id].Cells[13].Value.ToString();
-                txtComboOptions[0] = dataGridView1.Rows[id].Cells[14].Value.ToString();
-                icombo1Length.Text = dataGridView1.Rows[id].Cells[15].Value.ToString();
-                icombo2.Text = dataGridView1.Rows[id].Cells[16].Value.ToString();
-                txtComboOptions[1] = dataGridView1.Rows[id].Cells[17].Value.ToString();
-                icombo2Length.Text = dataGridView1.Rows[id].Cells[18].Value.ToString();
-                ibtnAdd1.Text = dataGridView1.Rows[id].Cells[19].Value.ToString();
-                ibtnAdd1Length.Text = dataGridView1.Rows[id].Cells[20].Value.ToString();
-                itxtDate1.Text = dataGridView1.Rows[id].Cells[21].Value.ToString();
-                dateType1.Text = dataGridView1.Rows[id].Cells[22].Value.ToString();
-                TextModel.Text = dataGridView1.Rows[id].Cells[23].Value.ToString();
-                ColRight.Text = dataGridView1.Rows[id].Cells[24].Value.ToString();
-                ColumnName = dataGridView1.Rows[id].Cells[25].Value.ToString();
-                langAuth.Text = dataGridView1.Rows[id].Cells[26].Value.ToString();
-                if (langAuth.Text == "" || langAuth.Text == "العربية")
-                {
-                    langAuth.CheckState = CheckState.Unchecked;
-                    langAuth.Text = "العربية";
-                    langIqrar.CheckState = CheckState.Unchecked;
-                    langIqrar.Text = "العربية";
-                }
-                else {
-                    langAuth.CheckState = CheckState.Checked;
-                    langAuth.Text = "الانجليزية";
-                    langIqrar.CheckState = CheckState.Checked;
-                    langIqrar.Text = "الانجليزية";
-                }
-                if (ColRight.Text != "")
-                {
-                    if (ColumnName.Contains("-"))
-                    {
-                        if (dataGridView1.Rows[id].Cells[25].Value.ToString().All(char.IsDigit))
-
-                            try
-                            {
-                                mainTypeAuth.SelectedIndex = Convert.ToInt32(dataGridView1.Rows[id].Cells[25].Value.ToString().Split('-')[1]);
-                            }
-                            catch (Exception exp)
-                            {
-                            }
-
-
-                        subTypeAuth.Text = dataGridView1.Rows[id].Cells[25].Value.ToString().Split('-')[0].Replace("_", " ");
-                    }
-                    panelAuthInfo.Visible = true;
-                    panelIqrar.Visible = false;
-                }
-                else
-                {
-                    if (ColumnName.Contains("-"))
-                    {
-                        if (dataGridView1.Rows[id].Cells[25].Value.ToString().All(char.IsDigit))
-                            try
-                            {
-                                mainTypeAuth.SelectedIndex = Convert.ToInt32(dataGridView1.Rows[id].Cells[25].Value.ToString().Split('-')[1]);
-                            }
-                            catch (Exception exp)
-                            {
-                            }
-
-                        subTypeAuth.Text = dataGridView1.Rows[id].Cells[25].Value.ToString().Split('-')[0].Replace("_", " ");
-                    }
-                    panelAuthInfo.Visible = false;
-                    panelIqrar.Visible = true;
-                }
-
-                txtSearch.Visible = button32.Visible = dataGridView1.Visible = false;
-                ContextPanel.Visible = true;
-
-                review1 = false;
-            }
-        }
+        
         private void Settings_Load(object sender, EventArgs e)
         {
 
@@ -670,16 +613,16 @@ namespace PersAhwal
             {
                 saConn.Open();
 
-                string query = "select max(ID) from "+ tableName+" as maxID where "+ comlumnName+" is not null";
+                string query = "select max(ID) as maxID from " + tableName + " where " + comlumnName + " is not null";
                 SqlCommand cmd = new SqlCommand(query, saConn);
                 cmd.CommandType = CommandType.Text;
 
-                MessageBox.Show(query);
+                //MessageBox.Show(query);
                 cmd.ExecuteNonQuery();
                 DataTable table = new DataTable();
                 SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
                 dataAdapter.Fill(table);
-                
+
                 foreach (DataRow dataRow in table.Rows)
                 {
                     try
@@ -693,6 +636,38 @@ namespace PersAhwal
                 saConn.Close();
             }
             return 1;
+        }
+
+
+        private int getCurrentID(string source, string comlumnName, string tableName, string text)
+        {
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                saConn.Open();
+
+                string query = "select ID from "+ tableName+"  where " + comlumnName+" = N'" + text+"'";
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.CommandType = CommandType.Text;
+
+                //MessageBox.Show(query);
+                cmd.ExecuteNonQuery();
+                DataTable table = new DataTable();
+                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                dataAdapter.Fill(table);
+                
+                foreach (DataRow dataRow in table.Rows)
+                {
+                    try
+                    {
+                        return Convert.ToInt32(dataRow["ID"].ToString());
+                    }
+                    catch (Exception) {
+                        return 0;
+                    }
+                }
+                saConn.Close();
+            }
+            return 0;
         }
 
         private void fillSubComboBox(ComboBox combbox, string source, string comlumnName, string tableName, bool select)
@@ -746,7 +721,11 @@ namespace PersAhwal
                 dataAdapter.Fill(table);
 
                 saConn.Close();
-                if (table.Rows.Count > 0) return true;
+                if (table.Rows.Count > 0)
+                {
+                    Console.WriteLine("المعاملة موجودة " + proID);
+                    return true;
+                }
                 else return false;
             }
             
@@ -1061,10 +1040,11 @@ namespace PersAhwal
         }
 
 
-        
-          private void dataGridView1_CellClick_1(object sender, DataGridViewCellEventArgs e)
+
+        private void dataGridView1_CellClick_1(object sender, DataGridViewCellEventArgs e)
         {
-            if (dataGridView1.Rows.Count > 1 && repReqPanel.Visible) {
+            if (dataGridView1.Rows.Count > 1 && repReqPanel.Visible)
+            {
                 المعاملة.Text = dataGridView1.CurrentRow.Cells["المعاملة"].Value.ToString();
                 OpenFile(المعاملة.Text, true, reviewForms);
                 //MessageBox.Show(CurrentFile);
@@ -1109,7 +1089,7 @@ namespace PersAhwal
                         }
                     }
                 }
-                txtSearch.Visible = button32.Visible = dataGridView1.Visible = false;
+                txtSearch.Visible = button32.Visible = label1.Visible = dataGridView1.Visible = false;
                 repReqPanel.Visible = true;
                 repReqPanel.BringToFront();
             }
@@ -1125,11 +1105,11 @@ namespace PersAhwal
                 TextModel.Text = dataGridView1.CurrentRow.Cells["TextModel"].Value.ToString();
                 editRights = dataGridView1.CurrentRow.Cells["editRights"].Value.ToString();
                 errorList = dataGridView1.CurrentRow.Cells["errorList"].Value.ToString();
-
+                
                 panelJob(dataGridView1.CurrentRow.Index);
                 //ColRight.Text = dataGridView1.CurrentRow.Cells["ColName"].Value.ToString();
                 //MessageBox.Show(dataGridView1.CurrentRow.Index.ToString());
-                
+
                 if (langAuth.Text == "" || langAuth.Text == "العربية")
                 {
                     langAuth.CheckState = CheckState.Unchecked;
@@ -1144,51 +1124,63 @@ namespace PersAhwal
                     langIqrar.CheckState = CheckState.Checked;
                     langIqrar.Text = "الانجليزية";
                 }
-                
+
                 if (ColRight.Text != "")
                 {
                     panelAuthInfo.Visible = true;
                     panelIqrar.Visible = false;
-                    mainTypeAuth.SelectedIndex = Convert.ToInt32(colname.Split('-')[1]);
-                    subTypeAuth.Text = colname.Split('-')[0];
-                     formNo = mainTypeAuth.Text + "-" + subTypeAuth.Text.Trim();
+                    try
+                    {
+                        mainTypeAuth.SelectedIndex = Convert.ToInt32(colname.Split('-')[1]);
+                        subTypeAuth.Text = colname.Split('-')[0];
+                        formNo = mainTypeAuth.Text + "-" + subTypeAuth.Text.Trim();
+
+                    }
+                    catch (Exception ex) { }
                 }
                 else
                 {
                     panelIqrar.Visible = true;
                     panelAuthInfo.Visible = false;
-                    mainTypeIqrar.SelectedIndex = Convert.ToInt32(colname.Split('-')[1]);
-                    subTypeIqrar.Text = colname.Split('-')[0];
-                     formNo = mainTypeAuth.Text + "-" + subTypeAuth.Text.Trim();
+                    try
+                    {
+                        mainTypeIqrar.SelectedIndex = Convert.ToInt32(colname.Split('-')[1]);
+                        subTypeIqrar.Text = colname.Split('-')[0];
+                        formNo = mainTypeAuth.Text + "-" + subTypeAuth.Text.Trim();
+                    }
+                    catch (Exception ex) { }
                 }
 
-                
-                
-                txtSearch.Visible = button32.Visible = dataGridView1.Visible = false;
+
+
+                txtSearch.Visible = button32.Visible = label1.Visible = dataGridView1.Visible = false;
                 ContextPanel.BringToFront();
                 labID.BringToFront();
                 if (checkRequInfo(formNo))
-                    OpenFile(formNo, false, formsBtn);
+                    OpenFile(formNo, true, formsBtn);
                 else
                 {
                     repReqPanel.BringToFront();
                     repReqPanel.Visible = true;
                     المعاملة.Text = formNo;
-
+                    revisedRow("");
                     MessageBox.Show("لا يوجد قائمة بالمطلوبات الأولية للمعاملة، يرجى إضافتها");
                 }
                 if (!formsBtn.Enabled)
                 {
+                    revisedRow("");
                     formsBtn.Enabled = true;
                     formsBtn.Text = "رفع الاستمارة الأولية";
                 }
-                ContextPanel.Visible = true;
+                panelLowButtons.Visible = ContextPanel.Visible = true;
                 button117.Enabled = true;
                 //review1 = true;
                 review1 = false;
                 btnDelete.Visible = btnClear.Visible = true;
                 DPTitle[0] = icheckoption11.Text + "_" + icheckoption12.Text;
-}
+                dataGridView1.Visible = false;
+                btnRightsShow.PerformClick();
+            }
         }
 
         private void dataGridView1_RowIndex(string colName)
@@ -1483,7 +1475,7 @@ namespace PersAhwal
             preffix[5, 8] = "يقوموا";
 
 
-            preffix[0, 9] = "نصيبي";//#5
+            preffix[0, 9] = "نصيبي";//#6
             preffix[1, 9] = "نصيبي";
             preffix[2, 9] = "نصيبينا";
             preffix[3, 9] = "نصيبينا";
@@ -1788,8 +1780,8 @@ namespace PersAhwal
         private void button37_Click_1(object sender, EventArgs e)
         {
             panelAuthOptions.Visible = false;
-            authType.Text = "نموذج صيغة التفويض:";
-            TextModel.Text = "لينوب عني ويقوم مقامي في ";
+            //authType.Text = "نموذج صيغة التفويض:";
+            //TextModel.Text = "لينوب عني ويقوم مقامي في ";
 
         }
 
@@ -2030,6 +2022,12 @@ namespace PersAhwal
         private void btnDelete_Click(object sender, EventArgs e)
         {
             deleteRowsData(idIndex, "TableAddContext", DataSource);
+            dataGridView1.BringToFront();
+            FillDataGridView("TableAddContext", AuthType);
+            panelLowButtons.Visible = panelIqrar.Visible = panelAuthInfo.Visible = false;
+            txtSearch.Visible = button32.Visible = label1.Visible = dataGridView1.Visible = true;
+            repReqPanel.Visible = flowLayoutPanel9.Visible = SettingsPanel.Visible = false;
+            panelLowButtons.Visible = ContextPanel.Visible = true; 
         }
 
 
@@ -2044,9 +2042,9 @@ namespace PersAhwal
             }
             else
             {
-                txtSearch.Visible = button32.Visible = dataGridView1.Visible = false;
+                txtSearch.Visible = button32.Visible = label1.Visible = dataGridView1.Visible = false;
                 ContextPanel.Visible = false;
-                ContextPanel.Visible = true;
+                panelLowButtons.Visible = ContextPanel.Visible = true;
                 flowLayoutPanel9.Visible = SettingsPanel.Visible = false;
             }
         }
@@ -2296,6 +2294,7 @@ namespace PersAhwal
             else labelarch.Visible = false;
             //labelarch.Text = "عدد (" + errorList.ToString() + ") معاملة تحتاج إلى تصحيح ";
             labelarch.Text = "عدد (" + authrevices.ToString() + ") تم معاينتها من أصل ( " + allauth+") معاملة ";
+            label1.Text = "عدد (" + authrevices.ToString() + ") تم معاينتها من أصل ( " + allauth+") معاملة ";
 
         }
 
@@ -2339,7 +2338,7 @@ namespace PersAhwal
             if (reader.Read())
             {
                 string str = reader["proForm1"].ToString();
-                
+                Console.WriteLine(str);
                 try
                 {
                     var Data = (byte[])reader["Data1"];
@@ -2354,7 +2353,7 @@ namespace PersAhwal
                 {
                     try
                     {
-                        File.Delete(CurrentFile);
+                        //File.Delete(CurrentFile);
 
                         button.Enabled = true;
 
@@ -2366,13 +2365,15 @@ namespace PersAhwal
 
                             FileInfo fileInfo = new FileInfo(CurrentFile);
                             if (fileInfo.IsReadOnly) fileInfo.IsReadOnly = false;
-                            System.Diagnostics.Process.Start(CurrentFile);
+                                Console.WriteLine("CurrentFile " + CurrentFile);
+                                System.Diagnostics.Process.Start(CurrentFile);
                         }
                         return CurrentFile;
                     }
                     catch (Exception ex)
                     {
-                        button.Enabled = false;
+                            Console.WriteLine("fail " +str);
+                            button.Enabled = false;
                         return "";
                     }
 
@@ -2514,9 +2515,24 @@ namespace PersAhwal
             sqlCmd.Parameters.AddWithValue("@errorList", "");
             sqlCmd.Parameters.AddWithValue("@revised", revised);
             addParameters(sqlCmd);
+            sqlCmd.Parameters.AddWithValue("@ColRight", ColRight.Text); 
             sqlCmd.ExecuteNonQuery();
             sqlCon.Close();
-            this.Close();
+            var selectedOption = MessageBox.Show("", "إنهاء المراجعة؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (selectedOption == DialogResult.Yes)
+            {
+                btnRevised.PerformClick();
+
+            }
+            else {
+                dataGridView1.BringToFront();
+                FillDataGridView("TableAddContext", AuthType);
+                panelLowButtons.Visible = panelIqrar.Visible = panelAuthInfo.Visible = false;
+                txtSearch.Visible = button32.Visible = label1.Visible = dataGridView1.Visible = true;
+                flowLayoutPanel9.Visible = SettingsPanel.Visible = false;
+                panelLowButtons.Visible = ContextPanel.Visible = true;
+            }
+            //this.Close();
             //ClearFileds();
         }
 
@@ -2566,8 +2582,9 @@ namespace PersAhwal
 
             panelAuthOptions.Visible = true;
             panelAuthOptions.BringToFront();
-            TextModel.Text = "";
-            deleteItemsAO(); RightColumnName = ColRight.Text;
+            //TextModel.Text = "";
+            deleteItemsAO(); 
+            RightColumnName = ColRight.Text;
             PopulateCheckBoxes(ColRight.Text.Trim(), "TableAuthRights", DataSource);
             //ContextPanel.Visible = false;
         }
@@ -2616,9 +2633,12 @@ namespace PersAhwal
                 }
                 CombAuthTypeIndex = mainTypeAuth.Items.Count;
                 ColumnName = subTypeAuth.Text.Replace(" ", "_") + "-" + (mainTypeAuth.Items.Count).ToString();
-                int id = getLastID(DataSource, mainTypeAuth.Text.Replace(" ", "_"), "TableListCombo");
-                MessageBox.Show(id.ToString());
-                addSubAuth(id, subTypeAuth.Text, mainTypeAuth.Text.Replace(" ", "_"));                
+                int curenntID = getCurrentID(DataSource, mainTypeAuth.Text.Replace(" ", "_"), "TableListCombo", subTypeAuth.Text);
+                if (curenntID == 0)
+                    curenntID = getLastID(DataSource, mainTypeAuth.Text.Replace(" ", "_"), "TableListCombo");
+                    //MessageBox.Show(curenntID.ToString());
+                    addSubAuth(curenntID, subTypeAuth.Text, mainTypeAuth.Text.Replace(" ", "_"));
+                
             }
             else
             {                
@@ -2628,8 +2648,11 @@ namespace PersAhwal
                     mainTypeIqrar.Items.Add(mainTypeIqrar.Text);
                 }
                 ColumnName = subTypeIqrar.Text.Replace(" ", "_") + "-" + mainTypeIqrar.SelectedIndex.ToString();
-                int id = getLastID(DataSource, mainTypeIqrar.Text.Replace(" ", "_"), "TableListCombo");
-                addSubAuth(id, subTypeIqrar.Text, mainTypeIqrar.Text.Replace(" ", "_"));
+
+                int curenntID = getCurrentID(DataSource, mainTypeIqrar.Text.Replace(" ", "_"), "TableListCombo", subTypeIqrar.Text);
+                if (curenntID == 0)
+                    curenntID = getLastID(DataSource, mainTypeAuth.Text.Replace(" ", "_"), "TableListCombo");
+                addSubAuth(curenntID, subTypeIqrar.Text, mainTypeIqrar.Text.Replace(" ", "_"));
             }
             
         }
@@ -2862,7 +2885,7 @@ namespace PersAhwal
 
         private void ProFormType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            FillDataGridView("TableAddContext");
+            FillDataGridView("TableAddContext", AuthType);
             dataGridView1_RowIndex(subTypeIqrar.Text + "-" + mainTypeIqrar.SelectedIndex.ToString());
             checkIndex = false;
             //for (int id = 0; id < dataGridView1.Rows.Count - 1; id++)
@@ -2880,18 +2903,39 @@ namespace PersAhwal
 
         private void btnClear_Click(object sender, EventArgs e)
         {
+            AuthType = false; 
             if (dataGridView1.Visible)
             {
-                txtSearch.Visible = button32.Visible = dataGridView1.Visible = false;
+                txtSearch.Visible = button32.Visible = label1.Visible = dataGridView1.Visible = false;
                 flowLayoutPanel9.Visible = SettingsPanel.Visible = false;
+                dataGridView1.SendToBack();
+                panelLowButtons.Visible = ContextPanel.Visible = true;
+                ContextPanel.BringToFront();
             }
             else
             {
-                panelIqrar.Visible = panelAuthInfo.Visible = false;
-                txtSearch.Visible = button32.Visible = dataGridView1.Visible = true;
+
+                repReqPanel.Visible = false;
+                dataGridView1.BringToFront();
+                FillDataGridView("TableAddContext", false);
+                panelLowButtons.Visible = panelIqrar.Visible = panelAuthInfo.Visible = false;
+                txtSearch.Visible = button32.Visible = label1.Visible = dataGridView1.Visible = true;
                 flowLayoutPanel9.Visible = SettingsPanel.Visible = false;
-                ContextPanel.Visible = false;
+                panelLowButtons.Visible = ContextPanel.Visible = true;
+                formsBtn.Visible = proFileBtn.Visible = btnRevised.Visible = true;
             }
+            //if (dataGridView1.Visible)
+            //{
+            //    txtSearch.Visible = button32.Visible = label1.Visible = dataGridView1.Visible = false;
+            //    flowLayoutPanel9.Visible = SettingsPanel.Visible = false;
+            //}
+            //else
+            //{
+            //    panelIqrar.Visible = panelAuthInfo.Visible = panelLowButtons.Visible = false;
+            //    txtSearch.Visible = button32.Visible = label1.Visible = dataGridView1.Visible = true;
+            //    flowLayoutPanel9.Visible = SettingsPanel.Visible = false;
+            //    ContextPanel.Visible = false;
+            //}
         }
 
         private void addParameters( SqlCommand sqlCmd)
@@ -2972,7 +3016,7 @@ namespace PersAhwal
             {
                 sqlCmd.Parameters.AddWithValue("@authIqrar", "auth");
                 sqlCmd.Parameters.AddWithValue("@Lang", langAuth.Text);
-                sqlCmd.Parameters.AddWithValue("@ColRight", ColRight.Text);
+                
                 
                 //sqlCmd.Parameters.AddWithValue("@ColName", (subTypeAuth.Text + "-" + CombAuthTypeIndex.ToString()).Replace("--", "-"));
             }
@@ -3201,6 +3245,7 @@ namespace PersAhwal
         private void flllPanelItemsboxes(string rowID, string cellValue)
         {
             //MessageBox.Show("rowID = " + rowID + " - cellValue=" + cellValue);
+            int checkIndex = 0;
             if (dataGridView1.Rows.Count > 1)
             {
                 for (int index = 0; index < dataGridView1.Rows.Count - 1; index++)
@@ -3211,6 +3256,15 @@ namespace PersAhwal
                         foreach (Control Lcontrol in PanelItemsboxes.Controls)
                             try
                             {
+                                if (Lcontrol is CheckBox)
+                                {                                    
+                                    itemsicheck1[checkIndex] = dataGridView1.Rows[index].Cells[Lcontrol.Name.Replace("V", "") + "Option"].Value.ToString();
+                                    Lcontrol.Text = itemsicheck1[checkIndex].Split('_')[0]; 
+                                    checkIndex++;
+
+
+                                }
+
                                 if (Lcontrol.Name.StartsWith("L"))
                                 {
                                     Lcontrol.Text = dataGridView1.Rows[index].Cells[Lcontrol.Name.Replace("L", "")].Value.ToString();
@@ -3222,15 +3276,28 @@ namespace PersAhwal
                                             //MessageBox.Show("View = " + Vcontrol.Name + " - Label=" + Lcontrol.Name.Replace("L", "V"));
                                             if (Vcontrol.Name.Trim() == Lcontrol.Name.Replace("L", "V").Trim())
                                             {
-                                                //MessageBox.Show(Lcontrol.Name + "Length");
+                                                
                                                 Vcontrol.Visible = true;
                                                 string size = dataGridView1.Rows[index].Cells[Lcontrol.Name.Replace("L", "") + "Length"].Value.ToString();
+                                                //MessageBox.Show(Lcontrol.Name +"-"+size); 
                                                 Vcontrol.Width = Convert.ToInt32(size);
                                                 if (Convert.ToInt32(size) >= 700)
                                                 {
                                                     if (Vcontrol is TextBox) ((TextBox)Vcontrol).Multiline = true;
                                                     Vcontrol.Height = 150;
                                                 }
+
+                                                if (Vcontrol is ComboBox)
+                                                {
+                                                    ((ComboBox)Vcontrol).Items.Clear();
+                                                    string[] items = dataGridView1.Rows[index].Cells[Lcontrol.Name.Replace("L", "") + "Option"].Value.ToString().Split('_');
+
+                                                    for (int x = 0; x < items.Length; x++)
+                                                        ((ComboBox)Vcontrol).Items.Add(items[x]);
+                                                }
+
+                                                
+
                                                 //MessageBox.Show(Lcontrol.Name + "Length");
                                             }
                                             if (Vcontrol.Name.Contains(Lcontrol.Name.Replace("L", "V") + "V") || Vcontrol.Name.Contains(Lcontrol.Name.Replace("L", "V") + "L"))
@@ -3316,7 +3383,7 @@ namespace PersAhwal
             }
         }
 
-        private void btnRevised_Click(object sender, EventArgs e)
+        private void revisedRow(string text)
         {
             string colName = subTypeAuth.Text.Trim() + "-" + mainTypeAuth.SelectedIndex.ToString();
             SqlConnection sqlCon = new SqlConnection(DataSource);
@@ -3326,17 +3393,20 @@ namespace PersAhwal
                     sqlCon.Open();
             }
             catch (Exception ex) { return; }
-            SqlCommand sqlCmd = new SqlCommand("update TableAddContext set revised=N'revised' where ColName=N'" + colName + "'", sqlCon);
+            SqlCommand sqlCmd = new SqlCommand("update TableAddContext set revised=N'"+ text+"' where ColName=N'" + colName + "'", sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.ExecuteNonQuery();
             sqlCon.Close();
-
+        }
+            private void btnRevised_Click(object sender, EventArgs e)
+        {
+            revisedRow("revised");
             dataGridView1.BringToFront();
-            FillDataGridView("TableAddContext");
-            panelIqrar.Visible = panelAuthInfo.Visible = false;
-            txtSearch.Visible = button32.Visible = dataGridView1.Visible = true;
-            flowLayoutPanel9.Visible = SettingsPanel.Visible = false;            
-            ContextPanel.Visible = true;
+            FillDataGridView("TableAddContext", AuthType);
+            panelLowButtons.Visible = panelIqrar.Visible = panelAuthInfo.Visible = false;
+            txtSearch.Visible = button32.Visible = label1.Visible = dataGridView1.Visible = true;
+            flowLayoutPanel9.Visible = SettingsPanel.Visible = false;
+            panelLowButtons.Visible = ContextPanel.Visible = true;
         }
 
         private void mainTypeAuth_TextChanged(object sender, EventArgs e)
@@ -3426,7 +3496,7 @@ namespace PersAhwal
         {
             if (dataGridView1.Visible)
             {
-                txtSearch.Visible = button32.Visible = dataGridView1.Visible = false;
+                txtSearch.Visible = button32.Visible = label1.Visible = dataGridView1.Visible = false;
                 flowLayoutPanel9.Visible = SettingsPanel.Visible = false;
                 dataGridView1.SendToBack();
                 repReqPanel.BringToFront();
@@ -3434,15 +3504,15 @@ namespace PersAhwal
             }
             else
             {
-                panelIqrar.Visible = panelAuthInfo.Visible = false;
-                txtSearch.Visible = button32.Visible = dataGridView1.Visible = true;
+                panelLowButtons.Visible = panelIqrar.Visible = panelAuthInfo.Visible = false;
+                txtSearch.Visible = button32.Visible = label1.Visible = dataGridView1.Visible = true;
+                
                 repReqPanel.Visible = true;
                 ContextPanel.Visible = false;
                 dataGridView1.BringToFront();
-                FillDataGridView("TableProcReq");
+                FillDataGridViewReq("TableProcReq");
                 formsBtn.Visible = proFileBtn.Visible = btnRevised.Visible = false;
                 fileComboBox(المعاملة, DataSource, "المعاملة", "TableProcReq", true);
-                
             }
         }
 
@@ -3803,7 +3873,7 @@ namespace PersAhwal
                     }
                 }
             }
-            txtSearch.Visible = button32.Visible = dataGridView1.Visible = false;
+            txtSearch.Visible = button32.Visible = label1.Visible = dataGridView1.Visible = false;
             repReqPanel.Visible = true;
             repReqPanel.BringToFront();
         }
@@ -3824,23 +3894,45 @@ namespace PersAhwal
             sqlCon.Close();
 
             dataGridView1.BringToFront();
-            FillDataGridView("TableAddContext");
-            panelIqrar.Visible = panelAuthInfo.Visible = false;
-            txtSearch.Visible = button32.Visible = dataGridView1.Visible = true;
+            FillDataGridView("TableAddContext",AuthType);
+            panelLowButtons.Visible = panelIqrar.Visible = panelAuthInfo.Visible = false;
+            txtSearch.Visible = button32.Visible = label1.Visible = dataGridView1.Visible = true;
             flowLayoutPanel9.Visible = SettingsPanel.Visible = false;
             ContextPanel.Visible = false;
         }
 
         private void txtSearch_TextChanged(object sender, EventArgs e)
         {
-            if (txtSearch.Text.Length != 0)
+            if (txtSearch.Text.Length != 0 && txtSearch.Text.All(char.IsLetterOrDigit))
             {
                 BindingSource bs = new BindingSource();
                 bs.DataSource = dataGridView1.DataSource;
-                bs.Filter = dataGridView1.Columns[2].HeaderText.ToString() + " LIKE '" + txtSearch.Text + "%'";
+                bs.Filter = dataGridView1.Columns[2].HeaderText.ToString() + " LIKE '%" + txtSearch.Text + "%'";
                 dataGridView1.DataSource = bs;
-            }else FillDataGridView("TableAddContext");
+            }else FillDataGridView("TableAddContext", AuthType);
             ColorFulGrid9();
+        }
+
+        private void button33_Click(object sender, EventArgs e)
+        {
+            repReqPanel.Visible = false;
+            repReqPanel.SendToBack();
+        }
+
+        private void Vicheck1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Vicheck1.Checked)
+                Vicheck1.Text = itemsicheck1[0].Split('_')[0];
+            else Vicheck1.Text = itemsicheck1[0].Split('_')[1];
+        }
+
+        private void TextModel_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)13)
+            {
+                //MessageBox.Show("enter");
+                button117.PerformClick();
+            }
         }
 
         private void button116_Click(object sender, EventArgs e)
@@ -3856,12 +3948,29 @@ namespace PersAhwal
             catch (Exception ex) { return; }
             SqlCommand sqlCmd = new SqlCommand(insertAll, sqlCon);
             sqlCmd.CommandType = CommandType.Text;
-
+            
+            sqlCmd.Parameters.AddWithValue("@revised", revised);            
+            sqlCmd.Parameters.AddWithValue("@ColRight", ColRight.Text);
             sqlCmd.Parameters.AddWithValue("@errorList", "");
             addParameters(sqlCmd);
             sqlCmd.ExecuteNonQuery();
             sqlCon.Close();
-            this.Close();
+            //this.Close();
+            var selectedOption = MessageBox.Show("", "إنهاء المراجعة؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (selectedOption == DialogResult.Yes)
+            {
+                btnRevised.PerformClick();
+
+            }
+            else
+            {
+                dataGridView1.BringToFront();
+                FillDataGridView("TableAddContext", AuthType);
+                panelLowButtons.Visible = panelIqrar.Visible = panelAuthInfo.Visible = false;
+                txtSearch.Visible = button32.Visible = label1.Visible = dataGridView1.Visible = true;
+                flowLayoutPanel9.Visible = SettingsPanel.Visible = false;
+                panelLowButtons.Visible = ContextPanel.Visible = true;
+            }
         }
 
         private void panelDate_MouseEnter(object sender, EventArgs e)
@@ -3896,9 +4005,20 @@ namespace PersAhwal
 
         private void button118_Click(object sender, EventArgs e)
         {
-            flllPanelItemsboxes("ID", idIndex.ToString());
-            PanelItemsboxes.BringToFront();
-            PanelItemsboxes.Visible = true;
+            if (PanelItemsboxes.Visible)
+            {
+                PanelItemsboxes.SendToBack();
+                PanelItemsboxes.Visible = false;
+                btnreviewPanel.Text = "معاينة الحقول";
+            }
+            else
+            {
+                btnreviewPanel.Text = "إخفاء القائمة";
+                flllPanelItemsboxes("ID", idIndex.ToString());
+                PanelItemsboxes.BringToFront();
+                PanelItemsboxes.Visible = true;
+                PanelItemsboxes.BringToFront();
+            }
             //else
             //{
             //    PanelItemsboxes.Visible = false;
@@ -3935,7 +4055,7 @@ namespace PersAhwal
             sqlCmd.Parameters.AddWithValue("@ID", v1);
             sqlCmd.ExecuteNonQuery();
             Con.Close();
-            FillDataGridView("TableAddContext");
+            FillDataGridView("TableAddContext", AuthType);
             btnDelete.Visible = btnClear.Visible = false;
         }
 

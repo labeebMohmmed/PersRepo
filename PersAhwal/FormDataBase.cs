@@ -214,7 +214,11 @@ namespace PersAhwal
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
             SqlCommand sqlCmd = new SqlCommand("update TableSettings set closeToUpdate=@closeToUpdate where ID=@id", sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.Parameters.AddWithValue("@id", 1);
@@ -248,7 +252,11 @@ namespace PersAhwal
         {
             SqlConnection sqlCon = new SqlConnection(DataSource56);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return ; }
             SqlCommand sqlCmd = new SqlCommand("update TableSettings set Version=@Version where ID='1'", sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.Parameters.AddWithValue("@Version", version);
@@ -300,7 +308,11 @@ namespace PersAhwal
             if (sqlCon.State == ConnectionState.Closed)
                 try
                 {
-                    sqlCon.Open();
+                    try
+                    {
+                        sqlCon.Open();
+                    }
+                    catch (Exception ex) { return; }
                     string settingData = "select * from TableUser";
                     SqlDataAdapter sqlDa = new SqlDataAdapter(settingData, sqlCon);
                     sqlDa.SelectCommand.CommandType = CommandType.Text;
@@ -336,7 +348,11 @@ namespace PersAhwal
 
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return ""; }
             string settingData = "select FolderApp from TableSettings where ID='1'";
             SqlDataAdapter sqlDa = new SqlDataAdapter(settingData, sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
@@ -358,7 +374,11 @@ namespace PersAhwal
         {            
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return ""; }
             string settingData = "select RestPAss from TableUser where UserName=@UserName";
             SqlDataAdapter sqlDa = new SqlDataAdapter(settingData, sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
@@ -379,7 +399,11 @@ namespace PersAhwal
            
             SqlConnection sqlCon = new SqlConnection(dataSource);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return ""; }
             string settingData = "select Version from TableSettings where ID='1'";
             SqlDataAdapter sqlDa = new SqlDataAdapter(settingData, sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
@@ -402,7 +426,11 @@ namespace PersAhwal
             if (Con.State == ConnectionState.Closed)
                 try
                 {
-                    Con.Open();
+                    try
+                    {
+                        Con.Open();
+                    }
+                    catch (Exception ex) { return; }
 
                     var reader = sqlCmd1.ExecuteReader();
                     if (reader.Read())
@@ -569,7 +597,11 @@ namespace PersAhwal
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
             SqlCommand sqlCmd = new SqlCommand("UPDATE TableUser SET Pass = @Pass,RestPAss=@RestPAss WHERE ID = @ID", sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.Parameters.AddWithValue("@ID", id);
@@ -584,7 +616,11 @@ namespace PersAhwal
 
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return 0; }
             SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT top(1) ID from TableUserLog order by ID desc", sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
@@ -604,7 +640,11 @@ namespace PersAhwal
             
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return 0; }
 
             SqlCommand sqlCmd = new SqlCommand("INSERT INTO TableUserLog (userName,timeDateIn,timeDateOut,pcIP) values (@userName,@timeDateIn,@timeDateOut,@pcIP)", sqlCon);
             sqlCmd.CommandType = CommandType.Text;
@@ -732,21 +772,21 @@ namespace PersAhwal
                 try
                 {
                     saConn.Open();
-
-                    if (daymonth) query = "select hijriday from TableSettings";
-                    else query = "select hijrimonth from TableSettings";
-                    SqlCommand cmd = new SqlCommand(query, saConn);
-                    cmd.ExecuteNonQuery();
-                    var reader = cmd.ExecuteReader();
-                    if (reader.Read())
-                    {
-                        if (daymonth) differment = Convert.ToInt32(reader["hijriday"].ToString());
-                        else differment = Convert.ToInt32(reader["hijrimonth"].ToString());
-                    }
-
-                    saConn.Close();
                 }
-                catch (Exception ex) { }
+                catch (Exception ex) { return differment; }
+                if (daymonth) query = "select hijriday from TableSettings";
+                else query = "select hijrimonth from TableSettings";
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.ExecuteNonQuery();
+                var reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    if (daymonth) differment = Convert.ToInt32(reader["hijriday"].ToString());
+                    else differment = Convert.ToInt32(reader["hijrimonth"].ToString());
+                }
+
+                saConn.Close();
+
             }
             return differment;
         }
@@ -771,8 +811,7 @@ namespace PersAhwal
         private void pictureBox2_Click(object sender, EventArgs e)
         {
            
-            var settings = new Settings(Server, false, DataSource56, DataSource57, false, LocalModelFiles, FilepathOut, ArchFile, localModelForms,"");
-            settings.Show();
+            
         }
 
         private void pictureBox4_Click(object sender, EventArgs e)

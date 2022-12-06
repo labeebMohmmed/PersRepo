@@ -507,14 +507,14 @@ namespace PersAhwal
 
         private void timer2_Tick(object sender, EventArgs e)
         {
-            CultureInfo arSA = new CultureInfo("ar-SA");
-            arSA.DateTimeFormat.Calendar = new GregorianCalendar();
+            //CultureInfo arSA = new CultureInfo("ar-SA");
+            //arSA.DateTimeFormat.Calendar = new GregorianCalendar();
 
 
-            Thread.CurrentThread.CurrentCulture = arSA;
-            new System.Globalization.GregorianCalendar();
-            التاريخ_الميلادي.Text = DateTime.Now.ToString("MM-dd-yyyy");
-            timer2.Enabled = false;
+            //Thread.CurrentThread.CurrentCulture = arSA;
+            //new System.Globalization.GregorianCalendar();
+            //التاريخ_الميلادي.Text = DateTime.Now.ToString("MM-dd-yyyy");
+            //timer2.Enabled = false;
         }
 
 
@@ -1200,7 +1200,9 @@ namespace PersAhwal
                     txtCountry.Text = dataGridView1.CurrentRow.Cells[8].Value.ToString();
                     language.CheckState = CheckState.Checked;
                 }
+                التاريخ_الميلادي.Text = "0-0-0";
                 التاريخ_الميلادي.Text = dataGridView1.CurrentRow.Cells[9].Value.ToString();
+                //MessageBox.Show();
                 التاريخ_الهجري.Text = dataGridView1.CurrentRow.Cells[10].Value.ToString();
                 AttendViceConsul.Text = dataGridView1.CurrentRow.Cells[12].Value.ToString();
                 if (dataGridView1.CurrentRow.Cells[13].Value.ToString().ToString() == "غير معالج")
@@ -1994,6 +1996,12 @@ namespace PersAhwal
         private void التاريخ_الميلادي_TextChanged(object sender, EventArgs e)
         {
             التاريخ_الميلادي_off.Text = التاريخ_الميلادي.Text.Split('-')[1] + " - " + التاريخ_الميلادي.Text.Split('-')[0] + " - " + التاريخ_الميلادي.Text.Split('-')[2];
+            //MessageBox.Show(التاريخ_الميلادي_off.Text);
+        }
+
+        private void التاريخ_الهجري_TextChanged(object sender, EventArgs e)
+        {
+            //التاريخ_الميلادي_off.Text = التاريخ_الميلادي.Text.Split('-')[1] + " - " + التاريخ_الميلادي.Text.Split('-')[0] + " - " + التاريخ_الميلادي.Text.Split('-')[2];
         }
 
         private void addarchives(string[] text)
