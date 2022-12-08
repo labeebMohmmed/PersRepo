@@ -1574,8 +1574,9 @@ namespace PersAhwal
             colIDs[6] = mandoubName.Text;
             addarchives(colIDs);
             if (EmbassySource.Text != "الخرطوم") CreateMessageWord("ق س ج/80/" + DateTime.Now.Year.ToString().Replace("20", "") + "/" + "02" + "/");
+            this.Close();   
 
-            Clear_Fields();
+            //Clear_Fields();
         }
 
 

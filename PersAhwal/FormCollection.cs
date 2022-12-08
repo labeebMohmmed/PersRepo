@@ -32,6 +32,10 @@ using Aspose.Words.Settings;
 using DocumentFormat.OpenXml.Presentation;
 using Control = System.Windows.Forms.Control;
 using Microsoft.Reporting.WinForms;
+using System.Windows.Documents;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using SautinSoft.Document;
 
 namespace PersAhwal
 {
@@ -51,6 +55,7 @@ namespace PersAhwal
         string HijriDate = "";
         bool newData = false;
         string[] colIDs = new string[100];
+        string[] boldTexts= new string[100];
         string[] forbidDs = new string[100];
         static string[,] preffix = new string[10, 20];
         string Jobposition = "";
@@ -310,11 +315,45 @@ namespace PersAhwal
         } 
         public void boxesPreparationsArabic(int index, int proTypeIndex)
         {
+            for (int x = 0; x < 100; x++) 
+                boldTexts[x] = "";
+            boldTexts[0] = موقع_المعاملة.Text.Trim();
+            boldTexts[1] = موقع_المعاملة_off.Text.Trim();
+            for (int x = 10; x < مقدم_الطلب.Text.Split('_').Length; x++)
+                boldTexts[x] = مقدم_الطلب.Text.Split('_')[x-10];
+            
+            for (int x = 30; x < مقدم_الطلب.Text.Split('_').Length; x++)
+                boldTexts[x] = مقدم_الطلب.Text.Split('_')[x-30];
             //addNameIndex
+            string auth = "";
             switch (proTypeIndex) {
                 case 0:
                     appCaseIndex = Appcases(النوع, index);
                     //إقرار 
+                    if (index == 1)
+                    {
+                        نص_مقدم_الطلب0_off.Text = "أنا المواطن" + preffix[appCaseIndex, 5];
+                        نص_مقدم_الطلب1_off.Text = "/ " + مقدم_الطلب.Text + "، المقيم" + preffix[appCaseIndex, 5] + " بالمملكة العربية السعودية حامل" + preffix[appCaseIndex, 5] + " " + نوع_الهوية.Text + " رقم " + رقم_الهوية.Text.Replace("p", "P") + " إصدار " + مكان_الإصدار.Text + "، وبكامل قوا" + preffix[appCaseIndex, 12] + " العقلية وبطوع" + preffix[appCaseIndex, 12] + " واختيار" + preffix[appCaseIndex, 12] + " وحالت" + preffix[appCaseIndex, 12] + " المعتبرة شرعا وقانونا ";
+                        boldTexts[0] = مقدم_الطلب.Text;
+                    }
+                    else if (index > 1)
+                    {
+                        نص_مقدم_الطلب0_off.Text = "نحن المواطن" + preffix[appCaseIndex, 5] + " الموقع" + preffix[appCaseIndex, 5] + " أدناه:";
+                        نص_مقدم_الطلب1_off.Text = "المقيم" + preffix[appCaseIndex, 5] + " بالمملكة العربية السعودية، وبكامل قوا" + preffix[appCaseIndex, 12] + " العقلية وبطوع" + preffix[appCaseIndex, 12] + " واختيار" + preffix[appCaseIndex, 12] + " وحالت" + preffix[appCaseIndex, 12] + " المعتبرة شرعا وقانونا ";
+                    }
+
+                    موقع_المعاملة_off.Text = موقع_المعاملة.Text.Trim();
+                    التوقيع_off.Text = مقدم_الطلب.Text;
+                    
+                     auth = " المواطن" + preffix[appCaseIndex, 5] + " المذكور" + preffix[appCaseIndex, 5] + " أعلاه قد حضر" + preffix[appCaseIndex, 3] + " ووقع" + preffix[appCaseIndex, 3] + " بتوقيع" + preffix[appCaseIndex, 4] + " على هذا الإقرار، وذلك بعد تلاوته علي" + preffix[appCaseIndex, 4] + " وبعد أن فهم" + preffix[appCaseIndex, 3] + " مضمونه ومحتواه";
+                    if (!طريقة_الطلب.Checked)
+                        auth = " المواطن" + preffix[appCaseIndex, 5] + " المذكور" + preffix[appCaseIndex, 5] + " أعلاه قد حضر" + preffix[appCaseIndex, 3] + " ووقع" + preffix[appCaseIndex, 3] + " بتوقيع" + preffix[appCaseIndex, 4] + " على هذا الإقرار" + " بعد تلاوته علي" + preffix[appCaseIndex, 4] + " وبعد أن فهم" + preffix[appCaseIndex, 3] + " مضمونه ومحتواه" + " وذلك أمام مندوب جالية منطقة " + اسم_المندوب.Text.Split('-')[1] + " السيد/ " + اسم_المندوب.Text.Split('-')[0] + " بموجب التفويض الممنوح له من القنصلية العامة ";
+                    التوثيق_off.Text = " قنصل بالقنصلية العامة لجمهورية السودان بجدة، بأن" + auth + "، صدر تحت توقيعي وختم القنصلية العامة";
+                    
+                    break;
+                case 1:
+                    appCaseIndex = Appcases(النوع, index);
+                    //إقرار مشفوع باليمين 
                     if (index == 1)
                     {
                         نص_مقدم_الطلب0_off.Text = "أنا المواطن" + preffix[appCaseIndex, 5];
@@ -326,23 +365,23 @@ namespace PersAhwal
                         نص_مقدم_الطلب1_off.Text = "المقيم" + preffix[appCaseIndex, 5] + " بالمملكة العربية السعودية، وبكامل قوا" + preffix[appCaseIndex, 12] + " العقلية وبطوع" + preffix[appCaseIndex, 12] + " واختيار" + preffix[appCaseIndex, 12] + " وحالت" + preffix[appCaseIndex, 12] + " المعتبرة شرعا وقانونا ";
                     }
 
-                    موقع_المعاملة_off.Text = "/" + موقع_المعاملة.Text.Trim();
+                    موقع_المعاملة_off.Text = موقع_المعاملة.Text.Trim();
 //                    MessageBox.Show(موقع_المعاملة_off.Text);
                     التوقيع_off.Text = مقدم_الطلب.Text;
   //                  MessageBox.Show(التوقيع_off.Text);
                     
-                    string auth = " المواطن" + preffix[appCaseIndex, 5] + " المذكور" + preffix[appCaseIndex, 5] + " أعلاه قد حضر" + preffix[appCaseIndex, 3] + " ووقع" + preffix[appCaseIndex, 3] + " بتوقيع" + preffix[appCaseIndex, 4] + " على هذا الإقرار، وذلك بعد تلاوته علي" + preffix[appCaseIndex, 4] + " وبعد أن فهم" + preffix[appCaseIndex, 3] + " مضمونه ومحتواه";
+                     auth = " المواطن" + preffix[appCaseIndex, 5] + " المذكور" + preffix[appCaseIndex, 5] + " أعلاه قد حضر" + preffix[appCaseIndex, 3] + " ووقع" + preffix[appCaseIndex, 3] + " بتوقيع" + preffix[appCaseIndex, 4] + " على هذا الإقرار، وذلك بعد تلاوته علي" + preffix[appCaseIndex, 4] + " وبعد أن فهم" + preffix[appCaseIndex, 3] + " مضمونه ومحتواه";
                     if (!طريقة_الطلب.Checked)
-                        auth = " المواطن" + preffix[appCaseIndex, 5] + " المذكور" + preffix[appCaseIndex, 5] + " أعلاه قد حضر" + preffix[appCaseIndex, 3] + " ووقع" + preffix[appCaseIndex, 3] + " بتوقيع" + preffix[appCaseIndex, 4] + " على هذا الإقرار" + " بعد تلاوته علي" + preffix[appCaseIndex, 4] + " وبعد أن فهم" + preffix[appCaseIndex, 3] + " مضمونه ومحتواه" + " وذلك أمام مندوب جالية منطقة " + اسم_المندوب.Text.Split('_')[1] + " السيد/ " + اسم_المندوب.Text.Split('_')[0] + " بموجب التفويض الممنوح له من القنصلية العامة ";
-                    التوثيق_off.Text = "نائب قنصل بالقنصلية العامة لجمهورية السودان بجدة، بأن" + auth + "، صدر تحت توقيعي وختم القنصلية العامة";
+                        auth = " المواطن" + preffix[appCaseIndex, 5] + " المذكور" + preffix[appCaseIndex, 5] + " أعلاه قد حضر" + preffix[appCaseIndex, 3] + " ووقع" + preffix[appCaseIndex, 3] + " بتوقيع" + preffix[appCaseIndex, 4] + " على هذا الإقرار" + " بعد تلاوته علي" + preffix[appCaseIndex, 4] + " وبعد أن فهم" + preffix[appCaseIndex, 3] + " مضمونه ومحتواه" + " وذلك أمام مندوب جالية منطقة " + اسم_المندوب.Text.Split('-')[1] + " السيد/ " + اسم_المندوب.Text.Split('-')[0] + " بموجب التفويض الممنوح له من القنصلية العامة ";
+                    التوثيق_off.Text = " قنصل بالقنصلية العامة لجمهورية السودان بجدة، بأن" + auth + "، صدر تحت توقيعي وختم القنصلية العامة";
                     
                     break;
                 case 2:
                     // افادة وشهادة لمن يهمه الامر
                     if (index == 1)
                     {
-                        نص_مقدم_الطلب0_off.Text = "";// " المواطن" + preffix[appCaseIndex, 5] + " السواني" + preffix[appCaseIndex, 5] + " السيد" + preffix[appCaseIndex, 5];
-                        نص_مقدم_الطلب1_off.Text = "";// "/ " + مقدم_الطلب.Text + "، المقيم" + preffix[appCaseIndex, 5] + " بالمملكة العربية السعودية حامل" + preffix[appCaseIndex, 5] + " " + نوع_الهوية.Text + " رقم " + رقم_الهوية.Text.Replace("p", "P") + " إصدار " + مكان_الإصدار.Text + "،";
+                        نص_مقدم_الطلب0_off.Text = " المواطن" + preffix[appCaseIndex, 5] + " السواني" + preffix[appCaseIndex, 5] + " السيد" + preffix[appCaseIndex, 5];
+                        نص_مقدم_الطلب1_off.Text =  "/ " + مقدم_الطلب.Text + "، المقيم" + preffix[appCaseIndex, 5] + " بالمملكة العربية السعودية حامل" + preffix[appCaseIndex, 5] + " " + نوع_الهوية.Text + " رقم " + رقم_الهوية.Text.Replace("p", "P") + " إصدار " + مكان_الإصدار.Text + "،";
                     }
                     else if (index > 1)
                     {
@@ -1368,6 +1407,7 @@ namespace PersAhwal
             object objCurrentCopy = localCopy.Text;
 
             oBDoc = oBMicroWord.Documents.Open(objCurrentCopy, oBMiss);
+            
             oBMicroWord.Selection.Find.ClearFormatting();
             oBMicroWord.Selection.Find.Replacement.ClearFormatting();
 
@@ -1800,17 +1840,67 @@ namespace PersAhwal
                 }
             }
         }
+        public static void FindAndReplace(string loadPath, string text, bool remove)
+        {
+            DocumentCore dc = DocumentCore.Load(loadPath);
+
+            // Find "Bean" and Replace everywhere on "Joker"
+            Regex regex = new Regex(@text , RegexOptions.IgnoreCase);
+
+            // Start:
+
+            // Please note, Reverse() makes sure that action Replace() doesn't affect to Find().
+            foreach (ContentRange item in dc.Content.Find(regex).Reverse())
+            {
+                if(remove)
+                    item.Replace("", new CharacterFormat() { FontName = "Traditional Arabic", Size = 19.0,Bold = true });
+                else item.Replace(text, new CharacterFormat() { FontName = "Traditional Arabic", Size = 19.0,Bold = true });
+            }
+
+            // End:
+
+            // The code above finds and replaces the content in the whole document.
+            // Let us say, you want to replace a text inside shape blocks only:
+
+            // 1. Comment the code above from the line "Start" to the "End".
+            // 2. Uncomment this code:
+            //foreach (Shape shp in dc.GetChildElements(true, ElementType.Shape).Reverse())
+            //{
+            //    foreach (ContentRange item in shp.Content.Find(regex).Reverse())
+            //    {
+            //        item.Replace("Joker", new CharacterFormat() { BackgroundColor = Color.Yellow, FontName = "Arial", Size = 16.0 });
+            //    }
+            //}
+
+            // Save the document as DOCX format.
+            //string savePath = Path.ChangeExtension(loadPath, ".replaced.docx");
+            dc.Save(loadPath, SaveOptions.DocxDefault);
+
+            // Open the original and result documents for demonstration purposes.
+            //System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(loadPath) { UseShellExecute = true });
+            //System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(loadPath) { UseShellExecute = true });
+        }
         private void fillPrintDocx(string deleteDocxFile)
         {
             btnPrint.Enabled = false;
             //MessageBox.Show(localCopy.Text);
             string pdfFile = localCopy.Text.Replace("docx", "pdf");
+            
             oBDoc.SaveAs2(localCopy.Text);
             if (deleteDocxFile == "no")
                 oBDoc.ExportAsFixedFormat(pdfFile, Word.WdExportFormat.wdExportFormatPDF);
             oBDoc.Close(false, oBMiss);
             oBMicroWord.Quit(false, false);
             System.Runtime.InteropServices.Marshal.ReleaseComObject(oBMicroWord);
+
+            //if(اسم_المندوب.Visible)
+            //    FindAndReplace(localCopy.Text, "أشهد أنا/لبيب محمد أحمد نائب  قنصل بالقنصلية العامة لجمهورية السودان بجدة", true);            
+            //for (int x = 0; x < 100; x++)
+            //{
+            //    if (boldTexts[x] == "") continue;
+            //    FindAndReplace(localCopy.Text, boldTexts[x], false);
+            //}
+
             if (deleteDocxFile == "no")
             {
                 System.Diagnostics.Process.Start(pdfFile);
@@ -2105,6 +2195,13 @@ namespace PersAhwal
         {
             if (Vicheck5.Checked) Vicheck5.Text = checkOptions[4].Split('_')[0];
             else Vicheck5.Text = checkOptions[4].Split('_')[1];
+        }
+
+        private void طريقة_الطلب_CheckedChanged(object sender, EventArgs e)
+        {
+            if(!طريقة_الطلب.Checked)
+                اسم_المندوب.Visible = mandoubLabel.Visible= true;
+            else اسم_المندوب.Visible = mandoubLabel.Visible = false;
         }
     }    
 }

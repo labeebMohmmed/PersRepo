@@ -838,6 +838,7 @@
             this.طريقة_الطلب.TabIndex = 646;
             this.طريقة_الطلب.Text = "حضور مباشرة إلى القنصلية";
             this.طريقة_الطلب.UseVisualStyleBackColor = true;
+            this.طريقة_الطلب.CheckedChanged += new System.EventHandler(this.طريقة_الطلب_CheckedChanged);
             // 
             // mandoubLabel
             // 

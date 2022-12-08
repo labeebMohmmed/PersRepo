@@ -41,7 +41,7 @@ namespace PersAhwal
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.btnAuth = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnSaveEnd = new System.Windows.Forms.Button();
             this.Combo1 = new System.Windows.Forms.ComboBox();
             this.Combo2 = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -158,17 +158,17 @@ namespace PersAhwal
             this.btnAuth.UseVisualStyleBackColor = true;
             this.btnAuth.Click += new System.EventHandler(this.btnAuth_Click);
             // 
-            // button1
+            // btnSaveEnd
             // 
-            this.button1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(1061, 545);
-            this.button1.Name = "button1";
-            this.button1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.button1.Size = new System.Drawing.Size(275, 55);
-            this.button1.TabIndex = 510;
-            this.button1.Text = "حفظ وإنهاء الارشفة";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.btnSaveEnd.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSaveEnd.Location = new System.Drawing.Point(1061, 545);
+            this.btnSaveEnd.Name = "btnSaveEnd";
+            this.btnSaveEnd.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.btnSaveEnd.Size = new System.Drawing.Size(275, 55);
+            this.btnSaveEnd.TabIndex = 510;
+            this.btnSaveEnd.Text = "حفظ وإنهاء الارشفة";
+            this.btnSaveEnd.UseVisualStyleBackColor = true;
+            this.btnSaveEnd.Click += new System.EventHandler(this.button1_Click);
             // 
             // Combo1
             // 
@@ -638,7 +638,7 @@ namespace PersAhwal
             this.ClientSize = new System.Drawing.Size(1370, 741);
             this.Controls.Add(this.lalProType);
             this.Controls.Add(this.panel3);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btnSaveEnd);
             this.Controls.Add(this.تاريخ_الميلاد);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.panel2);
@@ -652,10 +652,10 @@ namespace PersAhwal
             this.Controls.Add(this.dataGridView2);
             this.Controls.Add(this.docId);
             this.Controls.Add(this.txtIDNo);
-            this.Controls.Add(this.button3);
             this.Controls.Add(this.Combo1);
             this.Controls.Add(this.Combo2);
             this.Controls.Add(this.button4);
+            this.Controls.Add(this.button3);
             this.Name = "FormPics";
             this.Text = "أرشفة الملفات";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormPics_FormClosed);
@@ -681,7 +681,7 @@ namespace PersAhwal
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button btnAuth;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnSaveEnd;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.ComboBox Combo1;
         private System.Windows.Forms.ComboBox Combo2;

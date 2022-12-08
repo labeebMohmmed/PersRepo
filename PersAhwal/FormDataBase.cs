@@ -583,6 +583,7 @@ namespace PersAhwal
                         int userID = userLogInfo(name, IP);
                         MainForm mainForm = new MainForm(career,userID, Server, name, joposition, DataSource56, DataSource57, LocalModelFiles, FilepathOut, ArchFile, localModelForms, Pers_Peope, GregorianDate, HijriDate, ServerModelFiles, ServerModelForms);
                         mainForm.ShowDialog();
+                        timer1.Enabled = false;
                         Console.WriteLine("pass login1");
                         //timer1.Enabled = false;
                         //timer2.Enabled = false;

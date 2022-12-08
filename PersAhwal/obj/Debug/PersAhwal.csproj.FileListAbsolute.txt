@@ -1268,3 +1268,5 @@ C:\Users\hp\Source\Repos\PersRepo\PersAhwal\obj\Debug\PersAhwal.application
 C:\Users\hp\Source\Repos\PersRepo\PersAhwal\obj\Debug\PersAhwal.csproj.CopyComplete
 C:\Users\hp\Source\Repos\PersRepo\PersAhwal\obj\Debug\PersAhwal.exe
 C:\Users\hp\Source\Repos\PersRepo\PersAhwal\obj\Debug\PersAhwal.pdb
+C:\Users\hp\source\repos\PersRepo\PersAhwal\bin\Debug\SautinSoft.Document.dll
+C:\Users\hp\source\repos\PersRepo\PersAhwal\bin\Debug\SautinSoft.Document.xml

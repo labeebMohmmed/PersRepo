@@ -72,6 +72,7 @@ namespace PersAhwal
         string formNo = "";
         string[] itemsicheck1 = new string[5];
         bool AuthType = true;
+        bool reqGrid = false;
         
         public Settings(string server, bool newSettings, string dataSource56, string dataSource57, bool setDataBase, string filepathIn, string filepathOut, string archFile, string formDataFile, string colName)
         {
@@ -115,10 +116,13 @@ namespace PersAhwal
                 //flllPanelItemsboxes("ColName", colName);
             }
             Suffex_preffixList();
-            for (int x = 0; x < mainTypeAuth.Items.Count; x++)
-            {
-                sunInfo(mainTypeAuth.Items[x].ToString().Replace(" ", "_"), x);
-            }
+            //for (int x = 0; x < mainTypeAuth.Items.Count; x++)
+            //{
+            //    sunInfo(mainTypeAuth.Items[x].ToString().Replace(" ", "_"), x);
+            //}
+            System.Globalization.CultureInfo TypeOfLanguage = new System.Globalization.CultureInfo("ar-SA");
+            InputLanguage.CurrentInputLanguage = InputLanguage.FromCulture(TypeOfLanguage);
+            txtSearch.Select();
         }
 
         private void insertRow(string ColName)
@@ -450,6 +454,7 @@ namespace PersAhwal
 
         private void button36_Click(object sender, EventArgs e)
         {
+            reqGrid = false;
             AuthType = true;
                 if(dataGridView1.Visible)
             {
@@ -484,10 +489,10 @@ namespace PersAhwal
             }
             catch (Exception ex) { return; }
 
-            SqlDataAdapter sqlDa = new SqlDataAdapter("select " + getColumnNames(table) + " from " + table + " order by ID desc", sqlCon);
-            //SqlDataAdapter sqlDa = new SqlDataAdapter("select " + getColumnNames(table) + " from " + table + " where ColRight <> '' order by ID desc", sqlCon);
-            //if(!auth)
-            //    sqlDa = new SqlDataAdapter("select " + getColumnNames(table) + " from " + table + " where ColRight = '' order by ID desc", sqlCon);
+            //SqlDataAdapter sqlDa = new SqlDataAdapter("select " + getColumnNames(table) + " from " + table + " order by ID desc", sqlCon);
+            SqlDataAdapter sqlDa = new SqlDataAdapter("select " + getColumnNames(table) + " from " + table + " where ColRight <> '' order by ID desc", sqlCon);
+            if (!auth)
+                sqlDa = new SqlDataAdapter("select " + getColumnNames(table) + " from " + table + " where ColRight = '' order by ID desc", sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
             sqlDa.Fill(dtbl);
@@ -516,12 +521,12 @@ namespace PersAhwal
             }
             catch (Exception ex) { return; }
 
-            SqlDataAdapter sqlDa = new SqlDataAdapter("select " + getColumnNames(table) + " from " + table + " order by ID desc", sqlCon);
+            SqlDataAdapter sqlDa = new SqlDataAdapter("select " + getColumnNames(table) + " from " + table + " order by  المعاملة asc", sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
             sqlDa.Fill(dtbl);
             dataGridView1.DataSource = dtbl;
-            dataGridView1.Sort(dataGridView1.Columns["ID"], System.ComponentModel.ListSortDirection.Descending);
+            //dataGridView1.Sort(dataGridView1.Columns["ID"], System.ComponentModel.ListSortDirection.Descending);
             //dataGridView1.Columns["ID"].Visible = false;
             try
             {
@@ -693,8 +698,11 @@ namespace PersAhwal
                     dataAdapter.Fill(table);
                 foreach (DataRow dataRow in table.Rows)
                 {
-                    if (!String.IsNullOrEmpty(dataRow[comlumnName].ToString()))
-                        combbox.Items.Add(dataRow[comlumnName].ToString());
+                        if (!String.IsNullOrEmpty(dataRow[comlumnName].ToString()))
+                        {
+                            //MessageBox.Show(dataRow[comlumnName].ToString());
+                            combbox.Items.Add(dataRow[comlumnName].ToString());
+                        }
                 }
                 }
                 catch (Exception ex) { }
@@ -1101,7 +1109,7 @@ namespace PersAhwal
                 idIndex = Convert.ToInt32(dataGridView1.CurrentRow.Cells["ID"].Value.ToString());
 
                 langAuth.Text = dataGridView1.CurrentRow.Cells["Lang"].Value.ToString();
-                ColRight.Text = dataGridView1.CurrentRow.Cells["ColName"].Value.ToString().Replace(" ", "_");
+                ColRight.Text = dataGridView1.CurrentRow.Cells["ColRight"].Value.ToString().Replace(" ", "_");
                 TextModel.Text = dataGridView1.CurrentRow.Cells["TextModel"].Value.ToString();
                 editRights = dataGridView1.CurrentRow.Cells["editRights"].Value.ToString();
                 errorList = dataGridView1.CurrentRow.Cells["errorList"].Value.ToString();
@@ -1179,7 +1187,9 @@ namespace PersAhwal
                 btnDelete.Visible = btnClear.Visible = true;
                 DPTitle[0] = icheckoption11.Text + "_" + icheckoption12.Text;
                 dataGridView1.Visible = false;
-                btnRightsShow.PerformClick();
+                //MessageBox.Show(ColRight.Text);
+                if(ColRight.Text != "") 
+                    btnRightsShow.PerformClick();
             }
         }
 
@@ -1188,68 +1198,93 @@ namespace PersAhwal
             for (int indEX = 0; indEX < dataGridView1.Rows.Count - 1; indEX++)
                 if (colName == dataGridView1.Rows[indEX].Cells["ColName"].Value.ToString())
                 {
-                    idIndex = Convert.ToInt32(dataGridView1.Rows[indEX].Cells[0].Value.ToString());
+                    string colname = txtProName.Text = dataGridView1.Rows[indEX].Cells["ColName"].Value.ToString();
+                    revised = dataGridView1.Rows[indEX].Cells["revised"].Value.ToString();
+                    labID.Text = "rowID:" + dataGridView1.Rows[indEX].Cells["ID"].Value.ToString();
+                    idIndex = Convert.ToInt32(dataGridView1.Rows[indEX].Cells["ID"].Value.ToString());
+
                     langAuth.Text = dataGridView1.Rows[indEX].Cells["Lang"].Value.ToString();
-                    ColRight.Text = dataGridView1.Rows[indEX].Cells["ColName"].Value.ToString().Replace(" ","_");
+                    ColRight.Text = dataGridView1.Rows[indEX].Cells["ColRight"].Value.ToString().Replace(" ", "_");
                     TextModel.Text = dataGridView1.Rows[indEX].Cells["TextModel"].Value.ToString();
                     editRights = dataGridView1.Rows[indEX].Cells["editRights"].Value.ToString();
                     errorList = dataGridView1.Rows[indEX].Cells["errorList"].Value.ToString();
 
-                    if (errorList != "")
+                    panelJob(dataGridView1.Rows[indEX].Index);
+                    //ColRight.Text = dataGridView1.Rows[indEX].Cells["ColName"].Value.ToString();
+                    //MessageBox.Show(dataGridView1.Rows[indEX].Index.ToString());
+
+                    if (langAuth.Text == "" || langAuth.Text == "العربية")
                     {
-                        panellError.Visible = true;
-                        panellError.BringToFront();
-                        errors = errorList.Split('_');
-                        //MessageBox.Show(error);MessageBox.Show(errors[0]);
-                        error1.Checked = Convert.ToBoolean(errors[0]);
-                        error2.Checked = Convert.ToBoolean(errors[1]);
-                        error3.Checked = Convert.ToBoolean(errors[2]);
-                        error4.Checked = Convert.ToBoolean(errors[3]);
-                        error5.Checked = Convert.ToBoolean(errors[4]);
-                        if (errors[5] == "False")
-                            labelError.Visible = otherError.Visible = error6.Checked = false;
-                        else
-                        {
-                            otherError.Visible = labelError.Visible = true;
-                            error6.Checked = true;
-                            otherError.Text = errors[5];
-                        }
-                        button22.Visible = true;
-                        Nobox = 0;
-                        foreach (string str in editRights.Split('،'))
-                        {
-                            if (str != "")
-                            {
-                                //{
-                                CheckBox chk = new CheckBox();
-                                chk.TabIndex = Nobox;
-                                chk.Width = 80;
-                                chk.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                                if (Nobox == 0) chk.Width = panelAuthOptions.Width - 100;
-                                else chk.Width = panelAuthOptions.Width - 130;
-                                chk.Height = 33;
-                                chk.Location = new System.Drawing.Point(70, 3 + Nobox * 37);
-                                chk.Name = "checkBox" + Nobox.ToString();
-                                try
-                                {
-                                    chk.Text = str.Split('_')[1] + "،";
-                                    chk.Tag = "valid";
-                                    if (str.Split('_')[0] == "1")
-                                        chk.CheckState = CheckState.Checked;
-                                    else chk.CheckState = CheckState.Unchecked;
-                                }
-                                catch (Exception ex)
-                                {
-                                    //MessageBox.Show(str);
-                                }
-                                Nobox++;
-                                panellError.Controls.Add(chk);
-                            }
-                        }
+                        langAuth.CheckState = CheckState.Unchecked;
+                        langAuth.Text = "العربية";
+                        langIqrar.CheckState = CheckState.Unchecked;
+                        langIqrar.Text = "العربية";
+                    }
+                    else
+                    {
+                        langAuth.CheckState = CheckState.Checked;
+                        langAuth.Text = "الانجليزية";
+                        langIqrar.CheckState = CheckState.Checked;
+                        langIqrar.Text = "الانجليزية";
                     }
 
-                    panelJob(indEX);
-                    
+                    if (ColRight.Text != "")
+                    {
+                        panelAuthInfo.Visible = true;
+                        panelIqrar.Visible = false;
+                        try
+                        {
+                            mainTypeAuth.SelectedIndex = Convert.ToInt32(colname.Split('-')[1]);
+                            subTypeAuth.Text = colname.Split('-')[0];
+                            formNo = mainTypeAuth.Text + "-" + subTypeAuth.Text.Trim();
+
+                        }
+                        catch (Exception ex) { }
+                    }
+                    else
+                    {
+                        panelIqrar.Visible = true;
+                        panelAuthInfo.Visible = false;
+                        try
+                        {
+                            mainTypeIqrar.SelectedIndex = Convert.ToInt32(colname.Split('-')[1]);
+                            subTypeIqrar.Text = colname.Split('-')[0];
+                            formNo = mainTypeAuth.Text + "-" + subTypeAuth.Text.Trim();
+                        }
+                        catch (Exception ex) { }
+                    }
+
+
+
+                    txtSearch.Visible = button32.Visible = label1.Visible = dataGridView1.Visible = false;
+                    ContextPanel.BringToFront();
+                    labID.BringToFront();
+                    if (checkRequInfo(formNo))
+                        OpenFile(formNo, true, formsBtn);
+                    else
+                    {
+                        repReqPanel.BringToFront();
+                        repReqPanel.Visible = true;
+                        المعاملة.Text = formNo;
+                        revisedRow("");
+                        MessageBox.Show("لا يوجد قائمة بالمطلوبات الأولية للمعاملة، يرجى إضافتها");
+                    }
+                    if (!formsBtn.Enabled)
+                    {
+                        revisedRow("");
+                        formsBtn.Enabled = true;
+                        formsBtn.Text = "رفع الاستمارة الأولية";
+                    }
+                    panelLowButtons.Visible = ContextPanel.Visible = true;
+                    button117.Enabled = true;
+                    //review1 = true;
+                    review1 = false;
+                    btnDelete.Visible = btnClear.Visible = true;
+                    DPTitle[0] = icheckoption11.Text + "_" + icheckoption12.Text;
+                    dataGridView1.Visible = false;
+                    //MessageBox.Show(ColRight.Text);
+                    if (ColRight.Text != "")
+                        btnRightsShow.PerformClick();
                 }
         }
 
@@ -2186,6 +2221,7 @@ namespace PersAhwal
         {
             if (checkColumnName(mainTypeAuth.Text.Replace(" ", "_")))
             {
+                //MessageBox.Show(mainTypeAuth.Text.Replace(" ", "_"));
                 subTypeAuth.Items.Clear();
                 //newFillComboBox1(subTypeAuth, DataSource, mainTypeAuth.SelectedIndex.ToString(), langAuth.Text);
                 fillSubComboBox(subTypeAuth, DataSource, mainTypeAuth.Text.Replace(" ", "_"), "TableListCombo",false);
@@ -2278,23 +2314,50 @@ namespace PersAhwal
                 //    dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightCyan;
                 //    errorList++;
                 //}
-                try
+                if (!reqGrid)
                 {
+                    try
+                    {
+                        if (dataGridView1.Rows[i].Cells["revised"].Value.ToString() == "")
+                        {
+                            dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.White;
+                            if (dataGridView1.Rows[i].Cells["ColRight"].Value.ToString() != "") authrevices++;
+                        }
+                        else dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
+                        if (dataGridView1.Rows[i].Cells["ColRight"].Value.ToString() != "") allauth++;
+                    }
+                    catch (Exception ex) { }
+                }
+                else
+                {
+                    allauth++;
                     if (dataGridView1.Rows[i].Cells["revised"].Value.ToString() == "")
                     {
                         dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.White;
-                        if (dataGridView1.Rows[i].Cells["ColRight"].Value.ToString() != "") authrevices++;
                     }
-                    else dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
-                    if (dataGridView1.Rows[i].Cells["ColRight"].Value.ToString() != "") allauth++;
-                }
-                catch (Exception ex) { }
-            }
+                    if (dataGridView1.Rows[i].Cells["proForm1"].Value.ToString() == "")
+                    {
+                        dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightCyan;
+                    }
+                    else if (dataGridView1.Rows[i].Cells["revised"].Value.ToString() != "")
+                    {
+                        dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
+                        authrevices++;
+                    }
+                    }
+             }
             if (errorList > 0) labelarch.Visible = true;
             else labelarch.Visible = false;
             //labelarch.Text = "عدد (" + errorList.ToString() + ") معاملة تحتاج إلى تصحيح ";
-            labelarch.Text = "عدد (" + authrevices.ToString() + ") تم معاينتها من أصل ( " + allauth+") معاملة ";
-            label1.Text = "عدد (" + authrevices.ToString() + ") تم معاينتها من أصل ( " + allauth+") معاملة ";
+            if (!reqGrid)
+            {
+                labelarch.Text = "عدد (" + authrevices.ToString() + ") تم معاينتها من أصل ( " + allauth + ") معاملة ";
+                label1.Text = "عدد (" + authrevices.ToString() + ") تم معاينتها من أصل ( " + allauth + ") معاملة ";
+            }
+            else {
+                labelarch.Text = "عدد (" + authrevices.ToString() + ") تم معاينتها من أصل ( " + allauth + ") معاملة ";
+                label1.Text = "عدد (" + authrevices.ToString() + ") تم معاينتها من أصل ( " + allauth + ") معاملة ";
+            }
 
         }
 
@@ -2305,7 +2368,7 @@ namespace PersAhwal
             //MessageBox.Show(subTypeAuth.Text + "-" + mainTypeAuth.SelectedIndex.ToString());
             dataGridView1_RowIndex(subTypeAuth.Text + "-" + mainTypeAuth.SelectedIndex.ToString());
                 string formNo = mainTypeAuth.Text + "-" + subTypeAuth.Text.Trim();
-            checkIndex = false;
+            //checkIndex = false;
             OpenFile(formNo, false, formsBtn);
             //flllPanelItemsboxes("ColName", subTypeAuth.Text + "-" + mainTypeAuth.SelectedIndex.ToString());
             //for (int id = 0; id < dataGridView1.Rows.Count - 1; id++)
@@ -2451,7 +2514,7 @@ namespace PersAhwal
                     byte[] buffer1 = new byte[stream.Length];
                     stream.Read(buffer1, 0, buffer1.Length);
                     var fileinfo1 = new FileInfo(location);
-                    string query = "UPDATE TableProcReq SET Data1=@Data1,proForm1=@proForm1 WHERE المعاملة=N'" + formNo + "'";
+                    string query = "UPDATE TableProcReq SET Data1=@Data1,proForm1=@proForm1 WHERE المعاملة=N'" + المعاملة.Text + "'";
                     //MessageBox.Show(query);
                     SqlConnection sqlCon = new SqlConnection(DataSource);
                     try
@@ -2463,8 +2526,8 @@ namespace PersAhwal
                     SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
                     sqlCmd.CommandType = CommandType.Text;
                     sqlCmd.Parameters.Add("@Data1", SqlDbType.VarBinary).Value = buffer1;
-                    sqlCmd.Parameters.Add("@proForm1", SqlDbType.NVarChar).Value = formNo;
-                    //MessageBox.Show(formNo);
+                    sqlCmd.Parameters.Add("@proForm1", SqlDbType.NVarChar).Value = المعاملة.Text;
+                    //MessageBox.Show(المعاملة.Text);
                     sqlCmd.ExecuteNonQuery();
                     sqlCon.Close();
                     
@@ -2903,6 +2966,7 @@ namespace PersAhwal
 
         private void btnClear_Click(object sender, EventArgs e)
         {
+            reqGrid = false; 
             AuthType = false; 
             if (dataGridView1.Visible)
             {
@@ -3010,22 +3074,21 @@ namespace PersAhwal
                 }
             }
             sqlCmd.Parameters.AddWithValue("@TextModel", TextModel.Text);
-            sqlCmd.Parameters.AddWithValue("@editRights", editRights);
+            
             sqlCmd.Parameters.AddWithValue("@ColName", txtProName.Text);
             if (panelAuthInfo.Visible)
             {
                 sqlCmd.Parameters.AddWithValue("@authIqrar", "auth");
                 sqlCmd.Parameters.AddWithValue("@Lang", langAuth.Text);
-                
-                
+                sqlCmd.Parameters.AddWithValue("@editRights", editRights);
+
                 //sqlCmd.Parameters.AddWithValue("@ColName", (subTypeAuth.Text + "-" + CombAuthTypeIndex.ToString()).Replace("--", "-"));
             }
             else
             {
                 sqlCmd.Parameters.AddWithValue("@authIqrar", "iqrar");
                 sqlCmd.Parameters.AddWithValue("@Lang", langIqrar.Text);
-                sqlCmd.Parameters.AddWithValue("@ColRight", "");
-
+                sqlCmd.Parameters.AddWithValue("@editRights", "");
                 //sqlCmd.Parameters.AddWithValue("@ColName", (subTypeIqrar.Text + "-" + mainTypeIqrar.SelectedIndex.ToString()).Replace("--", "-"));
             }
         }
@@ -3494,10 +3557,11 @@ namespace PersAhwal
 
         private void button23_Click(object sender, EventArgs e)
         {
+            reqGrid = true; 
             if (dataGridView1.Visible)
             {
                 txtSearch.Visible = button32.Visible = label1.Visible = dataGridView1.Visible = false;
-                flowLayoutPanel9.Visible = SettingsPanel.Visible = false;
+                repReqPanel.Visible = flowLayoutPanel9.Visible = SettingsPanel.Visible = false;
                 dataGridView1.SendToBack();
                 repReqPanel.BringToFront();
                 
@@ -3817,6 +3881,15 @@ namespace PersAhwal
                 CurrentFile = @dlg.FileName;
                 //MessageBox.Show(CurrentFile);
                 uploadFormsReq(CurrentFile);
+                panelLowButtons.Visible = panelIqrar.Visible = panelAuthInfo.Visible = false;
+                txtSearch.Visible = button32.Visible = label1.Visible = dataGridView1.Visible = true;
+
+                repReqPanel.Visible = true;
+                ContextPanel.Visible = false;
+                dataGridView1.BringToFront();
+                FillDataGridViewReq("TableProcReq");
+                formsBtn.Visible = proFileBtn.Visible = btnRevised.Visible = false;
+                fileComboBox(المعاملة, DataSource, "المعاملة", "TableProcReq", true);
             }
         }
 
@@ -3935,6 +4008,30 @@ namespace PersAhwal
             }
         }
 
+        private void txtSearch_MouseClick(object sender, MouseEventArgs e)
+        {
+            System.Globalization.CultureInfo TypeOfLanguage = new System.Globalization.CultureInfo("ar-SA");
+            InputLanguage.CurrentInputLanguage = InputLanguage.FromCulture(TypeOfLanguage);
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void searchReq_TextChanged(object sender, EventArgs e)
+        {
+            if (searchReq.Text.Length != 0 && searchReq.Text.All(char.IsLetterOrDigit))
+            {
+                BindingSource bs = new BindingSource();
+                bs.DataSource = dataGridView1.DataSource;
+                bs.Filter = dataGridView1.Columns[2].HeaderText.ToString() + " LIKE '%" + searchReq.Text + "%'";
+                dataGridView1.DataSource = bs;
+            }
+            else FillDataGridViewReq("TableProcReq");
+            ColorFulGrid9();
+        }
+
         private void button116_Click(object sender, EventArgs e)
         {
             ColumnJobs();
@@ -3948,9 +4045,10 @@ namespace PersAhwal
             catch (Exception ex) { return; }
             SqlCommand sqlCmd = new SqlCommand(insertAll, sqlCon);
             sqlCmd.CommandType = CommandType.Text;
-            
-            sqlCmd.Parameters.AddWithValue("@revised", revised);            
-            sqlCmd.Parameters.AddWithValue("@ColRight", ColRight.Text);
+            MessageBox.Show(revised);
+            sqlCmd.Parameters.AddWithValue("@revised", "");
+            MessageBox.Show(ColRight.Text);
+            sqlCmd.Parameters.AddWithValue("@ColRight", "");            
             sqlCmd.Parameters.AddWithValue("@errorList", "");
             addParameters(sqlCmd);
             sqlCmd.ExecuteNonQuery();

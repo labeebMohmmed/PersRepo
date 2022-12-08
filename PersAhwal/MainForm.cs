@@ -898,6 +898,7 @@ namespace PersAhwal
 
         private string getVersio()
         {
+            //return "";
             string ver = "1.0.0.0";
             SqlConnection sqlCon = new SqlConnection(DataSource56);
             try
@@ -1323,6 +1324,51 @@ namespace PersAhwal
                         using (var package = new ExcelPackage(fileinfo))
                         {
                             ExcelWorksheet excelsheet = package.Workbook.Worksheets.Add("Rights");
+                            excelsheet.Cells.LoadFromDataTable(dtbl);
+
+                            //excelsheet.Cells.LoadFromCollection(dataGridView7.DataSource); 
+                            package.Save();
+
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+
+
+                }
+            }
+        }
+
+
+        private void StaredColumns1()
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+            SqlDataAdapter sqlDa1 = new SqlDataAdapter("select * from TableAddContext", sqlCon);
+            sqlDa1.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa1.Fill(dtbl);
+            dataGridView7.DataSource = dtbl;
+
+            sqlCon.Close();
+
+
+            using (SaveFileDialog sfd = new SaveFileDialog() { Filter = "Excel workbook|*.xlsx" })
+            {
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        var fileinfo = new FileInfo(sfd.FileName);
+                        using (var package = new ExcelPackage(fileinfo))
+                        {
+                            ExcelWorksheet excelsheet = package.Workbook.Worksheets.Add("Context");
                             excelsheet.Cells.LoadFromDataTable(dtbl);
 
                             //excelsheet.Cells.LoadFromCollection(dataGridView7.DataSource); 
@@ -5159,11 +5205,17 @@ rep1[month, 0] = monthS;
         private void button21_Click(object sender, EventArgs e)
         {
             StaredColumns();
+            //StaredColumns1();
             //var selectedOption = MessageBox.Show("", "تحميل الاحصائيات؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             //if (selectedOption == DialogResult.Yes)
             //{
             //    StatisticInfo();
             //}
+            var selectedOption = MessageBox.Show("", "قوائم المعاملات؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (selectedOption == DialogResult.Yes)
+            {
+                StaredColumns1();
+            }
         }
 
         private void merriageTable()
@@ -6230,6 +6282,7 @@ rep1[month, 0] = monthS;
             {
                 VersionUpdate(str + ".O");
             }
+            timer4Update();
         }
 
         private void upDateClose()
@@ -6250,32 +6303,35 @@ rep1[month, 0] = monthS;
                 //MessageBox.Show("close");
             }
         }
-        private void timer4_Tick(object sender, EventArgs e)
-        {
-            UserLogOut();
+        private void timer4Update() {
+            int CV = 0;
+            int cV = 0;
+            string updateType = "O";
+            //if (onUpdate) return;
             string currentVersion = getVersio();
             try
             {
-                int CV = Convert.ToInt32(CurrentVersion.Split('.')[3]);
-            
-                int cV = Convert.ToInt32(currentVersion.Split('.')[3]);
-        
-            
-            if (CV < cV && UserJobposition.Contains("قنصل"))
-            {
-                
-                empUpdate.Visible = false;
+                CV = Convert.ToInt32(CurrentVersion.Split('.')[3]);
+
+                cV = Convert.ToInt32(currentVersion.Split('.')[3]);
+                updateType = currentVersion.Split('.')[4];
+                if (CV < cV && UserJobposition.Contains("قنصل"))
+                {
+
+                    empUpdate.Visible = false;
+                }
+                else
+                {
+
+                    empUpdate.Visible = true;
+                }
             }
-            else
-            {
-                
-                empUpdate.Visible = true;
-            }
-            }
+
             catch (Exception ex) { return; }
             
-
-            if (Convert.ToInt32(CurrentVersion.Split('.')[3]) < Convert.ToInt32(currentVersion.Split('.')[3]) && currentVersion.Split('.')[4] == "F" && !onUpdate)
+            if (CV >= cV || updateType != "F")
+                return;
+            else if (CV < cV && updateType == "F" && !onUpdate)
             {
                 Console.WriteLine(primeryLink + @"\updatingStatus.txt");
                 string status = File.ReadAllText(primeryLink + @"\updatingStatus.txt");
@@ -6285,12 +6341,18 @@ rep1[month, 0] = monthS;
                     upDateClose();
                 }
             }
+        }
+        private void timer4_Tick(object sender, EventArgs e)
+        {
+            UserLogOut();
             if (deleteEmptyRows)
             {
+                Console.WriteLine("deleteEmptyRows");
                 {
                     DeleteEmptyFiles(parrtialAll);
                 }
             }
+
         }
 
         private void DeleteEmptyFiles(bool partial)
