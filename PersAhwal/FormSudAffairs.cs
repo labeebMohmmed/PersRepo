@@ -3965,7 +3965,8 @@ namespace PersAhwal
 
         }
 
-        private void ListSearch_TextChanged(object sender, EventArgs e)
+      
+            private void ListSearch_TextChanged(object sender, EventArgs e)
         {
             //
             Console.WriteLine("Before Items count " + dataGridView1.Rows.Count.ToString());

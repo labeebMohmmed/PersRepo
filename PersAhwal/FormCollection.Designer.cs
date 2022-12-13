@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormCollection));
             this.PanelFiles = new System.Windows.Forms.Panel();
             this.button1 = new System.Windows.Forms.Button();
@@ -111,6 +111,10 @@
             this.التوقيع = new System.Windows.Forms.TextBox();
             this.نص_مقدم_الطلب0 = new System.Windows.Forms.TextBox();
             this.panelAuthRights = new System.Windows.Forms.FlowLayoutPanel();
+            this.button7 = new System.Windows.Forms.Button();
+            this.button10 = new System.Windows.Forms.Button();
+            this.صفة_مقدم_الطلب_off = new System.Windows.Forms.ComboBox();
+            this.button8 = new System.Windows.Forms.Button();
             this.PanelItemsboxes = new System.Windows.Forms.FlowLayoutPanel();
             this.Litext1 = new System.Windows.Forms.Label();
             this.Vitext1 = new System.Windows.Forms.TextBox();
@@ -170,6 +174,18 @@
             this.LibtnAdd3 = new System.Windows.Forms.Button();
             this.LibtnAdd4 = new System.Windows.Forms.Button();
             this.LibtnAdd5 = new System.Windows.Forms.Button();
+            this.PanelButtonInfo = new System.Windows.Forms.FlowLayoutPanel();
+            this.button9 = new System.Windows.Forms.Button();
+            this.labl1 = new System.Windows.Forms.Label();
+            this.button11 = new System.Windows.Forms.Button();
+            this.labl2 = new System.Windows.Forms.Label();
+            this.button12 = new System.Windows.Forms.Button();
+            this.labl3 = new System.Windows.Forms.Label();
+            this.button13 = new System.Windows.Forms.Button();
+            this.labl4 = new System.Windows.Forms.Label();
+            this.button14 = new System.Windows.Forms.Button();
+            this.labl5 = new System.Windows.Forms.Label();
+            this.button15 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.checkAutoUpdate = new System.Windows.Forms.CheckBox();
             this.PaneltxtReview = new System.Windows.Forms.FlowLayoutPanel();
@@ -217,6 +233,7 @@
             this.PanelItemsboxes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.PanelButtonInfo.SuspendLayout();
             this.PaneltxtReview.SuspendLayout();
             this.panelRemove.SuspendLayout();
             this.finalPanel.SuspendLayout();
@@ -665,6 +682,7 @@
             this.btnPanelapp.TabIndex = 631;
             this.btnPanelapp.Text = "إخفاء";
             this.btnPanelapp.UseVisualStyleBackColor = true;
+            this.btnPanelapp.Click += new System.EventHandler(this.btnPanelapp_Click);
             // 
             // label28
             // 
@@ -839,6 +857,7 @@
             this.طريقة_الطلب.Text = "حضور مباشرة إلى القنصلية";
             this.طريقة_الطلب.UseVisualStyleBackColor = true;
             this.طريقة_الطلب.CheckedChanged += new System.EventHandler(this.طريقة_الطلب_CheckedChanged);
+            this.طريقة_الطلب.TextChanged += new System.EventHandler(this.طريقة_الطلب_TextChanged);
             // 
             // mandoubLabel
             // 
@@ -890,6 +909,8 @@
             this.موقع_المعاملة.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.موقع_المعاملة.Size = new System.Drawing.Size(184, 35);
             this.موقع_المعاملة.TabIndex = 666;
+            this.موقع_المعاملة.SelectedIndexChanged += new System.EventHandler(this.موقع_المعاملة_SelectedIndexChanged);
+            this.موقع_المعاملة.TextChanged += new System.EventHandler(this.موقع_المعاملة_TextChanged);
             // 
             // label2
             // 
@@ -1095,23 +1116,23 @@
             this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle4;
             this.dataGridView1.Location = new System.Drawing.Point(3, 0);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -1205,7 +1226,12 @@
             this.panelAuthRights.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.panelAuthRights.BackColor = System.Drawing.SystemColors.Control;
             this.panelAuthRights.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelAuthRights.Controls.Add(this.button7);
+            this.panelAuthRights.Controls.Add(this.button10);
+            this.panelAuthRights.Controls.Add(this.صفة_مقدم_الطلب_off);
+            this.panelAuthRights.Controls.Add(this.button8);
             this.panelAuthRights.Controls.Add(this.PanelItemsboxes);
+            this.panelAuthRights.Controls.Add(this.PanelButtonInfo);
             this.panelAuthRights.Controls.Add(this.button6);
             this.panelAuthRights.Controls.Add(this.checkAutoUpdate);
             this.panelAuthRights.Controls.Add(this.PaneltxtReview);
@@ -1213,9 +1239,63 @@
             this.panelAuthRights.Location = new System.Drawing.Point(12, 41);
             this.panelAuthRights.Name = "panelAuthRights";
             this.panelAuthRights.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.panelAuthRights.Size = new System.Drawing.Size(1315, 367);
+            this.panelAuthRights.Size = new System.Drawing.Size(1315, 639);
             this.panelAuthRights.TabIndex = 669;
             this.panelAuthRights.Visible = false;
+            // 
+            // button7
+            // 
+            this.button7.BackColor = System.Drawing.SystemColors.Control;
+            this.button7.FlatAppearance.BorderSize = 0;
+            this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button7.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button7.Location = new System.Drawing.Point(844, 3);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(466, 35);
+            this.button7.TabIndex = 671;
+            this.button7.UseVisualStyleBackColor = false;
+            this.button7.Visible = false;
+            // 
+            // button10
+            // 
+            this.button10.BackColor = System.Drawing.SystemColors.Control;
+            this.button10.FlatAppearance.BorderSize = 0;
+            this.button10.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button10.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button10.Location = new System.Drawing.Point(704, 3);
+            this.button10.Name = "button10";
+            this.button10.Size = new System.Drawing.Size(134, 35);
+            this.button10.TabIndex = 686;
+            this.button10.Text = "صفة مقدم الطلب:";
+            this.button10.UseVisualStyleBackColor = false;
+            // 
+            // صفة_مقدم_الطلب_off
+            // 
+            this.صفة_مقدم_الطلب_off.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.صفة_مقدم_الطلب_off.FormattingEnabled = true;
+            this.صفة_مقدم_الطلب_off.Items.AddRange(new object[] {
+            "مفرد مذكر",
+            "مفرد مؤنث",
+            "مثنى مذكر",
+            "مثنى مؤنث",
+            "جمع مؤنث",
+            "جمع مذكر ومؤنث"});
+            this.صفة_مقدم_الطلب_off.Location = new System.Drawing.Point(513, 3);
+            this.صفة_مقدم_الطلب_off.Name = "صفة_مقدم_الطلب_off";
+            this.صفة_مقدم_الطلب_off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.صفة_مقدم_الطلب_off.Size = new System.Drawing.Size(185, 35);
+            this.صفة_مقدم_الطلب_off.TabIndex = 683;
+            this.صفة_مقدم_الطلب_off.Text = "صفة مقدم الطلب";
+            // 
+            // button8
+            // 
+            this.button8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.button8.Location = new System.Drawing.Point(432, 3);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(75, 35);
+            this.button8.TabIndex = 685;
+            this.button8.Text = "أعد الصياغة";
+            this.button8.UseVisualStyleBackColor = false;
             // 
             // PanelItemsboxes
             // 
@@ -1281,7 +1361,7 @@
             this.PanelItemsboxes.Controls.Add(this.LibtnAdd5);
             this.PanelItemsboxes.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
             this.PanelItemsboxes.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PanelItemsboxes.Location = new System.Drawing.Point(2, 3);
+            this.PanelItemsboxes.Location = new System.Drawing.Point(2, 44);
             this.PanelItemsboxes.Name = "PanelItemsboxes";
             this.PanelItemsboxes.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.PanelItemsboxes.Size = new System.Drawing.Size(1308, 116);
@@ -1883,6 +1963,7 @@
             this.LibtnAdd1.TabIndex = 601;
             this.LibtnAdd1.UseVisualStyleBackColor = false;
             this.LibtnAdd1.Visible = false;
+            this.LibtnAdd1.Click += new System.EventHandler(this.LibtnAdd1_Click);
             // 
             // pictureBox2
             // 
@@ -1946,13 +2027,161 @@
             this.LibtnAdd5.UseVisualStyleBackColor = false;
             this.LibtnAdd5.Visible = false;
             // 
+            // PanelButtonInfo
+            // 
+            this.PanelButtonInfo.AutoScroll = true;
+            this.PanelButtonInfo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.PanelButtonInfo.Controls.Add(this.button9);
+            this.PanelButtonInfo.Controls.Add(this.labl1);
+            this.PanelButtonInfo.Controls.Add(this.button11);
+            this.PanelButtonInfo.Controls.Add(this.labl2);
+            this.PanelButtonInfo.Controls.Add(this.button12);
+            this.PanelButtonInfo.Controls.Add(this.labl3);
+            this.PanelButtonInfo.Controls.Add(this.button13);
+            this.PanelButtonInfo.Controls.Add(this.labl4);
+            this.PanelButtonInfo.Controls.Add(this.button14);
+            this.PanelButtonInfo.Controls.Add(this.labl5);
+            this.PanelButtonInfo.Controls.Add(this.button15);
+            this.PanelButtonInfo.Location = new System.Drawing.Point(2, 166);
+            this.PanelButtonInfo.Name = "PanelButtonInfo";
+            this.PanelButtonInfo.Size = new System.Drawing.Size(1308, 125);
+            this.PanelButtonInfo.TabIndex = 677;
+            this.PanelButtonInfo.Visible = false;
+            // 
+            // button9
+            // 
+            this.button9.BackColor = System.Drawing.SystemColors.Control;
+            this.button9.FlatAppearance.BorderSize = 0;
+            this.button9.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button9.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button9.Location = new System.Drawing.Point(1235, 3);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(68, 35);
+            this.button9.TabIndex = 632;
+            this.button9.UseVisualStyleBackColor = false;
+            // 
+            // labl1
+            // 
+            this.labl1.AutoSize = true;
+            this.labl1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labl1.Location = new System.Drawing.Point(1155, 0);
+            this.labl1.Name = "labl1";
+            this.labl1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.labl1.Size = new System.Drawing.Size(74, 27);
+            this.labl1.TabIndex = 560;
+            this.labl1.Text = "النص الأول:";
+            // 
+            // button11
+            // 
+            this.button11.BackColor = System.Drawing.SystemColors.Control;
+            this.button11.FlatAppearance.BorderSize = 0;
+            this.button11.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button11.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button11.Location = new System.Drawing.Point(982, 3);
+            this.button11.Name = "button11";
+            this.button11.Size = new System.Drawing.Size(167, 35);
+            this.button11.TabIndex = 633;
+            this.button11.UseVisualStyleBackColor = false;
+            // 
+            // labl2
+            // 
+            this.labl2.AutoSize = true;
+            this.labl2.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labl2.Location = new System.Drawing.Point(902, 0);
+            this.labl2.Name = "labl2";
+            this.labl2.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.labl2.Size = new System.Drawing.Size(74, 27);
+            this.labl2.TabIndex = 571;
+            this.labl2.Text = "النص الأول:";
+            // 
+            // button12
+            // 
+            this.button12.BackColor = System.Drawing.SystemColors.Control;
+            this.button12.FlatAppearance.BorderSize = 0;
+            this.button12.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button12.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button12.Location = new System.Drawing.Point(734, 3);
+            this.button12.Name = "button12";
+            this.button12.Size = new System.Drawing.Size(162, 35);
+            this.button12.TabIndex = 634;
+            this.button12.UseVisualStyleBackColor = false;
+            // 
+            // labl3
+            // 
+            this.labl3.AutoSize = true;
+            this.labl3.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labl3.Location = new System.Drawing.Point(654, 0);
+            this.labl3.Name = "labl3";
+            this.labl3.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.labl3.Size = new System.Drawing.Size(74, 27);
+            this.labl3.TabIndex = 573;
+            this.labl3.Text = "النص الأول:";
+            // 
+            // button13
+            // 
+            this.button13.BackColor = System.Drawing.SystemColors.Control;
+            this.button13.FlatAppearance.BorderSize = 0;
+            this.button13.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button13.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button13.Location = new System.Drawing.Point(483, 3);
+            this.button13.Name = "button13";
+            this.button13.Size = new System.Drawing.Size(165, 35);
+            this.button13.TabIndex = 635;
+            this.button13.UseVisualStyleBackColor = false;
+            // 
+            // labl4
+            // 
+            this.labl4.AutoSize = true;
+            this.labl4.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labl4.Location = new System.Drawing.Point(403, 0);
+            this.labl4.Name = "labl4";
+            this.labl4.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.labl4.Size = new System.Drawing.Size(74, 27);
+            this.labl4.TabIndex = 575;
+            this.labl4.Text = "النص الأول:";
+            // 
+            // button14
+            // 
+            this.button14.BackColor = System.Drawing.SystemColors.Control;
+            this.button14.FlatAppearance.BorderSize = 0;
+            this.button14.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button14.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button14.Location = new System.Drawing.Point(272, 3);
+            this.button14.Name = "button14";
+            this.button14.Size = new System.Drawing.Size(125, 35);
+            this.button14.TabIndex = 636;
+            this.button14.UseVisualStyleBackColor = false;
+            // 
+            // labl5
+            // 
+            this.labl5.AutoSize = true;
+            this.labl5.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labl5.Location = new System.Drawing.Point(192, 0);
+            this.labl5.Name = "labl5";
+            this.labl5.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.labl5.Size = new System.Drawing.Size(74, 27);
+            this.labl5.TabIndex = 577;
+            this.labl5.Text = "النص الأول:";
+            // 
+            // button15
+            // 
+            this.button15.BackColor = System.Drawing.SystemColors.Control;
+            this.button15.FlatAppearance.BorderSize = 0;
+            this.button15.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button15.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button15.Location = new System.Drawing.Point(10, 3);
+            this.button15.Name = "button15";
+            this.button15.Size = new System.Drawing.Size(176, 35);
+            this.button15.TabIndex = 637;
+            this.button15.UseVisualStyleBackColor = false;
+            // 
             // button6
             // 
             this.button6.BackColor = System.Drawing.SystemColors.Control;
             this.button6.FlatAppearance.BorderSize = 0;
             this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button6.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button6.Location = new System.Drawing.Point(747, 125);
+            this.button6.Location = new System.Drawing.Point(747, 297);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(563, 35);
             this.button6.TabIndex = 671;
@@ -1965,7 +2194,7 @@
             this.checkAutoUpdate.Checked = true;
             this.checkAutoUpdate.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkAutoUpdate.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkAutoUpdate.Location = new System.Drawing.Point(642, 125);
+            this.checkAutoUpdate.Location = new System.Drawing.Point(642, 297);
             this.checkAutoUpdate.Name = "checkAutoUpdate";
             this.checkAutoUpdate.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.checkAutoUpdate.Size = new System.Drawing.Size(99, 31);
@@ -1984,7 +2213,7 @@
             this.PaneltxtReview.Controls.Add(this.txtReview);
             this.PaneltxtReview.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
             this.PaneltxtReview.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PaneltxtReview.Location = new System.Drawing.Point(2, 166);
+            this.PaneltxtReview.Location = new System.Drawing.Point(2, 338);
             this.PaneltxtReview.Name = "PaneltxtReview";
             this.PaneltxtReview.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.PaneltxtReview.Size = new System.Drawing.Size(1308, 391);
@@ -1996,7 +2225,7 @@
             this.button3.FlatAppearance.BorderSize = 0;
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button3.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.Location = new System.Drawing.Point(503, 3);
+            this.button3.Location = new System.Drawing.Point(524, 3);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(783, 39);
             this.button3.TabIndex = 671;
@@ -2006,7 +2235,7 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(413, 0);
+            this.label12.Location = new System.Drawing.Point(434, 0);
             this.label12.Name = "label12";
             this.label12.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.label12.Size = new System.Drawing.Size(84, 27);
@@ -2033,7 +2262,7 @@
             this.عنوان_المكاتبة.Location = new System.Drawing.Point(3, 3);
             this.عنوان_المكاتبة.Name = "عنوان_المكاتبة";
             this.عنوان_المكاتبة.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.عنوان_المكاتبة.Size = new System.Drawing.Size(404, 39);
+            this.عنوان_المكاتبة.Size = new System.Drawing.Size(425, 39);
             this.عنوان_المكاتبة.TabIndex = 675;
             this.عنوان_المكاتبة.Text = "عنوان المكاتبة";
             // 
@@ -2044,7 +2273,7 @@
             this.txtReview.Multiline = true;
             this.txtReview.Name = "txtReview";
             this.txtReview.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.txtReview.Size = new System.Drawing.Size(1283, 632);
+            this.txtReview.Size = new System.Drawing.Size(1304, 396);
             this.txtReview.TabIndex = 671;
             // 
             // panelRemove
@@ -2058,7 +2287,7 @@
             this.panelRemove.Controls.Add(this.removedDocSource);
             this.panelRemove.Controls.Add(this.label7);
             this.panelRemove.Controls.Add(this.removedDocDate);
-            this.panelRemove.Location = new System.Drawing.Point(473, 563);
+            this.panelRemove.Location = new System.Drawing.Point(473, 735);
             this.panelRemove.Name = "panelRemove";
             this.panelRemove.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.panelRemove.Size = new System.Drawing.Size(837, 47);
@@ -2423,9 +2652,9 @@
             this.Controls.Add(this.btnPrevious);
             this.Controls.Add(this.labDescribed);
             this.Controls.Add(this.panelapplicationInfo);
+            this.Controls.Add(this.finalPanel);
             this.Controls.Add(this.panelAuthRights);
             this.Controls.Add(this.PanelDataGrid);
-            this.Controls.Add(this.finalPanel);
             this.Name = "FormCollection";
             this.Text = "FormCollection";
             this.Load += new System.EventHandler(this.FormCollection_Load);
@@ -2443,6 +2672,8 @@
             this.PanelItemsboxes.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.PanelButtonInfo.ResumeLayout(false);
+            this.PanelButtonInfo.PerformLayout();
             this.PaneltxtReview.ResumeLayout(false);
             this.PaneltxtReview.PerformLayout();
             this.panelRemove.ResumeLayout(false);
@@ -2636,5 +2867,21 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.ComboBox عنوان_المكاتبة;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button button10;
+        private System.Windows.Forms.ComboBox صفة_مقدم_الطلب_off;
+        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.FlowLayoutPanel PanelButtonInfo;
+        private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.Label labl1;
+        private System.Windows.Forms.Button button11;
+        private System.Windows.Forms.Label labl2;
+        private System.Windows.Forms.Button button12;
+        private System.Windows.Forms.Label labl3;
+        private System.Windows.Forms.Button button13;
+        private System.Windows.Forms.Label labl4;
+        private System.Windows.Forms.Button button14;
+        private System.Windows.Forms.Label labl5;
+        private System.Windows.Forms.Button button15;
     }
 }

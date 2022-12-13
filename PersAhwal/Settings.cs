@@ -2714,7 +2714,7 @@ namespace PersAhwal
 
                 int curenntID = getCurrentID(DataSource, mainTypeIqrar.Text.Replace(" ", "_"), "TableListCombo", subTypeIqrar.Text);
                 if (curenntID == 0)
-                    curenntID = getLastID(DataSource, mainTypeAuth.Text.Replace(" ", "_"), "TableListCombo");
+                    curenntID = getLastID(DataSource, mainTypeIqrar.Text.Replace(" ", "_"), "TableListCombo");
                 addSubAuth(curenntID, subTypeIqrar.Text, mainTypeIqrar.Text.Replace(" ", "_"));
             }
             
@@ -3738,8 +3738,8 @@ namespace PersAhwal
         {
             string[] data = new string[11];
             string[] colList = new string[11];
-            colList[0] = "رقم_المعاملة";
-            colList[1] = "المعاملة";
+            colList[1] = "رقم_المعاملة";
+            colList[0] = "المعاملة";
             colList[2] = "المطلوب_رقم1";
             colList[3] = "المطلوب_رقم2";
             colList[4] = "المطلوب_رقم3";
@@ -4045,9 +4045,9 @@ namespace PersAhwal
             catch (Exception ex) { return; }
             SqlCommand sqlCmd = new SqlCommand(insertAll, sqlCon);
             sqlCmd.CommandType = CommandType.Text;
-            MessageBox.Show(revised);
+            //MessageBox.Show(revised);
             sqlCmd.Parameters.AddWithValue("@revised", "");
-            MessageBox.Show(ColRight.Text);
+            //MessageBox.Show(ColRight.Text);
             sqlCmd.Parameters.AddWithValue("@ColRight", "");            
             sqlCmd.Parameters.AddWithValue("@errorList", "");
             addParameters(sqlCmd);

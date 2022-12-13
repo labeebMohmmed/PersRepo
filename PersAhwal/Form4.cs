@@ -299,18 +299,6 @@ namespace PersAhwal
                     sqlCmd.Parameters.AddWithValue("@RelatedVisaApp", PreRelatedID);
                     string filePath1 = FilesPathIn + "text1.txt";
                     string filePath2 = FilesPathIn + "text2.txt";
-
-                    using (Stream stream = File.OpenRead(filePath2))
-                    {
-                        byte[] buffer2 = new byte[stream.Length];
-                        stream.Read(buffer2, 0, buffer2.Length);
-                        var fileinfo2 = new FileInfo(filePath2);
-                        string extn2 = fileinfo2.Extension;
-                        string DocName2 = fileinfo2.Name;
-                        sqlCmd.Parameters.Add("@Data2", SqlDbType.VarBinary).Value = buffer2;
-                        sqlCmd.Parameters.Add("@Extension2", SqlDbType.Char).Value = extn2;
-                        sqlCmd.Parameters.Add("@FileName2", SqlDbType.NVarChar).Value = DocName2;
-                    }
                     sqlCmd.Parameters.AddWithValue("@Comment", Comment.Text.Trim());
                     sqlCmd.Parameters.AddWithValue("@ArchivedState", "غير مؤرشف");
                     sqlCmd.Parameters.AddWithValue("@Apptitle", str[1]);
@@ -322,9 +310,7 @@ namespace PersAhwal
                 }
                 else
                 {
-                    //MessageBox.Show("str[6]" + str[6]);
-                    //MessageBox.Show("str[7]" + str[7]);
-                    SqlCommand sqlCmd = new SqlCommand("UPDATE TableVisaApp SET DocID=@DocID,AppName=@AppName,lang=@lang,Gender=@Gender,DocNo=@DocNo,DocSource=@DocSource,DocIssueDate=@DocIssueDate,CountryDest=@CountryDest,GriDate=@GriDate,Hijri=@Hijri,AllFamilyMembers=@AllFamilyMembers,AtteVicCo=@AtteVicCo,Viewed =@Viewed,DataInterType =@DataInterType,DataInterName =@DataInterName, DataMandoubName =@DataMandoubName, TravelPurpose =@TravelPurpose,RelatedVisaApp = @RelatedVisaApp,Data2=@Data2,Extension2=@Extension2,FileName2 =@FileName2,Comment=@Comment,ArchivedState=@ArchivedState,Apptitle=@Apptitle,FullTextData=@FullTextData WHERE ID = @ID", sqlCon);
+                    SqlCommand sqlCmd = new SqlCommand("UPDATE TableVisaApp SET DocID=@DocID,AppName=@AppName,lang=@lang,Gender=@Gender,DocNo=@DocNo,DocSource=@DocSource,DocIssueDate=@DocIssueDate,CountryDest=@CountryDest,GriDate=@GriDate,Hijri=@Hijri,AllFamilyMembers=@AllFamilyMembers,AtteVicCo=@AtteVicCo,Viewed =@Viewed,DataInterType =@DataInterType,DataInterName =@DataInterName, DataMandoubName =@DataMandoubName, TravelPurpose =@TravelPurpose,RelatedVisaApp = @RelatedVisaApp,Comment=@Comment,ArchivedState=@ArchivedState,Apptitle=@Apptitle,FullTextData=@FullTextData WHERE ID = @ID", sqlCon);
                     sqlCmd.CommandType = CommandType.Text;
                     if (sqlCon.State == ConnectionState.Closed)
                         sqlCon.Open();
@@ -352,23 +338,7 @@ namespace PersAhwal
                     string filePath2 = FilesPathIn + "text2.txt";
 
                     if (Search.Text != "") { filePath2 = Search.Text; fileloaded = true; }
-                    using (Stream stream = File.OpenRead(filePath2))
-                    {
-                        byte[] buffer2 = new byte[stream.Length];
-                        stream.Read(buffer2, 0, buffer2.Length);
-                        var fileinfo2 = new FileInfo(filePath2);
-                        string extn2 = fileinfo2.Extension;
-                        string DocName2 = fileinfo2.Name;
-                        sqlCmd.Parameters.Add("@Data2", SqlDbType.VarBinary).Value = buffer2;
-                        sqlCmd.Parameters.Add("@Extension2", SqlDbType.Char).Value = extn2;
-                        sqlCmd.Parameters.Add("@FileName2", SqlDbType.NVarChar).Value = DocName2;
-                        ArchivedSt.CheckState = CheckState.Checked;
-                        if (fileloaded)
-                        {
-                            ArchivedSt.CheckState = CheckState.Checked;
-                            Clear_Fields();
-                        }
-                    }
+                    
                     sqlCmd.Parameters.AddWithValue("@Comment", Comment.Text.Trim());
                     if (fileloaded)
                         sqlCmd.Parameters.AddWithValue("@ArchivedState", ConsulateEmpName.Trim() + " " + DateTime.Now.ToString("hh:mm"));

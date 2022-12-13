@@ -77,7 +77,7 @@ namespace PersAhwal
         int Messid = 1;
         int MessageDocNo = 0;
         string ArchfilePath = "";
-        string MessageNo = "ق س ج/160/01/";
+        string MessageNo = "ق س ج/80/01/";
         private static bool NewSettings = false, FirstDate = false, LastDate = false;
         private static int TableIndex = -1, IDNo = -1, IDVANo = -1;
         static string[] query = new string[15];
@@ -177,6 +177,7 @@ namespace PersAhwal
         string[] rightColNames;
         string LocalModelFiles = "";
         string LocalModelForms = "";
+        string docidMess = "";
         public MainForm(string career,int id, string server, string Employee, string jobposition, string dataSource56, string dataSource57, string filepathIn, string filepathOut, string archFile, string formDataFile, bool pers_Peope, string gregorianDate, string hijriDate, string modelFiles,string modelForms)
         {
             InitializeComponent();
@@ -191,7 +192,7 @@ namespace PersAhwal
             Console.WriteLine(1);
             //MessageBox.Show(HijriDate);
             // BackupDataBase(DataSource57, "AhwalDataBase");
-
+            //MessageBox.Show(DocIDGenerator());
             //DeleteEmptyFiles("TableAddContext");
             if (Server == "57")
             {
@@ -364,7 +365,7 @@ namespace PersAhwal
 
         private void backgroundWorker1_DoWork_1(object sender, DoWorkEventArgs e)
         {
-
+            return;
             CultureInfo arSA = new CultureInfo("ar-SA");
             arSA.DateTimeFormat.Calendar = new GregorianCalendar();
             Thread.CurrentThread.CurrentCulture = arSA;
@@ -383,76 +384,78 @@ namespace PersAhwal
                 }
                 catch (Exception ex) { }
             }
-            //string DFile = @"D:\";
-            //if (Directory.Exists(DFile))
-            //{
-            //    archFiles = Directory.GetFiles(DFile);
-            //    foreach (string str in archFiles)
-            //    {
-            //        FileInfo fileInfo = new FileInfo(str);
-            //        DateTime dt = fileInfo.LastWriteTime.Date;
+            string DFile = @"D:\";
+            if (Directory.Exists(DFile))
+            {
+                archFiles = Directory.GetFiles(DFile);
+                foreach (string str in archFiles)
+                {
+                    FileInfo fileInfo = new FileInfo(str);
+                    DateTime dt = fileInfo.LastWriteTime.Date;
 
-            //        Console.WriteLine(date + " - " + str + " date is " + dt.ToString().Split(' ')[0]);
-            //        try
-            //        {
-            //            if (fileInfo.Name.Contains("ArchiveFiles") &&  date != dt.ToString().Split(' ')[0]) File.Delete(str);
-            //        }
-            //        catch (Exception ex) { }
-            //    }
-            //}
-            //string DFile = @"D:\PrimariFiles\";
-            //if (Directory.Exists(DFile))
-            //{
-            //    archFiles = Directory.GetFiles(DFile);
-            //    foreach (string str in archFiles)
-            //    {
-            //        if (!str.Contains(".txt"))
-            //        {
-            //            try
-            //            {
-            //                File.Delete(str);
-            //            }
-            //            catch (Exception ex) { }
-            //        }
-            //    }
-            //}
-            
-            //DFile = @"D:\PrimariFiles\ModelFiles";
-            ////DFile = @"\\192.168.100.100\Users\Public\Documents\ModelFiles";
-            //if (Directory.Exists(DFile))
-            //{
-            //    archFiles = Directory.GetFiles(DFile);
-            //    foreach (string str in archFiles)
-            //    {
-            //        FileInfo fileInfo = new FileInfo(str);
-            //        if (fileInfo.Name.Contains("Docx")||str.Contains(".pdf") ||str.Contains(".odt") || str.Contains(".xlsx") || str.Contains(".txt")|| str.Contains(".jpg")|| str.Contains(".jpg"))
-            //        {
-            //            try {
-            //                File.Delete(str); 
-            //            }
-            //            catch (Exception ex) { }
-            //        }
-            //    }
-            //}
-            
-            //DFile = @"D:\PrimariFiles\FormData";
-            ////DFile = @"\\192.168.100.100\Users\Public\Documents\FormData";
-            //if (Directory.Exists(DFile))
-            //{
-            //    archFiles = Directory.GetFiles(DFile);
-            //    foreach (string str in archFiles)
-            //    {
-            //        FileInfo fileInfo = new FileInfo(str);
-                    
-            //        if (str.Contains(".db") ||str.Contains(".pdf") ||str.Contains(".odt") || str.Contains(".xlsx") || str.Contains(".txt")|| str.Contains(".jpg")|| str.Contains(".jpg"))
-            //        {
-            //            try {
-            //                File.Delete(str); 
-            //            }
-            //            catch (Exception ex) { }
-            //        }
-            //    }
-            //}
+                    Console.WriteLine(date + " - " + str + " date is " + dt.ToString().Split(' ')[0]);
+                    try
+                    {
+                        if (fileInfo.Name.Contains("ArchiveFiles") && date != dt.ToString().Split(' ')[0]) File.Delete(str);
+                    }
+                    catch (Exception ex) { }
+                }
+            }
+            DFile = @"D:\PrimariFiles\";
+            if (Directory.Exists(DFile))
+            {
+                archFiles = Directory.GetFiles(DFile);
+                foreach (string str in archFiles)
+                {
+                    if (!str.Contains(".txt"))
+                    {
+                        try
+                        {
+                            File.Delete(str);
+                        }
+                        catch (Exception ex) { }
+                    }
+                }
+            }
+
+            DFile = @"D:\PrimariFiles\ModelFiles";
+            //DFile = @"\\192.168.100.100\Users\Public\Documents\ModelFiles";
+            if (Directory.Exists(DFile))
+            {
+                archFiles = Directory.GetFiles(DFile);
+                foreach (string str in archFiles)
+                {
+                    FileInfo fileInfo = new FileInfo(str);
+                    if (fileInfo.Name.Contains("Docx") || str.Contains(".pdf") || str.Contains(".odt") || str.Contains(".xlsx") || str.Contains(".txt") || str.Contains(".jpg") || str.Contains(".jpg"))
+                    {
+                        try
+                        {
+                            File.Delete(str);
+                        }
+                        catch (Exception ex) { }
+                    }
+                }
+            }
+
+            DFile = @"D:\PrimariFiles\FormData";
+            //DFile = @"\\192.168.100.100\Users\Public\Documents\FormData";
+            if (Directory.Exists(DFile))
+            {
+                archFiles = Directory.GetFiles(DFile);
+                foreach (string str in archFiles)
+                {
+                    FileInfo fileInfo = new FileInfo(str);
+
+                    if (str.Contains(".db") || str.Contains(".pdf") || str.Contains(".odt") || str.Contains(".xlsx") || str.Contains(".txt") || str.Contains(".jpg") || str.Contains(".jpg"))
+                    {
+                        try
+                        {
+                            File.Delete(str);
+                        }
+                        catch (Exception ex) { }
+                    }
+                }
+            }
 
         }
         protected virtual bool IsFileLocked(FileInfo file)
@@ -3585,10 +3588,10 @@ rep1[month, 0] = monthS;
                 Word.Range BookGregorDate2 = oBDoc2.Bookmarks.get_Item(ref ParaGregorDate2).Range;
                 Word.Range BookMassageTitle = oBDoc2.Bookmarks.get_Item(ref ParaMassageTitle).Range;
                 Word.Range BookViseConsul1 = oBDoc2.Bookmarks.get_Item(ref ParaViseConsul1).Range;
-
+                string noID = MessageNo + (MessageDocNo + 1).ToString(); 
                 BookMApplicantName.Text = ApplicantName;
                 BookcapitalMessage.Text = EmbassySource;
-                BookMassageNo.Text = MessageNo + (MessageDocNo + 1).ToString();
+                BookMassageNo.Text = noID;
                 BookMassageIqrarNo.Text = IqrarNo;
                 BookApliSex.Text = ApplicantSex;
                 BookDateGre.Text = GregorianDate;
@@ -3622,6 +3625,7 @@ rep1[month, 0] = monthS;
 
                 oBDoc2.Activate();
                 oBDoc2.Save();
+                //addMessageArch(ActiveCopy, noID);
                 oBMicroWord2.Visible = true;
                 NewMessageNo();
             }
@@ -4181,7 +4185,38 @@ rep1[month, 0] = monthS;
         //    
 
         //}
-
+        private string DocIDGenerator()
+        {
+            string formtype = "18";
+            string year = DateTime.Now.Year.ToString().Replace("20", "");
+            string query = "select max(cast (right(رقم_معاملة_القسم,LEN(رقم_معاملة_القسم) - 15) as int)) as newDocID from TableGeneralArch where رقم_معاملة_القسم like N'ق س ج/80/" + year + "/" + formtype + "%'";
+            
+            return "ق س ج/80/" + year + "/" + formtype + "/" + getUniqueID(query);
+        }
+        private string getUniqueID(string query)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            string maxID = "1";
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                try
+                {
+                    maxID = (Convert.ToInt32(dataRow["newDocID"].ToString()) + 1).ToString();
+                }
+                catch (Exception ex)
+                {
+                    return maxID;
+                }
+            }
+            return maxID;
+        }
         private void PrintReport_Click(object sender, EventArgs e)
         {
             string ReportName1 = "Report1" + DateTime.Now.ToString("mmss") + ".docx";
@@ -4716,9 +4751,8 @@ rep1[month, 0] = monthS;
 
         private void button5_Click_1(object sender, EventArgs e)
         {
-            fileComboBox(txtHAAuthentic, DataSource, "AppName", "TableHandAuth", true);
-            //if(!autoCompleteMode) 
-                autoCompleteTextBox(txtHandAuthNo, DataSource, "DocID", "TableHandAuth");
+            autoCompleteTextBox(txtHAAuthentic, DataSource, "AppName", "TableHandAuth");
+            autoCompleteTextBox(txtHandAuthNo, DataSource, "DocID", "TableHandAuth");
             fillDataGrid("");
             combCount.SelectedIndex = 0;
             imagecount = 0;
@@ -4801,7 +4835,7 @@ rep1[month, 0] = monthS;
             sqlCon.Close();
         }
 
-        private void SubAuthData(int id, string DocID, string AppName, string Gender, string Institute, string GriDate, string filePath, string viewed, string docCount, string comment)
+        private int SubAuthData(int id, string DocID, string AppName, string Gender, string Institute, string GriDate, string viewed, string docCount, string comment)
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
@@ -4809,9 +4843,9 @@ rep1[month, 0] = monthS;
                 {
                     sqlCon.Open();
                 }
-                catch (Exception ex) { return; }
-            SqlCommand sqlCmd = new SqlCommand("INSERT INTO TableHandAuth ( DocID,AppName,Gender,Institute,GriDate,Data1,Extension1,FileName1,ArchivedState,Viewed,HandTime,DocNo,Comment,AVConsule) values (@DocID,@AppName,@Gender,@Institute,@GriDate,@Data1,@Extension1,@FileName1,@ArchivedState,@Viewed,@HandTime,@DocNo,@Comment,@AVConsule)", sqlCon);
-            if (id != 1) sqlCmd = new SqlCommand("UPDATE TableHandAuth SET  DocID=@DocID,AppName=@AppName,Gender=@Gender,Institute=@Institute,GriDate=@GriDate,Data1=@Data1,Extension1=@Extension1,FileName1=@FileName1,ArchivedState=@ArchivedState,Viewed=@Viewed,HandTime=@HandTime,DocNo=@DocNo,Comment=@Comment,AVConsule=@AVConsule where ID=@ID", sqlCon);
+                catch (Exception ex) { return 0; }
+            SqlCommand sqlCmd = new SqlCommand("INSERT INTO TableHandAuth ( DocID,AppName,Gender,Institute,GriDate,ArchivedState,Viewed,HandTime,DocNo,Comment,AVConsule) values (@DocID,@AppName,@Gender,@Institute,@GriDate,@ArchivedState,@Viewed,@HandTime,@DocNo,@Comment,@AVConsule);SELECT @@IDENTITY as lastid", sqlCon);
+            if (id != 1) sqlCmd = new SqlCommand("UPDATE TableHandAuth SET  DocID=@DocID,AppName=@AppName,Gender=@Gender,Institute=@Institute,GriDate=@GriDate,ArchivedState=@ArchivedState,Viewed=@Viewed,HandTime=@HandTime,DocNo=@DocNo,Comment=@Comment,AVConsule=@AVConsule where ID=@ID", sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.Parameters.AddWithValue("@ID", id);
             sqlCmd.Parameters.AddWithValue("@DocID", DocID);
@@ -4823,7 +4857,6 @@ rep1[month, 0] = monthS;
             sqlCmd.Parameters.AddWithValue("@GriDate", GregorianDate);
             sqlCmd.Parameters.AddWithValue("@Comment", comment);
             sqlCmd.Parameters.AddWithValue("@AVConsule", attendedVC.Text);
-
             if (filePath == "")
             {
                 filePath = ArchFile + "text1.txt";
@@ -4831,22 +4864,20 @@ rep1[month, 0] = monthS;
             }
             else
                 sqlCmd.Parameters.AddWithValue("@ArchivedState", "مؤرشف");
-
-            if (filePath == "") { MessageBox.Show("لا يوجد رابط بيانات صالح"); return; }
-            using (Stream stream = File.OpenRead(filePath))
-            {
-                byte[] buffer1 = new byte[stream.Length];
-                stream.Read(buffer1, 0, buffer1.Length);
-                var fileinfo1 = new FileInfo(filePath);
-                string extn1 = fileinfo1.Extension;
-                string DocName1 = fileinfo1.Name;
-                sqlCmd.Parameters.Add("@Data1", SqlDbType.VarBinary).Value = buffer1;
-                sqlCmd.Parameters.Add("@Extension1", SqlDbType.Char).Value = extn1;
-                sqlCmd.Parameters.Add("@FileName1", SqlDbType.NVarChar).Value = DocName1;
-            }
             sqlCmd.Parameters.AddWithValue("@Viewed", viewed);
+
+            if (id == 1)
+            {
+                var reader = sqlCmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    id = Convert.ToInt32(reader["lastid"].ToString());
+                }
+                sqlCon.Close();
+            }else
             sqlCmd.ExecuteNonQuery();
             sqlCon.Close();
+            return id;
         }
 
 
@@ -4958,7 +4989,13 @@ rep1[month, 0] = monthS;
 
         private void txtHandAuthNo_TextChanged_1(object sender, EventArgs e)
         {
-
+            if (button19.Text == "بحث")
+            {
+                BindingSource bs = new BindingSource();
+                bs.DataSource = dataGridView8.DataSource;
+                bs.Filter = dataGridView8.Columns[2].HeaderText.ToString() + " LIKE '%" + txtHandAuthNo.Text + "%'";
+                dataGridView8.DataSource = dataGridView8.DataSource = bs;
+            }
             OpenReportArch(Messid.ToString());
         }
 
@@ -5012,7 +5049,43 @@ rep1[month, 0] = monthS;
             PrintMessage.Visible = false;
             DetecedForm.Width = 393;
         }
+        private void addMessageArch(string location, string messNo) {
+            if (location != "")
+            {
+                using (Stream stream = File.OpenRead(location))
+                {
+                    byte[] buffer1 = new byte[stream.Length];
+                    stream.Read(buffer1, 0, buffer1.Length);
+                    var fileinfo1 = new FileInfo(location);
+                    string extn1 = fileinfo1.Extension;
+                    string DocName1 = fileinfo1.Name;
 
+                    insertMessDoc("1", GregorianDate, EmployeeName, DataSource, extn1, DocName1, messNo, "data1", buffer1);
+                    //Console.WriteLine(docid);
+                }
+            }
+        }
+
+        private void insertMessDoc(string id, string date, string employee, string dataSource, string extn1, string DocName1, string messNo, string docType, byte[] buffer1)
+        {
+            string query = "INSERT INTO TableGeneralArch (Data1,Extension1,نوع_المستند,رقم_معاملة_القسم,المستند,الموظف,التاريخ,رقم_المرجع,docTable) values (@Data1,@Extension1,@نوع_المستند,@رقم_معاملة_القسم,@المستند,@الموظف,@التاريخ,@رقم_المرجع,@docTable)";
+            SqlConnection sqlCon = new SqlConnection(dataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.Parameters.AddWithValue("@رقم_معاملة_القسم", messNo);
+            sqlCmd.Parameters.AddWithValue("@نوع_المستند", docType);
+            sqlCmd.Parameters.AddWithValue("@الموظف", employee);
+            sqlCmd.Parameters.AddWithValue("@التاريخ", date);
+            sqlCmd.Parameters.AddWithValue("@رقم_المرجع", id);
+            sqlCmd.Parameters.Add("@Data1", SqlDbType.VarBinary).Value = buffer1;
+            sqlCmd.Parameters.Add("@Extension1", SqlDbType.Char).Value = extn1;
+            sqlCmd.Parameters.Add("@المستند", SqlDbType.NVarChar).Value = DocName1;
+            sqlCmd.Parameters.Add("@docTable", SqlDbType.NVarChar).Value = TableList;
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
+        }
         private void MainForm_Load(object sender, EventArgs e)
         {
             checkYear(DataSource);
@@ -5382,6 +5455,76 @@ rep1[month, 0] = monthS;
             return true;
         }
         
+        private void checkQllReights(string text)
+        {
+            //Console.WriteLine(text);
+            string query = "select قائمة_الحقوق_الكاملة from TableAuthRight where قائمة_الحقوق_الكاملة=N'" + text.Split('_')[0] + "'";
+            
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return ; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            try
+            {
+                sqlDa.Fill(dtbl);
+            }
+            catch (Exception ex)
+            {
+                return ;
+            }
+            if (dtbl.Rows.Count == 0)
+            {
+                //MessageBox.Show(text + " not found");
+                int id = getLastID(DataSource, "قائمة_الحقوق_الكاملة", "TableAuthRight");
+                Console.WriteLine(id.ToString()+" - "+ text.Split('_')[0]);
+                if (checkID(id.ToString()))
+                    UpdateColumn(DataSource, "قائمة_الحقوق_الكاملة", id, text.Split('_')[0], "TableAuthRight");
+                else InsertColumn(DataSource, "قائمة_الحقوق_الكاملة", id, text.Split('_')[0], "TableAuthRight");
+            }
+            else return;
+            
+            sqlCon.Close();           
+        }
+
+        private int getLastID(string source, string comlumnName, string tableName)
+        {
+            int x = 1;
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                saConn.Open();
+
+                string query = "select max(ID) as maxID from " + tableName + " where " + comlumnName + " is not null";
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.CommandType = CommandType.Text;
+
+                //MessageBox.Show(query);
+                cmd.ExecuteNonQuery();
+                DataTable table = new DataTable();
+                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                dataAdapter.Fill(table);
+
+                foreach (DataRow dataRow in table.Rows)
+                {
+                    try
+                    {
+                        return Convert.ToInt32(dataRow["maxID"].ToString()) + 1;
+                    }
+                    catch (Exception)
+                    {
+                        return 1;
+                    }
+                }
+                saConn.Close();
+            }
+            return 1;
+        }
+
         private bool checkID(string id)
         {
             //MessageBox.Show(id);
@@ -5453,10 +5596,17 @@ rep1[month, 0] = monthS;
                     else InsertColumn(DataSource, colName[col].Replace("-", "_"), 1, colName[col], "TableAuthRights");
                 }
             }
+
+            //checkQllReightsFun(newFun());
             newFun();
+            xlWorkBook.Close(true, null, null);
+            xlApp.Quit();
+            Marshal.ReleaseComObject(xlWorkSheet);
+            Marshal.ReleaseComObject(xlWorkBook);
+            Marshal.ReleaseComObject(xlApp);
         }
 
-        private void newFun() {
+        private Excel.Range newFun() {
             OpenFileDialog dlg = new OpenFileDialog();
             dlg.ShowDialog();
             xlApp = new Excel.Application();
@@ -5468,14 +5618,7 @@ rep1[month, 0] = monthS;
             cl = range.Columns.Count;
             button23.Enabled = false;
             ColumnNamesLoad();
-
-            SqlConnection sqlCon = new SqlConnection(DataSource);
-            if (sqlCon.State == ConnectionState.Closed)
-                try
-                {
-                    sqlCon.Open();
-                }
-                catch (Exception ex) { return; }
+            
             for (cCnt = 2; cCnt <= cl; cCnt++)
             {
                 Console.WriteLine("rightColNames " + rightColNames.Length.ToString() + " cCnt " + cCnt.ToString());
@@ -5489,59 +5632,65 @@ rep1[month, 0] = monthS;
                      cols = colname.Replace(" ", "_").Replace("-", "_");
                     if (!checkColumnNames(cols, ""))
                     {
-                        //MessageBox.Show(colname + "-"+colname);
                         CreateColumns(cols);
                         if (checkID("1"))
                             UpdateColumn(DataSource, cols, 1, cols, "TableAuthRights");
                         else InsertColumn(DataSource, cols, 1, cols, "TableAuthRights");
                     }
-                    //MessageBox.Show(colname);
+                    else {
+                        UpdateColumn(DataSource, cols, 1, cols, "TableAuthRights");
+                    }
                     for (rCnt = 2; rCnt < rw; rCnt++)
                     {
                         try
                         {
                             string strData = (string)(range.Cells[rCnt, cCnt] as Excel.Range).Value2;
                             if (String.IsNullOrEmpty(strData)) strData = "";
-                            //MessageBox.Show(rCnt +"_" +strData);
+
                             if (checkID(rCnt.ToString()))
                                 UpdateColumn(DataSource, cols, rCnt, strData, "TableAuthRights");
                             else InsertColumn(DataSource, cols, rCnt, strData, "TableAuthRights");
                         }
                         catch (Exception ex)
                         {
-                            //for (cCnt = 2; cCnt <= rightColNames.Length; cCnt++)
-                            //{
-                            //    col = rightColNames[cCnt - 2];
-
-                            //    for (rCnt = 1; rCnt < 24; rCnt++)
-                            //    {
-                            //        try
-                            //        {
-                            //            string strData = (string)(range.Cells[rCnt, cCnt] as Excel.Range).Value2;
-                            //            if (String.IsNullOrEmpty(strData)) strData = "";
-                            //            UpdateColumn(DataSource, col, rCnt, strData, "TableAuthRights");
-                            //        }
-                            //        catch (Exception e1x)
-                            //        {
-                            //        }
-                            //        //MessageBox.Show(rCnt.ToString());
-                            //    }
-                            //}
+                            
                         }
-                        //MessageBox.Show(rCnt.ToString());
                     }
                 }
-                catch (Exception ex) { MessageBox.Show(cols); }
+                catch (Exception ex) {
+                }
             }
 
-            sqlCon.Close();
-            xlWorkBook.Close(true, null, null);
-            xlApp.Quit();
-            Marshal.ReleaseComObject(xlWorkSheet);
-            Marshal.ReleaseComObject(xlWorkBook);
-            Marshal.ReleaseComObject(xlApp);
-
             button23.Enabled = true;
+
+
+
+
+            return range;
+        }
+
+        private void checkQllReightsFun(Excel.Range range) {
+
+            for (cCnt = 2; cCnt <= cl; cCnt++)
+            {
+                
+                
+                try
+                {
+                    string rCntData = (string)(range.Cells[1, cCnt] as Excel.Range).Value2;
+                    for (rCnt = 2; rCnt < rw; rCnt++)
+                    {
+
+                        string strData = (string)(range.Cells[rCnt, cCnt] as Excel.Range).Value2;
+                        if (String.IsNullOrEmpty(strData)) strData = "";
+                        if (strData == "")
+                            break;
+                        //Console.WriteLine("rightColNames " + rCntData + " strData " + strData);
+                        checkQllReights(strData);
+                    }
+                }
+                catch (Exception ex) { }
+            }
         }
         private string[] getColName()
         {
@@ -5830,9 +5979,9 @@ rep1[month, 0] = monthS;
             try
             {if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
-                SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT ID,AppName,DocID,Institute,GriDate,Viewed,HandTime,DocNo,Comment,AVConsule FROM TableHandAuth", sqlCon);
+                SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT ID,AppName,DocID,Institute,GriDate,Viewed,HandTime,DocNo,Comment,AVConsule FROM TableHandAuth order by ID desc", sqlCon);
                 if (text != "")
-                    sqlDa = new SqlDataAdapter("SELECT ID,AppName,DocID,Institute,GriDate,Viewed,HandTime,DocNo,Comment,AVConsule  FROM TableHandAuth where Institute=@Institute", sqlCon);
+                    sqlDa = new SqlDataAdapter("SELECT ID,AppName,DocID,Institute,GriDate,Viewed,HandTime,DocNo,Comment,AVConsule  FROM TableHandAuth where Institute=@Institute order by ID desc", sqlCon);
                 sqlDa.SelectCommand.CommandType = CommandType.Text;
                 sqlDa.SelectCommand.Parameters.AddWithValue("@Institute", text);
                 DataTable table = new DataTable();
@@ -5967,12 +6116,7 @@ rep1[month, 0] = monthS;
 
             var reader = sqlCmd1.ExecuteReader();
             if (reader.Read())
-            {
-                
-                string name = reader["FileName1"].ToString();
-                var Data = (byte[])reader["Data1"];
-                var ext = reader["Extension1"].ToString();
-                PathImage = name.Replace(ext, DateTime.Now.ToString("mmss")) + ext;
+            {                
                 txtHAAuthentic.Text = reader["AppName"].ToString();
                 txtHandAuthNo.Text = reader["DocID"].ToString();
                 combCount.Text = reader["DocNo"].ToString();
@@ -5996,27 +6140,43 @@ rep1[month, 0] = monthS;
                 else if (btnSaveArch.Text == "حفظ وتأكيد")
                     btnSaveArch.Text = "تعديل وتأكيد";
 
-                File.WriteAllBytes(PathImage, Data);
-                panel4.Visible = true;
-
-                if (ext != ".docx")
-                {
-                    Process.Start(PathImage);
-                    //ArchivePic.ImageLocation = PathImage;
-                    //org = new PictureBox();
-                    //org.Load(PathImage);
-                    //ArchivePic.SizeMode = PictureBoxSizeMode.Zoom;
-
-                }
-                else {
-                    Process.Start("WINWORD.EXE", PathImage);
-                }
+                
                 //ArchivePic.Image = ZoomPicture(ArchivePic.Image, new Size(trackBar1.Value, trackBar1.Value));
             }
             Con.Close();
 
         }
 
+        void FillDatafromGenArch(string doc, string id, string table)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableGeneralArch where  رقم_المرجع='" + id + "' and نوع_المستند='" + doc + "' and docTable='" + table + "'", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            foreach (DataRow reader in dtbl.Rows)
+            {
+                var name = reader["المستند"].ToString();
+                var Data = (byte[])reader["Data1"];
+                var ext = reader["Extension1"].ToString();
+                var NewFileName = name.Replace(ext, DateTime.Now.ToString("ddMMyyyyhhmmss")) + ext;
+                File.WriteAllBytes(NewFileName, Data);
+                //if (ext.Contains("doc"))
+                    System.Diagnostics.Process.Start(NewFileName);
+                //else
+                //{
+                //    ArchivePic.ImageLocation = NewFileName;
+                //    ArchivePic.BringToFront();
+                //    ArchivePic.Visible = true;
+                //}
+            }
+
+
+            sqlCon.Close();
+        }
         Image ZoomPicture(Image img, Size size)
         {
             Bitmap bm = new Bitmap(img, Convert.ToInt32(img.Width + (img.Width * size.Width / 100)), Convert.ToInt32(img.Height + (img.Height * size.Height / 100)));
@@ -6028,9 +6188,10 @@ rep1[month, 0] = monthS;
 
         private void ArchivePic_Click(object sender, EventArgs e)
         {
-            if (ArchivePic.SizeMode == PictureBoxSizeMode.Zoom) {
-                ArchivePic.SizeMode = PictureBoxSizeMode.AutoSize;
-            }else ArchivePic.SizeMode = PictureBoxSizeMode.Zoom;
+            //if (ArchivePic.SizeMode == PictureBoxSizeMode.Zoom) {
+            //    ArchivePic.SizeMode = PictureBoxSizeMode.AutoSize;
+            //}else ArchivePic.SizeMode = PictureBoxSizeMode.Zoom;
+            ArchivePic.SendToBack();
         }
 
        
@@ -6119,11 +6280,29 @@ rep1[month, 0] = monthS;
             Con.Close();
            Console.WriteLine("deleted files no " + v1 +" - "+v2);
         }
-
+        string lastInput1 = "";
         private void txtHAGredate_TextChanged(object sender, EventArgs e)
         {
-            if (txtHAGredate.Text.Length == 2) txtHAGredate.Text = "-" + txtHAGredate.Text;
-            else if (txtHAGredate.Text.Length == 5) txtHAGredate.Text = "-" + txtHAGredate.Text;
+            if (txtHAGredate.Text.Length == 10)
+            {
+                int month = Convert.ToInt32(SpecificDigit(txtHAGredate.Text, 1, 2));
+                if (month > 12)
+                {
+                    MessageBox.Show("الشهر يحب أن يكون أقل من 12");
+                    //تاريخ_الميلاد.Text = "";
+                    txtHAGredate.Text = SpecificDigit(txtHAGredate.Text, 3, 10);
+                    return;
+                }
+            }
+
+            if (txtHAGredate.Text.Length == 11)
+            {
+                txtHAGredate.Text = lastInput1; return;
+            }
+            if (txtHAGredate.Text.Length == 10) return;
+            if (txtHAGredate.Text.Length == 4) txtHAGredate.Text = "-" + txtHAGredate.Text;
+            else if (txtHAGredate.Text.Length == 7) txtHAGredate.Text = "-" + txtHAGredate.Text;
+            lastInput1 = txtHAGredate.Text;
         }
 
         private void txtHAAuthenticic_TextChanged(object sender, EventArgs e)
@@ -6138,7 +6317,8 @@ rep1[month, 0] = monthS;
             {
                 textNumber = true;
                 Messid = Convert.ToInt32(dataGridView8.CurrentRow.Cells[0].Value.ToString());
-                
+                //MessageBox.Show(Messid.ToString());
+                FillDatafromGenArch("data2", Messid.ToString(), "TableHandAuth");
                 OpenReportArchID(Messid);
                 btnSaveArch.Text = "تعديل وتأكيد";
                 //dataGridView8.Visible = false;
@@ -6873,28 +7053,47 @@ rep1[month, 0] = monthS;
             }
         }
 
-        private string CreatePic( string[] location)
+        private void CreatePic( string[] location, string id)
         {
-            
-            string ActiveCopy = PrimariFiles + "Docx" + DateTime.Now.ToString("mmss") + ".docx";
-                using (DocX document = DocX.Create(ActiveCopy))
+            for (int x = 0; x < imagecount; x++)
+            {
+                //MessageBox.Show(location[x]);
+                if (location[x] != "")
                 {
-                    Paragraph p1 = document.InsertParagraph();
-
-                    // Append content to the Paragraph
-                    for (int x = 0; x < imagecount; x++)
+                    using (Stream stream = File.OpenRead(location[x]))
                     {
-                        var image = document.AddImage(location[x]);
-                        // Set Picture Height and Width.
-                        var picture = image.CreatePicture(600, 500);
+                        byte[] buffer1 = new byte[stream.Length];
+                        stream.Read(buffer1, 0, buffer1.Length);
+                        var fileinfo1 = new FileInfo(location[x]);
+                        string extn1 = fileinfo1.Extension;
+                        string DocName1 = fileinfo1.Name;
 
-                        p1.AppendPicture(picture);
+                        insertDocx(id.ToString(), txtHandAuthNo.Text, GregorianDate, EmployeeName, DataSource, extn1, DocName1, txtHAAuthentic.Text+ "_"+id.ToString(), "data2", buffer1);
+                        //Console.WriteLine(docid);
                     }
-                    document.Save();
-
-                    imagecount = 0;
                 }
-            return ActiveCopy;
+            }
+        }
+        private void insertDocx(string id, string name, string date, string employee, string dataSource, string extn1, string DocName1, string messNo, string docType, byte[] buffer1)
+        {
+            string query = "INSERT INTO TableGeneralArch (Data1,Extension1,نوع_المستند,رقم_معاملة_القسم,المستند,الموظف,التاريخ,رقم_المرجع,docTable,الاسم) values (@Data1,@Extension1,@نوع_المستند,@رقم_معاملة_القسم,@المستند,@الموظف,@التاريخ,@رقم_المرجع,@docTable,@الاسم)";
+            SqlConnection sqlCon = new SqlConnection(dataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.Parameters.AddWithValue("@الاسم", name);
+            sqlCmd.Parameters.AddWithValue("@رقم_معاملة_القسم", messNo);
+            sqlCmd.Parameters.AddWithValue("@نوع_المستند", docType);
+            sqlCmd.Parameters.AddWithValue("@الموظف", employee);
+            sqlCmd.Parameters.AddWithValue("@التاريخ", date);
+            sqlCmd.Parameters.AddWithValue("@رقم_المرجع", id);
+            sqlCmd.Parameters.Add("@Data1", SqlDbType.VarBinary).Value = buffer1;
+            sqlCmd.Parameters.Add("@Extension1", SqlDbType.Char).Value = extn1;
+            sqlCmd.Parameters.Add("@المستند", SqlDbType.NVarChar).Value = DocName1;
+            sqlCmd.Parameters.Add("@docTable", SqlDbType.NVarChar).Value = "TableHandAuth";
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
         }
         private void button34_Click(object sender, EventArgs e)
         {
@@ -6931,19 +7130,19 @@ rep1[month, 0] = monthS;
             {
                 MessageBox.Show("يرجى توضيح اسم موثق المكاتبة ");
                 return;
-            }
-
+            }            
             int iD = 1;
             if (btnSaveArch.Text == "حفظ وتأكيد")
             {
                 // Console.WriteLine("حفظ وتأكيد");
-                SubAuthData(1, txtHandAuthNo.Text, txtHAAuthentic.Text, checkHASex.Text, comboBox2.Text, txtHAGredate.Text, CreatePic(PathImages), GregorianDate + "_تمت معالجة الملف بواسطة" + EmployeeName, combCount.Text, comment);
-
+                iD = SubAuthData(1, txtHandAuthNo.Text, txtHAAuthentic.Text, checkHASex.Text, comboBox2.Text, txtHAGredate.Text, GregorianDate + "_تمت معالجة الملف بواسطة" + EmployeeName, combCount.Text, comment);
+                if(iD != 0) CreatePic(PathImages, iD.ToString());
             }
             else if (btnSaveArch.Text == "تعديل وتأكيد")
             {
-                iD = Messid;
-                SubAuthData(iD, txtHandAuthNo.Text, txtHAAuthentic.Text, checkHASex.Text, comboBox2.Text, txtHAGredate.Text, CreatePic(PathImages), GregorianDate + "_تمت معالجة الملف بواسطة" + EmployeeName, combCount.Text, comment);
+                iD = Messid;                
+                SubAuthData(iD, txtHandAuthNo.Text, txtHAAuthentic.Text, checkHASex.Text, comboBox2.Text, txtHAGredate.Text, GregorianDate + "_تمت معالجة الملف بواسطة" + EmployeeName, combCount.Text, comment);
+                CreatePic(PathImages, Messid.ToString());
             }
             btnSaveArch.Text = "حفظ وتأكيد";
             txtHandAuthNo.Text = txtHAAuthentic.Text = checkHASex.Text = comboBox2.Text = txtHAGredate.Text = ArchfilePath = "";
@@ -6970,7 +7169,7 @@ rep1[month, 0] = monthS;
         {
             if (comboBox1.SelectedIndex == 0)
             {
-                
+                //MessageBox.Show(GregorianDate);
                 BindingSource bs = new BindingSource();
                 bs.DataSource = dataGridView8.DataSource;
                 bs.Filter = dataGridView8.Columns[4].HeaderText.ToString() + " LIKE '%" + GregorianDate + "%'";
@@ -6987,24 +7186,6 @@ rep1[month, 0] = monthS;
             
         }
 
-        private void dateAuth_ValueChanged(object sender, EventArgs e)
-        {
-            CultureInfo arSA = new CultureInfo("ar-SA");
-            arSA.DateTimeFormat.Calendar = new GregorianCalendar();
-
-
-            Thread.CurrentThread.CurrentCulture = arSA;
-            new System.Globalization.GregorianCalendar();
-            string satePicked = dateAuth.Value.ToString().Split(' ')[0].Replace("/", "-").Trim();
-           // Console.WriteLine(satePicked);
-            BindingSource bs = new BindingSource();
-            bs.DataSource = dataGridView8.DataSource;
-            bs.Filter = dataGridView8.Columns[4].HeaderText.ToString() + " LIKE '%" + satePicked + "%'";
-            dataGridView8.DataSource = dataGridView8.DataSource = bs;
-
-            dateAuth.Visible = false;
-            comboBox1.Visible = true;
-        }
 
         private void DocDestin_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -7289,7 +7470,7 @@ rep1[month, 0] = monthS;
             dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
             //MessageBox.Show(HijriDate);
 
-            FormAuth formAuth = new FormAuth(attendedVC.SelectedIndex, -1, "", DataSource, FilespathIn, FilespathOut, EmployeeName, UserJobposition, GregorianDate, HijriDate);
+            FormAuth formAuth = new FormAuth(attendedVC.SelectedIndex, -1, "", DataSource, FilespathIn, FilespathOut, EmployeeName, UserJobposition, GregorianDate, HijriDate, false);
             formAuth.ShowDialog();
         }
 
@@ -7375,6 +7556,69 @@ rep1[month, 0] = monthS;
             var settings = new Settings(Server, false, DataSource56, DataSource57, false, LocalModelFiles, ArchFile, ArchFile, LocalModelForms, "");
             settings.Show();
         }
+        string lastInput2 = "";
+        private void dateAuth_TextChanged(object sender, EventArgs e)
+        {
+            if (dateAuth.Text.Length == 10)
+            {
+                int month = Convert.ToInt32(SpecificDigit(dateAuth.Text, 1, 2));
+                if (month > 12)
+                {
+                    //MessageBox.Show("الشهر يحب أن يكون أقل من 12");
+                    //تاريخ_الميلاد.Text = "";
+                    dateAuth.Text = SpecificDigit(dateAuth.Text, 3, 10);
+                    return;
+                }
+                //MessageBox.Show(dateAuth.Text);
+                BindingSource bs = new BindingSource();
+                bs.DataSource = dataGridView8.DataSource;
+                bs.Filter = dataGridView8.Columns[4].HeaderText.ToString() + " LIKE '%" + dateAuth.Text + "%'";
+                dataGridView8.DataSource = dataGridView8.DataSource = bs;
+            }
+
+            if (dateAuth.Text.Length == 11)
+            {
+                dateAuth.Text = lastInput2; return;
+            }
+            if (dateAuth.Text.Length == 10) return;
+            if (dateAuth.Text.Length == 4) dateAuth.Text = "-" + dateAuth.Text;
+            else if (dateAuth.Text.Length == 7) dateAuth.Text = "-" + dateAuth.Text;
+            lastInput2 = dateAuth.Text;
+        }
+        private string SpecificDigit(string text, int Firstdigits, int Lastdigits)
+        {
+            char[] characters = text.ToCharArray();
+            string firstNchar = "";
+            int z = 0;
+            for (int x = Firstdigits - 1; x < Lastdigits && x < text.Length; x++)
+            {
+                firstNchar = firstNchar + characters[x];
+
+            }
+            return firstNchar;
+        }
+
+        private void txtHAAuthentic_TextChanged(object sender, EventArgs e)
+        {
+            if(button17.Text == "بحث")
+            {
+                BindingSource bs = new BindingSource();
+                bs.DataSource = dataGridView8.DataSource;
+                bs.Filter = dataGridView8.Columns[1].HeaderText.ToString() + " LIKE '%" + txtHAAuthentic.Text + "%'";
+                dataGridView8.DataSource = dataGridView8.DataSource = bs;
+            }
+        }
+
+        private void button19_Click(object sender, EventArgs e)
+        {
+            if (button19.Text == "بحث")
+            {
+                fillDataGrid("");
+                button19.Text = "نوع المكاتبة:";
+            }
+            else
+                button19.Text = "بحث";
+        }
 
         private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -7396,15 +7640,18 @@ rep1[month, 0] = monthS;
                 if (!File.Exists(localFile))
                 {
                     System.IO.File.Copy(serverfiles[i], localFile);
-                    //MessageBox.Show(serverfiles[i]);
+                    
                 }
                 else if (File.Exists(localFile))
                 {
                     DateTime serverLastWite = serverfileinfo.LastWriteTime.Date;
                     var localfileinfo = new FileInfo(localFile);
                     DateTime localLastWite = localfileinfo.LastWriteTime.Date;
+                    Console.WriteLine(localLastWite);
+                    //MessageBox.Show(serverLastWite +"-" +localLastWite);
                     if (serverLastWite != localLastWite)
                     {
+
                         try
                         {
                            File.Delete(localFile);
@@ -7416,21 +7663,21 @@ rep1[month, 0] = monthS;
             }
 
 
-            foreach (string localFile in Directory.GetFiles(FilespathIn))
-            {
-                var localFileinfo = new FileInfo(localFile);
-                string localFilename = localFileinfo.Name;
-                string serverfile = ServerModelFiles + localFilename;
-                if (File.Exists(localFile) && !File.Exists(serverfile))
-                {
-                    try
-                    {
-                        File.Delete(localFile);
-                    }
-                    catch (Exception ex) { }
-                }
+            //foreach (string localFile in Directory.GetFiles(FilespathIn))
+            //{
+            //    var localFileinfo = new FileInfo(localFile);
+            //    string localFilename = localFileinfo.Name;
+            //    string serverfile = ServerModelFiles + localFilename;
+            //    if (File.Exists(localFile) && !File.Exists(serverfile))
+            //    {
+            //        try
+            //        {
+            //            File.Delete(localFile);
+            //        }
+            //        catch (Exception ex) { }
+            //    }
                 
-            }
+            //}
 
             string[] formfiles = Directory.GetFiles(ServerModelForms);
             for (int i = 0; i < formfiles.Length; i++)
@@ -7957,7 +8204,7 @@ rep1[month, 0] = monthS;
         {
             SqlConnection sqlCon = new SqlConnection(source);
             string column = "@" + comlumnName;
-            string qurey = "SET IDENTITY_INSERT dbo.TableAuthRights ON;  insert into " + table + " (ID," + comlumnName+") values ('"+id.ToString()+"', N'" + data + "')";
+            string qurey = "SET IDENTITY_INSERT dbo."+ table + " ON;  insert into " + table + " (ID," + comlumnName+") values ('"+id.ToString()+"', N'" + data + "')";
             SqlCommand sqlCmd = new SqlCommand(qurey, sqlCon);
             if (sqlCon.State == ConnectionState.Closed)
                 try

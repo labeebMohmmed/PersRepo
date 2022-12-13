@@ -2248,32 +2248,7 @@ namespace PersAhwal
                     sqlCmd.Parameters.AddWithValue("@DataInterName", ConsulateEmpName.Trim() + " " + DateTime.Now.ToString("hh:mm"));
                     sqlCmd.Parameters.AddWithValue("@DataMandoubName", mandoubName.Text);
                     sqlCmd.Parameters.AddWithValue("@RelatedApp", "");
-                    string filePath1 = FilesPathIn + "text1.txt";
-                    string filePath2 = FilesPathIn + "text2.txt";
-                    //using (Stream stream = File.OpenRead(filePath1))
-                    //{
-                    //    byte[] buffer1 = new byte[stream.Length];
-                    //    stream.Read(buffer1, 0, buffer1.Length);
-                    //    var fileinfo1 = new FileInfo(filePath1);
-                    //    string extn1 = fileinfo1.Extension;
-                    //    string DocName1 = fileinfo1.Name;
-                    //    sqlCmd.Parameters.Add("@Data1", SqlDbType.VarBinary).Value = buffer1;
-                    //    sqlCmd.Parameters.Add("@Extension1", SqlDbType.Char).Value = extn1;
-                    //    sqlCmd.Parameters.Add("@FileName1", SqlDbType.NVarChar).Value = DocName1;
-                    //}
-                    if (Search.Text != "") filePath2 = Search.Text;
-                    using (Stream stream = File.OpenRead(filePath2))
-                    {
-                        byte[] buffer2 = new byte[stream.Length];
-                        stream.Read(buffer2, 0, buffer2.Length);
-                        var fileinfo2 = new FileInfo(filePath2);
-                        string extn2 = fileinfo2.Extension;
-                        string DocName2 = fileinfo2.Name;
-                        sqlCmd.Parameters.Add("@Data2", SqlDbType.VarBinary).Value = buffer2;
-                        sqlCmd.Parameters.Add("@Extension2", SqlDbType.Char).Value = extn2;
-                        sqlCmd.Parameters.Add("@FileName2", SqlDbType.NVarChar).Value = DocName2;
-                        Search.Clear();
-                    }
+                    
 
                     sqlCmd.Parameters.AddWithValue("@ArchivedState", "غير مؤرشف");
                     sqlCmd.Parameters.AddWithValue("@Comment", Comment.Text.Trim());
@@ -2319,26 +2294,8 @@ namespace PersAhwal
                     sqlCmd.Parameters.AddWithValue("@RelatedApp", PreAppId.Trim());
                     sqlCmd.Parameters.AddWithValue("@المهنة", المهنة.Text.Trim());
                     sqlCmd.Parameters.AddWithValue("@تاريخ_الميلاد", تاريخ_الميلاد.Text.Trim());
-                    string filePath1 = FilesPathIn + "text1.txt";
-                    string filePath2 = FilesPathIn + "text2.txt";
                     
-                    if (Search.Text != "") { filePath2 = Search.Text; fileloaded = true; }
-                    using (Stream stream = File.OpenRead(filePath2))
-                    {
-                        byte[] buffer2 = new byte[stream.Length];
-                        stream.Read(buffer2, 0, buffer2.Length);
-                        var fileinfo2 = new FileInfo(filePath2);
-                        string extn2 = fileinfo2.Extension;
-                        string DocName2 = fileinfo2.Name;
-                        sqlCmd.Parameters.Add("@Data2", SqlDbType.VarBinary).Value = buffer2;
-                        sqlCmd.Parameters.Add("@Extension2", SqlDbType.Char).Value = extn2;
-                        sqlCmd.Parameters.Add("@FileName2", SqlDbType.NVarChar).Value = DocName2;
-                        if (fileloaded)
-                        {
-                            ArchivedSt.CheckState = CheckState.Checked;
-                            Clear_Fields();
-                        }
-                    }
+                    
 
                     if (fileloaded)
                         sqlCmd.Parameters.AddWithValue("@ArchivedState", ConsulateEmpName.Trim() + " " + DateTime.Now.ToString("hh:mm"));

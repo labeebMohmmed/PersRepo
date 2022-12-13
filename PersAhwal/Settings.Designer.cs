@@ -342,6 +342,7 @@ namespace PersAhwal
             this.label1 = new System.Windows.Forms.Label();
             this.btnRevised = new System.Windows.Forms.Button();
             this.repReqPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.searchReq = new System.Windows.Forms.TextBox();
             this.المعاملة = new System.Windows.Forms.ComboBox();
             this.button33 = new System.Windows.Forms.Button();
             this.button24 = new System.Windows.Forms.Button();
@@ -374,7 +375,6 @@ namespace PersAhwal
             this.button27 = new System.Windows.Forms.Button();
             this.labID = new System.Windows.Forms.Label();
             this.panelLowButtons = new System.Windows.Forms.FlowLayoutPanel();
-            this.searchReq = new System.Windows.Forms.TextBox();
             this.SettingsPanel.SuspendLayout();
             this.flowLayoutPanel9.SuspendLayout();
             this.panelAuthOptions.SuspendLayout();
@@ -4102,6 +4102,16 @@ namespace PersAhwal
             this.repReqPanel.TabIndex = 826;
             this.repReqPanel.Visible = false;
             // 
+            // searchReq
+            // 
+            this.searchReq.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.searchReq.Location = new System.Drawing.Point(505, 3);
+            this.searchReq.Name = "searchReq";
+            this.searchReq.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.searchReq.Size = new System.Drawing.Size(180, 35);
+            this.searchReq.TabIndex = 692;
+            this.searchReq.TextChanged += new System.EventHandler(this.searchReq_TextChanged);
+            // 
             // المعاملة
             // 
             this.المعاملة.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -4434,16 +4444,6 @@ namespace PersAhwal
             this.panelLowButtons.TabIndex = 831;
             this.panelLowButtons.Visible = false;
             // 
-            // searchReq
-            // 
-            this.searchReq.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.searchReq.Location = new System.Drawing.Point(505, 3);
-            this.searchReq.Name = "searchReq";
-            this.searchReq.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.searchReq.Size = new System.Drawing.Size(180, 35);
-            this.searchReq.TabIndex = 692;
-            this.searchReq.TextChanged += new System.EventHandler(this.searchReq_TextChanged);
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4455,11 +4455,11 @@ namespace PersAhwal
             this.Controls.Add(this.flowLayoutPanel2);
             this.Controls.Add(this.panelLowButtons);
             this.Controls.Add(this.repReqPanel);
-            this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.panellError);
             this.Controls.Add(this.ContextPanel);
             this.Controls.Add(this.panelAuthOptions);
             this.Controls.Add(this.SettingsPanel);
+            this.Controls.Add(this.dataGridView1);
             this.Name = "Settings";
             this.Text = "Settings";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Settings_FormClosed);

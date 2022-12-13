@@ -30,6 +30,8 @@ namespace PersAhwal
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -42,8 +44,6 @@ namespace PersAhwal
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.labelName = new System.Windows.Forms.Label();
             this.ApplicantName = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -107,6 +107,7 @@ namespace PersAhwal
             this.txtPhone2 = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
             this.PanelMain = new System.Windows.Forms.Panel();
+            this.gridExcel = new System.Windows.Forms.DataGridView();
             this.ready = new System.Windows.Forms.CheckBox();
             this.dataGridView8 = new System.Windows.Forms.DataGridView();
             this.preComment = new System.Windows.Forms.ComboBox();
@@ -209,11 +210,11 @@ namespace PersAhwal
             this.labelEmp = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.gridExcel = new System.Windows.Forms.DataGridView();
             this.PanelFiles.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView7)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView6)).BeginInit();
             this.PanelMain.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridExcel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView8)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.panel2.SuspendLayout();
@@ -235,7 +236,6 @@ namespace PersAhwal
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridExcel)).BeginInit();
             this.SuspendLayout();
             // 
             // labelName
@@ -1013,16 +1013,54 @@ namespace PersAhwal
             this.PanelMain.Controls.Add(this.dataGridView4);
             this.PanelMain.Controls.Add(this.btnEditID);
             this.PanelMain.Controls.Add(this.txtId);
+            this.PanelMain.Controls.Add(this.picVerify);
+            this.PanelMain.Controls.Add(this.picVerified);
             this.PanelMain.Controls.Add(this.PaneTransfer);
             this.PanelMain.Controls.Add(this.panelStatist);
             this.PanelMain.Controls.Add(this.flowbasicInfo);
-            this.PanelMain.Controls.Add(this.picVerify);
-            this.PanelMain.Controls.Add(this.picVerified);
             this.PanelMain.Location = new System.Drawing.Point(12, 61);
             this.PanelMain.Name = "PanelMain";
             this.PanelMain.Size = new System.Drawing.Size(1351, 679);
             this.PanelMain.TabIndex = 690;
             this.PanelMain.Visible = false;
+            // 
+            // gridExcel
+            // 
+            this.gridExcel.AllowUserToDeleteRows = false;
+            this.gridExcel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridExcel.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.gridExcel.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.gridExcel.DefaultCellStyle = dataGridViewCellStyle2;
+            this.gridExcel.Location = new System.Drawing.Point(589, 325);
+            this.gridExcel.Name = "gridExcel";
+            this.gridExcel.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.gridExcel.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.gridExcel.RowTemplate.DefaultCellStyle.BackColor = System.Drawing.Color.White;
+            this.gridExcel.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Arabic Typesetting", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gridExcel.RowTemplate.DefaultCellStyle.ForeColor = System.Drawing.Color.Black;
+            this.gridExcel.RowTemplate.DefaultCellStyle.Padding = new System.Windows.Forms.Padding(4);
+            this.gridExcel.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.LightGreen;
+            this.gridExcel.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.gridExcel.RowTemplate.Height = 30;
+            this.gridExcel.Size = new System.Drawing.Size(189, 44);
+            this.gridExcel.TabIndex = 846;
+            this.gridExcel.Visible = false;
             // 
             // ready
             // 
@@ -2370,44 +2408,6 @@ namespace PersAhwal
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
             // 
-            // gridExcel
-            // 
-            this.gridExcel.AllowUserToDeleteRows = false;
-            this.gridExcel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridExcel.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            this.gridExcel.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.gridExcel.DefaultCellStyle = dataGridViewCellStyle2;
-            this.gridExcel.Location = new System.Drawing.Point(589, 325);
-            this.gridExcel.Name = "gridExcel";
-            this.gridExcel.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.gridExcel.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.gridExcel.RowTemplate.DefaultCellStyle.BackColor = System.Drawing.Color.White;
-            this.gridExcel.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Arabic Typesetting", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.gridExcel.RowTemplate.DefaultCellStyle.ForeColor = System.Drawing.Color.Black;
-            this.gridExcel.RowTemplate.DefaultCellStyle.Padding = new System.Windows.Forms.Padding(4);
-            this.gridExcel.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.LightGreen;
-            this.gridExcel.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.gridExcel.RowTemplate.Height = 30;
-            this.gridExcel.Size = new System.Drawing.Size(189, 44);
-            this.gridExcel.TabIndex = 846;
-            this.gridExcel.Visible = false;
-            // 
             // FormSudAffairs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2430,6 +2430,7 @@ namespace PersAhwal
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView6)).EndInit();
             this.PanelMain.ResumeLayout(false);
             this.PanelMain.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridExcel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView8)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.panel2.ResumeLayout(false);
@@ -2455,7 +2456,6 @@ namespace PersAhwal
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridExcel)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
