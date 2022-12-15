@@ -341,7 +341,7 @@ namespace PersAhwal
             }
             Console.WriteLine(7);
             //backgroundWorker1.RunWorkerAsync();
-            //backgroundWorker2.RunWorkerAsync();
+            backgroundWorker2.RunWorkerAsync();
 
 
             //MessageBox.Show("FilespathIn " + FilespathIn);
@@ -1202,21 +1202,21 @@ namespace PersAhwal
 
 
 
-            queryDateList[0] = "select AppName from TableDocIqrar,GriDate where GriDate=@GriDate";
-            queryDateList[1] = "select AppName,ProType,DocID,ArchivedState,DataInterType,GriDate from TableTravIqrar where GriDate=@GriDate";
-            queryDateList[2] = "select AppName,IqrarPurpose,DocID,ArchivedState,DataInterType,GriDate from TableMultiIqrar where GriDate=@GriDate";
-            queryDateList[3] = "select AppName,IqrarType,DocID,ArchivedState,DataInterType,GriDate from TableTRName where GriDate=@GriDate";
-            queryDateList[4] = "select مقدم_الطلب,نوع_الإجراء,رقم_المعاملة,حالة_الارشفة,طريقة_الطلب,التاريخ_الميلادي from TableCollection where التاريخ_الميلادي=@التاريخ_الميلادي";
-            queryDateList[5] = "select AppName,ProCase,DocID,ArchivedState,DataInterType,GriDate from TableFamilySponApp where GriDate=@GriDate";
-            queryDateList[6] = "select مقدم_الطلب,إجراء_التوكيل,نوع_التوكيل,رقم_التوكيل,الموكَّل,حالة_الارشفة,طريقة_الطلب,نوع_التوكيل ,التاريخ_الميلادي from TableAuth where التاريخ_الميلادي=@التاريخ_الميلادي";
-            queryDateList[7] = "select AppName,DocID,ArchivedState,DataInterType,GriDate from TableForensicApp where GriDate=@GriDate";
-            queryDateList[8] = "select AppName,DocID,ArchivedState,DataInterType,GriDate from TableMarriage where GriDate=@GriDate";
-            queryDateList[9] = "select AppName,DocID,ArchivedState,DataInterType,GriDate from TableStudent where GriDate=@GriDate";
-            queryDateList[10] = "select AppName,DocID,ArchivedState,DataInterType,GriDate from TableVisaApp where GriDate=@GriDate";
+            queryDateList[0] = "select AppName from TableDocIqrar,GriDate where GriDate=@GriDate and ArchivedState=N'مؤرشف نهائي'";
+            queryDateList[1] = "select AppName,ProType,DocID,ArchivedState,DataInterType,GriDate from TableTravIqrar where GriDate=@GriDate and ArchivedState=N'مؤرشف نهائي'";
+            queryDateList[2] = "select AppName,IqrarPurpose,DocID,ArchivedState,DataInterType,GriDate from TableMultiIqrar where GriDate=@GriDate and ArchivedState=N'مؤرشف نهائي'";
+            queryDateList[3] = "select AppName,IqrarType,DocID,ArchivedState,DataInterType,GriDate from TableTRName where GriDate=@GriDate and ArchivedState=N'مؤرشف نهائي'";
+            queryDateList[4] = "select مقدم_الطلب,نوع_الإجراء,رقم_المعاملة,حالة_الارشفة,طريقة_الطلب,التاريخ_الميلادي from TableCollection where التاريخ_الميلادي=@التاريخ_الميلادي and حالة_الارشفة=N'مؤرشف نهائي'";
+            queryDateList[5] = "select AppName,ProCase,DocID,ArchivedState,DataInterType,GriDate from TableFamilySponApp where GriDate=@GriDate and ArchivedState=N'مؤرشف نهائي'";
+            queryDateList[6] = "select مقدم_الطلب,إجراء_التوكيل,نوع_التوكيل,رقم_التوكيل,الموكَّل,حالة_الارشفة,طريقة_الطلب,نوع_التوكيل ,التاريخ_الميلادي from TableAuth where التاريخ_الميلادي=@التاريخ_الميلادي and حالة_الارشفة=N'مؤرشف نهائي'";
+            queryDateList[7] = "select AppName,DocID,ArchivedState,DataInterType,GriDate from TableForensicApp where GriDate=@GriDate and ArchivedState=N'مؤرشف نهائي'";
+            queryDateList[8] = "select AppName,DocID,ArchivedState,DataInterType,GriDate from TableMarriage where GriDate=@GriDate and ArchivedState=N'مؤرشف نهائي'";
+            queryDateList[9] = "select AppName,DocID,ArchivedState,DataInterType,GriDate from TableStudent where GriDate=@GriDate and ArchivedState=N'مؤرشف نهائي'";
+            queryDateList[10] = "select AppName,DocID,ArchivedState,DataInterType,GriDate from TableVisaApp where GriDate=@GriDate and ArchivedState=N'مؤرشف نهائي'";
             queryDateList[11] = "select DocNo,GriDate from TableHandAuth where GriDate=@GriDate";
-            queryDateList[12] = "select رقم_اذن_الدفن,التاريخ_الميلادي from TablePassAway where التاريخ_الميلادي=@التاريخ_الميلادي";
-            queryDateList[13] = "select رقم_المعاملة,التاريخ_الميلادي from TableMerrageDoc where التاريخ_الميلادي=@التاريخ_الميلادي";
-            queryDateList[14] = "select رقم_المعاملة,التاريخ_الميلادي from TableDivorce  where التاريخ_الميلادي=@التاريخ_الميلادي";
+            queryDateList[12] = "select رقم_اذن_الدفن,التاريخ_الميلادي from TablePassAway where التاريخ_الميلادي=@التاريخ_الميلادي and حالة_الارشفة=N'مؤرشف نهائي'";
+            queryDateList[13] = "select رقم_المعاملة,التاريخ_الميلادي from TableMerrageDoc where التاريخ_الميلادي=@التاريخ_الميلادي and حالة_الارشفة=N'مؤرشف نهائي'";
+            queryDateList[14] = "select رقم_المعاملة,التاريخ_الميلادي from TableDivorce  where التاريخ_الميلادي=@التاريخ_الميلادي and حالة_الارشفة=N'مؤرشف نهائي'";
 
 
             querydatabase[0] = "select Data1, Extension1,FileName1,Data2,Extension2,FileName2  from TableDocIqrar where ID=@id";
@@ -1433,6 +1433,24 @@ namespace PersAhwal
         }
         void DailyList(string dateFrom)
         {
+            /*
+             queryDateList[0] = "select AppName from TableDocIqrar,GriDate where GriDate=@GriDate";
+            queryDateList[1] = "select AppName,ProType,DocID,ArchivedState,DataInterType,GriDate from TableTravIqrar where GriDate=@GriDate";
+            queryDateList[2] = "select AppName,IqrarPurpose,DocID,ArchivedState,DataInterType,GriDate from TableMultiIqrar where GriDate=@GriDate";
+            queryDateList[3] = "select AppName,IqrarType,DocID,ArchivedState,DataInterType,GriDate from TableTRName where GriDate=@GriDate";
+            queryDateList[4] = "select مقدم_الطلب,نوع_الإجراء,رقم_المعاملة,حالة_الارشفة,طريقة_الطلب,التاريخ_الميلادي from TableCollection where التاريخ_الميلادي=@التاريخ_الميلادي";
+            queryDateList[5] = "select AppName,ProCase,DocID,ArchivedState,DataInterType,GriDate from TableFamilySponApp where GriDate=@GriDate";
+            queryDateList[6] = "select مقدم_الطلب,إجراء_التوكيل,نوع_التوكيل,رقم_التوكيل,الموكَّل,حالة_الارشفة,طريقة_الطلب,نوع_التوكيل ,التاريخ_الميلادي from TableAuth where التاريخ_الميلادي=@التاريخ_الميلادي";
+            queryDateList[7] = "select AppName,DocID,ArchivedState,DataInterType,GriDate from TableForensicApp where GriDate=@GriDate";
+            queryDateList[8] = "select AppName,DocID,ArchivedState,DataInterType,GriDate from TableMarriage where GriDate=@GriDate";
+            queryDateList[9] = "select AppName,DocID,ArchivedState,DataInterType,GriDate from TableStudent where GriDate=@GriDate";
+            queryDateList[10] = "select AppName,DocID,ArchivedState,DataInterType,GriDate from TableVisaApp where GriDate=@GriDate";
+            queryDateList[11] = "select DocNo,GriDate from TableHandAuth where GriDate=@GriDate";
+            queryDateList[12] = "select رقم_اذن_الدفن,التاريخ_الميلادي from TablePassAway where التاريخ_الميلادي=@التاريخ_الميلادي";
+            queryDateList[13] = "select رقم_المعاملة,التاريخ_الميلادي from TableMerrageDoc where التاريخ_الميلادي=@التاريخ_الميلادي";
+            queryDateList[14] = "select رقم_المعاملة,التاريخ_الميلادي from TableDivorce  where التاريخ_الميلادي=@التاريخ_الميلادي";
+             * 
+             */
             totalrowsAuth = 0;
 
             totalrowsAffadivit = 0;
@@ -1489,7 +1507,13 @@ namespace PersAhwal
                         string[] arrangeData = new string[5];
                         foreach (DataRow row in dtbl.Rows)
                         {
-
+                            //try
+                            //{
+                            //    MessageBox.Show(dateFrom + " - " + row["AppName"].ToString());
+                            //}
+                            //catch (Exception ex) {
+                            //    MessageBox.Show(dateFrom + " - " + row["مقدم_الطلب"].ToString());
+                            //}
                             if (!(row["ArchivedState"].ToString().Contains("-") && row["DataInterType"].ToString() != "حضور مباشرة إلى القنصلية"))
                             {
 
@@ -2251,6 +2275,10 @@ rep1[month, 0] = monthS;
 
         private void CreateDailyReportIqrar(int rows, string reportName, string DocumentType, bool AffadaivtAuth)
         {
+            loadMessageNo();
+            
+            string year = DateTime.Now.Year.ToString().Replace("20", "");
+            string noID = MessageNo + "/"+year+"/"+(MessageDocNo + 1).ToString();
             route = FilespathIn + @"\DailyReport.docx";
             string ActiveCopy = FilespathOut + reportName;
             System.IO.File.Copy(route, ActiveCopy);
@@ -2259,7 +2287,7 @@ rep1[month, 0] = monthS;
                 System.Globalization.CultureInfo TypeOfLanguage = new System.Globalization.CultureInfo("ar-SA");
                 InputLanguage.CurrentInputLanguage = InputLanguage.FromCulture(TypeOfLanguage);
 
-                string strHeader = "الرقم : " + ReportNo.Text + "     " + "التاريخ :" + GregorianDate + " م" + "     " + "الموافق : " + HijriDate + "هـ" + Environment.NewLine;
+                string strHeader = "الرقم : " + noID + "     " + "التاريخ :" + GregorianDate + " م" + "     " + "الموافق : " + HijriDate + "هـ" + Environment.NewLine;
                 document.InsertParagraph(strHeader)
                 .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
                 .FontSize(16d)
@@ -2319,7 +2347,7 @@ rep1[month, 0] = monthS;
 
                 document.Save();
                 Process.Start("WINWORD.EXE", ActiveCopy);
-
+                NewMessageNo();
             }
 
 
@@ -2329,6 +2357,8 @@ rep1[month, 0] = monthS;
 
         private void CreateDailyReportAuth(int rows, string reportName, string DocumentType, bool AffadaivtAuth)
         {
+            loadMessageNo(); string year = DateTime.Now.Year.ToString().Replace("20", "");
+            string noID = MessageNo + "/" + year + "/" + (MessageDocNo + 1).ToString();
             route = FilespathIn + @"\DailyReport.docx";
             string ActiveCopy = FilespathOut + reportName;
             System.IO.File.Copy(route, ActiveCopy);
@@ -2337,7 +2367,7 @@ rep1[month, 0] = monthS;
                 System.Globalization.CultureInfo TypeOfLanguage = new System.Globalization.CultureInfo("ar-SA");
                 InputLanguage.CurrentInputLanguage = InputLanguage.FromCulture(TypeOfLanguage);
 
-                string strHeader = "الرقم : " + ReportNo.Text + "     " + "التاريخ :" + GregorianDate + " م" + "     " + "الموافق : " + HijriDate + "هـ" + Environment.NewLine;
+                string strHeader = "الرقم : " + noID + "     " + "التاريخ :" + GregorianDate + " م" + "     " + "الموافق : " + HijriDate + "هـ" + Environment.NewLine;
                 document.InsertParagraph(strHeader)
                 .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
                 .FontSize(16d)
@@ -2404,7 +2434,7 @@ rep1[month, 0] = monthS;
 
                 document.Save();
                 Process.Start("WINWORD.EXE", ActiveCopy);
-
+                NewMessageNo();
             }
 
 
@@ -3529,6 +3559,7 @@ rep1[month, 0] = monthS;
         }
 
 
+
         private void loadMessageNo()
         {
             SqlConnection Con = new SqlConnection(DataSource);
@@ -3598,7 +3629,8 @@ rep1[month, 0] = monthS;
                 BookGregorDate2.Text = GregorianDate;
                 BookHijriDate.Text = HijriDate;
                 BookViseConsul1.Text = ViseConsul;
-                BookMassageTitle.Text = MessageType;
+                MessageBox.Show(txtSearch.Text.Split('/')[3]);
+                BookMassageTitle.Text = getDocType(txtSearch.Text.Split('/')[3]);
 
                 object rangeViseConsul1 = BookViseConsul1;
                 object rangeMApplicantName = BookMApplicantName;
@@ -5048,6 +5080,23 @@ rep1[month, 0] = monthS;
             CreateMessageWord(applicant.Text, txtEmbassey.Text, txtSearch.Text, strMessageType, bolApplicantSex, date.Text, HijriDate, attendedVC.Text);
             PrintMessage.Visible = false;
             DetecedForm.Width = 393;
+        }
+        private string getDocType(string from)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT docType FROM TableFileArch where FormType =N'" + from + "'", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            foreach (DataRow row in dtbl.Rows)
+            {
+                MessageBox.Show(row["docType"].ToString());
+                return row["docType"].ToString();
+            }
+            return "";
         }
         private void addMessageArch(string location, string messNo) {
             if (location != "")
@@ -7635,6 +7684,7 @@ rep1[month, 0] = monthS;
                 //MessageBox.Show(serverfiles[i]);
                 var serverfileinfo = new FileInfo(serverfiles[i]);
                 string serverfilename = serverfileinfo.Name;
+                string serverLastWrite = serverfileinfo.LastWriteTime.ToShortTimeString();
                 string localFile = FilespathIn + serverfilename;
 
                 if (!File.Exists(localFile))
@@ -7642,21 +7692,23 @@ rep1[month, 0] = monthS;
                     System.IO.File.Copy(serverfiles[i], localFile);
                     
                 }
-                else if (File.Exists(localFile))
+                else //if (File.Exists(localFile))
                 {
-                    DateTime serverLastWite = serverfileinfo.LastWriteTime.Date;
+                    //MessageBox.Show(serverfiles[i]);
+                    //MessageBox.Show(localFile);
+                    
                     var localfileinfo = new FileInfo(localFile);
-                    DateTime localLastWite = localfileinfo.LastWriteTime.Date;
-                    Console.WriteLine(localLastWite);
-                    //MessageBox.Show(serverLastWite +"-" +localLastWite);
-                    if (serverLastWite != localLastWite)
+                    string localLastWrite = localfileinfo.LastWriteTime.ToShortTimeString();
+                    
+                    //MessageBox.Show(serverLastWrite.Split(' ')[0] +"-" +localLastWrite.Split(' ')[0]);
+                    if (serverLastWrite.Split(' ')[0] != localLastWrite.Split(' ')[0])
                     {
 
                         try
                         {
-                           File.Delete(localFile);
+                            File.Delete(localFile);
                         }
-                        catch (Exception ex) { }
+                        catch (Exception ex) { Console.WriteLine("الملف يحتاج إلى معالجة " + localFile); }
                         System.IO.File.Copy(serverfiles[i], localFile);
                     }
                 }
@@ -7690,10 +7742,10 @@ rep1[month, 0] = monthS;
                     System.IO.File.Copy(formfiles[i], localForm);
                 else if (File.Exists(localForm))
                 {
-                    DateTime serverLastWite = serverforminfo.LastWriteTime.Date;
+                    string serverLastWrite = serverforminfo.LastWriteTime.ToShortTimeString();
                     var localforminfo = new FileInfo(localForm);
-                    DateTime localLastWite = localforminfo.LastWriteTime.Date;
-                    if (serverLastWite != localLastWite)
+                    string localLastWrite = localforminfo.LastWriteTime.ToShortTimeString();
+                    if (serverLastWrite.Split(' ')[0] != localLastWrite.Split(' ')[0])
                     {
                         //MessageBox.Show(serverfiles[i]);
                         try
@@ -7705,22 +7757,22 @@ rep1[month, 0] = monthS;
                     }
                 }
             }
-            foreach (string localForm in Directory.GetFiles(FormDataFile))
-            {
-                var localFileinfo = new FileInfo(localForm);
-                string localFormname = localFileinfo.Name;
-                string serverform = ServerModelForms + localFormname;
-                if (File.Exists(localForm) && !File.Exists(serverform))
-                {
-                    try
+            //foreach (string localForm in Directory.GetFiles(FormDataFile))
+            //{
+            //    var localFileinfo = new FileInfo(localForm);
+            //    string localFormname = localFileinfo.Name;
+            //    string serverform = ServerModelForms + localFormname;
+            //    if (File.Exists(localForm) && !File.Exists(serverform))
+            //    {
+            //        try
 
-                    {
-                       File.Delete(localForm);
-                    }
-                    catch (Exception ex) { }
-                }
+            //        {
+            //           File.Delete(localForm);
+            //        }
+            //        catch (Exception ex) { }
+            //    }
 
-            }
+            //}
         }
 
         private string[] getColList(string table)

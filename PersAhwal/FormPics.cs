@@ -860,7 +860,7 @@ namespace PersAhwal
             SqlCommand sqlCmd = new SqlCommand(GenQuery, sqlCon);            
             sqlCmd.CommandType = CommandType.Text;
             archstat = "مؤرشف نهائي";
-            if (mandoubName.Text != "حضور مباشرة إلى القنصلية" && !finalArch && DocType.CheckState == CheckState.Checked) 
+            if (mandoubName.Text != "حضور مباشرة إلى القنصلية" && (archCase == 2 || archCase == 3))
                 archstat = "مؤرشف نهائي_" + mandoubName.Text.Split('-')[0];
             paraValues[0] = archstat;
             paraValues[1] = GregorianDate;
@@ -1260,7 +1260,7 @@ namespace PersAhwal
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
-            SqlDataAdapter sqlDa = new SqlDataAdapter("select docDate,docID,appName from archives where mandoubName=@mandoubName", sqlCon);
+            SqlDataAdapter sqlDa = new SqlDataAdapter("select docDate,docID,appName from archives where mandoubName=@mandoubName and docDate <> N'"+date+"'", sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             sqlDa.SelectCommand.Parameters.AddWithValue("@mandoubName", mandoubName);
             DataTable dtbl = new DataTable();
@@ -1829,12 +1829,14 @@ namespace PersAhwal
         {
             string query;
             SqlConnection Con = new SqlConnection(DataSource);
-            query = "DELETE FROM " + v2 + " where "+ colName+" = @"+ colName;
+            query = "DELETE FROM " + v2 + " where "+ colName+" = N'"+ v1+"'";
+            Console.WriteLine(query); 
+            //MessageBox.Show(query);
+            
             if (Con.State == ConnectionState.Closed)
                 Con.Open();
             SqlCommand sqlCmd = new SqlCommand(query, Con);
             sqlCmd.CommandType = CommandType.Text;
-            sqlCmd.Parameters.AddWithValue("@"+ colName, v1);
             sqlCmd.ExecuteNonQuery();
             Con.Close();
         }
@@ -2059,107 +2061,31 @@ namespace PersAhwal
             return rowCnt;
 
         }
-        private string checkArch(string documenNo)
+        private string checkArchCase(string documenNo)
         {
+            string text = "";
+            string query = "SELECT " + allUpdateNamesList[0] + " FROM " + TableList + " WHERE " + allUpdateNamesList[2] + "=N'" + documenNo + "'";
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
-
                 sqlCon.Open();
-            SqlDataAdapter sqlDa = new SqlDataAdapter("select ID,نوع_المستند,التاريخ,الاسم,المستند from TableGeneralArch where رقم_معاملة_القسم=@رقم_معاملة_القسم", sqlCon);
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            //M
             sqlDa.SelectCommand.CommandType = CommandType.Text;
-            sqlDa.SelectCommand.Parameters.AddWithValue("@رقم_معاملة_القسم", documenNo);
             DataTable dtbl = new DataTable();
-            sqlDa.Fill(dtbl);
-            sqlCon.Close();
-            bool data1check = false;
-            bool data2check = false;
-            bool data3check = false;
-            string[] id1List = new string[100];            
-            string[] id2List = new string[100];
-            string[] data1List = new string[100];
-            int index1 = 0;
-            string[] data2List = new string[100];
-            int index2 = 0;
-            string name = "";
-            foreach (DataRow row in dtbl.Rows)
+            try
             {
-                data3check = true;
-                name = row["الاسم"].ToString();
-                if (name != "")
+                sqlDa.Fill(dtbl);
+                sqlCon.Close();
+                foreach (DataRow row in dtbl.Rows)
                 {
-                    if (row["نوع_المستند"].ToString() == "data1")
-                    {
-                        data1check = true;
-                        data1List[index1] = row["المستند"].ToString();
-                        id1List[index1] = row["ID"].ToString();
-                        index1++;
-                    }
-
-                    if (row["نوع_المستند"].ToString() == "data2")
-                    {
-                        data2check = true;
-                        data2List[index2] = row["المستند"].ToString();
-                        //MessageBox.Show(id2List[index2]);
-                        id2List[index2] = row["ID"].ToString();
-                        index2++;
-                    }
+                    text = row[allUpdateNamesList[0]].ToString();
+                    //MessageBox.Show(text);
                 }
             }
-            
-            if (data1check)
-            {
-                drawBoxesTitle("المستندات الأولية للإجراء", 60);
-                for (int index = 0; index < index1; index++) 
-                    drawBoxes(data1List[index], false, id1List[index]);             
-            }
-            if (data2check)
-            {
-                drawBoxesTitle("------------------------", 60);
-                drawBoxesTitle("المكاتبات النهائية من طرف القنصلية العامة", 20);
-                for (int index = 0; index < index2; index++)
-                    drawBoxes(data2List[index], false, id2List[index]);
-                drawBoxes("أرشفة مستندات أخرى", true, "");
-                btnSaveEnd.Visible = panelFinalArch.Visible = false;
-                btnSaveEnd.Location = new System.Drawing.Point(754, 662);
-            }
-            else {
-                btnSaveEnd.Visible = panelFinalArch.Visible = false;
-                btnSaveEnd.Location = new System.Drawing.Point(754, 662);
-                drawBoxesTitle("أرشفة المكاتبات النهائية", 20);                
-                drawBoxes("استمارة الطلب بعد البصمة", true, "");
-                drawBoxes("المكاتبة النهائية ", true, "");
-                drawBoxes("أرشفة مستندات أخرى", true, "");
-            }
-
-            //if (name == "مؤرشف نهائي")
-            //{
-            //    //
-            //    requiredDocument.Size = new System.Drawing.Size(308, 85);
-            //    requiredDocument.Enabled = true; nameSave.Visible = true; 
-            //    return name; 
-            //}
-            
-            
-            if (name == "" && data3check)
-            {
-                archCase = 1;
-                return "المستندات مؤرشفة مبدئيا ولكن لم يتم إدخال بيانات مقدم الطلب برقم المعاملة " + documenNo;
-            }
-            else if (data1check && !data2check)
-            {
-                archCase = 2; return "تم إصدارالمكاتبة النهائية للسيد/"+ name+" ولكن لم تتم أرشفتها بعد";
-            }
-            else if (data2check)
-            {
-                archCase = 3; return "تم إصدارالمكاتبة للسيد/"+ name+" وقد تمت أرشفتها بصورة نهائية";
-            }
-            else
-            {
-                archCase = 0; return "لا يوجد بالنظام معاملة بالرقم " + documenNo;
-            }
-            if (ServerType == "56")
-                btnSaveEnd.Visible = panelFinalArch.Visible = true;
+            catch (Exception ex) { }
+            return text;
         }
+        
 
 
 
@@ -2310,15 +2236,52 @@ namespace PersAhwal
                     }
                 }
             }
-            else if (requiredDocument.Text.Contains("مؤرشف") && !ArchiveState)
-            {
+            else if (!ArchiveState && (archCase == 2 || archCase == 3)) {
+                //MessageBox.Show("archCase = " + archCase.ToString());
+                //"تم إصدارالمكاتبة النهائية باسم ولكن لم تتم أرشفتها بعد";
                 if (docIDNumber == "") return;
                 if (FileIDNo == "0")
                     if (FormType != 13)
                         getZeroID(columnList, TableList, docIDNumber);
-                    //else if (FormType == 13)
-                    //    getZeroID("مقدم_الطلب", TableList[12], docIDNumber);
 
+                FinalDataArch(DataSource, docIDNumber);
+                for (int x = 0; x < imagecount; x++)
+                {
+                    if (location[x] != "")
+                    {
+                        using (Stream stream = File.OpenRead(location[x]))
+                        {
+                            byte[] buffer1 = new byte[stream.Length];
+                            stream.Read(buffer1, 0, buffer1.Length);
+                            var fileinfo1 = new FileInfo(location[x]);
+                            string extn1 = fileinfo1.Extension;
+                            string DocName1 = fileinfo1.Name;
+                            insertDoc(FileIDNo, GregorianDate, EmpName, DataSource, extn1, DocName1, docIDNumber, "data2", buffer1);
+                        }
+                    }
+                }
+                updateNames();
+
+                if (mandoubName.Text == "حضور مباشرة إلى القنصلية" || ServerType == "56" || SpecificDigit(docId.Text, 3, 4) == "06")
+                {
+                    deleteRowsData(docIDNumber, "archives", "docID");
+                    MessageBox.Show("تمت الأرشفة النهائية " + mandoubName.Text+" - "+ ServerType +" - "+ SpecificDigit(docId.Text, 3, 4));
+                }
+                
+                else if (mandoubName.Text != "حضور مباشرة إلى القنصلية" && mandoubName.Text.Contains( "المندوب"))
+                {
+                    UpdateMandoubState(txtIDNo.Text, "appOldNew", "في انتظار نسخة المواطن");
+                    MessageBox.Show("تمت الأرشفة وفي انتظار نسخة المواطن بعد البصمة");
+                }
+                
+            }
+            else if ((archCase == 4||archCase == 5) && !ArchiveState)
+            {
+                //MessageBox.Show("archCase = " + archCase.ToString());
+                if (docIDNumber == "") return;
+                if (FileIDNo == "0")
+                    if (FormType != 13)
+                        getZeroID(columnList, TableList, docIDNumber);
                 FinalDataArch(DataSource, docIDNumber);
                 for (int x = 0; x < imagecount; x++)
                 {
@@ -2339,83 +2302,128 @@ namespace PersAhwal
 
                 CurrentFile = "";
                 updateNames();
-                if (smsActiviated)
-                {
-                    //MessageBox.Show(smsPhoneNo);
-                    SMS(Convert.ToInt32(FileIDNo), TableList);
-                }
-                if ((mandoubName.Text != "حضور مباشرة إلى القنصلية" && finalArch)|| mandoubName.Text == "حضور مباشرة إلى القنصلية" || ServerType == "56" || SpecificDigit(docId.Text, 3, 4) == "06")
-                {
-                    deleteRowsData(docIDNumber, "archives", "docID");
-                    //deleteRowsData(txtIDNo.Text, allUpdateNamesList[2]);
-                    MessageBox.Show("تمت الإضافة إلى الأرشفة النهائية");
-                }
-                else if (mandoubName.Text != "حضور مباشرة إلى القنصلية" && !finalArch)
-                {
-                    UpdateMandoubState(txtIDNo.Text, "appOldNew", "في انتظار نسخة المواطن");
-                    MessageBox.Show("تمت الإضافة إلى الأرشفة وفي انتظار نسخة المواطن بعد البصمة");
-                }
 
-            } else if (!ArchiveState && !requiredDocument.Text.Contains("مؤرشف")) {
-                if (docIDNumber == "") return;
-                if (FileIDNo == "0")
-                    if (FormType != 13)
-                        getZeroID(columnList, TableList, docIDNumber);
-                    //else if (FormType == 13)
-                    //    getZeroID("مقدم_الطلب", TableList[12], docIDNumber);
-
-                FinalDataArch(DataSource, docIDNumber);
-                for (int x = 0; x < imagecount; x++)
-                {
-                    if (location[x] != "")
-                    {
-                        using (Stream stream = File.OpenRead(location[x]))
-                        {
-                            byte[] buffer1 = new byte[stream.Length];
-                            stream.Read(buffer1, 0, buffer1.Length);
-                            var fileinfo1 = new FileInfo(location[x]);
-                            string extn1 = fileinfo1.Extension;
-                            string DocName1 = fileinfo1.Name;
-                            insertDoc(FileIDNo, GregorianDate, EmpName, DataSource, extn1, DocName1, docIDNumber, "data2", buffer1);
-                        }
-                    }
-                }
-                updateNames();
-                if (smsActiviated)
-                {
-                    //MessageBox.Show(smsPhoneNo);
-                    SMS(Convert.ToInt32(FileIDNo), TableList);
-                }
-                if (checkMandounbPro(docIDNumber))
-                {
-                    //MessageBox.Show("remove");
-                    deleteRowsData(docIDNumber, "archives", "docID");
-                    //deleteRowsData(txtIDNo.Text, allUpdateNamesList[2]);
-
-                }
-                if ((mandoubName.Text != "حضور مباشرة إلى القنصلية" && finalArch) || mandoubName.Text == "حضور مباشرة إلى القنصلية" || ServerType == "56" || SpecificDigit(docId.Text, 3, 4) == "06")
-                {
-                    deleteRowsData(docIDNumber, "archives", "docID");
-                    //deleteRowsData(txtIDNo.Text, allUpdateNamesList[2]);
-                    MessageBox.Show("تمت الأرشفة النهائية");
-                }
-                
-                else if (mandoubName.Text != "حضور مباشرة إلى القنصلية" && !finalArch && !checkMandounbPro(docIDNumber))
-                {
-                    UpdateMandoubState(txtIDNo.Text, "appOldNew", "في انتظار نسخة المواطن");
-                    MessageBox.Show("تمت الأرشفة وفي انتظار نسخة المواطن بعد البصمة");
-                }
-                //MessageBox.Show(mandoubName.Text);
+                deleteRowsData(docIDNumber, "archives", "docID");
+                MessageBox.Show("تمت الأرشفة النهائية");
                 if (mandoubName.Text != "حضور مباشرة إلى القنصلية" && mandoubName.Text != "")
                 {
-
                     int found = todayList(mandoubName.Text.Trim(), Labdate);
                     if (found > 0)
                         MessageBox.Show("المندوب لدية عدد " + found.ToString() + " مكاتبات غير مكتملة،،، في انتظار المتبقي من المعاملات...");
                 }
             }
         }
+        private string checkArch(string documenNo)
+        {
 
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter("select ID,نوع_المستند,التاريخ,الاسم,المستند from TableGeneralArch where رقم_معاملة_القسم=@رقم_معاملة_القسم", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            sqlDa.SelectCommand.Parameters.AddWithValue("@رقم_معاملة_القسم", documenNo);
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            bool data1check = false;
+            bool data2check = false;
+            bool data3check = false;
+            string[] id1List = new string[100];
+            string[] id2List = new string[100];
+            string[] data1List = new string[100];
+            int index1 = 0;
+            string[] data2List = new string[100];
+            int index2 = 0;
+            string name = "";
+            foreach (DataRow row in dtbl.Rows)
+            {
+                data3check = true;
+                name = row["الاسم"].ToString();
+                if (name != "")
+                {
+                    if (row["نوع_المستند"].ToString() == "data1")
+                    {
+                        data1check = true;
+                        data1List[index1] = row["المستند"].ToString();
+                        id1List[index1] = row["ID"].ToString();
+                        index1++;
+                    }
+
+                    if (row["نوع_المستند"].ToString() == "data2")
+                    {
+                        data2check = true;
+                        data2List[index2] = row["المستند"].ToString();
+                        //MessageBox.Show(id2List[index2]);
+                        id2List[index2] = row["ID"].ToString();
+                        index2++;
+                    }
+                }
+            }
+
+            if (data1check)
+            {
+                drawBoxesTitle("المستندات الأولية للإجراء", 60);
+                for (int index = 0; index < index1; index++)
+                    drawBoxes(data1List[index], false, id1List[index]);
+            }
+            if (data2check)
+            {
+                drawBoxesTitle("------------------------", 60);
+                drawBoxesTitle("المكاتبات النهائية من طرف القنصلية العامة", 20);
+                for (int index = 0; index < index2; index++)
+                    drawBoxes(data2List[index], false, id2List[index]);
+                drawBoxes("أرشفة مستندات أخرى", true, "");
+                btnSaveEnd.Visible = panelFinalArch.Visible = false;
+                btnSaveEnd.Location = new System.Drawing.Point(754, 662);
+            }
+            else
+            {
+                btnSaveEnd.Visible = panelFinalArch.Visible = false;
+                btnSaveEnd.Location = new System.Drawing.Point(754, 662);
+                drawBoxesTitle("أرشفة المكاتبات النهائية", 20);
+                drawBoxes("استمارة الطلب بعد البصمة", true, "");
+                drawBoxes("المكاتبة النهائية ", true, "");
+                drawBoxes("أرشفة مستندات أخرى", true, "");
+            }
+
+            //if (name == "مؤرشف نهائي")
+            //{
+            //    //
+            //    requiredDocument.Size = new System.Drawing.Size(308, 85);
+            //    requiredDocument.Enabled = true; nameSave.Visible = true; 
+            //    return name; 
+            //}
+
+
+            if (name == "" && data3check)
+            {
+                archCase = 1;
+                return "المستندات مؤرشفة مبدئيا ولكن لم يتم إدخال بيانات مقدم الطلب برقم المعاملة " + documenNo;
+            }
+            else if (data1check && !data2check)
+            {
+                archCase = 2; return "تم إصدارالمكاتبة النهائية باسم /" + name + " ولكن لم تتم أرشفتها بعد";
+            }
+            else if (data2check && checkArchCase(documenNo).Contains("غير"))
+            {
+                archCase = 3; return "تم إصدارالمكاتبة باسم /" + name + " وقد تمت أرشفتها بصورة نهائية وقد تمت إعادة طباعتها مجددا";
+            }
+            else if (data2check && checkArchCase(documenNo) == "مؤرشف نهائي")
+            {
+                archCase = 4; return "تم إصدارالمكاتبة باسم /" + name + " وقد تمت أرشفتها بصورة نهائية";
+            }
+            else if (data2check && checkArchCase(documenNo).Contains("مؤرشف نهائي_"))
+            {
+                archCase = 5; return "تم إصدارالمكاتبة باسم /" + name + " وقد تمت أرشفتها بصورة نهائية وفي انتظار نسخة المواطن بعد البصمة";
+            }
+            else
+            {
+                archCase = 0; return "لا يوجد بالنظام معاملة بالرقم " + documenNo;
+            }
+            if (ServerType == "56")
+                btnSaveEnd.Visible = panelFinalArch.Visible = true;
+        }
         private void UpdateMandoubState(string id, string col,string text)
         {
             //sqlCmd.Parameters.AddWithValue("@appOldNew", "في انتظار نسخة المواطن");
@@ -2690,7 +2698,7 @@ namespace PersAhwal
 
                     if (File.Exists(imageUri) && jpgFile.Checked)
                         Report(date.Split('-')[2].Replace("20", "") + FormType.ToString() + rowCount + Environment.NewLine + date, docId.Text, imageUri);
-
+                    
                     else if (File.Exists(reqFile))
                     {
                         //updatetproFormRow(proID, DataSource, reqFile);
@@ -2909,28 +2917,26 @@ namespace PersAhwal
         {
             //MessageBox.Show(data[1]);
             SqlConnection sqlCon = new SqlConnection(DataSource);
-            string[] colList = new string[11];
-            colList[0] = "رقم_المعاملة";
-            colList[1] = "المعاملة";
+            //string[] colList = new string[11];
+            //colList[0] = "رقم_المعاملة";
+            //colList[1] = "المعاملة";
             
-            string item = "رقم_المعاملة";
+            //string item = "رقم_المعاملة";
             string value = "@رقم_المعاملة";
-            for (int col = 1; col < 11; col++)
-            {
-                item = item + "," + colList[col];
-                value = value + ",@" + colList[col];
-            }
+            //for (int col = 1; col < 11; col++)
+            //{
+            //    item = item + "," + colList[col];
+            //    value = value + ",@" + colList[col];
+            //}
 
-            string query = "INSERT INTO TableProcReq (" + item + ") values (" + value + ")";
+            string query = "INSERT INTO TableProcReq (المعاملة,رقم_المعاملة) values (@المعاملة,@رقم_المعاملة)";
 
             SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             sqlCmd.CommandType = CommandType.Text;
-            for (int col = 0; col < 2; col++)
-            {
-                sqlCmd.Parameters.AddWithValue(colList[col], data[col]);
-            }
+            sqlCmd.Parameters.AddWithValue("@المعاملة", data[1]);
+            sqlCmd.Parameters.AddWithValue("@رقم_المعاملة", data[0]);
             try
             {
                 sqlCmd.ExecuteNonQuery();
@@ -3098,259 +3104,6 @@ namespace PersAhwal
             }
         }
 
-        private void requiredDocText()
-        {
-
-            
-
-            if (FormType == 3)
-            {
-
-                switch (Combo1.Text)
-                {
-                    case "إثبات حياة":
-
-                        requiredDocument.Text = "1 - جواز سفر ساري";
-                        break;
-                    case "إثبات حالة إجتماعية (متزوج)":
-
-                        requiredDocument.Text = "1 - جواز سفر ساري أو اقامة فيما يخص الاجراءات داخل المملكة";
-                        break;
-                    case "إثبات حالة إجتماعية (أرملة)":
-
-                        requiredDocument.Text = "1 - جواز سفر ساري أو اقامة فيما يخص الاجراءات داخل المملكة";
-                        break;
-                    case "إثبات حالة إجتماعية (غير متزوج)":
-
-                        requiredDocument.Text = "1 - جواز سفر ساري أو اقامة فيما يخص الاجراءات داخل المملكة";
-                        break;
-                    case "إعفاء خروج جزئي":
-
-                        requiredDocument.Text = "1 - جواز سفر ساري";
-                        break;
-                    case "بلوغ سن الرشد":
-
-                        requiredDocument.Text = "1 - جواز سفر ساري";
-                        break;
-                    case "خطة إسكانية":
-
-                        requiredDocument.Text = "1 - جواز سفر ساري";
-                        break;
-                    case "إعالة أسرية":
-                        requiredDocument.Text = "1 - جواز سفر ساري أو اقامة فيما يخص الاجراءات داخل المملكة";
-                        break;
-                }
-                
-            }
-            else if (FormType == 5)
-            {
-                switch (Combo2.SelectedIndex)
-                {
-                    case 0:
-                        requiredDocument.Text = "1 - اقامة جميع الاطراف";
-                        break;
-                    case 1:
-                        requiredDocument.Text = "1 - اقامة جميع الاطراف";
-                        break;
-                    case 2:
-                        requiredDocument.Text = "1 - اقامة جميع الاطراف";
-                        break;
-                    case 3:
-                        requiredDocument.Text = "1 - اقامة جميع الاطراف";
-                        break;
-                }
-                //if(Combo2.Items.Count > 0)Combo2.SelectedIndex = 0;
-            }
-            else if (FormType == 2)
-            {
-                switch (Combo2.SelectedIndex)
-                {
-                    case 0:
-                        requiredDocument.Text = "1 - جواز سفر ساري أو اقامة";
-                        break;
-                    case 1:
-                        requiredDocument.Text = "1 - جواز سفر ساري أو اقامة";
-                        break;
-                    case 2:
-                        requiredDocument.Text = "1 - جواز سفر ساري أو اقامة";
-                        break;
-                }
-                if (Combo2.Items.Count > 0) Combo2.SelectedIndex = 0;
-            }
-            else if (FormType == 7)
-            {
-                switch (Combo2.SelectedIndex)
-                {
-                    case 0:
-                        requiredDocument.Text = "1 - جواز سفر ساري";
-                        break;
-                    case 1:
-                        requiredDocument.Text = "1 - جواز سفر ساري";
-                        break;
-                }
-                //if (Combo2.Items.Count > 0) Combo2.SelectedIndex = 0;
-            }
-            else if (FormType == 10)
-            {
-                requiredDocument.Text = "بحسب نوع المعاملة يتم تحديد المستندات المطلوبة";
-            }
-            else if (FormType == 14)
-            {
-                switch (Combo2.SelectedIndex)
-                {
-                    case 10:
-                        requiredDocument.Text = "برقية الرئاسة";
-                        break;
-                }
-                //if (Combo2.Items.Count > 0) Combo2.SelectedIndex = 0;
-            }
-        }
-
-        private void ComboProcedureChanged(string text)
-        {
-            
-            switch (text)
-            {
-                case "عقد قران شخصي":
-                    
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    break;
-                case "عقد قران غير شخصي":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    break;
-                case "وثيقة تصادق على زواج":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    break;
-                case "طلاق - قسيمة":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    break;
-                case "قسيمة زواج":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    break;
-                case "طلاق - إيقاع":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    break;
-                case "ورثة - استلام":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    break;
-                case "ورثة - الوقوف والمقاضاة":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    break;
-                case "ورثة - تنازل":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    requiredDocument.Text = requiredDocument.Text + Environment.NewLine + "2 - اعلام شرعي بالوراثة صادر من محكمة معتمدة";
-                    break;
-                case "ورثة - تصرف ناقل للملكية":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    requiredDocument.Text = requiredDocument.Text + Environment.NewLine + "2 - اعلام شرعي بالوراثة صادر من محكمة معتمدة";
-                    break;
-                case "ورثة - الإشراف":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    requiredDocument.Text = requiredDocument.Text + Environment.NewLine + "2 - اعلام شرعي بالوراثة صادر من محكمة معتمدة";
-                    break;
-                case "بيع ارض":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    requiredDocument.Text = requiredDocument.Text + Environment.NewLine + "2 - شهادة اثبات ملكية صادرة من جهة معتمدة";
-                    break;
-                case "شراء ارض":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    requiredDocument.Text = requiredDocument.Text + Environment.NewLine + "2 - شهادة اثبات ملكية صادرة من جهة معتمدة";
-                    break;
-                case "خطة اسكانية":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    break;
-                case "فك حجز وبيع":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    requiredDocument.Text = requiredDocument.Text + Environment.NewLine + "2 - شهادة اثبات ملكية صادرة من جهة معتمدة";
-                    break;
-                case "إشراف":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    break;
-                case "إدخال خدمات":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    break;
-                case "تقاضي":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    break;
-                case "حجز":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    requiredDocument.Text = requiredDocument.Text + Environment.NewLine + "2 - شهادة اثبات ملكية صادرة من جهة معتمدة";
-                    break;
-                case "هبة":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    requiredDocument.Text = requiredDocument.Text + Environment.NewLine + "2 - شهادة اثبات ملكية صادرة من جهة معتمدة";
-                    break;
-                case "رهن":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    requiredDocument.Text = requiredDocument.Text + Environment.NewLine + "2 - شهادة اثبات ملكية صادرة من جهة معتمدة";
-                    break;
-                case "شهادة بحث بغرض التأكد":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    break;
-                case "شهادة بحث بغرض الرهن":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    requiredDocument.Text = requiredDocument.Text + Environment.NewLine + "2 - شهادة اثبات ملكية صادرة من جهة معتمدة";
-                    break;
-                case "شهادة بحث بغرض الهبة":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    requiredDocument.Text = requiredDocument.Text + Environment.NewLine + "2 - شهادة اثبات ملكية صادرة من جهة معتمدة";
-                    break;
-                case "شهادة بحث بغرض البيع":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    requiredDocument.Text = requiredDocument.Text + Environment.NewLine + "2 - شهادة اثبات ملكية صادرة من جهة معتمدة";
-                    break;
-                case "سيارة - التخارج":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    requiredDocument.Text = requiredDocument.Text + Environment.NewLine + "2 - استمارة السيارة او اثبات ملكيتها";
-                    break;
-                case "سيارة - استلام":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    requiredDocument.Text = requiredDocument.Text + Environment.NewLine + "2 - استمارة السيارة او اثبات ملكيتها";
-                    break;
-                case "سيارة - الاشراف":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    requiredDocument.Text = requiredDocument.Text + Environment.NewLine + "2 - استمارة السيارة او اثبات ملكيتها";
-                    break;
-                case "سيارة - تقاضي":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    requiredDocument.Text = requiredDocument.Text + Environment.NewLine + "2 - استمارة السيارة او اثبات ملكيتها";
-                    break;
-                case "سيارة - تخليص جمركي":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    requiredDocument.Text = requiredDocument.Text + Environment.NewLine + "2 - استمارة السيارة او اثبات ملكيتها";
-                    break;
-                case "سيارة - بيع":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    requiredDocument.Text = requiredDocument.Text + Environment.NewLine + "2 - استمارة السيارة او اثبات ملكيتها";
-                    break;
-                case "استخراج وتوثيق":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    break;
-                case "تنازل - عقار":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    requiredDocument.Text = requiredDocument.Text + Environment.NewLine + "2 - شهادة اثبات ملكية صادرة من جهة معتمدة";
-                    break;
-                case "تنازل - أخرى":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    requiredDocument.Text = requiredDocument.Text + Environment.NewLine + "2 - شهادة اثبات ملكية صادرة من جهة معتمدة";
-                    break;
-                case "تنازل - مركبة":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    requiredDocument.Text = requiredDocument.Text + Environment.NewLine + "2 - استمارة السيارة او اثبات ملكيتها";
-                    break;
-                case "دراسة جامعية":
-                    requiredDocument.Text = "1 - جواز سفر ساري";
-                    break;
-
-            }
-            btnAuth.Visible = true;
-        }
-
-        //private void ComboProcedure_TextChanged(object sender, EventArgs e)
-        //{
-        //    ComboProcedureChanged(Combo2.Text.Trim());
-        //   // if (ArchiveState) DocIDGenerator(FormType);
-        //}
 
         private void timer1_Tick(object sender, EventArgs e)
         {

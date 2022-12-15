@@ -82,7 +82,7 @@ namespace PersAhwal
         string proType1 = "1";
         int ButtonInfoIndex = 0;
         bool LibtnAdd1Vis = false;
-
+        int MessageDocNo = 0;
         public FormCollection(int Atvc, int currentRow, int DocumentType, string empName, string dataSource, string filepathIn, string filepathOut, string jobposition, string gregorianDate, string hijriDate)
         {
             InitializeComponent();
@@ -413,8 +413,8 @@ namespace PersAhwal
                     // افادة وشهادة لمن يهمه الامر
                     if (index == 1)
                     {
-                        نص_مقدم_الطلب0_off.Text = " المواطن" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5] + " السواني" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5] + " السيد" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5];
-                        نص_مقدم_الطلب1_off.Text =  "/ " + مقدم_الطلب.Text + "، المقيم" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5] + " بالمملكة العربية السعودية حامل" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5] + " " + نوع_الهوية.Text + " رقم " + رقم_الهوية.Text.Replace("p", "P") + " إصدار " + مكان_الإصدار.Text + "،";
+                        نص_مقدم_الطلب0_off.Text = "";// " المواطن" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5] + " السواني" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5] + " السيد" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5];
+                        نص_مقدم_الطلب1_off.Text = "";// " + مقدم_الطلب.Text + "، المقيم" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5] + " بالمملكة العربية السعودية حامل" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5] + " " + نوع_الهوية.Text + " رقم " + رقم_الهوية.Text.Replace("p", "P") + " إصدار " + مكان_الإصدار.Text + "،";
                     }
                     else if (index > 1)
                     {
@@ -427,12 +427,12 @@ namespace PersAhwal
                     // افادة وشهادة لمن يهمه الامر
                     if (index == 1)
                     {
-                        نص_مقدم_الطلب0_off.Text = "المواطن" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5] + "السواني" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5] + "السيد" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5];
+                        نص_مقدم_الطلب0_off.Text = "";// "المواطن" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5] + "السواني" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5] + "السيد" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5];
                         نص_مقدم_الطلب1_off.Text = "";// "/ " + مقدم_الطلب.Text + "، المقيم" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5] + " بالمملكة العربية السعودية حامل" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5] + " " + نوع_الهوية.Text + " رقم " + رقم_الهوية.Text.Replace("p", "P") + " إصدار " + مكان_الإصدار.Text + "،";
                     }
                     else if (index > 1)
                     {
-                        نص_مقدم_الطلب0_off.Text = "المواطن" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5] + " السوداني" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5] + " المذكور" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5] + " أدناه:";
+                        نص_مقدم_الطلب0_off.Text = "";// "المواطن" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5] + " السوداني" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5] + " المذكور" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5] + " أدناه:";
                         نص_مقدم_الطلب1_off.Text = "";
                     }
                     التوثيق_off.Text = "حررت هذه الشهادة بناء على طلب المذكور" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5] + " أعلاه لاستخدامها على الوجه المشروع";
@@ -688,14 +688,6 @@ namespace PersAhwal
             preffix[5, 5] = "ون";
 
 
-            preffix[0, 15] = "";
-            preffix[1, 15] = "ة";
-            preffix[2, 15] = "ين";
-            preffix[3, 15] = "تين";
-            preffix[4, 15] = "ات";
-            preffix[5, 15] = "ين";
-
-
             preffix[0, 6] = "";//#5
             preffix[1, 6] = "ة";
             preffix[2, 6] = "ين";
@@ -763,148 +755,31 @@ namespace PersAhwal
             preffix[4, 14] = "ن";
             preffix[5, 14] = "ن";
 
+
+            preffix[0, 15] = "";
+            preffix[1, 15] = "ة";
+            preffix[2, 15] = "ين";
+            preffix[3, 15] = "تين";
+            preffix[4, 15] = "ات";
+            preffix[5, 15] = "ين";
+
+
+            preffix[0, 16] = "اسمي";//$$&
+            preffix[1, 16] = "اسمي";
+            preffix[2, 16] = "اسمينا";
+            preffix[3, 16] = "اسمينا";
+            preffix[4, 16] = "اسمائنا";
+            preffix[5, 16] = "اسمائنا";
+
+            preffix[0, 17] = "للسيد";//$$&
+            preffix[1, 17] = "للسيدة";
+            preffix[2, 17] = "لكل من ";
+            preffix[3, 17] = "لكل من ";
+            preffix[4, 17] = "لكل من ";
+            preffix[5, 17] = "لكل من ";
+
         }
-        //private void Suffex_preffixList()
-        //{
-
-
-        //    preffix[0, 0] = "ي"; //$$$
-        //    preffix[1, 0] = "ي";
-        //    preffix[2, 0] = "ا";
-        //    preffix[3, 0] = "ا";
-        //    preffix[4, 0] = "ا";
-        //    preffix[5, 0] = "ا";
-
-
-        //    preffix[0, 1] = "ت";//&&&
-        //    preffix[1, 1] = "ت";
-        //    preffix[2, 1] = "نا";
-        //    preffix[3, 1] = "نا";
-        //    preffix[4, 1] = "نا";
-        //    preffix[5, 1] = "نا";
-
-
-        //    preffix[0, 2] = "ني";//^^^
-        //    preffix[1, 2] = "ني";
-        //    preffix[2, 2] = "نا";
-        //    preffix[3, 2] = "نا";
-        //    preffix[4, 2] = "نا";
-        //    preffix[5, 2] = "نا";
-
-
-        //    preffix[0, 3] = "";//***
-        //    preffix[1, 3] = "ت";
-        //    preffix[2, 3] = "ا";
-        //    preffix[3, 3] = "تا";
-        //    preffix[4, 3] = "ن";
-        //    preffix[5, 3] = "وا";
-
-
-        //    preffix[0, 4] = "ه";//###
-        //    preffix[1, 4] = "ها";
-        //    preffix[2, 4] = "هما";
-        //    preffix[3, 4] = "هما";
-        //    preffix[4, 4] = "هن";
-        //    preffix[5, 4] = "هم";
-
-
-        //    preffix[0, 5] = "";
-        //    preffix[1, 5] = "ة";
-        //    preffix[2, 5] = "ان";
-        //    preffix[3, 5] = "تان";
-        //    preffix[4, 5] = "ات";
-        //    preffix[5, 5] = "ون";
-
-
-        //    preffix[0, 6] = "";//#5
-        //    preffix[1, 6] = "ة";
-        //    preffix[2, 6] = "ين";
-        //    preffix[3, 6] = "تين";
-        //    preffix[4, 6] = "ات";
-        //    preffix[5, 6] = "رين";
-
-
-        //    preffix[0, 7] = "ينوب";
-        //    preffix[1, 7] = "تنوب";
-        //    preffix[2, 7] = "ينوبا";
-        //    preffix[3, 7] = "تنوبا";
-        //    preffix[4, 7] = "ينبن";
-        //    preffix[5, 7] = "ينوبوا";
-
-
-        //    preffix[0, 8] = "يقوم";
-        //    preffix[1, 8] = "تقوم";
-        //    preffix[2, 8] = "يقوما";
-        //    preffix[3, 8] = "تقوما";
-        //    preffix[4, 8] = "يقمن";
-        //    preffix[5, 8] = "يقوموا";
-
-
-        //    preffix[0, 9] = "نصيبي";//#5
-        //    preffix[1, 9] = "نصيبي";
-        //    preffix[2, 9] = "نصيبينا";
-        //    preffix[3, 9] = "نصيبينا";
-        //    preffix[4, 9] = "أنصبتنا";
-        //    preffix[5, 9] = "أنصبتنا";
-
-
-        //    preffix[0, 10] = "ت";//#*#
-        //    preffix[1, 10] = "";
-
-
-
-        //    preffix[0, 11] = "تنازلت تنازلاً نهائياً";//&&&
-        //    preffix[1, 11] = "تنازلت تنازلاً نهائياً";
-        //    preffix[2, 11] = "تنازلنا تنازلاً نهائياً";
-        //    preffix[3, 11] = "تنازلنا تنازلاً نهائياً";
-        //    preffix[4, 11] = "تنازلنا تنازلاً نهائياً";
-        //    preffix[5, 11] = "تنازلنا تنازلاً نهائياً";
-
-
-        //    preffix[0, 12] = "ي";//"%&%
-        //    preffix[1, 12] = "ي";
-        //    preffix[2, 12] = "نا";
-        //    preffix[3, 12] = "نا";
-        //    preffix[4, 12] = "نا";
-        //    preffix[5, 12] = "نا";
-
-
-        //    preffix[0, 13] = "نت";//#$#
-        //    preffix[1, 13] = "نت";
-        //    preffix[2, 13] = "نا";
-        //    preffix[3, 13] = "نا";
-        //    preffix[4, 13] = "نا";
-        //    preffix[5, 13] = "نا";
-
-        //    preffix[0, 14] = "أ";//&^&
-        //    preffix[1, 14] = "إ";
-        //    preffix[2, 14] = "ن";
-        //    preffix[3, 14] = "ن";
-        //    preffix[4, 14] = "ن";
-        //    preffix[5, 14] = "ن";
-
-        //    preffix[0, 15] = "ي";//&^^
-        //    preffix[1, 15] = "ت";
-        //    preffix[2, 15] = "ي";
-        //    preffix[3, 15] = "ت";
-        //    preffix[4, 15] = "ي";
-        //    preffix[5, 15] = "ي";
-
-        //    preffix[0, 16] = "";//*%*
-        //    preffix[1, 16] = "";
-        //    preffix[2, 16] = "ا";
-        //    preffix[3, 16] = "ا";
-        //    preffix[4, 16] = "ن";
-        //    preffix[5, 16] = "وا";
-
-        //    preffix[0, 17] = "his";//&&*
-        //    preffix[1, 17] = "her";
-        //    preffix[2, 17] = "their";
-        //    preffix[3, 17] = "their";
-        //    preffix[4, 17] = "their";
-        //    preffix[5, 17] = "their";
-
-        //}
+        
         private string[] getColList(string table)
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
@@ -941,6 +816,8 @@ namespace PersAhwal
             return allList;
 
         }
+        
+        
         private void definColumn(string dataSource)
         {
             DataSource = dataSource;
@@ -1799,14 +1676,45 @@ namespace PersAhwal
         private void FormCollection_Load(object sender, EventArgs e)
         {
             fileComboBox2(نوع_المعاملة, DataSource, "ArabicGenIgrar", "TableListCombo");
-            fileComboBox(اسم_المندوب, DataSource, "MandoubNames", "TableListCombo");
+            
             fileComboBox(وجهة_المعاملة, DataSource, "ArabCountries", "TableListCombo");
             if(وجهة_المعاملة.Items.Count > 0 ) وجهة_المعاملة.SelectedIndex = 0; 
             //fileComboBoxAttend(DocType, DataSource, "DocType", "TableListCombo");
             //autoCompleteTextBox(DocSource, DataSource, "SDNIssueSource", "TableListCombo");
             fileComboBox(موقع_المعاملة, DataSource, "ArabicAttendVC", "TableListCombo");
-        }
+            fileComboBoxMandoub(اسم_المندوب, DataSource, "TableMandoudList");
+            autoCompleteTextBox(Vitext1, DataSource, "itext1", "TableAuth");
+            autoCompleteTextBox(Vitext2, DataSource, "itext2", "TableAuth");
+            autoCompleteTextBox(Vitext3, DataSource, "itext3", "TableAuth");
+            autoCompleteTextBox(Vitext4, DataSource, "itext4", "TableAuth");
+            autoCompleteTextBox(Vitext5, DataSource, "itext5", "TableAuth");
 
+        }
+        private void fileComboBoxMandoub(ComboBox combbox, string source, string tableName)
+        {
+            combbox.Visible = true;
+            combbox.Items.Clear();
+            combbox.Items.Add("حضور مباشرة إلى القنصلية");
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                saConn.Open();
+                string query = "select MandoubNames,MandoubAreas from " + tableName;
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.CommandType = CommandType.Text;
+                cmd.ExecuteNonQuery();
+                DataTable table = new DataTable();
+                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                dataAdapter.Fill(table);
+                foreach (DataRow dataRow in table.Rows)
+                {
+                    if (dataRow["MandoubNames"].ToString() != "")
+                        combbox.Items.Add(dataRow["MandoubNames"].ToString() + " - " + dataRow["MandoubAreas"].ToString());
+                }
+                saConn.Close();
+            }
+            if (combbox.Items.Count > 0)
+                combbox.SelectedIndex = 0;
+        }
         private void fileComboBoxAttend(ComboBox combbox, string source, string comlumnName, string tableName)
         {
             combbox.Items.Clear();
@@ -2022,8 +1930,188 @@ namespace PersAhwal
             fillDocFileAppInfo(PanelButtonInfo);
             chooseBtnTable();
             fillPrintDocx(edited.Text);
+            if (وجهة_المعاملة.Text.Contains("السودان"))
+                CreateMessageWord(رقم_المعاملة.Text, وجهة_المعاملة.Text, مقدم_الطلب.Text.Replace("_", " و"), "توكيلا", preffix[صفة_مقدم_الطلب_off.SelectedIndex, 16], التاريخ_الميلادي_off.Text, HijriDate, موقع_المعاملة.Text);
+            addarchives();
+            this.Close();
         }
+        private void CreateMessageWord(string ApplicantName, string EmbassySource, string IqrarNo, string MessageType, string ApplicantSex, string GregorianDate, string HijriDate, string ViseConsul)
+        {
+            string ActiveCopy;
+            string ReportName = DateTime.Now.ToString("mmss");
+            string routeDoc = FilespathIn + @"\MessageCap.docx";
+            loadMessageNo();
+            ActiveCopy = FilespathOut + "Message" + ApplicantName + ReportName + ".docx";
+            if (!File.Exists(ActiveCopy))
+            {
+                System.IO.File.Copy(routeDoc, ActiveCopy);
+                object oBMiss2 = System.Reflection.Missing.Value;
+                Word.Application oBMicroWord2 = new Word.Application();
 
+
+
+                Word.Document oBDoc2 = oBMicroWord2.Documents.Open(ActiveCopy, oBMiss2);
+
+                Object ParacapitalMessage = "MarkcapitalMessage";
+                Object ParaMApplicantName = "MarkApplicantName";
+                Object ParaMassageIqrarNo = "MarkMassageIqrarNo";
+                Object ParaMassageTitle = "MarkMassageTitle";
+                Object ParaMassageNo = "MarkMassageNo";
+                Object ParaApliSex = "MarkApliSex";
+                Object ParaHijriDate = "MarkHijriDate";
+                Object ParaDateGre = "MarkDateGre";
+                Object ParaGregorDate2 = "MarkGregorDate2";
+                Object ParaViseConsul1 = "MarkViseConsul1";
+
+
+                Word.Range BookMApplicantName = oBDoc2.Bookmarks.get_Item(ref ParaMApplicantName).Range;
+                Word.Range BookcapitalMessage = oBDoc2.Bookmarks.get_Item(ref ParacapitalMessage).Range;
+                Word.Range BookMassageIqrarNo = oBDoc2.Bookmarks.get_Item(ref ParaMassageIqrarNo).Range;
+                Word.Range BookMassageNo = oBDoc2.Bookmarks.get_Item(ref ParaMassageNo).Range;
+                Word.Range BookApliSex = oBDoc2.Bookmarks.get_Item(ref ParaApliSex).Range;
+                Word.Range BookDateGre = oBDoc2.Bookmarks.get_Item(ref ParaDateGre).Range;
+                Word.Range BookHijriDate = oBDoc2.Bookmarks.get_Item(ref ParaHijriDate).Range;
+                Word.Range BookGregorDate2 = oBDoc2.Bookmarks.get_Item(ref ParaGregorDate2).Range;
+                Word.Range BookMassageTitle = oBDoc2.Bookmarks.get_Item(ref ParaMassageTitle).Range;
+                Word.Range BookViseConsul1 = oBDoc2.Bookmarks.get_Item(ref ParaViseConsul1).Range;
+                string noID = "ق س ج/80/01/" + (MessageDocNo + 1).ToString();
+                BookMApplicantName.Text = ApplicantName;
+                BookcapitalMessage.Text = EmbassySource;
+                BookMassageNo.Text = noID;
+                BookMassageIqrarNo.Text = IqrarNo;
+                BookApliSex.Text = ApplicantSex;
+                BookDateGre.Text = GregorianDate;
+                BookGregorDate2.Text = GregorianDate;
+                BookHijriDate.Text = HijriDate;
+                BookViseConsul1.Text = ViseConsul;
+                BookMassageTitle.Text = MessageType;
+
+                object rangeViseConsul1 = BookViseConsul1;
+                object rangeMApplicantName = BookMApplicantName;
+                object rangecapitalMessage = BookcapitalMessage;
+                object rangeMassageIqrarNo = BookMassageIqrarNo;
+                object rangeMassageNo = BookMassageNo;
+                object rangeApliSex = BookApliSex;
+                object rangeDateGre = BookDateGre;
+                object rangeHijriDate = BookHijriDate;
+                object rangeGregorDate2 = BookGregorDate2;
+                object rangeMassageTitle = BookMassageTitle;
+
+
+                oBDoc2.Bookmarks.Add("MarkViseConsul1", ref rangeViseConsul1);
+                oBDoc2.Bookmarks.Add("MarkApplicantName", ref rangeMApplicantName);
+                oBDoc2.Bookmarks.Add("MarkcapitalMessage", ref rangecapitalMessage);
+                oBDoc2.Bookmarks.Add("MarkMassageIqrarNo", ref rangeMassageIqrarNo);
+                oBDoc2.Bookmarks.Add("MarkMassageNo", ref rangeMassageNo);
+                oBDoc2.Bookmarks.Add("MarkApliSex", ref rangeApliSex);
+                oBDoc2.Bookmarks.Add("MarkDateGre", ref rangeDateGre);
+                oBDoc2.Bookmarks.Add("MarkGregorDate2", ref rangeGregorDate2);
+                oBDoc2.Bookmarks.Add("MarkHijiData", ref rangeHijriDate);
+                oBDoc2.Bookmarks.Add("MarkMassageTitle", ref rangeMassageTitle);
+
+                oBDoc2.Activate();
+                oBDoc2.Save();
+                //addMessageArch(ActiveCopy, noID);
+                oBMicroWord2.Visible = true;
+                NewMessageNo();
+            }
+
+        }
+        private void loadMessageNo()
+        {
+            SqlConnection Con = new SqlConnection(DataSource);
+            SqlCommand sqlCmd1 = new SqlCommand("select MessageNo  from TableSettings where ID=@id", Con);
+            sqlCmd1.Parameters.Add("@id", SqlDbType.Int).Value = 1;
+            if (Con.State == ConnectionState.Closed)
+                Con.Open();
+
+            var reader = sqlCmd1.ExecuteReader();
+
+            if (reader.Read())
+            {
+                MessageDocNo = Convert.ToInt32(reader["MessageNo"].ToString());
+            }
+
+            Con.Close();
+
+
+        }
+        private void NewMessageNo()
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                    SqlCommand sqlCmd = new SqlCommand("UPDATE TableSettings SET MessageNo=@MessageNo WHERE ID=@ID", sqlCon);
+                    sqlCmd.CommandType = CommandType.Text;
+                    sqlCmd.Parameters.AddWithValue("@ID", 1);
+                    sqlCmd.Parameters.AddWithValue("@MessageNo", MessageDocNo + 1);
+                    sqlCmd.ExecuteNonQuery();
+                    sqlCon.Close();
+
+                }
+
+                catch (Exception ex)
+                {
+                    MessageBox.Show("الوصول لقاعدة البيانات غير متاح");
+                }
+                finally
+                {
+                }
+        }
+        private void addarchives()
+        {
+            Console.WriteLine(رقم_المعاملة.Text);
+
+            if (checkArchives(رقم_المعاملة.Text)) return;
+
+            colIDs[0] = رقم_المعاملة.Text;
+            colIDs[1] = intID.ToString();
+            colIDs[2] = التاريخ_الميلادي.Text;
+            colIDs[3] = مقدم_الطلب.Text.Split('_')[0];
+            colIDs[4] = EmpName;
+            colIDs[5] = طريقة_الطلب.Text;
+            colIDs[6] = اسم_المندوب.Text;
+            colIDs[7] = archState;
+
+            string[] allArchList = getColList("archives");
+            string strList = "";
+            for (int i = 1; i < allArchList.Length; i++)
+            {
+                if (i == 1) strList = "@" + allArchList[1];
+                else strList = strList + ",@" + allArchList[i];
+            }
+            SqlConnection sqlConnection = new SqlConnection(DataSource);
+            if (sqlConnection.State == ConnectionState.Closed)
+                sqlConnection.Open();
+
+            SqlCommand sqlCommand = new SqlCommand("insert into archives (" + strList.Replace("@", "") + ") values (" + strList + ")", sqlConnection);
+            sqlCommand.CommandType = CommandType.Text;
+            for (int i = 1; i < allArchList.Length; i++)
+            {
+
+                sqlCommand.Parameters.AddWithValue("@" + allArchList[i], colIDs[i - 1]);
+            }
+            try
+            {
+                sqlCommand.ExecuteNonQuery();
+            }
+            catch (Exception ex) { MessageBox.Show("insert into archives (" + strList.Replace("@", "") + ") values (" + strList + ")"); }
+        }
+        private bool checkArchives(string name)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT ID FROM archives where docID=N'" + name + "'", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            if (dtbl.Rows.Count > 0) { return true; }
+            else return false;
+        }
         private void chooseBtnTable() 
         {
             switch (نوع_المعاملة.SelectedIndex)
@@ -2298,7 +2386,7 @@ namespace PersAhwal
             }
             else System.Diagnostics.Process.Start(localCopy.Text);
             object doNotSaveChanges = Word.WdSaveOptions.wdSaveChanges;
-            this.Close();
+            
         }
         private int getEdited(string date)
         {

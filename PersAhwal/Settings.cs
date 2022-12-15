@@ -1159,27 +1159,31 @@ namespace PersAhwal
                     catch (Exception ex) { }
                 }
 
-
+                //MessageBox.Show(formNo);
 
                 txtSearch.Visible = button32.Visible = label1.Visible = dataGridView1.Visible = false;
                 ContextPanel.BringToFront();
                 labID.BringToFront();
-                if (checkRequInfo(formNo))
-                    OpenFile(formNo, true, formsBtn);
-                else
-                {
-                    repReqPanel.BringToFront();
-                    repReqPanel.Visible = true;
-                    المعاملة.Text = formNo;
-                    revisedRow("");
-                    MessageBox.Show("لا يوجد قائمة بالمطلوبات الأولية للمعاملة، يرجى إضافتها");
+                if (!formNo.Contains("إختر") && formNo != ""){
+                    if (checkRequInfo(formNo))
+                        OpenFile(formNo, true, formsBtn);
+                    else
+                    {
+                        repReqPanel.BringToFront();
+                        repReqPanel.Visible = true;
+                        المعاملة.Text = formNo;
+                        revisedRow("");
+                        MessageBox.Show("لا يوجد قائمة بالمطلوبات الأولية للمعاملة، يرجى إضافتها");
+                    }
                 }
+                //MessageBox.Show(المعاملة.Text);
                 if (!formsBtn.Enabled)
                 {
                     revisedRow("");
                     formsBtn.Enabled = true;
                     formsBtn.Text = "رفع الاستمارة الأولية";
                 }
+                
                 panelLowButtons.Visible = ContextPanel.Visible = true;
                 button117.Enabled = true;
                 //review1 = true;
@@ -1249,25 +1253,28 @@ namespace PersAhwal
                         {
                             mainTypeIqrar.SelectedIndex = Convert.ToInt32(colname.Split('-')[1]);
                             subTypeIqrar.Text = colname.Split('-')[0];
-                            formNo = mainTypeAuth.Text + "-" + subTypeAuth.Text.Trim();
+                            formNo = mainTypeIqrar.Text + "-" + subTypeIqrar.Text.Trim();
                         }
                         catch (Exception ex) { }
                     }
 
 
-
+                    //MessageBox.Show("formNo " + formNo);
                     txtSearch.Visible = button32.Visible = label1.Visible = dataGridView1.Visible = false;
                     ContextPanel.BringToFront();
                     labID.BringToFront();
-                    if (checkRequInfo(formNo))
-                        OpenFile(formNo, true, formsBtn);
-                    else
+                    if (!formNo.Contains("إختر") && formNo != "")
                     {
-                        repReqPanel.BringToFront();
-                        repReqPanel.Visible = true;
-                        المعاملة.Text = formNo;
-                        revisedRow("");
-                        MessageBox.Show("لا يوجد قائمة بالمطلوبات الأولية للمعاملة، يرجى إضافتها");
+                        if (checkRequInfo(formNo))
+                            OpenFile(formNo, true, formsBtn);
+                        else
+                        {
+                            repReqPanel.BringToFront();
+                            repReqPanel.Visible = true;
+                            المعاملة.Text = formNo;
+                            revisedRow("");
+                            MessageBox.Show("لا يوجد قائمة بالمطلوبات الأولية للمعاملة، يرجى إضافتها");
+                        }
                     }
                     if (!formsBtn.Enabled)
                     {
@@ -2366,10 +2373,19 @@ namespace PersAhwal
             //if (!NewColumn) return;
             //FillDataGridView("TableAddContext");
             //MessageBox.Show(subTypeAuth.Text + "-" + mainTypeAuth.SelectedIndex.ToString());
-            dataGridView1_RowIndex(subTypeAuth.Text + "-" + mainTypeAuth.SelectedIndex.ToString());
-                string formNo = mainTypeAuth.Text + "-" + subTypeAuth.Text.Trim();
+            if (panelAuthInfo.Visible)
+            {
+                MessageBox.Show("mainTypeAuth");
+                dataGridView1_RowIndex(subTypeAuth.Text + "-" + mainTypeAuth.SelectedIndex.ToString());
+            }
+            else
+            {
+                MessageBox.Show("mainTypeIqrar");
+                dataGridView1_RowIndex(subTypeIqrar.Text + "-" + mainTypeIqrar.SelectedIndex.ToString());
+            }
+                //string formNo = mainTypeAuth.Text + "-" + subTypeAuth.Text.Trim();
             //checkIndex = false;
-            OpenFile(formNo, false, formsBtn);
+            //OpenFile(formNo, false, formsBtn);
             //flllPanelItemsboxes("ColName", subTypeAuth.Text + "-" + mainTypeAuth.SelectedIndex.ToString());
             //for (int id = 0; id < dataGridView1.Rows.Count - 1; id++)
             //{
@@ -2396,7 +2412,11 @@ namespace PersAhwal
             if (Con.State == ConnectionState.Closed)
                 Con.Open();
             button.Enabled = false;
-           
+            if (!Directory.Exists(ArchFile + @"\formUpdated"))
+            {
+                System.IO.Directory.CreateDirectory(ArchFile + @"\formUpdated");
+            }
+
             var reader = sqlCmd1.ExecuteReader();
             if (reader.Read())
             {
@@ -2405,8 +2425,8 @@ namespace PersAhwal
                 try
                 {
                     var Data = (byte[])reader["Data1"];
-                
-                CurrentFile = ArchFile + @"\formUpdated\" + str +".docx";
+
+                    CurrentFile = ArchFile + @"\formUpdated\" + str + ".docx";
                 string filePath = ArchFile + @"\" + str +".docx";
                 if (File.Exists(CurrentFile) && !fileIsOpen(CurrentFile)) {
                     File.Delete(CurrentFile);
@@ -3689,8 +3709,8 @@ namespace PersAhwal
         {
             SqlConnection sqlCon = new SqlConnection(source);
             string[] colList = new string[11];
-            colList[0] = "رقم_المعاملة";
-            colList[1] = "المعاملة";
+            colList[0] = "المعاملة"; 
+            colList[1] = "رقم_المعاملة";
             colList[2] = "المطلوب_رقم1";
             colList[3] = "المطلوب_رقم2";
             colList[4] = "المطلوب_رقم3";
@@ -3700,8 +3720,8 @@ namespace PersAhwal
             colList[8] = "المطلوب_رقم7";
             colList[9] = "المطلوب_رقم8";
             colList[10] = "المطلوب_رقم9";
-            string item = "رقم_المعاملة";
-            string value = "@رقم_المعاملة";
+            string item = "المعاملة";
+            string value = "@المعاملة";
             for (int col = 1; col < 11; col++)
             {
                 item = item + "," + colList[col];
@@ -3718,6 +3738,8 @@ namespace PersAhwal
             }
             catch (Exception ex) { return; }
             sqlCmd.CommandType = CommandType.Text;
+            Console.WriteLine(query);
+            //MessageBox.Show(query);
             for (int col = 0; col < 11; col++)
             {
                 //MessageBox.Show(colList[col] + ","+data[col]);
@@ -3730,6 +3752,7 @@ namespace PersAhwal
             }
             catch (Exception ex)
             {
+                MessageBox.Show(query);
             }
             sqlCon.Close();
         }
@@ -3755,6 +3778,7 @@ namespace PersAhwal
                 {
                     if (control.Name == colList[index])
                     {
+                        //MessageBox.Show(control.Name +" - "+ colList[index]);
                         data[index] = control.Text;
                     }
                 }
@@ -3769,9 +3793,9 @@ namespace PersAhwal
             }
             repReqPanel.SendToBack();
             repReqPanel.Visible = false;
-            MessageBox.Show("تمت إضافة المعاملة بنجاح");
-            
+            //MessageBox.Show("تمت إضافة المعاملة بنجاح");
 
+            button23.PerformClick();
         }
 
         private void button26_Click(object sender, EventArgs e)
@@ -3807,6 +3831,7 @@ namespace PersAhwal
                     control.Text = "";
                 }
             }
+            button23.PerformClick();
         }
         private void updatetRow(int id, string source, string[] data)
         {
@@ -3871,6 +3896,7 @@ namespace PersAhwal
                     control.Text = "";
                 }
             }
+            button23.PerformClick();
         }
 
         private void button32_Click(object sender, EventArgs e)
@@ -3902,7 +3928,7 @@ namespace PersAhwal
 
         private void المعاملة_SelectedIndexChanged(object sender, EventArgs e)
         {
-            المعاملة.Text = dataGridView1.CurrentRow.Cells["المعاملة"].Value.ToString();
+            //المعاملة.Text = dataGridView1.CurrentRow.Cells["المعاملة"].Value.ToString();
             
             OpenFile(المعاملة.Text, true, reviewForms);
             string[] colList = new string[11];
@@ -4030,6 +4056,11 @@ namespace PersAhwal
             }
             else FillDataGridViewReq("TableProcReq");
             ColorFulGrid9();
+        }
+
+        private void المعاملة_TextChanged(object sender, EventArgs e)
+        {
+            //MessageBox.Show(المعاملة.Text);
         }
 
         private void button116_Click(object sender, EventArgs e)

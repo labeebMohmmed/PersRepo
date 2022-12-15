@@ -816,6 +816,7 @@ namespace PersAhwal
                 SponcedocNo.Text = dataGridView1.CurrentRow.Cells[10].Value.ToString();
                 SponceIssueSource.Text = dataGridView1.CurrentRow.Cells[11].Value.ToString();
 
+                التاريخ_الميلادي.Text = "";
                 التاريخ_الميلادي.Text = dataGridView1.CurrentRow.Cells[12].Value.ToString();
                 التاريخ_الهجري.Text = dataGridView1.CurrentRow.Cells[13].Value.ToString();
                 AllFamilyList = dataGridView1.CurrentRow.Cells[14].Value.ToString();
