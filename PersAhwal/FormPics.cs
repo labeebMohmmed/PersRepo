@@ -165,7 +165,6 @@ namespace PersAhwal
                 label1.Text = "اسم مقدم الطلب";
                 docId.Text = DateTime.Now.Year.ToString().Replace("20", "");
                 button3.Visible = true;
-                jpgFile.Visible = wordFile.Visible = checkPrint.Visible = false;
                 DocType.Visible = button4.Visible = true;
                 docId.Height = 46;
             }
@@ -383,7 +382,7 @@ namespace PersAhwal
         }
         
         private void drawBoxes(string text,bool hide, string id)
-        {
+        {if (text == ""|| text == "غير مدرج") return;
             //MessageBox.Show(text.Length % 16);
             PictureBox picAddReq1 = new PictureBox();
             PictureBox picRemReq1 = new PictureBox();
@@ -1369,7 +1368,7 @@ namespace PersAhwal
                 foreach (DataRow dataRow in table.Rows)
                 {
                     if (dataRow["MandoubNames"].ToString() == name)
-                        str = "استمارة خاصة بالسيد " + dataRow["MandoubNames"].ToString() + " مندوب جالية منطقة " + dataRow["MandoubAreas"].ToString() + Environment.NewLine + "مواعيد مراجعةالقنصلية العامة يوم " + dataRow["مواعيد_الحضور"].ToString() + " يمكن التواصل معه على رقم الهاتف " + dataRow["MandoubPhones"].ToString();
+                        str = " خاصة بالسيد " + dataRow["MandoubNames"].ToString() + " مندوب جالية منطقة " + dataRow["MandoubAreas"].ToString() + Environment.NewLine + " موعد المواجعة  " + dataRow["مواعيد_الحضور"].ToString() + " رقم الهاتف " + dataRow["MandoubPhones"].ToString();
                 }
                 saConn.Close();
             }
@@ -1615,11 +1614,16 @@ namespace PersAhwal
             panel1.Visible = true;
             string btnName = "";
             PictureBox pictureBox = (PictureBox)sender;
+            Button button = new Button();
             foreach (Control control in drawPic.Controls)
             {
                 if (control.Name.Contains("req_") && control.Name.Split('_')[1] == pictureBox.Name.Split('_')[1])
+                {
                     btnName = control.Text;
+                    button.Name = control.Name;
+                }
             }
+
             int picIndex = Convert.ToInt32(pictureBox.Name.Split('_')[1]);
             string fileName = loadDocxFile();
             var fileinfo = new FileInfo(fileName);
@@ -1627,7 +1631,7 @@ namespace PersAhwal
             if (fileName != "")
             {
                 //fileName = fileName.Replace(extn, btnName) + extn; ;
-                
+                PathImage[imagecount] = PrimariFiles + btnName + "_" + rowCount + imagecount.ToString() + ".jpg";
                 PathImage[imagecount] = fileName;
                 drawTempPics(PathImage[imagecount]);
                 imagecount++;
@@ -2384,7 +2388,9 @@ namespace PersAhwal
                 drawBoxesTitle("أرشفة المكاتبات النهائية", 20);
                 drawBoxes("استمارة الطلب بعد البصمة", true, "");
                 drawBoxes("المكاتبة النهائية ", true, "");
-                drawBoxes("أرشفة مستندات أخرى", true, "");
+                if(noForm == "15"||noForm == "17")
+                    drawBoxes("الإيصال المالي", true, "");
+                else drawBoxes("أرشفة مستندات أخرى", true, "");
             }
 
             //if (name == "مؤرشف نهائي")
@@ -2663,10 +2669,7 @@ namespace PersAhwal
                     MessageBox.Show("يرجى إدخال تاريخ ميلاد مقدم الطلب أولا"); 
                     return; 
                 }
-                if (checkPrint.CheckState == CheckState.Unchecked)
-                {
-                    CreatePic(PathImage);
-                }
+                
 
                 if (FormType != 6 )
                 {
@@ -2696,16 +2699,14 @@ namespace PersAhwal
                     if (FormType < 10) SubNo = "0" + FormType.ToString();
                     else SubNo = FormType.ToString();
 
-                    if (File.Exists(imageUri) && jpgFile.Checked)
-                        Report(date.Split('-')[2].Replace("20", "") + FormType.ToString() + rowCount + Environment.NewLine + date, docId.Text, imageUri);
                     
-                    else if (File.Exists(reqFile))
+                     if (File.Exists(reqFile))
                     {
                         //updatetproFormRow(proID, DataSource, reqFile);
                         CreateAuth(date.Split('-')[2].Replace("20", "") + SubNo + rowCount + Environment.NewLine + date, reqFile, wordOutFile);
                     }
 
-                    else if (File.Exists(wordInFile) && wordFile.Checked)
+                    else if (File.Exists(wordInFile) )
                     {
                         updatetproFormRow(proID, DataSource, wordInFile);
                         CreateAuth(date.Split('-')[2].Replace("20", "") + SubNo + rowCount + Environment.NewLine + date, wordInFile, wordOutFile);
@@ -2713,18 +2714,14 @@ namespace PersAhwal
                     }
                 
             }
-            else {
+            //else {
                 
                 CreatePic(PathImage);
                
-            }
+            //}
 
-
-            if (checkPrint.CheckState == CheckState.Unchecked)
-            {
-                finalArch = false;
-                this.Close();
-            }
+            finalArch = false;
+            this.Close();
             btnSaveEnd.Enabled = true;
         }
 
@@ -2844,14 +2841,14 @@ namespace PersAhwal
                     for (int x = 0; x < Combo2.Items.Count; x++)
                     {
                         
-                        string formNo = Combo1.Text + "-" + Combo2.Items[x].ToString().Trim();
+                        string formNo = Combo1.Text.Trim();
                         data[1] = Combo2.Items[x].ToString().Trim() +"-"+ Combo1.SelectedIndex.ToString();
                         //MessageBox.Show(data[1]);
                         if (PreReqFound(formNo))
                         {
-
+                            loadPreReq(noForm, Combo1.Text, ArchiveState);
                             //MessageBox.Show(formNo); 
-                            fillFormDocx(formNo, Combo2.Items[x].ToString().Trim() + "-" + Combo1.SelectedIndex.ToString());
+                            //fillFormDocx(formNo, Combo2.Items[x].ToString().Trim() + "-" + Combo1.SelectedIndex.ToString())
                         }
                         else 
                             insertRow(data);
@@ -3129,10 +3126,7 @@ namespace PersAhwal
                 loadPic.Size = new System.Drawing.Size(153, 59);
                 loadPic.Location = new System.Drawing.Point(164, 69);
                         reLoadPic.Visible = button2.Visible = true;
-                if (checkPrint.CheckState == CheckState.Checked)
-                {                    
-                    btnSaveEnd.Text = "حفظ وإنهاء الارشفة";
-                }
+                
                 
             }
             else
@@ -3141,12 +3135,7 @@ namespace PersAhwal
                 loadPic.Location = new System.Drawing.Point(3, 69);
                 loadPic.Width = btnAuth.Width = 311;
                 button2.Visible = false;
-                if (checkPrint.CheckState == CheckState.Checked)
-                {
-                    //btnAuth.Visible = false;
-                    //btnSaveEnd.Visible = true;
-                    btnSaveEnd.Text = "عرض الاستمارة";
-                }
+                
             }
         }
 
@@ -3169,6 +3158,7 @@ namespace PersAhwal
             System.Runtime.InteropServices.Marshal.ReleaseComObject(oBMicroWord);
             System.Diagnostics.Process.Start(DocxOutFile);            
         }
+        
 
         private void CreateMandoubfile( string text,string DocxInFile, string mandounName,bool copypast)
         {
@@ -3247,15 +3237,22 @@ namespace PersAhwal
             }
             else
             {
-                if (button.Name.Contains(FilespathIn))
+                if (!button.Name.All(char.IsDigit))
                 {
+                    //MessageBox.Show(button.Name);
+                    reqFile = "";
+                    OpenFile(Combo1.Text, false);
+                    if (reqFile == "")
+                        OpenFile(Combo1.Text+"-"+ Combo2.Text, false);
+
                     string wordOutFile = FilespathOut + Combo1.Text.Trim() + DateTime.Now.ToString("ssmm") + ".docx";
                     string date = DateTime.Now.Day.ToString() + "-" + DateTime.Now.Month.ToString() + "-" + DateTime.Now.Year.ToString();
                     string SubNo = "02";
                     if (FormType < 10) SubNo = "0" + FormType.ToString();
                     else SubNo = FormType.ToString();
 
-                    CreateAuth(date.Split('-')[2].Replace("20", "") + SubNo + rowCount + Environment.NewLine + date, button.Name, wordOutFile);
+                    if (File.Exists(reqFile)) 
+                        CreateAuth(date.Split('-')[2].Replace("20", "") + SubNo + rowCount + Environment.NewLine + date, reqFile, wordOutFile);
                 }
                 else
                 {
@@ -3267,9 +3264,7 @@ namespace PersAhwal
 
         private void Combo2_SelectedIndexChanged(object sender, EventArgs e)
         {
-             
-            
-            if (noForm != "" && Combo2.Visible)
+            if (noForm != "" &&noForm != "06" && Combo2.Visible)
             {
                 //MessageBox.Show("noForm= " + noForm + "_" + Combo2.SelectedIndex.ToString());
                 loadPreReq(noForm, Combo1.Text + "-" + Combo2.Text, ArchiveState);
@@ -3279,6 +3274,7 @@ namespace PersAhwal
 
         private string FillDatafromGenArch( string id)
         {
+            //MessageBox.Show(id);
 
             string NewFileName = "";
             SqlConnection sqlCon = new SqlConnection(DataSource);
@@ -3532,23 +3528,37 @@ namespace PersAhwal
             
 
             getColList(noForm, ArchiveState, index);
+            //if (FormType == 12)
+            //{
+            //MessageBox.Show(comboCol[0] + "_"+ comboCol[1]);
+            
             if (FormType == 12)
-            {
-                //MessageBox.Show(comboCol[0] + "_"+ comboCol[1]);
-                getComboText(docIDNumber, comboCol[0], comboCol[1]);
-                //MessageBox.Show(Combo1.Text + "_"+ Combo2.Text);
-                getTableList(noForm);
-
-                string wordInFile = FilespathIn + Combo2.Text.Trim() + "-" + getComboIndex(comboCol[2], Combo1.Text) + ".docx";
+             getComboText(docIDNumber, comboCol[0], comboCol[1]);
+            else {
+                Combo1.Text = comboCol[0];
+                
+                Combo2.Text = comboCol[1];
+            }
+            string formName = Combo1.Text+"-"+ Combo2.Text;
+            if (Combo2.Text == "")
+                formName = Combo1.Text;
+            //MessageBox.Show(Combo1.Text+"-"+ Combo2.Text);
+            //MessageBox.Show(Combo1.Text + "_"+ Combo2.Text);
+            getTableList(noForm);
+                
+                //string wordInFile = FilespathIn + Combo2.Text.Trim() + "-" + getComboIndex(comboCol[2], Combo1.Text) + ".docx";
+                string wordInFile = Combo1.Text.Trim() + "-" + Combo2.Text;
                 string date = DateTime.Now.Day.ToString() + "-" + DateTime.Now.Month.ToString() + "-" + DateTime.Now.Year.ToString();
                 string wordOutFile = FilespathOut + Combo1.Text.Trim() + DateTime.Now.ToString("ssmm") + ".docx";
                 string SubNo = "02";
                 if (FormType < 10) SubNo = "0" + FormType.ToString();
                 else SubNo = FormType.ToString();
-
+            if (Combo1.Text != "")
+            {
                 drawBoxesTitle("استمارة الطلب", 40);
-                drawBoxes(Combo2.Text, false, wordInFile);
+                drawBoxes(formName, false, wordInFile);
             }
+            //}
 
         //CreateAuth(date.Split('-')[2].Replace("20", "") + SubNo + rowCount + Environment.NewLine + date, wordInFile, wordOutFile);
 
@@ -3627,24 +3637,7 @@ namespace PersAhwal
             }
         }
 
-        private void checkPrint_CheckedChanged(object sender, EventArgs e)
-        {
-            if (checkPrint.CheckState == CheckState.Checked) {
-                checkPrint.Text = "طباعة فقط";
-                button2.Visible = false;
-                btnSaveEnd.Text = "عرض الاستمارة";
-                wordFile.Checked = true;
-                jpgFile.Checked = false;
-            }
-            else {
-                checkPrint.Text = "طباعة مباشرة";
-                btnAuth.Location = new System.Drawing.Point(776, 419);
-                btnAuth.Width = 311;
-                button2.Visible = true;
-                wordFile.Checked = false;
-                jpgFile.Checked = true;
-            }
-        }
+        
 
         private void printPreviewDialog1_Load(object sender, EventArgs e)
         {
@@ -3664,7 +3657,7 @@ namespace PersAhwal
 
             Thread.CurrentThread.CurrentCulture = arSA;
             new System.Globalization.GregorianCalendar();
-            Labdate = GregorianDate = DateTime.Now.ToString("MM-dd-yyyy");
+            التاريخ_الميلادي.Text = Labdate = GregorianDate = DateTime.Now.ToString("MM-dd-yyyy");
             timer2.Enabled = false;
         }
 
@@ -3800,10 +3793,74 @@ namespace PersAhwal
 
         private void button5_Click_1(object sender, EventArgs e)
         {
-            editForms();
-            
+            //editForms();
+            if (!mandoubName.Text.Contains("-")) return;
+            button5.Enabled = false;
+            reqFile = "";
+            OpenFile("استمارات المناديب", false);
+            string DocxOutFile = FilespathOut + Combo1.Text.Trim() + DateTime.Now.ToString("ssmm") + ".docx";
+            string PDFOutFile = FilespathOut + Combo1.Text.Trim() + DateTime.Now.ToString("ssmm") + ".pdf";
 
+            object oBMiss = System.Reflection.Missing.Value;
+            Word.Application oBMicroWord = new Word.Application();
+            object objCurrentCopy = reqFile;
+            Word.Document oBDoc = oBMicroWord.Documents.Open(objCurrentCopy, oBMiss);
+            oBMicroWord.Selection.Find.ClearFormatting();
+            oBMicroWord.Selection.Find.Replacement.ClearFormatting();
+            object ParaAuthIDNo = "المندوب";
+            Word.Range BookAuthIDNo = oBDoc.Bookmarks.get_Item(ref ParaAuthIDNo).Range;
+            BookAuthIDNo.Text = mandoubLine(mandoubName.Text.Split('-')[0].Trim());
+            object rangeAuthIDNo = BookAuthIDNo;
+            oBDoc.Bookmarks.Add("المندوب", ref rangeAuthIDNo);
+            oBDoc.SaveAs2(DocxOutFile);
+
+            oBDoc.ExportAsFixedFormat(PDFOutFile, Word.WdExportFormat.wdExportFormatPDF);
+            oBDoc.Close(false, oBMiss);
+            oBMicroWord.Quit(false, false);
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(oBMicroWord);
+            System.Diagnostics.Process.Start(PDFOutFile);
+            File.Delete(DocxOutFile);
+            //MessageBox.Show(التاريخ_الميلادي.Text);
+            reqFile = "";
+            restrictions();
+            button5.Enabled = true;
+        }
+        private void restrictions() {
+            reqFile = "";
+            OpenFile("ضوابط استمارات المناديب", false);
+            string DocxOutFile = FilespathOut + Combo1.Text.Trim() + DateTime.Now.ToString("ssmm") + ".docx";
+            string PDFOutFile = FilespathOut + Combo1.Text.Trim() + DateTime.Now.ToString("ssmm") + ".pdf";
+
+            object oBMiss = System.Reflection.Missing.Value;
+            Word.Application oBMicroWord = new Word.Application();
+            object objCurrentCopy = reqFile;
+            Word.Document oBDoc = oBMicroWord.Documents.Open(objCurrentCopy, oBMiss);
+            oBMicroWord.Selection.Find.ClearFormatting();
+            oBMicroWord.Selection.Find.Replacement.ClearFormatting();
             
+            object ParaAuthIDNo1 = "التاريخ_الميلادي";
+            Word.Range BookAuthIDNo1 = oBDoc.Bookmarks.get_Item(ref ParaAuthIDNo1).Range;
+            BookAuthIDNo1.Text = التاريخ_الميلادي.Text;
+            object rangeAuthIDNo1 = BookAuthIDNo1;
+            oBDoc.Bookmarks.Add("التاريخ_الميلادي", ref rangeAuthIDNo1);
+            
+            object ParaAuthIDNo2 = "بيانات_المندوب";
+            Word.Range BookAuthIDNo2 = oBDoc.Bookmarks.get_Item(ref ParaAuthIDNo2).Range;
+            BookAuthIDNo2.Text = بيانات_المندوب.Text;
+            object rangeAuthIDNo2 = BookAuthIDNo1;
+            oBDoc.Bookmarks.Add("بيانات_المندوب", ref rangeAuthIDNo2);
+            
+            oBDoc.SaveAs2(DocxOutFile);
+
+
+            oBDoc.ExportAsFixedFormat(PDFOutFile, Word.WdExportFormat.wdExportFormatPDF);
+            oBDoc.Close(false, oBMiss);
+            oBMicroWord.Quit(false, false);
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(oBMicroWord);
+            System.Diagnostics.Process.Start(PDFOutFile);
+            File.Delete(DocxOutFile);
+
+            reqFile = "";
         }
 
         private void button6_Click(object sender, EventArgs e)
@@ -4009,6 +4066,8 @@ namespace PersAhwal
 
         private void Combo1_TextChanged(object sender, EventArgs e)
         {
+            loadPreReq(noForm, Combo1.Text, ArchiveState); 
+            
             if (FormType == 10 ) {
                 fileComboBox(Combo2, DataSource, Combo1.Text.Replace(" ","_"), "TableListCombo");
             }
@@ -4029,7 +4088,7 @@ namespace PersAhwal
                 if (Combo2.Text != Combo2.Items[index].ToString()) continue;
                 else break;
             }
-            if (Combo2.Items.Count > 0)
+            if (Combo2.Items.Count > 0 && Combo2.Visible && noForm != "06")
             {
                 Combo2.Visible = true;
                 //Combo2.SelectedIndex = index;
@@ -4044,7 +4103,17 @@ namespace PersAhwal
             //}
         }
 
-        
+        private void mandoubName_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                بيانات_المندوب.Text = mandoubName.Text.Split('-')[0]+" مندوب جالية "+ mandoubName.Text.Split('-')[1];
+                //MessageBox.Show(بيانات_المندوب.Text);
+            }
+            catch (Exception ex) { 
+
+            }
+        }
 
         private void button4_Click(object sender, EventArgs e)
         {

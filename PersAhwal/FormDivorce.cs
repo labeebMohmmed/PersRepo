@@ -80,7 +80,7 @@ namespace PersAhwal
                 المأذون.SelectedIndex = AtVCIndex;
             else المأذون.SelectedIndex = 0;
             طريقة_الطلب.SelectedIndex = 0;
-            اسم_المندوب.Text = "";
+            
         }
         private void definColumn(string dataSource)
         {
@@ -262,7 +262,7 @@ namespace PersAhwal
                             MessageBox.Show("يرجى إضافة بيانات " + control.Name); return false;
                         }
 
-                        if (control.Visible && (control.Name.Contains("ميلاد_") && control.Text.Length != 4))
+                        if (control.Visible && (control.Name.Contains("ميلاد_") && control.Text.Length != 10))
                         {
                             MessageBox.Show("يرجى إضافة عام الميلاد لخانة " + control.Name); return false;
                         }
@@ -310,7 +310,15 @@ namespace PersAhwal
 
         private void button1_Click(object sender, EventArgs e)
         {
+            string part4 = رقم_المعاملة.Text.Split('/')[4];
+            string part1to3 = رقم_المعاملة.Text.Split('/')[0] + "/" + رقم_المعاملة.Text.Split('/')[1] + "/" + رقم_المعاملة.Text.Split('/')[2] + "/" + رقم_المعاملة.Text.Split('/')[3] + "/";
+            //MessageBox.Show(part4);
+            //MessageBox.Show(part1to3);
+            //MessageBox.Show(part1to3+ رقم_الوثيقة.Text);
+            if(رقم_الوثيقة.Text!=""&&رقم_الوثيقة.Text!="بدون")
+                رقم_المعاملة.Text = part1to3 + رقم_الوثيقة.Text;
             if (!ready()) return;
+            
             SqlConnection sqlConnection = new SqlConnection(DataSource);
             if (sqlConnection.State == ConnectionState.Closed)
                 sqlConnection.Open();
@@ -334,7 +342,7 @@ namespace PersAhwal
                     }
             }
             sqlCommand.ExecuteNonQuery();
-
+            updateGenName(رقم_المعاملة.Text, genIDNo.ToString());
             if (newData)
             {
                 colIDs[0] = رقم_المعاملة.Text;
@@ -349,7 +357,19 @@ namespace PersAhwal
             }
             this.Close();
         }
-
+        private void updateGenName(string name, string idDoc)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            string query = "update TableGeneralArch set رقم_معاملة_القسم=N'" + name + "' where رقم_المرجع = '" + idDoc + "' and docTable=N'TableDivorce'";
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
+        }
         private string commentInfo()
         {
             string comment = "";
@@ -447,13 +467,107 @@ namespace PersAhwal
 
         private void طريقة_الطلب_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (طريقة_الطلب.SelectedIndex != 0)
-                اسم_المندوب.Visible = true;
-            else
+            
+        }
+
+        private void FormDivorce_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            string primeryLink = @"D:\PrimariFiles\";
+            if (!Directory.Exists(@"D:\"))
             {
-                اسم_المندوب.Text = "";
-                اسم_المندوب.Visible = false;
+                string appFileName = Environment.GetCommandLineArgs()[0];
+                string directory = Path.GetDirectoryName(appFileName);
+                directory = directory + @"\";
+                primeryLink = directory + @"PrimariFiles\";
             }
+            dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Allowed");
+        }
+        private void dataSourceWrite(string dataSourcepath, string text)
+        {
+            using (FileStream fs = File.Create(dataSourcepath))
+            {
+                string dataasstring = text;
+                byte[] info = new UTF8Encoding(true).GetBytes(dataasstring);
+                fs.Write(info, 0, info.Length);
+                fs.Close();
+            }
+        }
+
+        private void طريقة_الإجراء_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (طريقة_الإجراء.SelectedIndex == 1)
+            {
+                labhusSideName.Visible = وكيل_الزوج.Visible = labhusSidePass.Visible = جواز_وكيل_الزوج.Visible = labhusSideIqama.Visible = إقامة_وكيل_الزوج.Visible = true;
+            }
+            else
+                labhusSideName.Visible = وكيل_الزوج.Visible = labhusSidePass.Visible = جواز_وكيل_الزوج.Visible = labhusSideIqama.Visible = إقامة_وكيل_الزوج.Visible = false;
+
+        }
+        string lastInput2 = "";
+        private void ميلاد_الزوجة_TextChanged(object sender, EventArgs e)
+        {
+            if (ميلاد_الزوجة.Text.Length == 10)
+            {
+                int month = Convert.ToInt32(SpecificDigit(ميلاد_الزوجة.Text, 1, 2));
+                if (month > 12)
+                {
+                    MessageBox.Show("الشهر يحب أن يكون أقل من 12");
+                    //VitxtDate1.Text = "";
+                    ميلاد_الزوجة.Text = SpecificDigit(ميلاد_الزوجة.Text, 3, 10);
+                    return;
+                }
+            }
+
+            if (ميلاد_الزوجة.Text.Length == 11)
+            {
+                ميلاد_الزوجة.Text = lastInput2; return;
+            }
+            if (ميلاد_الزوجة.Text.Length == 10) return;
+            if (ميلاد_الزوجة.Text.Length == 4) ميلاد_الزوجة.Text = "-" + ميلاد_الزوجة.Text;
+            else if (ميلاد_الزوجة.Text.Length == 7) ميلاد_الزوجة.Text = "-" + ميلاد_الزوجة.Text;
+            lastInput2 = ميلاد_الزوجة.Text;
+        }
+        private string SpecificDigit(string text, int Firstdigits, int Lastdigits)
+        {
+            char[] characters = text.ToCharArray();
+            string firstNchar = "";
+            int z = 0;
+            for (int x = Firstdigits - 1; x < Lastdigits && x < text.Length; x++)
+            {
+                firstNchar = firstNchar + characters[x];
+
+            }
+            return firstNchar;
+        }
+        string lastInput1 = "";
+        private void تاريخ_الميلاد_TextChanged(object sender, EventArgs e)
+        {
+            if (تاريخ_الميلاد.Text.Length == 10)
+            {
+                int month = Convert.ToInt32(SpecificDigit(تاريخ_الميلاد.Text, 1, 2));
+                if (month > 12)
+                {
+                    MessageBox.Show("الشهر يحب أن يكون أقل من 12");
+                    //VitxtDate1.Text = "";
+                    تاريخ_الميلاد.Text = SpecificDigit(تاريخ_الميلاد.Text, 3, 10);
+                    return;
+                }
+            }
+
+            if (تاريخ_الميلاد.Text.Length == 11)
+            {
+                تاريخ_الميلاد.Text = lastInput1; return;
+            }
+            if (تاريخ_الميلاد.Text.Length == 10) return;
+            if (تاريخ_الميلاد.Text.Length == 4) تاريخ_الميلاد.Text = "-" + تاريخ_الميلاد.Text;
+            else if (تاريخ_الميلاد.Text.Length == 7) تاريخ_الميلاد.Text = "-" + تاريخ_الميلاد.Text;
+            lastInput1 = تاريخ_الميلاد.Text;
+        }
+
+        private void رقم_الوثيقة_TextChanged(object sender, EventArgs e)
+        {
+            //MessageBox.Show(رقم_الوثيقة.Text);
+
         }
     }
 }

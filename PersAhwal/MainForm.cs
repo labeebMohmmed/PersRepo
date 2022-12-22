@@ -178,7 +178,8 @@ namespace PersAhwal
         string LocalModelFiles = "";
         string LocalModelForms = "";
         string docidMess = "";
-        public MainForm(string career,int id, string server, string Employee, string jobposition, string dataSource56, string dataSource57, string filepathIn, string filepathOut, string archFile, string formDataFile, bool pers_Peope, string gregorianDate, string hijriDate, string modelFiles,string modelForms)
+        bool Realwork = false;
+        public MainForm(string career,int id, string server, string Employee, string jobposition, string dataSource56, string dataSource57, string filepathIn, string filepathOut, string archFile, string formDataFile, bool pers_Peope, string gregorianDate, string hijriDate, string modelFiles,string modelForms, bool realwork)
         {
             InitializeComponent();
             userId = id;
@@ -186,6 +187,7 @@ namespace PersAhwal
             DataSource = dataSource57;
             DataSource56 = dataSource56;
             DataSource57 = dataSource57;
+            Realwork = realwork;
             //checkColumnNames("تقاضي_4");
             GregorianDate = gregorianDate;
             HijriDate = hijriDate;
@@ -355,7 +357,7 @@ namespace PersAhwal
             quorterE[1] = "-02-29-";
             quorterS[2] = "-011-01";
             quorterE[2] = "-12-31";
-
+            dataSourceWrite(primeryLink + "updatingStatus.txt", "Allowed");
             //string from = "2022" + quorterS[2];
             //string to = "2022" + quorterE[2];
             //DailyListcustm(from, to, 11);
@@ -2293,7 +2295,7 @@ rep1[month, 0] = monthS;
                 .FontSize(16d)
                 .Alignment = Alignment.center;
                 string MessageDir = "الى : خارجية - الخرطوم" + Environment.NewLine + "من سوداني - جدة" + Environment.NewLine + "لعناية السيد/ مدير إدارة التوثيق"
-                    + Environment.NewLine + "ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ"
+                    + Environment.NewLine + "ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ"
                     + Environment.NewLine + "بالإشارة إلى برقيتكم بالرقم: و خ/توثيق/97 بتاريخ 23/04/2014 م بشأن إصدار راجعة " + DocumentType + "، نفيدكم باعتماد القنصلية العامة للمعاملات الصادرة طرفها للمذكورين بالجدول أدناه" + " بتاريخ " + dateTimeFrom.Text;
                 document.InsertParagraph(MessageDir)
                     .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
@@ -2373,7 +2375,7 @@ rep1[month, 0] = monthS;
                 .FontSize(16d)
                 .Alignment = Alignment.center;
                 string MessageDir = "الى : خارجية - الخرطوم" + Environment.NewLine + "من سوداني - جدة" + Environment.NewLine + "لعناية السيد/ مدير إدارة التوثيق"
-                    + Environment.NewLine + "ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ"
+                    + Environment.NewLine + "ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ"
                     + Environment.NewLine + "بالإشارة إلى برقيتكم بالرقم: و خ/توثيق/97 بتاريخ 23/04/2014 م بشأن إصدار راجعة " + DocumentType + "، نفيدكم باعتماد القنصلية العامة للمعاملات الصادرة طرفها للمذكورين بالجدول أدناه" + " بتاريخ " + dateTimeFrom.Text;
                 document.InsertParagraph(MessageDir)
                     .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
@@ -4310,13 +4312,13 @@ rep1[month, 0] = monthS;
                     string[] str = new string[persbtn3.Items.Count];
                     for (int x = 0; x < persbtn3.Items.Count; x++) { str[x] = persbtn3.Items[x].ToString(); }
                     string[] strSub = new string[1] { "" };
-                    dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                     FormPics form2 = new FormPics(Server,EmployeeName, attendedVC.Text,UserJobposition, DataSource, persbtn3.SelectedIndex, FormDataFile, FilespathOut, 3, str, strSub, true, MandoubM, GriDateM);
                     form2.ShowDialog();
                 }
                 else
                 {
-                    dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                     Form3 form3 = new Form3(attendedVC.SelectedIndex, IDNo, persbtn3.SelectedIndex, EmployeeName, DataSource, FilespathIn, FilespathOut, UserJobposition, GregorianDate, HijriDate);
                     form3.ShowDialog();
                 }
@@ -4326,7 +4328,7 @@ rep1[month, 0] = monthS;
             {
                 if (mangerArch.CheckState == CheckState.Checked)
                 {
-                    dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                     string[] str = new string[persbtn3.Items.Count];
                     for (int x = 0; x < persbtn3.Items.Count; x++) { str[x] = persbtn3.Items[x].ToString(); }
                     string[] strSub = new string[4] { "نقل كفالة مقدم الطلب إلى كفالة طرف ثاني", "نقل كفالة طرف ثاني إلى كفالة مقدم الطلب", "نقل كفالة أحد مكفولي مقدم الطلب إلى كفالة طرف ثاني", "استقدام على كفالة طرف ثاني" };
@@ -4335,7 +4337,7 @@ rep1[month, 0] = monthS;
                 }
                 else
                 {
-                    dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                     Form5 form5 = new Form5(attendedVC.SelectedIndex, IDNo, EmployeeName, DataSource, FilespathIn, FilespathOut, UserJobposition, GregorianDate, HijriDate);
                     form5.ShowDialog();
                 }
@@ -4351,7 +4353,7 @@ rep1[month, 0] = monthS;
             {
                 if (mangerArch.CheckState == CheckState.Checked)
                 {
-                    dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                     string[] str = new string[persbtn3.Items.Count];
                     for (int x = 0; x < persbtn3.Items.Count; x++) { str[x] = persbtn3.Items[x].ToString(); }
                     string[] strSub = new string[7] { "استخراج وثائق للابناء", "عدم ممانعة سفر الابناء", "استخراج وثائق وعدم ممانعة سفر الابناء", "استخراج وثائق وعدم ممانعة سفر الابناء والزوجة", "استخراج وثائق وعدم ممانعة سفر الابناء بصحبة مرافق غير الزوجة", "عدم ممانعة سفر الابناء والزوجة", "عدم ممانعة سفر الزوجة" };
@@ -4360,7 +4362,7 @@ rep1[month, 0] = monthS;
                 }
                 else
                 {
-                    dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                     Form2 form2 = new Form2(attendedVC.SelectedIndex, IDNo, EmployeeName, DataSource, FilespathIn, FilespathOut, UserJobposition, GregorianDate, HijriDate);
                     form2.ShowDialog();
                 }
@@ -4370,7 +4372,7 @@ rep1[month, 0] = monthS;
             {
                 if (mangerArch.CheckState == CheckState.Checked)
                 {
-                    dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                     string[] str = new string[persbtn3.Items.Count];
                     for (int x = 0; x < persbtn3.Items.Count; x++) { str[x] = persbtn3.Items[x].ToString(); }
                     string[] strSub = new string[2] { "اثبات اسمان لذات واحدة", "اثبات صحة وثائق" };
@@ -4379,7 +4381,7 @@ rep1[month, 0] = monthS;
                 }
                 else
                 {
-                    dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                     Form7 form7 = new Form7(attendedVC.SelectedIndex, IDNo, EmployeeName, DataSource, FilespathIn, FilespathOut, UserJobposition, GregorianDate, HijriDate);
                     form7.ShowDialog();
                 }
@@ -4398,7 +4400,7 @@ rep1[month, 0] = monthS;
             {
                 if (mangerArch.CheckState == CheckState.Checked)
                 {
-                    dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                     string[] str = new string[persbtn4.Items.Count];
                     for (int x = 0; x < persbtn4.Items.Count; x++) { str[x] = persbtn4.Items[x].ToString(); }
                     string[] strSub = new string[4] { "إختر أو أكتب الغرض", "السفر للدراسة", "السفر للسياحة", "السفر للعلاج" };
@@ -4409,7 +4411,7 @@ rep1[month, 0] = monthS;
                 {
                     if (mangerArch.CheckState == CheckState.Checked)
                     {
-                        dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                        dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                         string[] str = new string[persbtn4.Items.Count];
                         for (int x = 0; x < persbtn4.Items.Count; x++) { str[x] = persbtn4.Items[x].ToString(); }
                         string[] strSub = new string[1] { "" };
@@ -4418,7 +4420,7 @@ rep1[month, 0] = monthS;
                     }
                     else
                     {
-                        dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                        dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                         Form6 form6 = new Form6(attendedVC.SelectedIndex, -1, EmployeeName, DataSource, FilespathIn, FilespathOut, UserJobposition, GregorianDate, HijriDate);
                         form6.ShowDialog();
                     }
@@ -4428,7 +4430,7 @@ rep1[month, 0] = monthS;
             {
                 if (mangerArch.CheckState == CheckState.Checked)
                 {
-                    dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                     string[] str = new string[persbtn4.Items.Count];
                     for (int x = 0; x < persbtn4.Items.Count; x++) { str[x] = persbtn4.Items[x].ToString(); }
                     string[] strSub = new string[1] { "" };
@@ -4437,7 +4439,7 @@ rep1[month, 0] = monthS;
                 }
                 else
                 {
-                    dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                     Form8 form8 = new Form8(attendedVC.SelectedIndex, -1, EmployeeName, DataSource, FilespathIn, FilespathOut, UserJobposition, GregorianDate, HijriDate);
                     form8.ShowDialog();
                 }
@@ -4446,7 +4448,7 @@ rep1[month, 0] = monthS;
             {
                 if (mangerArch.CheckState == CheckState.Checked)
                 {
-                    dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                     string[] str = new string[persbtn4.Items.Count];
                     for (int x = 0; x < persbtn4.Items.Count; x++) { str[x] = persbtn4.Items[x].ToString(); }
                     string[] strSub = new string[1] { "" };
@@ -4455,7 +4457,7 @@ rep1[month, 0] = monthS;
                 }
                 else
                 {
-                    dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                     Form10 form10 = new Form10(attendedVC.SelectedIndex, -1, 2, EmployeeName, DataSource, FilespathIn, FilespathOut, UserJobposition, GregorianDate, HijriDate);
                     form10.ShowDialog();
                 }
@@ -4468,7 +4470,7 @@ rep1[month, 0] = monthS;
             {
                 if (mangerArch.CheckState == CheckState.Checked)
                 {
-                    dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                     string[] str = new string[persbtn5.Items.Count];
                     for (int x = 0; x < persbtn5.Items.Count; x++) { str[x] = persbtn5.Items[x].ToString(); }
                     string[] strSub = new string[2] { "عدم ممانعة زواج", "عدم ممانعة وشهادة كفاءة" };
@@ -4477,7 +4479,7 @@ rep1[month, 0] = monthS;
                 }
                 else
                 {
-                    dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                     Form9 form9 = new Form9(attendedVC.SelectedIndex, -1, 0, EmployeeName, DataSource, FilespathIn, FilespathOut, UserJobposition, GregorianDate, HijriDate);
                     form9.ShowDialog();
                 }
@@ -4486,7 +4488,7 @@ rep1[month, 0] = monthS;
             {
                 if (mangerArch.CheckState == CheckState.Checked)
                 {
-                    dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                     string[] str = new string[persbtn5.Items.Count];
                     for (int x = 0; x < persbtn5.Items.Count; x++) { str[x] = persbtn5.Items[x].ToString(); }
                     string[] strSub = new string[1] { "" };
@@ -4497,7 +4499,7 @@ rep1[month, 0] = monthS;
                 {
                     if (mangerArch.CheckState == CheckState.Checked)
                     {
-                        dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                        dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                         string[] str = new string[persbtn5.Items.Count];
                         for (int x = 0; x < persbtn5.Items.Count; x++) { str[x] = persbtn5.Items[x].ToString(); }
                         string[] strSub = new string[1] { "" };
@@ -4506,7 +4508,7 @@ rep1[month, 0] = monthS;
                     }
                     else
                     {
-                        dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                        dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                         Form9 form9 = new Form9(attendedVC.SelectedIndex, -1, 1, EmployeeName, DataSource, FilespathIn, FilespathOut, UserJobposition, GregorianDate, HijriDate);
                         form9.ShowDialog();
                     }
@@ -4516,7 +4518,7 @@ rep1[month, 0] = monthS;
             {
                 if (mangerArch.CheckState == CheckState.Checked)
                 {
-                    dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                     string[] str = new string[persbtn5.Items.Count];
                     for (int x = 0; x < persbtn5.Items.Count; x++) { str[x] = persbtn5.Items[x].ToString(); }
                     string[] strSub = new string[1] { "" };
@@ -4525,7 +4527,7 @@ rep1[month, 0] = monthS;
                 }
                 else
                 {
-                    dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                     Form10 form10 = new Form10(attendedVC.SelectedIndex, -1, 3, EmployeeName, DataSource, FilespathIn, FilespathOut, UserJobposition, GregorianDate, HijriDate);
                     form10.ShowDialog();
                 }
@@ -4534,7 +4536,7 @@ rep1[month, 0] = monthS;
             {
                 if (mangerArch.CheckState == CheckState.Checked)
                 {
-                    dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                     string[] str = new string[persbtn5.Items.Count];
                     for (int x = 0; x < persbtn5.Items.Count; x++) { str[x] = persbtn5.Items[x].ToString(); }
                     string[] strSub = new string[1] { "" };
@@ -4543,8 +4545,8 @@ rep1[month, 0] = monthS;
                 }
                 else
                 {
-                    dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
-                    MerriageDoc merriageDoc = new MerriageDoc(DataSource, false, EmployeeName, attendedVC.SelectedIndex, GregorianDate, HijriDate);
+                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
+                    MerriageDoc merriageDoc = new MerriageDoc(DataSource, false, EmployeeName, attendedVC.SelectedIndex, GregorianDate, HijriDate,FilespathIn, FilespathOut);
                     merriageDoc.ShowDialog();
                 }
             }
@@ -4552,7 +4554,7 @@ rep1[month, 0] = monthS;
             {
                 if (mangerArch.CheckState == CheckState.Checked)
                 {
-                    dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                     string[] str = new string[persbtn5.Items.Count];
                     for (int x = 0; x < persbtn5.Items.Count; x++) { str[x] = persbtn5.Items[x].ToString(); }
                     string[] strSub = new string[1] { "" };
@@ -4561,7 +4563,7 @@ rep1[month, 0] = monthS;
                 }
                 else
                 {
-                    dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");                    
+                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");                    
                     PassAway passAway = new PassAway(attendedVC.SelectedIndex, DataSource, FilespathIn, FilespathOut, UserJobposition, EmployeeName, GregorianDate, HijriDate);
                     passAway.ShowDialog();
                 }
@@ -4569,7 +4571,7 @@ rep1[month, 0] = monthS;
             {
                 if (mangerArch.CheckState == CheckState.Checked)
                 {
-                    dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                     string[] str = new string[persbtn5.Items.Count];
                     for (int x = 0; x < persbtn5.Items.Count; x++) { str[x] = persbtn5.Items[x].ToString(); }
                     string[] strSub = new string[1] { "" };
@@ -4578,7 +4580,7 @@ rep1[month, 0] = monthS;
                 }
                 else
                 {
-                    dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                     FormDivorce formDivorce = new FormDivorce(DataSource, false, EmployeeName, attendedVC.SelectedIndex, GregorianDate, HijriDate);
                     formDivorce.ShowDialog();
                 }
@@ -4591,7 +4593,7 @@ rep1[month, 0] = monthS;
             {
                 if (mangerArch.CheckState == CheckState.Checked)
                 {
-                    dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                     string[] str = new string[persbtn6.Items.Count];
                     for (int x = 0; x < persbtn6.Items.Count; x++) { str[x] = persbtn6.Items[x].ToString(); }
                     string[] strSub = new string[1] { "" };
@@ -4600,7 +4602,7 @@ rep1[month, 0] = monthS;
                 }
                 else
                 {
-                    dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                     Form4 form4 = new Form4(attendedVC.SelectedIndex, -1, EmployeeName, DataSource, FilespathIn, FilespathOut, UserJobposition, GregorianDate, HijriDate);
                     form4.ShowDialog();
                 }
@@ -4749,11 +4751,11 @@ rep1[month, 0] = monthS;
         private void btnAuth_Click_1(object sender, EventArgs e)
         {
             uploadDocx = false;
-            dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+            dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
             //MessageBox.Show(HijriDate);
             Form11 form11 = new Form11(attendedVC.SelectedIndex, -1, "", DataSource, DataSource56, FilespathIn, FilespathOut, EmployeeName, UserJobposition, GregorianDate, HijriDate);
             form11.ShowDialog();
-            //dataSourceWrite(primeryLink + @"\updatingSetup.txt", "Not Allowed");
+            //dataSourceWrite(primeryLink + "updatingSetup.txt", "Not Allowed");
             //this.Hide();
 
         }
@@ -5285,7 +5287,7 @@ rep1[month, 0] = monthS;
                 str[x] = perbtn1.Items[x].ToString(); 
             }
             string[] strSub = new string[1] { "" };
-            dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+            dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
             FormPics form2 = new FormPics(Server,EmployeeName, attendedVC.Text,UserJobposition,DataSource, perbtn1.SelectedIndex, FormDataFile, FilespathOut, 12, str, strSub, true,MandoubM, GriDateM);
                 form2.ShowDialog();
             
@@ -5826,7 +5828,7 @@ rep1[month, 0] = monthS;
         {
             string[] str = new string[1] { "" };
             string[] strSub = new string[1] { "" };
-            dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+            dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
             FormPics form2 = new FormPics(Server,EmployeeName, attendedVC.Text,UserJobposition,DataSource, perbtn1.SelectedIndex, FormDataFile, FilespathOut, 12, str, strSub, false,MandoubM, GriDateM);
             form2.ShowDialog();
             flowLayoutPanel1.Visible = true;
@@ -6526,23 +6528,39 @@ rep1[month, 0] = monthS;
                 else if (Server == "56") 
                     dataSourceWrite(primeryLink + @"\SuddaneseAffairs\getVersio.txt", version);
 
-                dataSourceWrite(primeryLink + @"\updatingSetup.txt", "updating");                
+                dataSourceWrite(primeryLink + "updatingSetup.txt", "updating");                
             }
             catch (Exception ex) {
+                onUpdate = false;
+                timer1.Enabled = true;
                 //MessageBox.Show("close");
             }
         }
         private void timer4Update() {
-            int CV = 0;
+            string status = "";
+            try
+            {
+                status = File.ReadAllText(primeryLink + "updatingStatus.txt");
+            }
+            catch (Exception ex) { return; }
+            if (status != "Allowed")
+            {
+                Console.WriteLine("status..." + status);
+                return;
+            }
+
+                int CV = 0;
             int cV = 0;
             string updateType = "O";
             //if (onUpdate) return;
-            string currentVersion = getVersio();
+            
             try
             {
+                string currentVersion = getVersio();
                 CV = Convert.ToInt32(CurrentVersion.Split('.')[3]);
-
+                //MessageBox.Show(CurrentVersion);
                 cV = Convert.ToInt32(currentVersion.Split('.')[3]);
+                //MessageBox.Show(currentVersion);
                 updateType = currentVersion.Split('.')[4];
                 if (CV < cV && UserJobposition.Contains("قنصل"))
                 {
@@ -6557,18 +6575,20 @@ rep1[month, 0] = monthS;
             }
 
             catch (Exception ex) { return; }
-            
+
             if (CV >= cV || updateType != "F")
-                return;
-            else if (CV < cV && updateType == "F" && !onUpdate)
             {
-                Console.WriteLine(primeryLink + @"\updatingStatus.txt");
-                string status = File.ReadAllText(primeryLink + @"\updatingStatus.txt");
-                if (status == "Allowed")
-                {
-                    onUpdate = true;
-                    upDateClose();
-                }
+                Console.WriteLine("لا يوجد تحديث");
+                return;
+            }
+            else if (!onUpdate)
+            {
+                
+                Console.WriteLine(primeryLink + "updatingStatus.txt");
+                onUpdate = true;
+                timer1.Enabled = false;
+                //MessageBox.Show("updating...");
+                upDateClose();
             }
         }
         private void timer4_Tick(object sender, EventArgs e)
@@ -6687,7 +6707,7 @@ rep1[month, 0] = monthS;
         {
             if (mangerArch.CheckState == CheckState.Checked)
             {
-                dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                 string[] str = new string[persbtn3.Items.Count];
                 for (int x = 0; x < persbtn3.Items.Count; x++) { str[x] = persbtn3.Items[x].ToString(); }
                 string[] strSub = new string[4] { "إقرار بصيغة غير مدرجة", "اقرار بصيغة غير مدرجة مع الشهود", "إفادة لمن يهمه الأمر", "مذكرة لسفارة عربية" };
@@ -6697,7 +6717,7 @@ rep1[month, 0] = monthS;
             }
             else
             {
-                dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                 Form10 form10 = new Form10(attendedVC.SelectedIndex, IDNo, 0, EmployeeName, DataSource, FilespathIn, FilespathOut, UserJobposition, GregorianDate, HijriDate);
                 form10.ShowDialog();
             }
@@ -6787,13 +6807,13 @@ rep1[month, 0] = monthS;
                 }
                 if (Affbtn0.SelectedIndex <= 5)
                 {
-                    dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                     FormPics form2 = new FormPics(Server, EmployeeName, attendedVC.Text, UserJobposition, DataSource, index, FormDataFile, FilespathOut, 13, str, strSub, true, MandoubM, GriDateM);
                     form2.ShowDialog();
                 }
                 else if (index == 11)
                 {
-                    dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                     NoteVerbal noteVerbal = new NoteVerbal(modifyPermit, attendedVC.SelectedIndex, GregorianDate, HijriDate, UserJobposition, DataSource, FilespathIn, FilespathOut, EmployeeName, 1, true);
                     noteVerbal.ShowDialog();
                 }
@@ -6819,7 +6839,7 @@ rep1[month, 0] = monthS;
                 }
                 else if (index == 11)
                 {
-                    dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                     
                     NoteVerbal noteVerbal = new NoteVerbal(modifyPermit, attendedVC.SelectedIndex, GregorianDate, HijriDate, UserJobposition, DataSource, FilespathIn, FilespathOut, EmployeeName, 1, false);
                     noteVerbal.ShowDialog();
@@ -6827,7 +6847,7 @@ rep1[month, 0] = monthS;
                 else
                 {
                     //Console.WriteLine("FormTimeLine");
-                    dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                     FormSudAffairs formSudAffairs = new FormSudAffairs(modifyPermit, index, attendedVC.SelectedIndex, DataSource, FilespathIn, ArchFile + @"\", UserJobposition, EmployeeName, DataSource57);
                     formSudAffairs.ShowDialog(); Console.WriteLine(1);
                 }
@@ -7259,7 +7279,7 @@ rep1[month, 0] = monthS;
         private void sudan_affairs_Click(object sender, EventArgs e)
         {
             //MessageBox.Show(DataSource);
-            dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+            dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
             FormTimeLine formTimeLine = new FormTimeLine(attendedVC.SelectedIndex, DataSource, UserJobposition, FilespathIn, ArchFile + @"\", EmployeeName, GregorianDate);
             formTimeLine.ShowDialog();
         }
@@ -7290,7 +7310,7 @@ rep1[month, 0] = monthS;
             {
                 reportpass.Text = "";
                 reportpass.Visible = false;
-                dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                 DeepStatistics deepStatistics = new DeepStatistics(DataSource57, DataSource56, FilespathIn, FilespathOut);
                 deepStatistics.ShowDialog();
             }
@@ -7352,7 +7372,7 @@ rep1[month, 0] = monthS;
 
         private void Aprove_Click(object sender, EventArgs e)
         {
-            dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+            dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
             SignUp signUp = new SignUp(EmployeeName, UserJobposition, DataSource);
             signUp.ShowDialog();
         }
@@ -7516,7 +7536,7 @@ rep1[month, 0] = monthS;
         private void persbtn10_Click(object sender, EventArgs e)
         {
             uploadDocx = false;
-            dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+            dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
             //MessageBox.Show(HijriDate);
 
             FormAuth formAuth = new FormAuth(attendedVC.SelectedIndex, -1, "", DataSource, FilespathIn, FilespathOut, EmployeeName, UserJobposition, GregorianDate, HijriDate, false);
@@ -7542,7 +7562,7 @@ rep1[month, 0] = monthS;
         {
             if (mangerArch.CheckState == CheckState.Checked)
             {
-                dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                 string[] str = new string[persbtn3.Items.Count];
                 for (int x = 0; x < persbtn3.Items.Count; x++) { str[x] = persbtn3.Items[x].ToString(); }
                 string[] strSub = fileStrSub(DataSource, "ArabicGenIgrar", "TableListCombo");
@@ -7552,7 +7572,7 @@ rep1[month, 0] = monthS;
             }
             else
             {
-                dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+                dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                 FormCollection formCollection = new FormCollection(attendedVC.SelectedIndex, IDNo, 0, EmployeeName, DataSource, FilespathIn, FilespathOut, UserJobposition, GregorianDate, HijriDate);
                 formCollection.ShowDialog();
             }
@@ -7595,7 +7615,7 @@ rep1[month, 0] = monthS;
                 str[x] = docCollectCombo.Items[x].ToString();
             }
             string[] strSub = new string[1] { "" };
-            dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+            dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
             FormPics form2 = new FormPics(Server, EmployeeName, attendedVC.Text, UserJobposition, DataSource, docCollectCombo.SelectedIndex, FormDataFile, FilespathOut, 10, str, strSub, true, MandoubM, GriDateM);
             form2.ShowDialog();
         }
@@ -7669,16 +7689,27 @@ rep1[month, 0] = monthS;
                 button19.Text = "بحث";
         }
 
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            return;
+            timer4Update();
+        }
+
         private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
         {
+            if (!Realwork)
+            {
+                Console.WriteLine("Test Mode is running...");
+                return;
+            }
             CultureInfo arSA = new CultureInfo("ar-SA");
             arSA.DateTimeFormat.Calendar = new GregorianCalendar();
             Thread.CurrentThread.CurrentCulture = arSA;
             new System.Globalization.GregorianCalendar();
 
+            
 
-
-                string[] serverfiles = Directory.GetFiles(ServerModelFiles);
+            string[] serverfiles = Directory.GetFiles(ServerModelFiles);
             for (int i = 0; i < serverfiles.Length; i++)
             {
                 //MessageBox.Show(serverfiles[i]);
@@ -8615,7 +8646,7 @@ rep1[month, 0] = monthS;
 
         private void GoToForm(int indexNo, int locaIDNo)
         {
-            dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Not Allowed");
+            dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
             switch (indexNo)
             {
                 case 0:

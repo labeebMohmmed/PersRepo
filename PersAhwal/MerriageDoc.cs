@@ -47,14 +47,23 @@ namespace PersAhwal
         string HijriDate = "";
         bool newData = false;
         string[] colIDs = new string[100];
-        public MerriageDoc(string dataSource, bool addEdit, string empName, int atVCIndex, string gregorianDate, string hijriDate)
+        string[] forbidDs = new string[100];
+        string FilespathIn = "";
+        string FilespathOut = "";
+        Word.Document oBDoc;
+        object oBMiss;
+        Word.Application oBMicroWord;
+        bool button1Enabel = false;
+        string localCopy_off = "";
+        public MerriageDoc(string dataSource, bool addEdit, string empName, int atVCIndex, string gregorianDate, string hijriDate, string filespathIn, string filespathOut)
         {
             InitializeComponent();
             DataSource = dataSource;
             AddEdit = addEdit;
             AtVCIndex = atVCIndex;
             allList = getColList("TableMerrageDoc");
-
+            FilespathIn = filespathIn;
+            FilespathOut = filespathOut;
             التاريخ_الهجري.Text = HijriDate = hijriDate;
             التاريخ_الميلادي.Text = GregorianDate = gregorianDate;
             fillFileBox(DataSource);
@@ -75,6 +84,68 @@ namespace PersAhwal
             else المأذون.SelectedIndex = 0;
             طريقة_الطلب.SelectedIndex = 0;
             اسم_المندوب.Text = "";
+            definColumn(DataSource);
+        }
+        private void definColumn(string dataSource)
+        {
+            DataSource = dataSource;
+            for (int index = 0; index < 100; index++)
+                forbidDs[index] = "";
+
+            forbidDs[0] = "تعليق";
+            forbidDs[1] = "حالة_الارشفة";
+            forbidDs[2] = "sms";
+            foreach (Control control in PanelMain.Controls)
+            {
+                if ((control is TextBox || control is ComboBox || control is CheckBox) && !control.Name.Contains("ff"))
+                {
+                    if (!checkColumnName(control.Name, DataSource))
+                    {
+                        CreateColumn(control.Name, DataSource);
+                    }
+                }
+            }
+            for (int index = 0; forbidDs[index] != ""; index++)
+            {
+                if (!checkColumnName(forbidDs[index].Replace(" ", "_"), DataSource))
+                {
+                    CreateColumn(forbidDs[index].Replace(" ", "_"), DataSource);
+                }
+            }
+        }
+
+        private void CreateColumn(string Columnname, string dataSource)
+        {
+            SqlConnection sqlCon = new SqlConnection(dataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlCommand sqlCmd = new SqlCommand("alter table TableMerrageDoc add " + Columnname.Replace(" ", "_") + " nvarchar(150)", sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
+        }
+
+        private bool checkColumnName(string colNo, string dataSource)
+        {
+            SqlConnection sqlCon = new SqlConnection(dataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter("SP_COLUMNS TableMerrageDoc", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                if (!string.IsNullOrEmpty(dataRow["COLUMN_NAME"].ToString()))
+                {
+                    if (dataRow["COLUMN_NAME"].ToString() == colNo.Replace(" ", "_"))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         private string[] getColList(string table)
@@ -120,14 +191,48 @@ namespace PersAhwal
             return allList;
 
         }
+        
+        private bool getDate(TextBox textBox)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT DATEDIFF(day, '" + textBox.Text + "', '" + GregorianDate + "')/365 as daysDiff", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            try
+            {
+                sqlDa.Fill(dtbl);
+                sqlCon.Close();
+
+                foreach (DataRow row in dtbl.Rows)
+                {
+                    int age = Convert.ToInt32(row["daysDiff"].ToString());
+                    if (age <= 18)
+                    {
+                        textBox.BackColor = System.Drawing.Color.MistyRose;
+                        MessageBox.Show("عمر حرج ويحتاج إلى موافق صريحة من المأذون");
+
+                        return true;
+                    }
+                    else
+                    {
+                        textBox.BackColor = System.Drawing.Color.White;
+                    }
+                }
+            }
+            catch (Exception ex) { MessageBox.Show("تاريخ ميلاد غير صالح"); }
+            return false;
+
+        }
 
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (طريقة_الإجراء.SelectedIndex == 1) {
-                labhusSideName.Visible = وكيل_الزوج.Visible = labhusSidePass.Visible = جواز_وكيل_الزوج.Visible = labhusSideIqama.Visible = إقامة_وكيل_الزوج.Visible = label22.Visible = هاتف_وكيل_الزوج.Visible = true;
+                labhusSideName.Visible = وكيل_الزوج.Visible = labhusSidePass.Visible = جواز_وكيل_الزوج.Visible = true;
             }
             else 
-                labhusSideName.Visible = وكيل_الزوج.Visible = labhusSidePass.Visible = جواز_وكيل_الزوج.Visible = labhusSideIqama.Visible = إقامة_وكيل_الزوج.Visible = label22.Visible = هاتف_وكيل_الزوج.Visible = false;
+                labhusSideName.Visible = وكيل_الزوج.Visible = labhusSidePass.Visible = جواز_وكيل_الزوج.Visible = false;
         }
 
         private void addarchives(string[] text)
@@ -166,6 +271,7 @@ namespace PersAhwal
             dataGridView1.Columns[0].Visible = false;
             dataGridView1.Columns[1].Width = 170;
             dataGridView1.Columns[2].Width = dataGridView1.Columns[3].Width = 200;
+            ColorFulGrid9();
         }
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -192,9 +298,14 @@ namespace PersAhwal
                     FillDatafromGenArch("data1", genIDNo.ToString(), "TableMerrageDoc");
                 }
                     AddEdit = false;
-                dataGridView1.Visible = false;
+                labDescribed.Visible = dataGridView1.Visible = false;
                 PanelMain.Visible = true;
+                backgroundWorker1.RunWorkerAsync();
             }
+            if (رقم_الوثيقة.Text != "" && رقم_الوثيقة.Text != "بدون") 
+                رقم_الوثيقة.Enabled = false;
+            else رقم_الوثيقة.Enabled = true;
+            
         }
 
         private bool ready()
@@ -210,22 +321,20 @@ namespace PersAhwal
                             MessageBox.Show("يرجى إضافة بيانات " + control.Name); return false;
                         }
 
-                        if (control.Visible && (control.Name.Contains("ميلاد_") && control.Text.Length != 4))
+                        if (control.Visible && (control.Name.Contains("ميلاد_") && control.Text.Length != 10))
                         {
                             MessageBox.Show("يرجى إضافة عام الميلاد لخانة " + control.Name); return false;
                         }
 
-                        if (control.Visible && (control.Name.Contains("هاتف") && control.Text.Length != 12))
-                        {
-                            MessageBox.Show("يرجى إضافة رقم الهاتف بخانة " + control.Name); return false;
-                        }
-                        if (control.Visible && (control.Name.Contains("قامة") && control.Text.Length != 10))
-                        {
-                            MessageBox.Show("يرجى إضافة رقم الإقامة بصورة صحيحة لخانة " + control.Name); return false;
-                        }
                         if (control.Visible && (control.Name.Contains("جواز") && control.Text.Length != 9))
                         {
                             MessageBox.Show("يرجى إضافة رقم الجواز بصورة صحيحة لخانة " + control.Name); return false;
+                        }
+                        
+                        if (عمر_الزوج_الحرج)
+                        {
+                            MessageBox.Show("عمر أحد الزوجين أقل من العمر الذي نص عليه القانون " + control.Name);
+                            return false;
                         }
                     }
                 }
@@ -233,6 +342,28 @@ namespace PersAhwal
             return true;
         }
 
+        private void ColorFulGrid9()
+        {
+
+            int arch = 0;
+            int inComb = 0;
+            int i = 0;
+            for (; i < dataGridView1.Rows.Count - 1; i++)
+            {
+                if (dataGridView1.Rows[i].Cells[2].Value.ToString() == "")
+                {
+                    inComb++;
+                }
+                if (dataGridView1.Rows[i].Cells["حالة_الارشفة"].Value.ToString() == "مؤرشف نهائي")
+                {
+                    dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
+                    
+                    arch++;
+                }
+            }
+            labDescribed.Text = "عدد (" + i.ToString() + ") معاملة .. عدد (" + inComb.ToString() + ") غير مكتمل.. والمؤرشف منها عدد (" + arch.ToString() + ")...";
+
+        }
         void FillDatafromGenArch(string doc, string id, string table)
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
@@ -258,7 +389,10 @@ namespace PersAhwal
         }
 
         private void button1_Click(object sender, EventArgs e)
-        {
+        {            
+            string part1to3 = رقم_المعاملة.Text.Split('/')[0] + "/" + رقم_المعاملة.Text.Split('/')[1] + "/" + رقم_المعاملة.Text.Split('/')[2] + "/" + رقم_المعاملة.Text.Split('/')[3] + "/";
+            if (رقم_الوثيقة.Text != "" && رقم_الوثيقة.Text != "بدون")
+                رقم_المعاملة.Text = part1to3 + رقم_الوثيقة.Text; 
             if (!ready()) return;
             SqlConnection sqlConnection = new SqlConnection(DataSource);
             if (sqlConnection.State == ConnectionState.Closed)
@@ -283,8 +417,8 @@ namespace PersAhwal
                     }
             }
             sqlCommand.ExecuteNonQuery();
-            
-            if(!checkSentSMS(genIDNo, "TableMerrageDoc")) 
+            updateGenName(رقم_المعاملة.Text, genIDNo.ToString());
+            if (!checkSentSMS(genIDNo, "TableMerrageDoc")) 
                 SMS(genIDNo, "TableMerrageDoc");
             
             if (newData) {
@@ -297,8 +431,58 @@ namespace PersAhwal
                 colIDs[6] = "";
                 colIDs[7] = "new";
                 addarchives(colIDs);
-            }            
+            }
+            fillDocFileAppInfo();
+            fillPrintDocx();
             this.Close();
+        }
+
+        private void fillPrintDocx( )
+        {
+            string pdfFile = localCopy_off.Replace("docx", "pdf");
+            oBDoc.SaveAs2(localCopy_off);
+            oBDoc.ExportAsFixedFormat(pdfFile, Word.WdExportFormat.wdExportFormatPDF);
+            oBDoc.Close(false, oBMiss);
+            oBMicroWord.Quit(false, false);
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(oBMicroWord);
+            System.Diagnostics.Process.Start(pdfFile);
+            File.Delete(localCopy_off);            
+            object doNotSaveChanges = Word.WdSaveOptions.wdSaveChanges;
+
+        }
+
+        private void chooseDocxFile(string docId, string name)
+        {
+            string RouteFile = FilespathIn + "TableMerrageDoc.docx";
+            if (name != "")
+                localCopy_off = FilespathOut + name + DateTime.Now.ToString("ddmmss") + ".docx";
+            else localCopy_off = FilespathOut + docId.Replace("/", "_") + DateTime.Now.ToString("ddmmss") + ".docx";
+            while (File.Exists(localCopy_off))
+            {
+                if (name != "")
+                    localCopy_off = FilespathOut + name + DateTime.Now.ToString("ddmmss") + ".docx";
+                else localCopy_off = FilespathOut + docId.Replace("/", "_") + DateTime.Now.ToString("ddmmss") + ".docx";
+            }
+            //
+            System.IO.File.Copy(RouteFile, localCopy_off);
+            FileInfo fileInfo = new FileInfo(localCopy_off);
+            if (fileInfo.IsReadOnly) fileInfo.IsReadOnly = false;
+
+            //MessageBox.Show(localCopy_off );
+        }
+
+        private void updateGenName(string name, string idDoc)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            string query = "update TableGeneralArch set رقم_معاملة_القسم=N'" + name + "' where رقم_المرجع = '" + idDoc + "' and docTable=N'TableMerrageDoc'";
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
         }
 
         private void SMS(int id, string table)
@@ -318,8 +502,7 @@ namespace PersAhwal
                 if (dataRow["الصفة"].ToString().Contains("قسم الأحوال الشخصية"))
                 {
                     string smsText = "تم إنهاء معاملة قسيمة زواج بالرقم  " + رقم_المعاملة.Text.Split('/')[4] + " للمواطن/ " + اسم_الزوج.Text + " بتاريخ:" + GregorianDate;
-                    SendSms(dataRow["MandoubPhones"].ToString(), smsText);
-                    SendSms(هاتف_الزوج.Text, smsText);
+                    SendSms(dataRow["MandoubPhones"].ToString(), smsText);                    
                     UpdateState(id, "sms", "sent", table);
                 }
             }
@@ -491,13 +674,13 @@ namespace PersAhwal
         {
             if (PanelMain.Visible)
             {
-                dataGridView1.Visible = true;
+                labDescribed.Visible = dataGridView1.Visible = true;
                 PanelMain.Visible = false;
                 dataGridView1.BringToFront();
             }
             else
             {
-                dataGridView1.Visible = false;
+                labDescribed.Visible = dataGridView1.Visible = false;
                 PanelMain.Visible = true;
                 dataGridView1.SendToBack();
             }
@@ -513,10 +696,176 @@ namespace PersAhwal
                 اسم_المندوب.Visible = false;
             }
         }
-
+        string lastInput2 = "";
+        bool عمر_الزوج_الحرج = true;
         private void تاريخ_الميلاد_TextChanged(object sender, EventArgs e)
         {
+            if (تاريخ_الميلاد.Text.Length == 10)
+            {
+                int month = Convert.ToInt32(SpecificDigit(تاريخ_الميلاد.Text, 1, 2));
+                if (month > 12)
+                {
+                    MessageBox.Show("الشهر يحب أن يكون أقل من 12");
+                    //VitxtDate1.Text = "";
+                    تاريخ_الميلاد.Text = SpecificDigit(تاريخ_الميلاد.Text, 3, 10);
+                    return;
+                }
+                عمر_الزوج_الحرج = getDate( تاريخ_الميلاد);
+            }
 
+            if (تاريخ_الميلاد.Text.Length == 11)
+            {
+                تاريخ_الميلاد.Text = lastInput2; return;
+            }
+            if (تاريخ_الميلاد.Text.Length == 10) return;
+            if (تاريخ_الميلاد.Text.Length == 4) تاريخ_الميلاد.Text = "-" + تاريخ_الميلاد.Text;
+            else if (تاريخ_الميلاد.Text.Length == 7) تاريخ_الميلاد.Text = "-" + تاريخ_الميلاد.Text;
+            lastInput2 = تاريخ_الميلاد.Text;
+        }
+        private string SpecificDigit(string text, int Firstdigits, int Lastdigits)
+        {
+            char[] characters = text.ToCharArray();
+            string firstNchar = "";
+            int z = 0;
+            for (int x = Firstdigits - 1; x < Lastdigits && x < text.Length; x++)
+            {
+                firstNchar = firstNchar + characters[x];
+
+            }
+            return firstNchar;
+        }
+        private void MerriageDoc_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            string primeryLink = @"D:\PrimariFiles\";
+            if (!Directory.Exists(@"D:\"))
+            {
+                string appFileName = Environment.GetCommandLineArgs()[0];
+                string directory = Path.GetDirectoryName(appFileName);
+                directory = directory + @"\";
+                primeryLink = directory + @"PrimariFiles\";
+            }
+            dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Allowed");
+        }
+        private void dataSourceWrite(string dataSourcepath, string text)
+        {
+            using (FileStream fs = File.Create(dataSourcepath))
+            {
+                string dataasstring = text;
+                byte[] info = new UTF8Encoding(true).GetBytes(dataasstring);
+                fs.Write(info, 0, info.Length);
+                fs.Close();
+            }
+        }
+
+        private void مؤخر_الصداق_كتابة_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+        string lastInput1 = "";
+        bool عمر_الزوجة_الحرج = true;
+        private void ميلاد_الزوجة_TextChanged(object sender, EventArgs e)
+        {
+            if (ميلاد_الزوجة.Text.Length == 10)
+            {
+                int month = Convert.ToInt32(SpecificDigit(ميلاد_الزوجة.Text, 1, 2));
+                if (month > 12)
+                {
+                    MessageBox.Show("الشهر يحب أن يكون أقل من 12");
+                    //VitxtDate1.Text = "";
+                    ميلاد_الزوجة.Text = SpecificDigit(ميلاد_الزوجة.Text, 3, 10);
+                    return;
+                }
+                عمر_الزوجة_الحرج = getDate(ميلاد_الزوجة);
+            }
+
+            if (ميلاد_الزوجة.Text.Length == 11)
+            {
+                ميلاد_الزوجة.Text = lastInput1; return;
+            }
+            if (ميلاد_الزوجة.Text.Length == 10) return;
+            if (ميلاد_الزوجة.Text.Length == 4) ميلاد_الزوجة.Text = "-" + ميلاد_الزوجة.Text;
+            else if (ميلاد_الزوجة.Text.Length == 7) ميلاد_الزوجة.Text = "-" + ميلاد_الزوجة.Text;
+            lastInput1 = ميلاد_الزوجة.Text;
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if(عمر_الزوج_الحرج || عمر_الزوجة_الحرج)
+                button1Enabel = false;
+            else
+                button1Enabel = true;
+        }
+
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+
+            string docType = "";
+            if (button1.InvokeRequired)
+            {
+                button1.Invoke(new MethodInvoker(delegate { button1.Enabled = false; }));
+            }
+            if (اسم_الزوج.InvokeRequired)
+            {
+                اسم_الزوج.Invoke(new MethodInvoker(delegate { docType = اسم_الزوج.Text; }));
+            }
+            chooseDocxFile(رقم_المعاملة.Text, docType); 
+            prepareDocxfile();
+            if (button1.InvokeRequired)
+            {
+                button1.Invoke(new MethodInvoker(delegate { button1.Enabled = true; }));
+            }
+        }
+        private void prepareDocxfile()
+        {
+
+            oBMiss = System.Reflection.Missing.Value;
+            oBMicroWord = new Word.Application();
+
+            object objCurrentCopy = localCopy_off;
+
+            oBDoc = oBMicroWord.Documents.Open(objCurrentCopy, oBMiss);
+            oBMicroWord.Selection.Find.ClearFormatting();
+            oBMicroWord.Selection.Find.Replacement.ClearFormatting();
+
+        }
+        private void fillDocFileAppInfo()
+        {
+            foreach (Control control in PanelMain.Controls)
+            {
+                if (control is TextBox || control is ComboBox)
+                {
+                    try
+                    {
+                        //if (control.Name == "التوقيع") 
+                        //    MessageBox.Show(panel.Name + control.Text);
+                        object ParaAuthIDNo = control.Name;
+                        Word.Range BookAuthIDNo = oBDoc.Bookmarks.get_Item(ref ParaAuthIDNo).Range;
+                        BookAuthIDNo.Text = control.Text;
+                        object rangeAuthIDNo = BookAuthIDNo;
+                        oBDoc.Bookmarks.Add(control.Name, ref rangeAuthIDNo);
+
+                        //MessageBox.Show(control.Text);
+                    }
+                    catch (Exception ex)
+                    {
+                        //    MessageBox.Show(control.Name); 
+                    }
+                }
+            }            
+        }
+
+        private void ListSearch_TextChanged(object sender, EventArgs e)
+        {
+            BindingSource bs = new BindingSource();
+            bs.DataSource = dataGridView1.DataSource;
+            bs.Filter = dataGridView1.Columns[2].HeaderText.ToString() + " LIKE '" + ListSearch.Text + "%'";
+            dataGridView1.DataSource = bs; 
+            ColorFulGrid9();
+        }
+
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            ColorFulGrid9();
         }
     }
 }

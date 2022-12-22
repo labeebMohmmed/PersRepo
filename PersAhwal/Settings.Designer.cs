@@ -1046,6 +1046,7 @@ namespace PersAhwal
             this.subTypeAuth.TabIndex = 621;
             this.subTypeAuth.Text = "إختر الإجراء";
             this.subTypeAuth.SelectedIndexChanged += new System.EventHandler(this.ComboProcedure_SelectedIndexChanged_1);
+            this.subTypeAuth.TextUpdate += new System.EventHandler(this.subTypeAuth_TextUpdate);
             this.subTypeAuth.TextChanged += new System.EventHandler(this.subTypeAuth_TextChanged);
             // 
             // mainTypeAuth
@@ -1059,6 +1060,7 @@ namespace PersAhwal
             this.mainTypeAuth.TabIndex = 621;
             this.mainTypeAuth.Text = "إختر أو أضف النوع الرئيس ";
             this.mainTypeAuth.SelectedIndexChanged += new System.EventHandler(this.CombAuthType_SelectedIndexChanged_1);
+            this.mainTypeAuth.TextUpdate += new System.EventHandler(this.mainTypeAuth_TextUpdate);
             this.mainTypeAuth.TextChanged += new System.EventHandler(this.mainTypeAuth_TextChanged);
             // 
             // langAuth
@@ -4455,12 +4457,12 @@ namespace PersAhwal
             this.Controls.Add(this.label1);
             this.Controls.Add(this.flowLayoutPanel2);
             this.Controls.Add(this.panelLowButtons);
-            this.Controls.Add(this.repReqPanel);
             this.Controls.Add(this.ContextPanel);
             this.Controls.Add(this.panelAuthOptions);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.SettingsPanel);
             this.Controls.Add(this.panellError);
+            this.Controls.Add(this.repReqPanel);
             this.Name = "Settings";
             this.Text = "Settings";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Settings_FormClosed);

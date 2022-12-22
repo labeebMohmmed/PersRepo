@@ -193,6 +193,7 @@ namespace PersAhwal
             this.persbtn11 = new System.Windows.Forms.Button();
             this.docCollectCombo = new System.Windows.Forms.ComboBox();
             this.picSettings = new System.Windows.Forms.PictureBox();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.panelReceMess.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView4)).BeginInit();
             this.panelAuthAknow.SuspendLayout();
@@ -2029,16 +2030,16 @@ namespace PersAhwal
             this.PanelMandounb.Location = new System.Drawing.Point(15, 163);
             this.PanelMandounb.Name = "PanelMandounb";
             this.PanelMandounb.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.PanelMandounb.Size = new System.Drawing.Size(401, 428);
+            this.PanelMandounb.Size = new System.Drawing.Size(401, 424);
             this.PanelMandounb.TabIndex = 814;
             this.PanelMandounb.Visible = false;
             // 
             // dataGridView10
             // 
             this.dataGridView10.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView10.Location = new System.Drawing.Point(0, 3);
+            this.dataGridView10.Location = new System.Drawing.Point(8, 3);
             this.dataGridView10.Name = "dataGridView10";
-            this.dataGridView10.Size = new System.Drawing.Size(398, 407);
+            this.dataGridView10.Size = new System.Drawing.Size(390, 411);
             this.dataGridView10.TabIndex = 475;
             // 
             // flowLayoutPanel3
@@ -2284,14 +2285,17 @@ namespace PersAhwal
             this.picSettings.TabStop = false;
             this.picSettings.Click += new System.EventHandler(this.pictureBox4_Click);
             // 
+            // timer1
+            // 
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1255, 745);
-            this.Controls.Add(this.SearchPanel);
             this.Controls.Add(this.picSettings);
-            this.Controls.Add(this.Affbtn4);
             this.Controls.Add(this.Combtn2);
             this.Controls.Add(this.persbtn8);
             this.Controls.Add(this.Combtn3);
@@ -2319,14 +2323,16 @@ namespace PersAhwal
             this.Controls.Add(this.persbtn10);
             this.Controls.Add(this.persbtn11);
             this.Controls.Add(this.Affbtn5);
+            this.Controls.Add(this.flowLayoutPanel1);
+            this.Controls.Add(this.Affbtn4);
             this.Controls.Add(this.ReportPanel);
             this.Controls.Add(this.PanelMandounb);
             this.Controls.Add(this.flowLayoutPanel3);
             this.Controls.Add(this.flowLayoutPanel2);
-            this.Controls.Add(this.fileManagePanel2);
-            this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.panelAuthAknow);
+            this.Controls.Add(this.fileManagePanel2);
             this.Controls.Add(this.panelReceMess);
+            this.Controls.Add(this.SearchPanel);
             this.Name = "MainForm";
             this.Text = "القائمة الرئيسة";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
@@ -2541,5 +2547,6 @@ namespace PersAhwal
         private System.Windows.Forms.PictureBox picSettings;
         private System.Windows.Forms.TextBox dateAuth;
         private System.Windows.Forms.TextBox txtHAAuthentic;
+        private System.Windows.Forms.Timer timer1;
     }
 }

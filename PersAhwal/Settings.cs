@@ -2375,12 +2375,12 @@ namespace PersAhwal
             //MessageBox.Show(subTypeAuth.Text + "-" + mainTypeAuth.SelectedIndex.ToString());
             if (panelAuthInfo.Visible)
             {
-                MessageBox.Show("mainTypeAuth");
+                //MessageBox.Show("mainTypeAuth");
                 dataGridView1_RowIndex(subTypeAuth.Text + "-" + mainTypeAuth.SelectedIndex.ToString());
             }
             else
             {
-                MessageBox.Show("mainTypeIqrar");
+                //MessageBox.Show("mainTypeIqrar");
                 dataGridView1_RowIndex(subTypeIqrar.Text + "-" + mainTypeIqrar.SelectedIndex.ToString());
             }
                 //string formNo = mainTypeAuth.Text + "-" + subTypeAuth.Text.Trim();
@@ -2582,7 +2582,7 @@ namespace PersAhwal
         }
         private void button117_Click(object sender, EventArgs e)
         {
-            ColumnJobs();
+            //ColumnJobs();
             createNewColContext();
             SqlConnection sqlCon = new SqlConnection(DataSource);
             try
@@ -2704,7 +2704,7 @@ namespace PersAhwal
         //    }
         //}
 
-        private void ColumnJobs() {
+        private void ColumnJobs() {            
             //CombAuthType.SelectedIndex.ToString()
             if (panelAuthInfo.Visible)
             {
@@ -3511,6 +3511,7 @@ namespace PersAhwal
 
         private void subTypeAuth_TextChanged(object sender, EventArgs e)
         {
+            txtProName.Text = subTypeAuth.Text + "-" + mainTypeAuth.SelectedIndex.ToString();
             //if (!checkIndex) return; 
             //if (subTypeAuth.Text != "")
             //{
@@ -3528,6 +3529,7 @@ namespace PersAhwal
 
         private void mainTypeIqrar_TextChanged(object sender, EventArgs e)
         {
+            txtProName.Text = subTypeIqrar.Text + "-" + mainTypeIqrar.SelectedIndex.ToString();
             //if (!checkIndex) return; 
             //if (mainTypeIqrar.Text != "")
             //{
@@ -3545,6 +3547,7 @@ namespace PersAhwal
 
         private void subTypeIqrar_TextChanged(object sender, EventArgs e)
         {
+            txtProName.Text = subTypeIqrar.Text + "-" + mainTypeIqrar.SelectedIndex.ToString();
             //if (!checkIndex) return; 
             //if (subTypeIqrar.Text != "")
             //{
@@ -4063,6 +4066,16 @@ namespace PersAhwal
             //MessageBox.Show(المعاملة.Text);
         }
 
+        private void mainTypeAuth_TextUpdate(object sender, EventArgs e)
+        {
+            txtProName.Text = subTypeAuth.Text + "-" + mainTypeAuth.SelectedIndex.ToString();
+        }
+
+        private void subTypeAuth_TextUpdate(object sender, EventArgs e)
+        {
+
+        }
+
         private void button116_Click(object sender, EventArgs e)
         {
             ColumnJobs();
@@ -4079,7 +4092,9 @@ namespace PersAhwal
             //MessageBox.Show(revised);
             sqlCmd.Parameters.AddWithValue("@revised", "");
             //MessageBox.Show(ColRight.Text);
-            sqlCmd.Parameters.AddWithValue("@ColRight", "");            
+            if(panelAuthInfo.Visible)
+                sqlCmd.Parameters.AddWithValue("@ColRight", subTypeAuth.Text.Replace(" ","_")+"_"+ mainTypeAuth.SelectedIndex.ToString());            
+            else sqlCmd.Parameters.AddWithValue("@ColRight", "");            
             sqlCmd.Parameters.AddWithValue("@errorList", "");
             addParameters(sqlCmd);
             sqlCmd.ExecuteNonQuery();
