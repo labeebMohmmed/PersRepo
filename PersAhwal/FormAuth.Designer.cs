@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormAuth));
             this.labDescribed = new System.Windows.Forms.Button();
             this.btnNext = new System.Windows.Forms.Button();
@@ -190,6 +190,7 @@
             this.وجهة_التوكيل = new System.Windows.Forms.ComboBox();
             this.btnPrint = new System.Windows.Forms.Button();
             this.finalPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.button2 = new System.Windows.Forms.Button();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.txtfinal = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
@@ -208,7 +209,6 @@
             this.label18 = new System.Windows.Forms.Label();
             this.تاريخ_إصدار_الوكالة = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.button5 = new System.Windows.Forms.Button();
             this.التعليقات_السابقة_Off = new System.Windows.Forms.TextBox();
@@ -324,23 +324,23 @@
             this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle15.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle15;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle16.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle16;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle4;
             this.dataGridView1.Location = new System.Drawing.Point(3, 0);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -694,6 +694,7 @@
             this.مقدم_الطلب.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.مقدم_الطلب.Size = new System.Drawing.Size(713, 35);
             this.مقدم_الطلب.TabIndex = 433;
+            this.مقدم_الطلب.TextChanged += new System.EventHandler(this.مقدم_الطلب_TextChanged);
             // 
             // النوع
             // 
@@ -847,6 +848,7 @@
             this.الشاهد_الأول.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.الشاهد_الأول.Size = new System.Drawing.Size(297, 35);
             this.الشاهد_الأول.TabIndex = 634;
+            this.الشاهد_الأول.TextChanged += new System.EventHandler(this.الشاهد_الأول_TextChanged);
             // 
             // labeltitle12
             // 
@@ -895,6 +897,9 @@
             this.هوية_الأول.Size = new System.Drawing.Size(196, 35);
             this.هوية_الأول.TabIndex = 639;
             this.هوية_الأول.Text = "P0";
+            this.هوية_الأول.MouseClick += new System.Windows.Forms.MouseEventHandler(this.هوية_الأول_MouseClick);
+            this.هوية_الأول.KeyDown += new System.Windows.Forms.KeyEventHandler(this.هوية_الأول_KeyDown);
+            this.هوية_الأول.KeyUp += new System.Windows.Forms.KeyEventHandler(this.هوية_الأول_KeyUp);
             // 
             // label32
             // 
@@ -915,6 +920,7 @@
             this.الشاهد_الثاني.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.الشاهد_الثاني.Size = new System.Drawing.Size(297, 35);
             this.الشاهد_الثاني.TabIndex = 637;
+            this.الشاهد_الثاني.TextChanged += new System.EventHandler(this.الشاهد_الثاني_TextChanged);
             // 
             // labeltitle13
             // 
@@ -963,6 +969,7 @@
             this.هوية_الثاني.Size = new System.Drawing.Size(196, 35);
             this.هوية_الثاني.TabIndex = 640;
             this.هوية_الثاني.Text = "P0";
+            this.هوية_الثاني.MouseClick += new System.Windows.Forms.MouseEventHandler(this.هوية_الثاني_MouseClick);
             // 
             // label1
             // 
@@ -1379,15 +1386,13 @@
             // checkAutoUpdate
             // 
             this.checkAutoUpdate.AutoSize = true;
-            this.checkAutoUpdate.Checked = true;
-            this.checkAutoUpdate.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkAutoUpdate.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkAutoUpdate.Location = new System.Drawing.Point(1211, 202);
+            this.checkAutoUpdate.Location = new System.Drawing.Point(1200, 202);
             this.checkAutoUpdate.Name = "checkAutoUpdate";
             this.checkAutoUpdate.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.checkAutoUpdate.Size = new System.Drawing.Size(99, 31);
+            this.checkAutoUpdate.Size = new System.Drawing.Size(110, 31);
             this.checkAutoUpdate.TabIndex = 664;
-            this.checkAutoUpdate.Text = "تحديث تلقائي";
+            this.checkAutoUpdate.Text = "إيقاف التحديث";
             this.checkAutoUpdate.UseVisualStyleBackColor = true;
             this.checkAutoUpdate.CheckedChanged += new System.EventHandler(this.checkAutoUpdate_CheckedChanged);
             // 
@@ -2158,7 +2163,7 @@
             // txtReview
             // 
             this.txtReview.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtReview.Location = new System.Drawing.Point(29, 202);
+            this.txtReview.Location = new System.Drawing.Point(18, 202);
             this.txtReview.Multiline = true;
             this.txtReview.Name = "txtReview";
             this.txtReview.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -2262,6 +2267,20 @@
             this.finalPanel.Size = new System.Drawing.Size(944, 622);
             this.finalPanel.TabIndex = 667;
             this.finalPanel.Visible = false;
+            // 
+            // button2
+            // 
+            this.button2.BackColor = System.Drawing.SystemColors.Control;
+            this.button2.FlatAppearance.BorderSize = 0;
+            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button2.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button2.Location = new System.Drawing.Point(16, 3);
+            this.button2.Name = "button2";
+            this.button2.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.button2.Size = new System.Drawing.Size(923, 35);
+            this.button2.TabIndex = 678;
+            this.button2.Text = "إضف تعليقا";
+            this.button2.UseVisualStyleBackColor = false;
             // 
             // flowLayoutPanel2
             // 
@@ -2491,20 +2510,6 @@
             this.label14.Text = "---------------------------------------------------------------------------------" +
     "--------------------------------------------------------------------------------" +
     "-----------------------";
-            // 
-            // button2
-            // 
-            this.button2.BackColor = System.Drawing.SystemColors.Control;
-            this.button2.FlatAppearance.BorderSize = 0;
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.Location = new System.Drawing.Point(16, 3);
-            this.button2.Name = "button2";
-            this.button2.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.button2.Size = new System.Drawing.Size(923, 35);
-            this.button2.TabIndex = 678;
-            this.button2.Text = "إضف تعليقا";
-            this.button2.UseVisualStyleBackColor = false;
             // 
             // flowLayoutPanel1
             // 

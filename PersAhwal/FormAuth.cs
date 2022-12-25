@@ -38,6 +38,7 @@ using System.Text.RegularExpressions;
 using System.Data.SqlTypes;
 using SautinSoft.Document;
 using Path = System.IO.Path;
+using OfficeOpenXml.Drawing.Controls;
 
 namespace PersAhwal
 {
@@ -134,6 +135,9 @@ namespace PersAhwal
         int MessageDocNo = 0;
         int onBehalfIndex = 0;
         bool proType1 = false;
+        int autoFillIndex = 0;
+        bool gridFill = true;
+        string getSexIndex = "1";
         public FormAuth(int atvc, int rowid, string AuthNo, string datasource, string filespathIn, string filespathOut, string empName, string jobposition, string greDate, string hijriDate,bool testItems )
         {
             InitializeComponent();
@@ -151,7 +155,24 @@ namespace PersAhwal
             FillDataGridView(DataSource);
             getMaxRange(DataSource);
             اسم_الموظف.Text = EmpName;
+            
+            //dataSourceWrite(FilespathOut + "autoDocs.txt", "No");
             //FindAndReplace(@"D:\ArchiveFiles\aa195648.docx", "إجراءات التنازل وتحويل السجل في إسمه", false);
+        }
+        public void PROCEGenNames()
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { }
+            SqlDataAdapter sqlDa = new SqlDataAdapter("PROCEGenNames", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.StoredProcedure;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+
         }
         public static void FindAndReplace(string loadPath, string text, bool remove)
         {
@@ -919,6 +940,7 @@ namespace PersAhwal
             authIDNo.Tag = "pass";
             authIDNo.Text = docNo;
             authIDNo.TextChanged += new System.EventHandler(this.authIDNo_TextChanged);
+            authIDNo.MouseClick += new System.Windows.Forms.MouseEventHandler(this.DocAuthNo_MouseClick);
             // 
             // pictureBox11
             // 
@@ -956,7 +978,7 @@ namespace PersAhwal
             PanelAuthPers.Controls.Add(removeAuthPic); 
             
             addAuthticIndex++;
-
+            autoCompleteTextBox(txtAuthPerson, DataSource, "الاسم", "TableGenNames");
             //صفة_الموكل_off.SelectedIndex = Appcases(جنس_الموكَّل, addAuthticIndex);
             Console.WriteLine(addNameIndex + صفة_مقدم_الطلب_off.SelectedIndex + addAuthticIndex + صفة_الموكل_off.SelectedIndex);
         }
@@ -1036,6 +1058,7 @@ namespace PersAhwal
             labelName.Size = new System.Drawing.Size(80, 27);
             labelName.TabIndex = 94;
             labelName.Text = "مقدم الطلب:";
+                
             // 
             // AppName1
             // 
@@ -1047,7 +1070,10 @@ namespace PersAhwal
             AppName.Size = new System.Drawing.Size(254, 35);
             AppName.TabIndex = 93;
             AppName.Text = name;
+            
             AppName.TextChanged += new System.EventHandler(this.AppName_TextChanged);
+            AppName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(AppName_KeyPress);
+
             // 
             // labeltitle1
             // 
@@ -1160,6 +1186,8 @@ namespace PersAhwal
             DocNo.Tag = "pass";
             DocNo.Text = docNo;
             DocNo.TextChanged += new System.EventHandler(this.DocNo_TextChanged);
+            DocNo.MouseClick += new System.Windows.Forms.MouseEventHandler(this.DocNo_MouseClick);
+            
             // 
             // label7
             // 
@@ -1275,6 +1303,7 @@ namespace PersAhwal
             Panelapp.Controls.Add(addName);
             Panelapp.Controls.Add(removeName);            
             addNameIndex++;
+            autoCompleteTextBox(AppName, DataSource, "الاسم", "TableGenNames");
             صفة_مقدم_الطلب_off.SelectedIndex = Appcases(النوع, addNameIndex);
             Console.WriteLine(addNameIndex + صفة_مقدم_الطلب_off.SelectedIndex + addAuthticIndex + صفة_الموكل_off.SelectedIndex);
             //Panelapp.Height = 130 * (addNameIndex);
@@ -1348,7 +1377,22 @@ namespace PersAhwal
         }
         private void AppName_TextChanged(object sender, EventArgs e)
         {
+            //TextBox textBox = (TextBox)sender;
+            //checkIDChanged(textBox, Panelapp);
+
+
             checkChanged(مقدم_الطلب, Panelapp);
+        }
+
+        private void AppName_KeyPress(object sender, KeyPressEventArgs e)
+        {            
+            if (e.KeyChar == (char)13)
+            {
+                TextBox textBox = (TextBox)sender;
+                string index = textBox.Name.Split('_')[2].Replace(".", "");
+                //MessageBox.Show(textBox.Text);
+                writeIDChanged(textBox, Panelapp, "مقدم_الطلب", index);
+            }
         }
         private void DocIssue_TextChanged(object sender, EventArgs e)
         {
@@ -1362,6 +1406,22 @@ namespace PersAhwal
         private void DocNo_TextChanged(object sender, EventArgs e)
         {
             checkChanged(رقم_الهوية, Panelapp);
+        }
+        
+        private void DocNo_MouseClick(object sender, EventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            if (textBox.Text.Length > 3) return;
+            string index = textBox.Name.Split('_')[2].Replace(".", "");
+            writeIDChanged(textBox, Panelapp, "مقدم_الطلب",  index);
+        }
+        
+        private void DocAuthNo_MouseClick(object sender, EventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            if (textBox.Text.Length > 3) return;
+            string index = textBox.Name.Split('_')[2].Replace(".", "");
+            writeIDChanged(textBox, PanelAuthPers, "الموكَّل",  index);
         }
         private void sexCheckedChanged(object sender, EventArgs e)
         {
@@ -1386,7 +1446,208 @@ namespace PersAhwal
                 }
             }
         }
+        
+        private void checkIDChanged( TextBox text, FlowLayoutPanel panel) {
+            int index = 0;
+            //MessageBox.Show(text.Name+" - "+ text.Text);
+            foreach (Control control in panel.Controls)
+            {                
+                if (control.Name.Contains("مقدم_الطلب_"))
+                {
+                    if (control.Text == text.Text)
+                    {
+                        //writeIDChanged("رقم_الهوية", panel, "مقدم_الطلب", index);
 
+                        return;
+                    }
+                    index++;
+                }
+            }
+        }
+
+        private void writeIDChanged(TextBox textto, FlowLayoutPanel panel, string controlType, string index)
+        {       
+            foreach (Control control in panel.Controls)
+            {
+                if (control.Name == controlType+"_" +index+".")
+                {
+                    foreach (Control control2 in panel.Controls)
+                    {
+                        if(control2.Name == "رقم_الهوية_" + index + ".")
+                            getID((TextBox)control2, control.Text.Trim(), "رقم_الهوية", fisrtWitIndex,"P0");
+                        if(control2.Name == "تاريخ_الميلاد_" + index + ".")
+                            getID((TextBox)control2, control.Text.Trim(), "تاريخ_الميلاد", fisrtWitIndex,"");
+                        if(control2.Name == "المهنة_" + index + ".")
+                            getID((TextBox)control2, control.Text.Trim(), "المهنة", fisrtWitIndex,"");
+                        if(control2.Name == "نوع_الهوية_" + index + ".")
+                            getID((ComboBox)control2, control.Text.Trim(), "نوع_الهوية", fisrtWitIndex,"جواز سفر");
+                        if(control2.Name == "مكان_الإصدار_" + index + ".")
+                            getID((TextBox)control2, control.Text.Trim(), "مكان_الإصدار", fisrtWitIndex,"");
+                        if(control2.Name == "النوع_" + index + ".")
+                            getID((CheckBox)control2, control.Text.Trim(), "النوع", fisrtWitIndex,"ذكر");
+                        if(control2.Name == "هوية_الموكل_" + index + ".")
+                            getID((TextBox)control2, control.Text.Trim(), "رقم_الهوية", fisrtWitIndex, "P0");
+                    }
+                }                
+            }
+        }
+        
+        
+        private void checkGender(FlowLayoutPanel panel, string controlType, string control2type)
+        {//"مقدم_الطلب_" //"النوع_" 
+            int index = 0;
+            foreach (Control control in panel.Controls)
+            {
+                if (control.Name == controlType+ index+".")
+                {
+                    string gender = getGender(control.Text.Split(' ')[0]);
+                    foreach (Control control2 in panel.Controls)
+                    {
+                        if (control2.Name == control2type+ index + ".")
+                        {
+                            if (gender != control2.Text)
+                            {
+                                var selectedOption = MessageBox.Show( "هل تود تغيير إعدادات البرنامج الداخلية والمتابعة للصفحة التالية؟", "يرجى مراحعة جنس   " + control.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                                if (selectedOption == DialogResult.No)
+                                {
+                                    currentPanelIndex--; return;
+                                }
+                                else if (selectedOption == DialogResult.Yes)
+                                {
+                                    updateGender(control2.Text, getSexIndex);
+                                }
+                            }
+                        }
+                    }
+                    index++;
+                }                
+            }
+        }
+
+        public string getGender(string name)
+        {
+            string sex = "ذكر";
+            string query = "SELECT ID,النوع FROM TableGenGender where الاسم = N'" + name + "'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            foreach (DataRow row in dtbl.Rows)
+            {
+                getSexIndex = row["ID"].ToString();
+                sex = row["النوع"].ToString();
+            }
+            return sex;
+        }
+
+        private void updateGender(string newGender, string id)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                    SqlCommand sqlCmd = new SqlCommand("UPDATE TableGenGender SET النوع=@N'"+ newGender+"' WHERE ID="+ id, sqlCon);
+                    //MessageBox.Show("UPDATE TableGenGender SET النوع=@N'" + newGender + "' WHERE ID=" + id);
+                    sqlCmd.CommandType = CommandType.Text;
+                    sqlCmd.ExecuteNonQuery();
+                    sqlCon.Close();
+
+                }
+
+                catch (Exception ex)
+                {
+                    return;
+                }
+                finally
+                {
+                }
+        }
+
+        public void getID(TextBox textTo, string name, string controlType, int index, string def)
+        {
+            if (gridFill) return ;
+            string query = "SELECT "+ controlType+" FROM TableGenNames where الاسم like N'" + name+"%'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            index = 0;
+            textTo.Text = "";
+            foreach (DataRow row in dtbl.Rows)
+            {
+                if (index == 0)
+                    textTo.Text = row[controlType].ToString();
+                else if (!textTo.Text.Contains(row[controlType].ToString()))
+                    textTo.Text = textTo.Text + "_" + row[controlType].ToString();
+                index++; 
+            }
+            int AllIndex = textTo.Text.Split('_').Length;
+            textTo.Text = textTo.Text.Split('_')[AllIndex - 1];
+            if (index == 0)
+            textTo.Text = def;
+        }
+        
+        public void getID(ComboBox textTo, string name, string controlType, int index, string def)
+        {
+            if (gridFill) return ;
+            string query = "SELECT "+ controlType+ " FROM TableGenNames where الاسم like N'" + name + "%'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            index = 0;
+            textTo.Text = "";
+            foreach (DataRow row in dtbl.Rows)
+            {
+                if (index == 0)
+                    textTo.Text = row[controlType].ToString();
+                else if (!textTo.Text.Contains(row[controlType].ToString()))
+                    textTo.Text = textTo.Text + "_" + row[controlType].ToString();
+                index++; 
+            }
+            int AllIndex = textTo.Text.Split('_').Length;
+            textTo.Text = textTo.Text.Split('_')[AllIndex - 1];
+            if (index == 0)
+            textTo.Text = def;
+        }
+        
+        public void getID(CheckBox textTo, string name, string controlType, int index, string def)
+        {
+            if (gridFill) return ;
+            string query = "SELECT "+ controlType+ " FROM TableGenNames where الاسم like N'" + name + "%'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            index = 0;
+            textTo.Text = "";
+            foreach (DataRow row in dtbl.Rows)
+            {
+                if (index == 0)
+                    textTo.Text = row[controlType].ToString();
+                else if (!textTo.Text.Contains(row[controlType].ToString()))
+                    textTo.Text = textTo.Text + "_" + row[controlType].ToString();
+                index++;
+            }
+            int AllIndex = textTo.Text.Split('_').Length;
+            textTo.Text = textTo.Text.Split('_')[AllIndex - 1];
+            if (index == 0)
+            textTo.Text = def;
+        }
         private void addName_Click(object sender, EventArgs e)
         {
             addName("", "ذكر", "جواز سفر", "P0", "", "العربية", "", "");
@@ -1493,7 +1754,8 @@ namespace PersAhwal
                         
                     }
                 }
-                if(مقدم_الطلب.Text=="") FillDatafromGenArch("data1", intID.ToString(), "TableAuth");
+                if (مقدم_الطلب.Text == "" && File.ReadAllText(FilespathOut + "autoDocs.txt") == "Yes")
+                    FillDatafromGenArch("data1", intID.ToString(), "TableAuth");
                 for (int app = 0; app < الموكَّل.Text.Split('_').Length; app++)
                 {
                     string str = "";
@@ -1510,15 +1772,16 @@ namespace PersAhwal
                 صفة_مقدم_الطلب_off.SelectedIndex = Appcases(النوع, addNameIndex);
                 صفة_الموكل_off.SelectedIndex = Appcases(جنس_الموكَّل, addAuthticIndex);
                 //MessageBox.Show("boxesPreparations " + addNameIndex + صفة_مقدم_الطلب_off.SelectedIndex + addAuthticIndex + صفة_الموكل_off.SelectedIndex);
-                checkAutoUpdate.Checked = false;
-                if (txtReview.Text == "") checkAutoUpdate.Checked = true;
-
+                
                 fillInfo(panelapplicationInfo, false);
                 //MessageBox.Show(نوع_التوكيل.Text);
                 fillInfo(PanelItemsboxes, false);
                 //fillTextBoxesInvers();
                 
-                fillInfo(panelAuthRights, false);
+                fillInfo(panelAuthRights, false);                
+                if (txtReview.Text == "")
+                    checkAutoUpdate.Checked = true;
+
                 fillInfo(finalPanel, false);
                 txtReview.Text = txtReview.Text.Replace("  ", " ");
                 currentPanelIndex = 1;
@@ -1540,6 +1803,7 @@ namespace PersAhwal
             //
             //Panel app
             //
+            gridFill = false;
             return;            
         }
 
@@ -1834,6 +2098,8 @@ namespace PersAhwal
 
             return "";
         }
+        
+        
         private void drawboxes(string txt, int idbox, bool check) {
             CheckBox chk = new CheckBox();
             chk.TabIndex = idbox;
@@ -2644,21 +2910,52 @@ namespace PersAhwal
                         MessageBox.Show("يرجى اقتراح اسم للمعاملة");
                         currentPanelIndex--; return;
                     }
-                    
+                    checkGender(Panelapp, "مقدم_الطلب_", "النوع_");
                     if (!save2DataBase(Panelapp)) {
                         currentPanelIndex--; return;
                     }
-                    
+
+                    checkGender(Panelapp, "الموكَّل_", "جنس_الموكَّل_");
                     if (!save2DataBase(PanelAuthPers))
                     {
                         currentPanelIndex--; return;
                     }
                     اسم_الموظف.Text = EmpName;
-                    
+
+                    string gender = getGender(الشاهد_الأول.Text.Split(' ')[0]);
+                    if (gender != "ذكر")
+                    {
+                        var selectedOption = MessageBox.Show("تم رصد اسم سيدة في حقل الشاهد الأول", "هل تود تغيير إعدادات البرنامج الداخلية والمتابعة للصفحة التالية؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                        if (selectedOption == DialogResult.No)
+                        {
+                            currentPanelIndex--; return;
+                        }
+                        else if (selectedOption == DialogResult.Yes)
+                        {
+                            updateGender("ذكر",getSexIndex);
+                        }
+                    }
+                    gender = getGender(الشاهد_الثاني.Text.Split(' ')[0]);
+                    if (gender != "ذكر")
+                    {
+                        var selectedOption = MessageBox.Show("تم رصد اسم سيدة في حقل الشاهد الأول", "هل تود تغيير إعدادات البرنامج الداخلية والمتابعة للصفحة التالية؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                        if (selectedOption == DialogResult.No)
+                        {
+                            currentPanelIndex--; return;
+                        }
+                        else if (selectedOption == DialogResult.Yes)
+                        {
+                            updateGender("ذكر", getSexIndex);
+                        }
+                    }
+
                     if (!save2DataBase(panelapplicationInfo))
                     {
                         currentPanelIndex--; return;
                     }
+                    
                     
 
                     //MessageBox.Show("صفة_الموكل_off.SelectedIndex " + صفة_الموكل_off.SelectedIndex.ToString() + " - addAuthticIndex " + addAuthticIndex.ToString());
@@ -2797,7 +3094,11 @@ namespace PersAhwal
             autoCompleteTextBox(Vitext3, DataSource, "itext3", "TableAuth");
             autoCompleteTextBox(Vitext4, DataSource, "itext4", "TableAuth");
             autoCompleteTextBox(Vitext5, DataSource, "itext5", "TableAuth");
-        }        
+
+            autoCompleteTextBox(الشاهد_الأول, DataSource, "الاسم", "TableGenNames");
+            autoCompleteTextBox(الشاهد_الثاني, DataSource, "الاسم", "TableGenNames");
+
+        }
         private void fileComboBoxMandoub(ComboBox combbox, string source, string tableName)
         {
             //combbox.Visible = true;
@@ -4406,7 +4707,7 @@ namespace PersAhwal
                 bool newSrt = true;
                 foreach (DataRow dataRow in Textboxtable.Rows)
                 {
-                    string text = dataRow[comlumnName].ToString();
+                    string text = dataRow[comlumnName].ToString().Trim();
                     text = SuffReplacements(text, صفة_مقدم_الطلب_off.SelectedIndex, صفة_الموكل_off.SelectedIndex);
                     Console.WriteLine("autoCompleteTextBox " + text);
                     autoComplete.Add(text);
@@ -4675,6 +4976,46 @@ namespace PersAhwal
                 fs.Close();
             }
         }
+
+        private void مقدم_الطلب_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+        int fisrtWitIndex = 0;
+        private void الشاهد_الأول_TextChanged(object sender, EventArgs e)
+        {
+            getID(هوية_الأول, الشاهد_الأول.Text, "رقم_الهوية", fisrtWitIndex, "P0");
+        }
+        int secondWitIndex = 0;
+        private void الشاهد_الثاني_TextChanged(object sender, EventArgs e)
+        {
+            getID(هوية_الثاني, الشاهد_الثاني.Text, "رقم_الهوية", secondWitIndex, "P0");
+        }
+
+        private void هوية_الأول_KeyDown(object sender, KeyEventArgs e)
+        {
+            //if (fisrtWitIndex < autoFillIndex - 1) fisrtWitIndex++;
+            //else return;
+            //getID(هوية_الأول, الشاهد_الأول.Text, "رقم_الهوية", fisrtWitIndex);
+        }
+
+        private void هوية_الأول_KeyUp(object sender, KeyEventArgs e)
+        {
+            //if (fisrtWitIndex > 0) fisrtWitIndex--;
+            //else return;
+            //getID(هوية_الأول, الشاهد_الأول.Text, "رقم_الهوية", fisrtWitIndex);
+        }
+
+        private void هوية_الأول_MouseClick(object sender, MouseEventArgs e)
+        {
+            //getID(هوية_الأول, الشاهد_الأول.Text, "رقم_الهوية", fisrtWitIndex,"P0");
+        }
+
+        private void هوية_الثاني_MouseClick(object sender, MouseEventArgs e)
+        {
+           // getID(هوية_الثاني, الشاهد_الثاني.Text, "رقم_الهوية", secondWitIndex, "P0");
+        }
+
         private void removeBtnName_Click(object sender, EventArgs e)
         {
             PictureBox pictureBox = (PictureBox)sender;

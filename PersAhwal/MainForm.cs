@@ -187,6 +187,7 @@ namespace PersAhwal
             DataSource = dataSource57;
             DataSource56 = dataSource56;
             DataSource57 = dataSource57;
+            
             Realwork = realwork;
             //checkColumnNames("تقاضي_4");
             GregorianDate = gregorianDate;
@@ -319,6 +320,8 @@ namespace PersAhwal
                 picSettings.Visible = Affbtn0.Visible = true;
                 empUpdate.Visible = false;
                 picVersio.BringToFront();
+                if (Server == "57") 
+                    PROCEGenNames();
             }
             else
             {
@@ -340,6 +343,12 @@ namespace PersAhwal
             {
 
                 dataSourceWrite(primeryLink + "fileUpdate.txt", "files are fully update");
+            }
+            
+            if (!File.Exists(FilespathOut + "autoDocs.txt"))
+            {
+                //MessageBox.Show(FilespathOut + "autoDocs.txt");
+                dataSourceWrite(FilespathOut + "autoDocs.txt", "Yes");
             }
             Console.WriteLine(7);
             //backgroundWorker1.RunWorkerAsync();
@@ -7695,6 +7704,19 @@ rep1[month, 0] = monthS;
             timer4Update();
         }
 
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked)
+            {
+                checkBox1.Text = "فتح الأرشفة تلقائي";
+                dataSourceWrite(primeryLink + "autoDocs.txt", "Yes");
+            }
+            else {
+                checkBox1.Text = "إيقاف فتح الأرشفة";
+                dataSourceWrite(primeryLink + "autoDocs.txt", "No");
+            }
+        }
+
         private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
         {
             if (!Realwork)
@@ -8642,6 +8664,22 @@ rep1[month, 0] = monthS;
                 else rows++;
             }
             return -1;
+        }
+        
+        public void PROCEGenNames()
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { }
+            SqlDataAdapter sqlDa = new SqlDataAdapter("PROCEGenNames", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.StoredProcedure;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            
         }
 
         private void GoToForm(int indexNo, int locaIDNo)
