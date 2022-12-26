@@ -77,7 +77,7 @@ namespace PersAhwal
         int Messid = 1;
         int MessageDocNo = 0;
         string ArchfilePath = "";
-        string MessageNo = "ق س ج/80/01/";
+        string MessageNo = "ق س ج/80/01";
         private static bool NewSettings = false, FirstDate = false, LastDate = false;
         private static int TableIndex = -1, IDNo = -1, IDVANo = -1;
         static string[] query = new string[15];
