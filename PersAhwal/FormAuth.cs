@@ -1493,8 +1493,8 @@ namespace PersAhwal
         }
         
         
-        private void checkGender(FlowLayoutPanel panel, string controlType, string control2type)
-        {//"مقدم_الطلب_" //"النوع_" 
+        private bool checkGender(FlowLayoutPanel panel, string controlType, string control2type)
+        {
             int index = 0;
             foreach (Control control in panel.Controls)
             {
@@ -1511,11 +1511,12 @@ namespace PersAhwal
 
                                 if (selectedOption == DialogResult.No)
                                 {
-                                    currentPanelIndex--; return;
+                                    return false;
                                 }
                                 else if (selectedOption == DialogResult.Yes)
                                 {
                                     updateGender(control2.Text, getSexIndex);
+                                    return true;    
                                 }
                             }
                         }
@@ -1523,6 +1524,7 @@ namespace PersAhwal
                     index++;
                 }                
             }
+            return true;
         }
 
         public string getGender(string name)
@@ -1551,8 +1553,8 @@ namespace PersAhwal
                 try
                 {
                     sqlCon.Open();
-                    SqlCommand sqlCmd = new SqlCommand("UPDATE TableGenGender SET النوع=@N'"+ newGender+"' WHERE ID="+ id, sqlCon);
-                    //MessageBox.Show("UPDATE TableGenGender SET النوع=@N'" + newGender + "' WHERE ID=" + id);
+                    SqlCommand sqlCmd = new SqlCommand("UPDATE TableGenGender SET النوع=N'"+ newGender+"' WHERE ID="+ id, sqlCon);
+                    MessageBox.Show("UPDATE TableGenGender SET النوع=N'" + newGender + "' WHERE ID=" + id);
                     sqlCmd.CommandType = CommandType.Text;
                     sqlCmd.ExecuteNonQuery();
                     sqlCon.Close();
@@ -1593,6 +1595,24 @@ namespace PersAhwal
             textTo.Text = textTo.Text.Split('_')[AllIndex - 1];
             if (index == 0)
             textTo.Text = def;
+        }
+        
+        public string checkExist(string name)
+        {
+            string id = "0";
+            string query = "SELECT ID FROM TableGenNames where الاسم like N'" + name+"%'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            foreach (DataRow row in dtbl.Rows)
+            {
+                id = row["ID"].ToString();                
+            }
+            return id;
         }
         
         public void getID(ComboBox textTo, string name, string controlType, int index, string def)
@@ -1778,8 +1798,9 @@ namespace PersAhwal
                 fillInfo(PanelItemsboxes, false);
                 //fillTextBoxesInvers();
                 
-                fillInfo(panelAuthRights, false);                
-                if (txtReview.Text == "")
+                fillInfo(panelAuthRights, false);
+                checkAutoUpdate.Checked = false; 
+                if (txtReview.Text == "" && نوع_التوكيل.Text != "توكيل بصيغة غير مدرجة")
                     checkAutoUpdate.Checked = true;
 
                 fillInfo(finalPanel, false);
@@ -2910,12 +2931,21 @@ namespace PersAhwal
                         MessageBox.Show("يرجى اقتراح اسم للمعاملة");
                         currentPanelIndex--; return;
                     }
-                    checkGender(Panelapp, "مقدم_الطلب_", "النوع_");
+                    if (!checkGender(Panelapp, "مقدم_الطلب_", "النوع_"))
+                    {
+                        currentPanelIndex--; return;
+                    }
+                    else addNewAppNameInfo();
+
                     if (!save2DataBase(Panelapp)) {
                         currentPanelIndex--; return;
                     }
 
-                    checkGender(Panelapp, "الموكَّل_", "جنس_الموكَّل_");
+                    if (!checkGender(Panelapp, "الموكَّل_", "جنس_الموكَّل_"))
+                    {
+                        currentPanelIndex--; return;
+                    }
+                    else addNewAuthNameInfo();
                     if (!save2DataBase(PanelAuthPers))
                     {
                         currentPanelIndex--; return;
@@ -3710,7 +3740,8 @@ namespace PersAhwal
             else txtRev.Text = txtReview.Text;
             if(!save2DataBase(finalPanel))return;
             
-            fillPrintDocx(edited.Text);            
+            fillPrintDocx(edited.Text);
+            
             addarchives();
             if (!وجهة_التوكيل.Text.Contains("السودان"))
                 CreateMessageWord(مقدم_الطلب.Text.Replace("_", " و"), وجهة_التوكيل.Text, رقم_التوكيل.Text, "توكيلا", preffix[صفة_مقدم_الطلب_off.SelectedIndex, 17], التاريخ_الميلادي_off.Text, HijriDate, موقع_التوكيل.Text);
@@ -3978,6 +4009,86 @@ namespace PersAhwal
                 
             }
             catch (Exception ex) { MessageBox.Show("insert into archives (" + strList.Replace("@", "") + ") values (" + strList + ")"); }
+        }
+
+        private void addNewAppNameInfo()
+        {
+            
+            string query = "insert into TableGenNames ([الاسم], رقم_الهوية,تاريخ_الميلاد,المهنة,النوع,نوع_الهوية,مكان_الإصدار) values (@col1,@col2,@col3,@col4,@col5,@col6,@col7) ;SELECT @@IDENTITY as lastid";
+            for (int x = 0; x < addNameIndex; x++)
+            {
+                string id = checkExist(مقدم_الطلب.Text.Split('_')[x]);
+                if (id != "0")
+                {
+                    query = "update TableGenNames set [الاسم] =  @col1,[رقم_الهوية] = @col2,[تاريخ_الميلاد] = @col3,[المهنة] = @col4,النوع = @col5,نوع_الهوية = @col6,مكان_الإصدار = @col7 where ID = "+id;
+                    //MessageBox.Show(query);
+                }
+                    SqlConnection sqlConnection = new SqlConnection(DataSource);
+                if (sqlConnection.State == ConnectionState.Closed)
+                    sqlConnection.Open();
+
+                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                sqlCommand.CommandType = CommandType.Text;
+                sqlCommand.Parameters.AddWithValue("@col1", مقدم_الطلب.Text.Split('_')[x]);
+                sqlCommand.Parameters.AddWithValue("@col2", رقم_الهوية.Text.Split('_')[x]);
+                sqlCommand.Parameters.AddWithValue("@col3", تاريخ_الميلاد.Text.Split('_')[x]);
+                sqlCommand.Parameters.AddWithValue("@col4", المهنة.Text.Split('_')[x]);
+                sqlCommand.Parameters.AddWithValue("@col5", النوع.Text.Split('_')[x]);
+                sqlCommand.Parameters.AddWithValue("@col6", نوع_الهوية.Text.Split('_')[x]);
+                sqlCommand.Parameters.AddWithValue("@col7", مكان_الإصدار.Text.Split('_')[x]);
+
+                var reader = sqlCommand.ExecuteReader();
+                if (reader.Read())
+                {
+                    //MessageBox.Show(reader["lastid"].ToString());
+                }
+                try
+                {
+
+
+                }
+                catch (Exception ex) {
+                    MessageBox.Show("addNewAppNameInfo"); 
+                }
+            }
+        }
+        
+        private void addNewAuthNameInfo()
+        {
+            
+            string query = "insert into TableGenNames ([الاسم], رقم_الهوية,النوع) values (@col1,@col2,@col5) ;SELECT @@IDENTITY as lastid";
+            for (int x = 0; x < addNameIndex; x++)
+            {
+                string id = checkExist(مقدم_الطلب.Text.Split('_')[x]);
+                if (id != "0")
+                {
+                    query = "update TableGenNames set [الاسم] =  @col1,[رقم_الهوية] = @col2,النوع = @col5 where ID = "+id;
+                    //MessageBox.Show(query);
+                }
+                    SqlConnection sqlConnection = new SqlConnection(DataSource);
+                if (sqlConnection.State == ConnectionState.Closed)
+                    sqlConnection.Open();
+
+                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                sqlCommand.CommandType = CommandType.Text;
+                sqlCommand.Parameters.AddWithValue("@col1", الموكَّل.Text.Split('_')[x]);
+                sqlCommand.Parameters.AddWithValue("@col2", هوية_الموكل.Text.Split('_')[x]);
+                sqlCommand.Parameters.AddWithValue("@col5", جنس_الموكَّل.Text.Split('_')[x]);
+                
+                var reader = sqlCommand.ExecuteReader();
+                if (reader.Read())
+                {
+                    //MessageBox.Show(reader["lastid"].ToString());
+                }
+                try
+                {
+
+
+                }
+                catch (Exception ex) {
+                    MessageBox.Show(query); 
+                }
+            }
         }
         private bool checkArchives(string name)
         {

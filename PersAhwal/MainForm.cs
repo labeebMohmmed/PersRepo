@@ -90,7 +90,7 @@ namespace PersAhwal
         int intMessageType;
         string strMessageType = "", strEmbassySource = "";
         static string[] AppNameA = new string[2000];
-        static string[] oldNewA= new string[2000];
+        static string[] oldNewA = new string[2000];
         static string[] oldNewM = new string[2000];
         static string[] DocIDA = new string[2000];
         static string[] GriDateA = new string[2000];
@@ -105,7 +105,7 @@ namespace PersAhwal
         static int[] IDA = new int[2000];
         static int[] IDV = new int[2000];
         static string[] DocA = new string[2000];
-        static string[] DocV = new string [2000];
+        static string[] DocV = new string[2000];
         static int[] IDM = new int[2000];
         static string[] DocM = new string[2000];
         string[] qureyDataUpdate = new string[7];
@@ -146,7 +146,7 @@ namespace PersAhwal
         string Model, Output, ServerIP, Login, Pass, Database, FileArch;
         int Hiday, Himonth;
         string[] travType = new string[2];
-        string[] IDList= new string[100];
+        string[] IDList = new string[100];
         string[] travType1 = new string[5];
         string[] travType2 = new string[10];
         Excel.Application xlApp;
@@ -179,7 +179,7 @@ namespace PersAhwal
         string LocalModelForms = "";
         string docidMess = "";
         bool Realwork = false;
-        public MainForm(string career,int id, string server, string Employee, string jobposition, string dataSource56, string dataSource57, string filepathIn, string filepathOut, string archFile, string formDataFile, bool pers_Peope, string gregorianDate, string hijriDate, string modelFiles,string modelForms, bool realwork)
+        public MainForm(string career, int id, string server, string Employee, string jobposition, string dataSource56, string dataSource57, string filepathIn, string filepathOut, string archFile, string formDataFile, bool pers_Peope, string gregorianDate, string hijriDate, string modelFiles, string modelForms, bool realwork)
         {
             InitializeComponent();
             userId = id;
@@ -187,7 +187,7 @@ namespace PersAhwal
             DataSource = dataSource57;
             DataSource56 = dataSource56;
             DataSource57 = dataSource57;
-            
+
             Realwork = realwork;
             //checkColumnNames("تقاضي_4");
             GregorianDate = gregorianDate;
@@ -208,7 +208,7 @@ namespace PersAhwal
             {
                 DataSource = dataSource56;
                 this.Name = "القائمة الرئيسة نافذة قسم شؤون الرعايا";
-                
+
             }
 
             if (Directory.Exists(@"D:\"))
@@ -248,8 +248,8 @@ namespace PersAhwal
                     if (control.Name.Contains("persbtn"))
                     {
                         control.Visible = true;
-                        control.BringToFront();                        
-                    } 
+                        control.BringToFront();
+                    }
                     else if (control.Name.Contains("Affbtn"))
                     {
                         control.Visible = false; ;
@@ -278,15 +278,15 @@ namespace PersAhwal
                 persbtn6.Visible = false;
                 Combtn0.Location = new System.Drawing.Point(427, 402);
                 Combtn1.Location = new System.Drawing.Point(427, 402 + 39);
-                Combtn2.Location = new System.Drawing.Point(427, 402 +(39*2));
-                Combtn3.Location = new System.Drawing.Point(427, 402 +(39*3));
-                Combtn4.Location = new System.Drawing.Point(427, 402 +(39*4));
+                Combtn2.Location = new System.Drawing.Point(427, 402 + (39 * 2));
+                Combtn3.Location = new System.Drawing.Point(427, 402 + (39 * 3));
+                Combtn4.Location = new System.Drawing.Point(427, 402 + (39 * 4));
             }
             perbtn1.Visible = false;
             Pers_Peope = pers_Peope;
             Affbtn6.Visible = !pers_Peope;
             uploadDocx = true;
-            
+
             EmployeeName = Employee;
             Career = career;
             //if (Career == "موظف ارشفة") timer5.Enabled = true;
@@ -296,7 +296,7 @@ namespace PersAhwal
             FilespathIn = filepathIn;
             ArchFile = archFile;
             FilespathOut = filepathOut;
-            
+
             UserJobposition = jobposition;
             //persbtn2MessageBox.Show(UserJobposition);
             ConsulateEmployee.Text = EmployeeName;
@@ -320,7 +320,7 @@ namespace PersAhwal
                 picSettings.Visible = Affbtn0.Visible = true;
                 empUpdate.Visible = false;
                 picVersio.BringToFront();
-                if (Server == "57") 
+                if (Server == "57")
                     PROCEGenNames();
             }
             else
@@ -328,10 +328,10 @@ namespace PersAhwal
                 picSettings.Visible = false;
                 Aprove.Text = "تعديل بيانات الدخول";
                 empUpdate.BringToFront();
-                    empUpdate.Visible = true;
+                empUpdate.Visible = true;
             }
 
-                if (!Directory.Exists(PrimariFiles))
+            if (!Directory.Exists(PrimariFiles))
             {
                 string appFileName = Environment.GetCommandLineArgs()[0];
                 string directory = Path.GetDirectoryName(appFileName);
@@ -344,7 +344,7 @@ namespace PersAhwal
 
                 dataSourceWrite(primeryLink + "fileUpdate.txt", "files are fully update");
             }
-            
+
             if (!File.Exists(FilespathOut + "autoDocs.txt"))
             {
                 //MessageBox.Show(FilespathOut + "autoDocs.txt");
@@ -387,8 +387,8 @@ namespace PersAhwal
             foreach (string str in archFiles) {
                 FileInfo fileInfo = new FileInfo(str);
                 DateTime dt = fileInfo.LastWriteTime.Date;
-                
-                    Console.WriteLine (date + " - " + str +" date is "+dt.ToString().Split(' ')[0]);
+
+                Console.WriteLine(date + " - " + str + " date is " + dt.ToString().Split(' ')[0]);
                 try
                 {
                     if (date != dt.ToString().Split(' ')[0]) File.Delete(str);
@@ -518,14 +518,14 @@ namespace PersAhwal
         //}
         private bool doubleCheckArch(string v1)
         {
-            int index = Convert.ToInt32(v1.Split('/')[3]) -1;
+            int index = Convert.ToInt32(v1.Split('/')[3]) - 1;
             string table = TableList[index];
             string arch = TableArch[index];
             string docID = TableDocID[index];
             //MessageBox.Show(table + " - "+arch);
             string query;
             SqlConnection Con = new SqlConnection(DataSource);
-            query = "select "+arch+" FROM "+table+" where "+ docID+ " = @" + docID;
+            query = "select " + arch + " FROM " + table + " where " + docID + " = @" + docID;
             if (Con.State == ConnectionState.Closed)
                 Con.Open();
             SqlDataAdapter sqlDa = new SqlDataAdapter(query, Con);
@@ -537,7 +537,7 @@ namespace PersAhwal
             foreach (DataRow dataRow in dtbl2.Rows)
             {
                 if (dataRow[arch].ToString().Contains("مؤرشف نهائي"))
-                return true;
+                    return true;
             }
             return false;
         }
@@ -818,7 +818,7 @@ namespace PersAhwal
                 sqlCmd.Parameters.AddWithValue("@التاريخ_الميلادي", Gredate);
             }
             else if (FormType == 13)
-            {                
+            {
                 sqlCmd.Parameters.AddWithValue("@رقم_المعاملة", "ق س ج/80/22/13/0");
                 sqlCmd.Parameters.AddWithValue("@id", 1);
             }
@@ -850,7 +850,7 @@ namespace PersAhwal
                 sqlCmd.ExecuteNonQuery();
                 sqlCon.Close();
             }
-            catch (Exception ex) { 
+            catch (Exception ex) {
             }
         }
 
@@ -1116,7 +1116,7 @@ namespace PersAhwal
             queryVA[10] = "";
             queryVA[11] = "select ID,مقدم_الطلب,المعالجة,حالة_الارشفة,رقم_التوكيل,التاريخ_الميلادي,DocxData,Extension3,طريقة_الطلب,المكاتبة_النهائية,اسم_المندوب,اسم_الموظف,fileUpload from TableAuth";
 
-            
+
             queryuPDATE[0] = "update TableDocIqrar set ArchivedState=@ArchivedState where ID=id";
             queryuPDATE[1] = "update TableTravIqrar set ArchivedState=@ArchivedState where ID=id";
             queryuPDATE[2] = "update TableMultiIqrar set ArchivedState=@ArchivedState where ID=id";
@@ -1131,51 +1131,51 @@ namespace PersAhwal
             queryuPDATE[10] = "update TableAuth set حالة_الارشفة=@حالة_الارشفة where ID=id";
 
             TableList[0] = "TableDocIqrar";
-                TableList[1] = "TableTravIqrar";
-                TableList[2] = "TableMultiIqrar";
-                TableList[3] = "TableVisaApp";
-                TableList[4] = "TableFamilySponApp";
-                TableList[5] = "TableForensicApp";
-                TableList[6] = "TableTRName";
-                TableList[7] = "TableStudent";
-                TableList[8] = "TableMarriage";
-                TableList[9] = "TableCollection";
-                TableList[10] = "";
-                TableList[11] = "TableAuth";
-                TableList[12] = "TableWafid";
-                TableList[13] = "TableSuitCase";
+            TableList[1] = "TableTravIqrar";
+            TableList[2] = "TableMultiIqrar";
+            TableList[3] = "TableVisaApp";
+            TableList[4] = "TableFamilySponApp";
+            TableList[5] = "TableForensicApp";
+            TableList[6] = "TableTRName";
+            TableList[7] = "TableStudent";
+            TableList[8] = "TableMarriage";
+            TableList[9] = "TableCollection";
+            TableList[10] = "";
+            TableList[11] = "TableAuth";
+            TableList[12] = "TableWafid";
+            TableList[13] = "TableSuitCase";
 
             TableArch[0] = "ArchivedState";
             TableArch[1] = "ArchivedState";
-                TableArch[2] = "ArchivedState";
-                TableArch[3] = "ArchivedState";
-                TableArch[4] = "ArchivedState";
-                TableArch[5] = "ArchivedState";
-                TableArch[6] = "ArchivedState";
-                TableArch[7] = "ArchivedState";
-                TableArch[8] = "ArchivedState";
-                TableArch[9] = "ArchivedState";
-                TableArch[10] = "ArchivedState";
-                TableArch[11] = "حالة_الارشفة";
-                TableArch[12] = "ArchivedState";
-                TableArch[13] = "ArchivedState";
+            TableArch[2] = "ArchivedState";
+            TableArch[3] = "ArchivedState";
+            TableArch[4] = "ArchivedState";
+            TableArch[5] = "ArchivedState";
+            TableArch[6] = "ArchivedState";
+            TableArch[7] = "ArchivedState";
+            TableArch[8] = "ArchivedState";
+            TableArch[9] = "ArchivedState";
+            TableArch[10] = "ArchivedState";
+            TableArch[11] = "حالة_الارشفة";
+            TableArch[12] = "ArchivedState";
+            TableArch[13] = "ArchivedState";
 
             TableDocID[0] = "docID";
             TableDocID[1] = "docID";
-                TableDocID[2] = "docID";
-                TableDocID[3] = "docID";
-                TableDocID[4] = "docID";
-                TableDocID[5] = "docID";
-                TableDocID[6] = "docID";
-                TableDocID[7] = "docID";
-                TableDocID[8] = "docID";
-                TableDocID[9] = "docID";
-                TableDocID[10] = "docID";
-                TableDocID[11] = "رقم_التوكيل";
-                TableDocID[12] = "رقم_المعاملة";
-                TableDocID[13] = "docID";
+            TableDocID[2] = "docID";
+            TableDocID[3] = "docID";
+            TableDocID[4] = "docID";
+            TableDocID[5] = "docID";
+            TableDocID[6] = "docID";
+            TableDocID[7] = "docID";
+            TableDocID[8] = "docID";
+            TableDocID[9] = "docID";
+            TableDocID[10] = "docID";
+            TableDocID[11] = "رقم_التوكيل";
+            TableDocID[12] = "رقم_المعاملة";
+            TableDocID[13] = "docID";
 
-                queryTable[0] = "TableDocIqrar";
+            queryTable[0] = "TableDocIqrar";
             queryTable[1] = "TableTravIqrar";
             queryTable[2] = "TableMultiIqrar";
             queryTable[3] = "TableVisaApp";
@@ -1482,7 +1482,7 @@ namespace PersAhwal
                 {
                     int x = 0;
 
-                    if (TableIndex == 6 )
+                    if (TableIndex == 6)
                     {
                         SqlDataAdapter sqlDa1 = new SqlDataAdapter(queryDateList[TableIndex], sqlCon);
                         sqlDa1.SelectCommand.CommandType = CommandType.Text;
@@ -1509,7 +1509,7 @@ namespace PersAhwal
                     {
                         SqlDataAdapter sqlDa = new SqlDataAdapter(queryDateList[TableIndex], sqlCon);
                         sqlDa.SelectCommand.CommandType = CommandType.Text;
-                        if(TableIndex == 4) 
+                        if (TableIndex == 4)
                             sqlDa.SelectCommand.Parameters.AddWithValue("@التاريخ_الميلادي", dateFrom);
                         else
                             sqlDa.SelectCommand.Parameters.AddWithValue("@GriDate", dateFrom);
@@ -1827,41 +1827,41 @@ namespace PersAhwal
                 }
                 catch (Exception ex) { return false; }
             for (int T = 0; T < 100; T++)
-                    for (int yy = 0; yy < 31; yy++)
-                        DeepReport[T, yy] = 0;
-                int d;
-                int m = monthS;
-                int y = yearS;
+                for (int yy = 0; yy < 31; yy++)
+                    DeepReport[T, yy] = 0;
+            int d;
+            int m = monthS;
+            int y = yearS;
 
-                //Console.WriteLine("*********************" + month.ToString() + "*********************");
-                for (d = dateS; d <= dateE && d <= daysOfMonth(m - 1, y); d++)
+            //Console.WriteLine("*********************" + month.ToString() + "*********************");
+            for (d = dateS; d <= dateE && d <= daysOfMonth(m - 1, y); d++)
+            {
+                int type = 0;
+                if (m < 10) Currentmonth = "0" + m.ToString();
+                else Currentmonth = m.ToString();
+                if (d < 10) CurrentDay = "0" + d.ToString();
+                else CurrentDay = d.ToString();
+                CurrentDate = CurrentDay + "-" + Currentmonth + "-" + y.ToString();
+                SqlDataAdapter sqlDa1 = new SqlDataAdapter(queryDateList[6], sqlCon);
+                sqlDa1.SelectCommand.CommandType = CommandType.Text;
+                sqlDa1.SelectCommand.Parameters.AddWithValue("@التاريخ_الميلادي", CurrentDate);
+                sqlDa1.Fill(dtbl);
+                dataGridView1.DataSource = dtbl;
+                foreach (DataRow dataRow in dtbl.Rows)
                 {
-                    int type = 0;
-                    if (m < 10) Currentmonth = "0" + m.ToString();
-                    else Currentmonth = m.ToString();
-                    if (d < 10) CurrentDay = "0" + d.ToString();
-                    else CurrentDay = d.ToString();
-                    CurrentDate = CurrentDay + "-" + Currentmonth + "-" + y.ToString();
-                    SqlDataAdapter sqlDa1 = new SqlDataAdapter(queryDateList[6], sqlCon);
-                    sqlDa1.SelectCommand.CommandType = CommandType.Text;
-                    sqlDa1.SelectCommand.Parameters.AddWithValue("@التاريخ_الميلادي", CurrentDate);
-                    sqlDa1.Fill(dtbl);
-                    dataGridView1.DataSource = dtbl;
-                    foreach (DataRow dataRow in dtbl.Rows)
+                    for (int x = 0; x < proTypeCount; x++)
                     {
-                        for (int x = 0; x < proTypeCount; x++)
-                        {
-                            BindingSource bs = new BindingSource();
-                            bs.DataSource = dataGridView1.DataSource;
-                            bs.Filter = dataGridView1.Columns[7].HeaderText.ToString() + " LIKE '%" + comboBox3.Items[x] + "%'";
-                            dataGridView1.DataSource = bs;
-                            //DeepReport[type, d] = dtbl.Rows.Count;
-                            //MessageBox.Show(ProType[x]  +" -- " + dataGridView1.RowCount.ToString());
-                        }
-                        type++;
+                        BindingSource bs = new BindingSource();
+                        bs.DataSource = dataGridView1.DataSource;
+                        bs.Filter = dataGridView1.Columns[7].HeaderText.ToString() + " LIKE '%" + comboBox3.Items[x] + "%'";
+                        dataGridView1.DataSource = bs;
+                        //DeepReport[type, d] = dtbl.Rows.Count;
+                        //MessageBox.Show(ProType[x]  +" -- " + dataGridView1.RowCount.ToString());
                     }
-                    dtbl.Rows.Clear();
-                
+                    type++;
+                }
+                dtbl.Rows.Clear();
+
 
                 //rep1[month, 0] = monthS;
 
@@ -1943,99 +1943,99 @@ namespace PersAhwal
                 for (int yy = 0; yy < 31; yy++)
                 { report1[x, yy] = 0; }
             }
-                int d;
-                int m = monthS;
-                int y = yearS;
-                //Console.WriteLine("*********************" + month.ToString() + "*********************");
-                for (d = dateS; d <= dateE && d <= daysOfMonth(m - 1, y); d++)
+            int d;
+            int m = monthS;
+            int y = yearS;
+            //Console.WriteLine("*********************" + month.ToString() + "*********************");
+            for (d = dateS; d <= dateE && d <= daysOfMonth(m - 1, y); d++)
+            {
+                if (m < 10) Currentmonth = "0" + m.ToString();
+                else Currentmonth = m.ToString();
+                if (d < 10) CurrentDay = "0" + d.ToString();
+                else CurrentDay = d.ToString();
+                CurrentDate = Currentmonth + "-" + CurrentDay + "-" + y.ToString();
+                if (Server == "57")
                 {
-                    if (m < 10) Currentmonth = "0" + m.ToString();
-                    else Currentmonth = m.ToString();
-                    if (d < 10) CurrentDay = "0" + d.ToString();
-                    else CurrentDay = d.ToString();
-                    CurrentDate = Currentmonth+ "-" + CurrentDay + "-" + y.ToString();
-                    if (Server == "57")
+                    for (TableIndex = 1; TableIndex < 15; TableIndex++)
                     {
-                        for (TableIndex = 1; TableIndex < 15; TableIndex++)
+                        SqlDataAdapter sqlDa1 = new SqlDataAdapter(queryDateList[TableIndex], sqlCon);
+                        //Console.WriteLine(TableIndex);
+                        if (TableIndex == 4 || TableIndex == 6 || TableIndex > 11)
                         {
-                            SqlDataAdapter sqlDa1 = new SqlDataAdapter(queryDateList[TableIndex], sqlCon);
-                            //Console.WriteLine(TableIndex);
-                            if (TableIndex == 4 ||TableIndex == 6 || TableIndex > 11)
-                            {
-                                sqlDa1.SelectCommand.CommandType = CommandType.Text;
-                                sqlDa1.SelectCommand.Parameters.AddWithValue("@التاريخ_الميلادي", CurrentDate);
-                                sqlDa1.Fill(dtbl1);
-                                report1[TableIndex, d] = dtbl1.Rows.Count;
-                                //Console.WriteLine(CurrentDate.ToString() + "-" + queryDateList[TableIndex].Split(' ')[3] + "-" + report1[TableIndex, d].ToString());
-                            }
-                            else if (TableIndex == 11)
-                            {
-                                sqlDa1.SelectCommand.CommandType = CommandType.Text;
-                                sqlDa1.SelectCommand.Parameters.AddWithValue("@GriDate", CurrentDate);
-                                sqlDa1.Fill(dtbl2);
-                                int AuthCount = 0;
-                                foreach (DataRow row in dtbl2.Rows)
-                                {
-
-                                    if (row["DocNo"].ToString().All(char.IsDigit))
-                                    {
-                                        AuthCount = AuthCount + Convert.ToInt32(row["DocNo"].ToString());
-                                    }
-                                }
-                                report1[TableIndex, d] = AuthCount;
-                            //Console.WriteLine(CurrentDate.ToString() + "-" + queryDateList[TableIndex].Split(' ')[3] + "-" + report1[TableIndex, d].ToString());
-                            //Console.WriteLine(d.ToString() + "-" + dtbl2.Rows.Count.ToString());
-                        }
-                            else
-                            {
-                                sqlDa1.SelectCommand.CommandType = CommandType.Text;
-                                sqlDa1.SelectCommand.Parameters.AddWithValue("@GriDate", CurrentDate);
-                                sqlDa1.Fill(dtbl);
-                                report1[TableIndex, d] = dtbl.Rows.Count;
-                            //Console.WriteLine(CurrentDate.ToString() + "-" + queryDateList[TableIndex].Split(' ')[3] + "-" + report1[TableIndex, d].ToString());
-
-                        }
-                            dtbl.Rows.Clear();
-                            dtbl1.Rows.Clear();
-                            dtbl2.Rows.Clear();
-                        }
-                    }
-                    else if (Server == "56")
-
-                    {
-                        for (TableIndex = 1; TableIndex < 7; TableIndex++)
-                        {
-                            string query = "select مقدم_الطلب  from "+ getFileTable(TableIndex-1) + " where التاريخ_الميلادي=@التاريخ_الميلادي";
-
-                            SqlDataAdapter sqlDa1 = new SqlDataAdapter(query, sqlCon);
                             sqlDa1.SelectCommand.CommandType = CommandType.Text;
                             sqlDa1.SelectCommand.Parameters.AddWithValue("@التاريخ_الميلادي", CurrentDate);
                             sqlDa1.Fill(dtbl1);
                             report1[TableIndex, d] = dtbl1.Rows.Count;
-                            dtbl1.Rows.Clear();
+                            //Console.WriteLine(CurrentDate.ToString() + "-" + queryDateList[TableIndex].Split(' ')[3] + "-" + report1[TableIndex, d].ToString());
                         }
-                    }   
-                
+                        else if (TableIndex == 11)
+                        {
+                            sqlDa1.SelectCommand.CommandType = CommandType.Text;
+                            sqlDa1.SelectCommand.Parameters.AddWithValue("@GriDate", CurrentDate);
+                            sqlDa1.Fill(dtbl2);
+                            int AuthCount = 0;
+                            foreach (DataRow row in dtbl2.Rows)
+                            {
 
-                
+                                if (row["DocNo"].ToString().All(char.IsDigit))
+                                {
+                                    AuthCount = AuthCount + Convert.ToInt32(row["DocNo"].ToString());
+                                }
+                            }
+                            report1[TableIndex, d] = AuthCount;
+                            //Console.WriteLine(CurrentDate.ToString() + "-" + queryDateList[TableIndex].Split(' ')[3] + "-" + report1[TableIndex, d].ToString());
+                            //Console.WriteLine(d.ToString() + "-" + dtbl2.Rows.Count.ToString());
+                        }
+                        else
+                        {
+                            sqlDa1.SelectCommand.CommandType = CommandType.Text;
+                            sqlDa1.SelectCommand.Parameters.AddWithValue("@GriDate", CurrentDate);
+                            sqlDa1.Fill(dtbl);
+                            report1[TableIndex, d] = dtbl.Rows.Count;
+                            //Console.WriteLine(CurrentDate.ToString() + "-" + queryDateList[TableIndex].Split(' ')[3] + "-" + report1[TableIndex, d].ToString());
+
+                        }
+                        dtbl.Rows.Clear();
+                        dtbl1.Rows.Clear();
+                        dtbl2.Rows.Clear();
+                    }
+                }
+                else if (Server == "56")
+
+                {
+                    for (TableIndex = 1; TableIndex < 7; TableIndex++)
+                    {
+                        string query = "select مقدم_الطلب  from " + getFileTable(TableIndex - 1) + " where التاريخ_الميلادي=@التاريخ_الميلادي";
+
+                        SqlDataAdapter sqlDa1 = new SqlDataAdapter(query, sqlCon);
+                        sqlDa1.SelectCommand.CommandType = CommandType.Text;
+                        sqlDa1.SelectCommand.Parameters.AddWithValue("@التاريخ_الميلادي", CurrentDate);
+                        sqlDa1.Fill(dtbl1);
+                        report1[TableIndex, d] = dtbl1.Rows.Count;
+                        dtbl1.Rows.Clear();
+                    }
+                }
+
+
+
 
             }
-rep1[month, 0] = monthS;
-                Console.WriteLine("--------------------------------"+ month.ToString()+"---------------------------------");
-                int[] tempX = new int[15];
-                for (int x = 1; x < 15; x++)
+            rep1[month, 0] = monthS;
+            Console.WriteLine("--------------------------------" + month.ToString() + "---------------------------------");
+            int[] tempX = new int[15];
+            for (int x = 1; x < 15; x++)
+            {
+                int tempdatat = 0;
+                for (int yy = 0; yy <= 31; yy++)
                 {
-                    int tempdatat = 0;
-                    for (int yy = 0; yy <= 31; yy++)
-                    {
-                        tempdatat = tempdatat + report1[x, yy];
-                        Console.WriteLine(queryDateList[x].ToString().Split(' ')[3] + "-" + yy.ToString() + "-" + report1[x, yy].ToString());
-                        report1[x, yy] = 0;
-                        if (tempdatat != 0)
-                            foundData = true;
-                    }
-                    rep1[month, x] = tempdatat;
+                    tempdatat = tempdatat + report1[x, yy];
+                    Console.WriteLine(queryDateList[x].ToString().Split(' ')[3] + "-" + yy.ToString() + "-" + report1[x, yy].ToString());
+                    report1[x, yy] = 0;
+                    if (tempdatat != 0)
+                        foundData = true;
                 }
+                rep1[month, x] = tempdatat;
+            }
 
             if (foundData)
                 totalRowDuration = 1;
@@ -2044,7 +2044,7 @@ rep1[month, 0] = monthS;
             sqlCon.Close();
             return foundData;
         }
-        
+
 
         private void correctData() {
             SqlDataAdapter sqlDa1 = new SqlDataAdapter("select ID,GriDate from TableVisaApp", sqlCon);
@@ -2106,10 +2106,10 @@ rep1[month, 0] = monthS;
                     for (int x = 1; x <= rows; x++)
                     {
                         t.Rows[x].Cells[0].Paragraphs[0].Append(GriDate[x - 1]).Font(new Xceed.Document.NET.Font("Arabic Typesetting")).FontSize(20d).Direction = Direction.RightToLeft;
-                         if (Pers_Peope)
+                        if (Pers_Peope)
                             t.Rows[x].Cells[1].Paragraphs[0].Append(DocID[x - 1]).Font(new Xceed.Document.NET.Font("Arabic Typesetting")).FontSize(20d).Direction = Direction.RightToLeft;
-                         else
-                            t.Rows[x].Cells[1].Paragraphs[0].Append(DocID[x - 1] ).Font(new Xceed.Document.NET.Font("Arabic Typesetting")).FontSize(20d).Direction = Direction.RightToLeft;
+                        else
+                            t.Rows[x].Cells[1].Paragraphs[0].Append(DocID[x - 1]).Font(new Xceed.Document.NET.Font("Arabic Typesetting")).FontSize(20d).Direction = Direction.RightToLeft;
                         t.Rows[x].Cells[2].Paragraphs[0].Append(AppName[x - 1]).Font(new Xceed.Document.NET.Font("Arabic Typesetting")).FontSize(20d).Direction = Direction.RightToLeft;
                         t.Rows[x].Cells[3].Paragraphs[0].Append(x.ToString() + ".").Font(new Xceed.Document.NET.Font("Arabic Typesetting")).FontSize(20d).Direction = Direction.RightToLeft;
                     }
@@ -2287,9 +2287,9 @@ rep1[month, 0] = monthS;
         private void CreateDailyReportIqrar(int rows, string reportName, string DocumentType, bool AffadaivtAuth)
         {
             loadMessageNo();
-            
+
             string year = DateTime.Now.Year.ToString().Replace("20", "");
-            string noID = MessageNo + "/"+year+"/"+(MessageDocNo + 1).ToString();
+            string noID = MessageNo + "/" + year + "/" + (MessageDocNo + 1).ToString();
             route = FilespathIn + @"\DailyReport.docx";
             string ActiveCopy = FilespathOut + reportName;
             System.IO.File.Copy(route, ActiveCopy);
@@ -2428,6 +2428,100 @@ rep1[month, 0] = monthS;
                         }
 
                     }
+                }
+
+
+
+                var p = document.InsertParagraph(Environment.NewLine);
+                p.InsertTableAfterSelf(t);
+
+                string strAttvCo = Environment.NewLine + "ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ" + Environment.NewLine + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + attendedVC.Text + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + "ع/ القنصل العام بالإنابة";
+                var AttvCo = document.InsertParagraph(strAttvCo)
+                    .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
+                    .FontSize(20d)
+                    .Bold()
+                    .Alignment = Alignment.center;
+
+
+                document.Save();
+                Process.Start("WINWORD.EXE", ActiveCopy);
+                NewMessageNo();
+            }
+
+
+
+        }
+
+        private void CreateCarsReportAuth(string reportName)
+        {
+            loadMessageNo();
+            DataTable table = new DataTable();
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+                SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT DocID,DocNo,ID FROM TableHandAuth where GriDate=N'"+ GregorianDate+ "' and DocID like N'فواتير سيارات%'", sqlCon);
+                sqlDa.SelectCommand.CommandType = CommandType.Text;
+                
+                sqlDa.Fill(table);
+                sqlCon.Close();
+                dataGridView8.DataSource = table;
+            }
+            catch (Exception ex) { return; }
+            dataGridView8.BringToFront();
+                dataGridView8.Visible = true;
+            
+
+            string year = DateTime.Now.Year.ToString().Replace("20", "");
+            string noID = MessageNo + "/" + year + "/" + (MessageDocNo + 1).ToString();
+            route = FilespathIn + @"\DailyReport.docx";
+            string ActiveCopy = FilespathOut + reportName;
+            System.IO.File.Copy(route, ActiveCopy);
+            using (var document = DocX.Load(ActiveCopy))
+            {
+                System.Globalization.CultureInfo TypeOfLanguage = new System.Globalization.CultureInfo("ar-SA");
+                InputLanguage.CurrentInputLanguage = InputLanguage.FromCulture(TypeOfLanguage);
+
+                string strHeader = "الرقم : " + noID + "     " + "التاريخ :" + GregorianDate + " م" + "     " + "الموافق : " + HijriDate + "هـ" + Environment.NewLine;
+                document.InsertParagraph(strHeader)
+                .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
+                .FontSize(16d)
+                .Alignment = Alignment.center;
+                string MessageDir = "الى : خارجية - الخرطوم" + Environment.NewLine + "من سوداني - جدة" + Environment.NewLine + "لعناية السيد/ مدير إدارة التوثيق"
+                    + Environment.NewLine + "ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ"
+                    + Environment.NewLine + "نرجو أن نفيدكم باعتماد القنصلية العامة لفواتير السيارات بالمرفقة بالقائمة أدناه";
+                document.InsertParagraph(MessageDir)
+                    .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
+                    .FontSize(18d)
+                    .Direction = Direction.RightToLeft;
+
+                var t = document.AddTable(1, 3);
+                t.Design = TableDesign.TableGrid;
+                t.Alignment = Alignment.center;
+                t.SetColumnWidth(2, 60);
+                t.SetColumnWidth(1, 170);
+                t.SetColumnWidth(0, 80);
+
+                t.Rows[0].Cells[0].Paragraphs[0].Append("عدد الفواتير").Font(new Xceed.Document.NET.Font("Arabic Typesetting")).FontSize(20d).Bold().Alignment = Alignment.center;
+                t.Rows[0].Cells[1].Paragraphs[0].Append("اسم المؤسسة").Font(new Xceed.Document.NET.Font("Arabic Typesetting")).FontSize(20d).Bold().Alignment = Alignment.center;
+                t.Rows[0].Cells[2].Paragraphs[0].Append("الرقم").Font(new Xceed.Document.NET.Font("Arabic Typesetting")).FontSize(20d).Bold().Alignment = Alignment.center;
+
+                int CurrentRows = 1;
+
+                for (int x = 0; x < dataGridView8.Rows.Count-1; x++)
+                {
+                    //MessageBox.Show(dataGridView8.Rows[x].Cells[1].Value.ToString());
+                    t.InsertRow();
+                    string institute = "مؤسسة " + dataGridView8.Rows[x].Cells[0].Value.ToString().Split('/')[1];
+                    
+                    t.Rows[CurrentRows].Cells[0].Paragraphs[0].Append(dataGridView8.Rows[x].Cells[1].Value.ToString()).Font(new Xceed.Document.NET.Font("Arabic Typesetting")).FontSize(20d).Direction = Direction.RightToLeft;
+                    t.Rows[CurrentRows].Cells[1].Paragraphs[0].Append(institute.Replace("  "," ")).Font(new Xceed.Document.NET.Font("Arabic Typesetting")).FontSize(20d).Direction = Direction.RightToLeft;
+                    t.Rows[CurrentRows].Cells[2].Paragraphs[0].Append("." + CurrentRows.ToString()).Font(new Xceed.Document.NET.Font("Arabic Typesetting")).FontSize(20d).Direction = Direction.RightToLeft;
+                    string ID = dataGridView8.Rows[x].Cells[2].Value.ToString();
+                    FillDatafromGenArch("data2", ID.ToString(), "TableHandAuth");
+                    CurrentRows++;
                 }
 
 
@@ -3591,6 +3685,77 @@ rep1[month, 0] = monthS;
 
         }
 
+        private void CreateMessageAuthentication(string EmbassySource, string IqrarNo, string MessageType, string ApplicantSex, string GregorianDate, string HijriDate, string ViseConsul)
+        {
+            string ActiveCopy;
+            string ReportName = DateTime.Now.ToString("mmss");
+            string routeDoc = FilespathIn + @"\MessageCapCheck.docx";
+            loadMessageNo();
+            ActiveCopy = FilespathOut + "Message" + اسم_صاحب_الشهادة.Text + ReportName + ".docx";
+            if (!File.Exists(ActiveCopy))
+            {
+                System.IO.File.Copy(routeDoc, ActiveCopy);
+                object oBMiss2 = System.Reflection.Missing.Value;
+                Word.Application oBMicroWord2 = new Word.Application();
+
+
+
+                Word.Document oBDoc2 = oBMicroWord2.Documents.Open(ActiveCopy, oBMiss2);
+
+                
+                Object ParaMApplicantName = "MarkApplicantName";
+                Object ParaMassageIqrarNo = "MarkMassageIqrarNo";                
+                Object ParaMassageNo = "MarkMassageNo";                
+                Object ParaHijriDate = "MarkHijriDate";
+                Object ParaDateGre = "MarkDateGre";
+                Object ParaInstitute = "MarkInstitute";
+                Object ParaViseConsul1 = "MarkViseConsul1";
+
+
+                Word.Range BookMApplicantName = oBDoc2.Bookmarks.get_Item(ref ParaMApplicantName).Range;                
+                Word.Range BookMassageIqrarNo = oBDoc2.Bookmarks.get_Item(ref ParaMassageIqrarNo).Range;
+                Word.Range BookMassageNo = oBDoc2.Bookmarks.get_Item(ref ParaMassageNo).Range;                
+                Word.Range BookDateGre = oBDoc2.Bookmarks.get_Item(ref ParaDateGre).Range;
+                Word.Range BookHijriDate = oBDoc2.Bookmarks.get_Item(ref ParaHijriDate).Range;
+                Word.Range BookInstitute = oBDoc2.Bookmarks.get_Item(ref ParaInstitute).Range;                
+                Word.Range BookViseConsul1 = oBDoc2.Bookmarks.get_Item(ref ParaViseConsul1).Range;
+
+                string noID = MessageNo + (MessageDocNo + 1).ToString(); 
+                
+                BookMApplicantName.Text = اسم_صاحب_الشهادة.Text;                
+                BookMassageNo.Text = noID;
+                BookMassageIqrarNo.Text = رقم_الشهادة.Text;
+                BookDateGre.Text = GregorianDate;
+                BookInstitute.Text = اسم_الجهة.Text;
+                BookHijriDate.Text = HijriDate;
+                BookViseConsul1.Text = ViseConsul;
+                
+                object rangeViseConsul1 = BookViseConsul1;
+                object rangeMApplicantName = BookMApplicantName;
+                object rangeMassageIqrarNo = BookMassageIqrarNo;
+                object rangeMassageNo = BookMassageNo;
+                object rangeDateGre = BookDateGre;
+                object rangeHijriDate = BookHijriDate;
+                object rangeInstitute = BookInstitute;
+                
+
+                oBDoc2.Bookmarks.Add("MarkViseConsul1", ref rangeViseConsul1);
+                oBDoc2.Bookmarks.Add("MarkApplicantName", ref rangeMApplicantName);
+                oBDoc2.Bookmarks.Add("MarkMassageIqrarNo", ref rangeMassageIqrarNo);
+                oBDoc2.Bookmarks.Add("MarkMassageNo", ref rangeMassageNo);
+                oBDoc2.Bookmarks.Add("MarkDateGre", ref rangeDateGre);
+                oBDoc2.Bookmarks.Add("MarkInstitute", ref rangeInstitute);
+                oBDoc2.Bookmarks.Add("MarkHijiData", ref rangeHijriDate);
+
+                oBDoc2.Activate();
+                oBDoc2.Save();
+                //addMessageArch(ActiveCopy, noID);
+                oBMicroWord2.Visible = true;
+                NewMessageNo();
+            }
+
+        }
+        
         private void CreateMessageWord(string ApplicantName, string EmbassySource, string IqrarNo, string MessageType, string ApplicantSex, string GregorianDate, string HijriDate, string ViseConsul)
         {
             string ActiveCopy;
@@ -3640,7 +3805,7 @@ rep1[month, 0] = monthS;
                 BookGregorDate2.Text = GregorianDate;
                 BookHijriDate.Text = HijriDate;
                 BookViseConsul1.Text = ViseConsul;
-                MessageBox.Show(txtSearch.Text.Split('/')[3]);
+                //MessageBox.Show(txtSearch.Text.Split('/')[3]);
                 BookMassageTitle.Text = getDocType(txtSearch.Text.Split('/')[3]);
 
                 object rangeViseConsul1 = BookViseConsul1;
@@ -4264,9 +4429,11 @@ rep1[month, 0] = monthS;
         {
             string ReportName1 = "Report1" + DateTime.Now.ToString("mmss") + ".docx";
             string ReportName2 = "Report2" + DateTime.Now.ToString("mmss") + ".docx";
+            string ReportName3 = "Report3" + DateTime.Now.ToString("mmss") + ".docx";
             PrintReport.Enabled = false;
             PrintReport.Text = "تجري عملية الطباعة";
             if (ReportType.SelectedIndex != 10) {
+                CreateCarsReportAuth(ReportName3);
                 if (totalrowsAuth > 0)
                 {
                     CreateDailyReportAuth(totalrowsAuth, ReportName1, " التواكيل", false);
@@ -7182,7 +7349,11 @@ rep1[month, 0] = monthS;
                 comment = "";
             } else if (selectedOption == DialogResult.No) 
                 comment = "مستند غير صحيح";
-
+            if (panelText.Visible && اسم_الجهة.Text != "" && اسم_صاحب_الشهادة.Text != "" && رقم_الشهادة.Text != "")
+            {
+                comment = "في انتظار تأكيد صحتها";
+                CreateMessageAuthentication(txtEmbassey.Text, txtSearch.Text, strMessageType, bolApplicantSex, date.Text, HijriDate, attendedVC.Text);
+            }
             if (PathImage == "")
             {
                 MessageBox.Show("يرجى أرشفة نموذج التوقيع أولا");
@@ -7238,8 +7409,8 @@ rep1[month, 0] = monthS;
             ArchivePic.Image = null;
             ScanPic.Text = "بدء الارشفة";
             loadPic.Text = "تحميل من ملف";
-            ScanPic.Size = new System.Drawing.Size(392, 59);
-            loadPic.Size = new System.Drawing.Size(392, 59);
+            ScanPic.Size = new System.Drawing.Size(392, 35);
+            loadPic.Size = new System.Drawing.Size(392, 35);
             reLoadPic.Visible = RescanPic.Visible = false;
         }
 
@@ -7826,6 +7997,19 @@ rep1[month, 0] = monthS;
             //    }
 
             //}
+        }
+
+        private void button35_Click(object sender, EventArgs e)
+        {
+            panelText.Visible = true;
+            panelText.Height = 134;
+            //
+
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+
         }
 
         private string[] getColList(string table)

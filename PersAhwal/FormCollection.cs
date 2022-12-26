@@ -98,8 +98,11 @@ namespace PersAhwal
             Jobposition = jobposition;
             التاريخ_الميلادي.Text = GregorianDate = gregorianDate;
             التاريخ_الهجري.Text = HijriDate = hijriDate;
+            Console.WriteLine("1");
             genPreperations();
+            Console.WriteLine("2");
             FillDataGridView(DataSource);
+            Console.WriteLine("3");
             getMaxRange(DataSource);
         }
         private void getMaxRange(string dataSource)
@@ -2115,7 +2118,7 @@ namespace PersAhwal
             for (int i = 0; i < 8; i++)
             {
                 Console.WriteLine(allArchList[i]+" - "+ colIDs[i]);
-                MessageBox.Show(allArchList[i]+" - "+ colIDs[i]);
+                //MessageBox.Show(allArchList[i]+" - "+ colIDs[i]);
                 
                 sqlCommand.Parameters.AddWithValue("@" + allArchList[i], colIDs[i]);
             }
