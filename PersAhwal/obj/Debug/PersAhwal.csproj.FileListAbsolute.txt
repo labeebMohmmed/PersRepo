@@ -1270,3 +1270,4 @@ C:\Users\hp\Source\Repos\PersRepo\PersAhwal\obj\Debug\PersAhwal.exe
 C:\Users\hp\Source\Repos\PersRepo\PersAhwal\obj\Debug\PersAhwal.pdb
 C:\Users\hp\source\repos\PersRepo\PersAhwal\bin\Debug\SautinSoft.Document.dll
 C:\Users\hp\source\repos\PersRepo\PersAhwal\bin\Debug\SautinSoft.Document.xml
+C:\Users\hp\source\repos\PersRepo\PersAhwal\obj\Debug\Interop.HPWia2DriverRootLib.dll

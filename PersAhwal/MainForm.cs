@@ -26,6 +26,8 @@ using Image = System.Drawing.Image;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using Color = System.Drawing.Color;
 using System.Runtime.InteropServices.ComTypes;
+using DocumentFormat.OpenXml.Office2016.Drawing.Charts;
+using DocumentFormat.OpenXml.Bibliography;
 
 namespace PersAhwal
 {
@@ -320,8 +322,8 @@ namespace PersAhwal
                 picSettings.Visible = Affbtn0.Visible = true;
                 empUpdate.Visible = false;
                 picVersio.BringToFront();
-                if (Server == "57")
-                    PROCEGenNames();
+                //if (Server == "57")
+                //    PROCEGenNames();
             }
             else
             {
@@ -2044,6 +2046,38 @@ namespace PersAhwal
             sqlCon.Close();
             return foundData;
         }
+        private void DailyListcustm1(string dateFrom, string dateTo)
+        {
+            string date = "GriDate";
+            string table = "TableTravIqrar";
+            string dateTime = "MONTH";
+            string dateModi = dateFrom.Split('-')[2];
+            if (dateModi.StartsWith("0")) 
+                dateModi = dateModi.Replace("0", "");
+            //MessageBox.Show(dateModi);
+            for (int x = 0; x < 1; x++)
+            {
+                string query = "select count (" + date + ") as countItem from " + table + " where DATEPART(" + dateTime + ", " + date + ") = "+ dateModi;
+                SqlConnection sqlCon = new SqlConnection(DataSource);
+                DataTable dtbl = new DataTable();
+                if (sqlCon.State == ConnectionState.Closed)
+                    try
+                    {
+                        sqlCon.Open();
+                    }
+                    catch (Exception ex) { return; }
+
+                SqlDataAdapter sqlDa1 = new SqlDataAdapter(query, sqlCon);
+
+                sqlDa1.SelectCommand.CommandType = CommandType.Text;
+                sqlDa1.Fill(dtbl);
+                foreach (DataRow dataRow in dtbl.Rows)
+                {
+                    rep1[Convert.ToInt32(dateModi)-1, x] = Convert.ToInt32(dataRow["countItem"].ToString());
+                    //MessageBox.Show(dateModi +" - "+dataRow["countItem"].ToString());
+                }
+            }    
+        }
 
 
         private void correctData() {
@@ -2468,6 +2502,7 @@ namespace PersAhwal
                 sqlDa.Fill(table);
                 sqlCon.Close();
                 dataGridView8.DataSource = table;
+                if (table.Rows.Count == 0) return;
             }
             catch (Exception ex) { return; }
             dataGridView8.BringToFront();
@@ -4433,7 +4468,7 @@ namespace PersAhwal
             PrintReport.Enabled = false;
             PrintReport.Text = "تجري عملية الطباعة";
             if (ReportType.SelectedIndex != 10) {
-                CreateCarsReportAuth(ReportName3);
+                
                 if (totalrowsAuth > 0)
                 {
                     CreateDailyReportAuth(totalrowsAuth, ReportName1, " التواكيل", false);
@@ -4442,8 +4477,11 @@ namespace PersAhwal
                 if (totalrowsAffadivit > 0)
                 {
                     CreateDailyReportIqrar(totalrowsAffadivit, ReportName2, " الإقرارات", true);
-
+                    
                 }
+                if (ReportType.SelectedIndex == 0)
+                    CreateCarsReportAuth(ReportName3);
+
                 if (rowFound)
                 {
                     while (File.Exists(ReportName2))
@@ -5315,7 +5353,7 @@ namespace PersAhwal
         }
         private void MainForm_Load(object sender, EventArgs e)
         {
-            checkYear(DataSource);
+            //checkYear(DataSource);
 
             autoCompleteTextBox(applicant, DataSource, "الاسم", "TableGeneralArch");
             fileComboBox(AttendViceConsul, DataSource, "ArabicAttendVC", "TableListCombo", true);
@@ -5446,7 +5484,7 @@ namespace PersAhwal
                 {
                     if (dataRow["CurrentYear"].ToString() != year)
                     {
-                        btnNewYear.Enabled = true;
+                        //btnNewYear.Enabled = true;
                         MessageBox.Show(" تشير الساعة إلى حلول عام ميلادي جديد، يرجى التواصل مع رئيس القسم لإعادة تصفير جميع المعاملات");
                         flowLayoutPanel3.BringToFront();
                     }
@@ -6924,7 +6962,8 @@ namespace PersAhwal
             {
                 string from = yearReport.Text.Trim() + quorterS[s];
                 string to = yearReport.Text.Trim() + quorterE[s];
-                rows = DailyListcustm(from, to,s);
+                rows = DailyListcustm(from, to, s);
+                //DailyListcustm1(from, to);
                 if (rows) rowFound = true;
             }
             
@@ -7393,6 +7432,7 @@ namespace PersAhwal
                 SubAuthData(iD, txtHandAuthNo.Text, txtHAAuthentic.Text, checkHASex.Text, comboBox2.Text, txtHAGredate.Text, GregorianDate + "_تمت معالجة الملف بواسطة" + EmployeeName, combCount.Text, comment);
                 CreatePic(PathImages, Messid.ToString());
             }
+            MessageBox.Show("الرقم المرجعي " + iD.ToString());
             btnSaveArch.Text = "حفظ وتأكيد";
             txtHandAuthNo.Text = txtHAAuthentic.Text = checkHASex.Text = comboBox2.Text = txtHAGredate.Text = ArchfilePath = "";
 

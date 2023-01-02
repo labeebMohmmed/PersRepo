@@ -236,6 +236,12 @@ namespace PersAhwal
                     
                     break;
                 case 2:
+                    if (!checkGender(Panelapp, "مقدم_الطلب_", "النوع_"))
+                    {
+                        currentPanelIndex--; return;
+                    }
+                    else addNewAppNameInfo(مقدم_الطلب);
+
                     if (!طريقة_الطلب.Checked ) proType1 = "2";
                     //MessageBox.Show(proType1);
                     if (!backgroundWorker1.IsBusy) backgroundWorker1.RunWorkerAsync();
@@ -1642,6 +1648,141 @@ namespace PersAhwal
             panelShow(currentPanelIndex);
         }
 
+        private void addNewAppNameInfo(TextBox textName )
+        {
+
+            string query = "insert into TableGenNames ([الاسم], رقم_الهوية,تاريخ_الميلاد,المهنة,النوع,نوع_الهوية,مكان_الإصدار) values (@col1,@col2,@col3,@col4,@col5,@col6,@col7) ;SELECT @@IDENTITY as lastid";
+            for (int x = 0; x < addNameIndex; x++)
+            {
+                string id = checkExist(textName.Text.Split('_')[x]);
+                if (id != "0")
+                {
+                    query = "update TableGenNames set [الاسم] =  @col1,[رقم_الهوية] = @col2,[تاريخ_الميلاد] = @col3,[المهنة] = @col4,النوع = @col5,نوع_الهوية = @col6,مكان_الإصدار = @col7 where ID = " + id;
+                    //MessageBox.Show(query);
+                }
+                SqlConnection sqlConnection = new SqlConnection(DataSource);
+                if (sqlConnection.State == ConnectionState.Closed)
+                    sqlConnection.Open();
+
+                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                sqlCommand.CommandType = CommandType.Text;
+                sqlCommand.Parameters.AddWithValue("@col1", مقدم_الطلب.Text.Split('_')[x]);
+                sqlCommand.Parameters.AddWithValue("@col2", رقم_الهوية.Text.Split('_')[x]);
+                sqlCommand.Parameters.AddWithValue("@col3", تاريخ_الميلاد.Text.Split('_')[x]);
+                sqlCommand.Parameters.AddWithValue("@col4", المهنة.Text.Split('_')[x]);
+                sqlCommand.Parameters.AddWithValue("@col5", النوع.Text.Split('_')[x]);
+                sqlCommand.Parameters.AddWithValue("@col6", نوع_الهوية.Text.Split('_')[x]);
+                sqlCommand.Parameters.AddWithValue("@col7", مكان_الإصدار.Text.Split('_')[x]);
+
+                var reader = sqlCommand.ExecuteReader();
+                if (reader.Read())
+                {
+                    //MessageBox.Show(reader["lastid"].ToString());
+                }
+                try
+                {
+
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("addNewAppNameInfo");
+                }
+            }
+        }
+        public string checkExist(string name)
+        {
+            string id = "0";
+            string query = "SELECT ID FROM TableGenNames where الاسم like N'" + name + "%'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            foreach (DataRow row in dtbl.Rows)
+            {
+                id = row["ID"].ToString();
+            }
+            return id;
+        }
+        private bool checkGender(FlowLayoutPanel panel, string controlType, string control2type)
+        {
+            int index = 0;
+            foreach (Control control in panel.Controls)
+            {
+                if (control.Name == controlType + index + ".")
+                {
+                    string gender = getGender(control.Text.Split(' ')[0]);
+                    foreach (Control control2 in panel.Controls)
+                    {
+                        if (control2.Name == control2type + index + ".")
+                        {
+                            if (gender != control2.Text)
+                            {
+                                var selectedOption = MessageBox.Show("هل تود تغيير إعدادات البرنامج الداخلية والمتابعة للصفحة التالية؟", "يرجى مراحعة جنس   " + control.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                                if (selectedOption == DialogResult.No)
+                                {
+                                    return false;
+                                }
+                                else if (selectedOption == DialogResult.Yes)
+                                {
+                                    updateGender(control2.Text, getSexIndex);
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                    index++;
+                }
+            }
+            return true;
+        }
+        string getSexIndex = "0";
+        public string getGender(string name)
+        {
+            string sex = "ذكر";
+            string query = "SELECT ID,النوع FROM TableGenGender where الاسم = N'" + name + "'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            foreach (DataRow row in dtbl.Rows)
+            {
+                getSexIndex = row["ID"].ToString();
+                sex = row["النوع"].ToString();
+            }
+            return sex;
+        }
+
+        private void updateGender(string newGender, string id)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                    SqlCommand sqlCmd = new SqlCommand("UPDATE TableGenGender SET النوع=N'" + newGender + "' WHERE ID=" + id, sqlCon);
+                    MessageBox.Show("UPDATE TableGenGender SET النوع=N'" + newGender + "' WHERE ID=" + id);
+                    sqlCmd.CommandType = CommandType.Text;
+                    sqlCmd.ExecuteNonQuery();
+                    sqlCon.Close();
+
+                }
+
+                catch (Exception ex)
+                {
+                    return;
+                }
+                finally
+                {
+                }
+        }
         private void btnPrevious_Click(object sender, EventArgs e)
         {
             if (currentPanelIndex > 0) currentPanelIndex--;
@@ -2130,7 +2271,7 @@ namespace PersAhwal
                 var reader = sqlCommand.ExecuteReader();
                 if (reader.Read())
                 {
-                    MessageBox.Show(reader["lastid"].ToString());
+                    //MessageBox.Show(reader["lastid"].ToString());
                 }
 
             }

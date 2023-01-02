@@ -61,9 +61,9 @@ namespace PersAhwal
             this.mandoubName = new System.Windows.Forms.ComboBox();
             this.AppType = new System.Windows.Forms.CheckBox();
             this.label21 = new System.Windows.Forms.Label();
-            this.DocType = new System.Windows.Forms.ComboBox();
+            this.نوع_الهوية = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.ApplicantIdocName = new System.Windows.Forms.TextBox();
+            this.مقدم_الطلب = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.AppWrongName = new System.Windows.Forms.TextBox();
             this.labelWrongName = new System.Windows.Forms.Label();
@@ -72,24 +72,24 @@ namespace PersAhwal
             this.label19 = new System.Windows.Forms.Label();
             this.التاريخ_الهجري = new System.Windows.Forms.TextBox();
             this.AttendViceConsul = new System.Windows.Forms.ComboBox();
-            this.ApplicantSex = new System.Windows.Forms.CheckBox();
+            this.النوع = new System.Windows.Forms.CheckBox();
             this.label11 = new System.Windows.Forms.Label();
             this.التاريخ_الميلادي = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
-            this.IssuedSource = new System.Windows.Forms.TextBox();
+            this.مكان_الإصدار = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.DocNo = new System.Windows.Forms.TextBox();
+            this.رقم_الهوية = new System.Windows.Forms.TextBox();
             this.labeldoctype = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.AppTrueName = new System.Windows.Forms.TextBox();
             this.labelName = new System.Windows.Forms.Label();
             this.PanelFiles = new System.Windows.Forms.Panel();
             this.PanelMain = new System.Windows.Forms.Panel();
+            this.التاريخ_الميلادي_off = new System.Windows.Forms.TextBox();
             this.txtEditID2 = new System.Windows.Forms.TextBox();
             this.btnEditID = new System.Windows.Forms.Button();
             this.txtEditID1 = new System.Windows.Forms.TextBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.التاريخ_الميلادي_off = new System.Windows.Forms.TextBox();
             this.PanelFiles.SuspendLayout();
             this.PanelMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -445,19 +445,19 @@ namespace PersAhwal
             this.label21.TabIndex = 491;
             this.label21.Text = "طريقة تقديم الطلب:";
             // 
-            // DocType
+            // نوع_الهوية
             // 
-            this.DocType.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DocType.FormattingEnabled = true;
-            this.DocType.Items.AddRange(new object[] {
+            this.نوع_الهوية.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.نوع_الهوية.FormattingEnabled = true;
+            this.نوع_الهوية.Items.AddRange(new object[] {
             "جواز سفر",
             "رقم وطني"});
-            this.DocType.Location = new System.Drawing.Point(846, 104);
-            this.DocType.Name = "DocType";
-            this.DocType.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.DocType.Size = new System.Drawing.Size(266, 35);
-            this.DocType.TabIndex = 490;
-            this.DocType.Text = "جواز سفر";
+            this.نوع_الهوية.Location = new System.Drawing.Point(846, 104);
+            this.نوع_الهوية.Name = "نوع_الهوية";
+            this.نوع_الهوية.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.نوع_الهوية.Size = new System.Drawing.Size(266, 35);
+            this.نوع_الهوية.TabIndex = 490;
+            this.نوع_الهوية.Text = "جواز سفر";
             // 
             // label5
             // 
@@ -470,14 +470,15 @@ namespace PersAhwal
             this.label5.TabIndex = 489;
             this.label5.Text = "نوع اثبات الشخصية:";
             // 
-            // ApplicantIdocName
+            // مقدم_الطلب
             // 
-            this.ApplicantIdocName.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ApplicantIdocName.Location = new System.Drawing.Point(846, 63);
-            this.ApplicantIdocName.Name = "ApplicantIdocName";
-            this.ApplicantIdocName.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.ApplicantIdocName.Size = new System.Drawing.Size(266, 35);
-            this.ApplicantIdocName.TabIndex = 487;
+            this.مقدم_الطلب.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.مقدم_الطلب.Location = new System.Drawing.Point(846, 63);
+            this.مقدم_الطلب.Name = "مقدم_الطلب";
+            this.مقدم_الطلب.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.مقدم_الطلب.Size = new System.Drawing.Size(266, 35);
+            this.مقدم_الطلب.TabIndex = 487;
+            this.مقدم_الطلب.TextChanged += new System.EventHandler(this.مقدم_الطلب_TextChanged);
             // 
             // label2
             // 
@@ -567,18 +568,18 @@ namespace PersAhwal
             this.AttendViceConsul.Size = new System.Drawing.Size(248, 35);
             this.AttendViceConsul.TabIndex = 480;
             // 
-            // ApplicantSex
+            // النوع
             // 
-            this.ApplicantSex.AutoSize = true;
-            this.ApplicantSex.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ApplicantSex.Location = new System.Drawing.Point(1063, 149);
-            this.ApplicantSex.Name = "ApplicantSex";
-            this.ApplicantSex.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.ApplicantSex.Size = new System.Drawing.Size(49, 31);
-            this.ApplicantSex.TabIndex = 479;
-            this.ApplicantSex.Text = "ذكر";
-            this.ApplicantSex.UseVisualStyleBackColor = true;
-            this.ApplicantSex.CheckedChanged += new System.EventHandler(this.ApplicantSex_CheckedChanged_1);
+            this.النوع.AutoSize = true;
+            this.النوع.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.النوع.Location = new System.Drawing.Point(1063, 149);
+            this.النوع.Name = "النوع";
+            this.النوع.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.النوع.Size = new System.Drawing.Size(49, 31);
+            this.النوع.TabIndex = 479;
+            this.النوع.Text = "ذكر";
+            this.النوع.UseVisualStyleBackColor = true;
+            this.النوع.CheckedChanged += new System.EventHandler(this.ApplicantSex_CheckedChanged_1);
             // 
             // label11
             // 
@@ -613,14 +614,14 @@ namespace PersAhwal
             this.label12.TabIndex = 477;
             this.label12.Text = "التاريخ الميلادي:";
             // 
-            // IssuedSource
+            // مكان_الإصدار
             // 
-            this.IssuedSource.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IssuedSource.Location = new System.Drawing.Point(846, 222);
-            this.IssuedSource.Name = "IssuedSource";
-            this.IssuedSource.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.IssuedSource.Size = new System.Drawing.Size(266, 35);
-            this.IssuedSource.TabIndex = 474;
+            this.مكان_الإصدار.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.مكان_الإصدار.Location = new System.Drawing.Point(846, 222);
+            this.مكان_الإصدار.Name = "مكان_الإصدار";
+            this.مكان_الإصدار.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.مكان_الإصدار.Size = new System.Drawing.Size(266, 35);
+            this.مكان_الإصدار.TabIndex = 474;
             // 
             // label7
             // 
@@ -633,15 +634,15 @@ namespace PersAhwal
             this.label7.TabIndex = 475;
             this.label7.Text = "مكان الإصدار:";
             // 
-            // DocNo
+            // رقم_الهوية
             // 
-            this.DocNo.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DocNo.Location = new System.Drawing.Point(846, 181);
-            this.DocNo.Name = "DocNo";
-            this.DocNo.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.DocNo.Size = new System.Drawing.Size(266, 35);
-            this.DocNo.TabIndex = 472;
-            this.DocNo.Text = "P0";
+            this.رقم_الهوية.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.رقم_الهوية.Location = new System.Drawing.Point(846, 181);
+            this.رقم_الهوية.Name = "رقم_الهوية";
+            this.رقم_الهوية.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.رقم_الهوية.Size = new System.Drawing.Size(266, 35);
+            this.رقم_الهوية.TabIndex = 472;
+            this.رقم_الهوية.Text = "P0";
             // 
             // labeldoctype
             // 
@@ -719,15 +720,15 @@ namespace PersAhwal
             this.PanelMain.Controls.Add(this.labeldoctype);
             this.PanelMain.Controls.Add(this.document);
             this.PanelMain.Controls.Add(this.checkedViewed);
-            this.PanelMain.Controls.Add(this.DocNo);
+            this.PanelMain.Controls.Add(this.رقم_الهوية);
             this.PanelMain.Controls.Add(this.label7);
             this.PanelMain.Controls.Add(this.label24);
-            this.PanelMain.Controls.Add(this.IssuedSource);
+            this.PanelMain.Controls.Add(this.مكان_الإصدار);
             this.PanelMain.Controls.Add(this.Comment);
             this.PanelMain.Controls.Add(this.label12);
             this.PanelMain.Controls.Add(this.التاريخ_الميلادي);
             this.PanelMain.Controls.Add(this.label11);
-            this.PanelMain.Controls.Add(this.ApplicantSex);
+            this.PanelMain.Controls.Add(this.النوع);
             this.PanelMain.Controls.Add(this.التاريخ_الهجري);
             this.PanelMain.Controls.Add(this.PersonDesc);
             this.PanelMain.Controls.Add(this.label19);
@@ -738,11 +739,11 @@ namespace PersAhwal
             this.PanelMain.Controls.Add(this.mandoubLabel);
             this.PanelMain.Controls.Add(this.label2);
             this.PanelMain.Controls.Add(this.mandoubName);
-            this.PanelMain.Controls.Add(this.ApplicantIdocName);
+            this.PanelMain.Controls.Add(this.مقدم_الطلب);
             this.PanelMain.Controls.Add(this.AppType);
             this.PanelMain.Controls.Add(this.label5);
             this.PanelMain.Controls.Add(this.label21);
-            this.PanelMain.Controls.Add(this.DocType);
+            this.PanelMain.Controls.Add(this.نوع_الهوية);
             this.PanelMain.Controls.Add(this.btnSavePrint);
             this.PanelMain.Controls.Add(this.txtEditID1);
             this.PanelMain.Controls.Add(this.Iqrarid);
@@ -751,6 +752,17 @@ namespace PersAhwal
             this.PanelMain.Size = new System.Drawing.Size(1250, 481);
             this.PanelMain.TabIndex = 630;
             this.PanelMain.Visible = false;
+            // 
+            // التاريخ_الميلادي_off
+            // 
+            this.التاريخ_الميلادي_off.Enabled = false;
+            this.التاريخ_الميلادي_off.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.التاريخ_الميلادي_off.Location = new System.Drawing.Point(366, 359);
+            this.التاريخ_الميلادي_off.Name = "التاريخ_الميلادي_off";
+            this.التاريخ_الميلادي_off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.التاريخ_الميلادي_off.Size = new System.Drawing.Size(257, 35);
+            this.التاريخ_الميلادي_off.TabIndex = 853;
+            this.التاريخ_الميلادي_off.Visible = false;
             // 
             // txtEditID2
             // 
@@ -825,17 +837,6 @@ namespace PersAhwal
             this.dataGridView1.TabIndex = 631;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             // 
-            // التاريخ_الميلادي_off
-            // 
-            this.التاريخ_الميلادي_off.Enabled = false;
-            this.التاريخ_الميلادي_off.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.التاريخ_الميلادي_off.Location = new System.Drawing.Point(366, 359);
-            this.التاريخ_الميلادي_off.Name = "التاريخ_الميلادي_off";
-            this.التاريخ_الميلادي_off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.التاريخ_الميلادي_off.Size = new System.Drawing.Size(257, 35);
-            this.التاريخ_الميلادي_off.TabIndex = 853;
-            this.التاريخ_الميلادي_off.Visible = false;
-            // 
             // Form7
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -891,9 +892,9 @@ namespace PersAhwal
         private System.Windows.Forms.ComboBox mandoubName;
         private System.Windows.Forms.CheckBox AppType;
         private System.Windows.Forms.Label label21;
-        private System.Windows.Forms.ComboBox DocType;
+        private System.Windows.Forms.ComboBox نوع_الهوية;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox ApplicantIdocName;
+        private System.Windows.Forms.TextBox مقدم_الطلب;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox AppWrongName;
         private System.Windows.Forms.Label labelWrongName;
@@ -902,13 +903,13 @@ namespace PersAhwal
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.TextBox التاريخ_الهجري;
         private System.Windows.Forms.ComboBox AttendViceConsul;
-        private System.Windows.Forms.CheckBox ApplicantSex;
+        private System.Windows.Forms.CheckBox النوع;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox التاريخ_الميلادي;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.TextBox IssuedSource;
+        private System.Windows.Forms.TextBox مكان_الإصدار;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox DocNo;
+        private System.Windows.Forms.TextBox رقم_الهوية;
         private System.Windows.Forms.Label labeldoctype;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox AppTrueName;

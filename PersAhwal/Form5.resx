@@ -1323,174 +1323,6 @@
   <data name="&gt;&gt;label20.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="&gt;&gt;ThirdPartyDesc.Name" xml:space="preserve">
-    <value>ThirdPartyDesc</value>
-  </data>
-  <data name="&gt;&gt;ThirdPartyDesc.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;ThirdPartyDesc.Parent" xml:space="preserve">
-    <value>panel1</value>
-  </data>
-  <data name="&gt;&gt;ThirdPartyDesc.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;ThirdPartyDocType.Name" xml:space="preserve">
-    <value>ThirdPartyDocType</value>
-  </data>
-  <data name="&gt;&gt;ThirdPartyDocType.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;ThirdPartyDocType.Parent" xml:space="preserve">
-    <value>panel1</value>
-  </data>
-  <data name="&gt;&gt;ThirdPartyDocType.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;ThirdPartyDocNo.Name" xml:space="preserve">
-    <value>ThirdPartyDocNo</value>
-  </data>
-  <data name="&gt;&gt;ThirdPartyDocNo.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;ThirdPartyDocNo.Parent" xml:space="preserve">
-    <value>panel1</value>
-  </data>
-  <data name="&gt;&gt;ThirdPartyDocNo.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="&gt;&gt;label9.Name" xml:space="preserve">
-    <value>label9</value>
-  </data>
-  <data name="&gt;&gt;label9.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label9.Parent" xml:space="preserve">
-    <value>panel1</value>
-  </data>
-  <data name="&gt;&gt;label9.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;label14.Name" xml:space="preserve">
-    <value>label14</value>
-  </data>
-  <data name="&gt;&gt;label14.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label14.Parent" xml:space="preserve">
-    <value>panel1</value>
-  </data>
-  <data name="&gt;&gt;label14.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="&gt;&gt;label15.Name" xml:space="preserve">
-    <value>label15</value>
-  </data>
-  <data name="&gt;&gt;label15.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label15.Parent" xml:space="preserve">
-    <value>panel1</value>
-  </data>
-  <data name="&gt;&gt;label15.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="&gt;&gt;ThirdPartyDocIssueSource.Name" xml:space="preserve">
-    <value>ThirdPartyDocIssueSource</value>
-  </data>
-  <data name="&gt;&gt;ThirdPartyDocIssueSource.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;ThirdPartyDocIssueSource.Parent" xml:space="preserve">
-    <value>panel1</value>
-  </data>
-  <data name="&gt;&gt;ThirdPartyDocIssueSource.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
-  <data name="&gt;&gt;label16.Name" xml:space="preserve">
-    <value>label16</value>
-  </data>
-  <data name="&gt;&gt;label16.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label16.Parent" xml:space="preserve">
-    <value>panel1</value>
-  </data>
-  <data name="&gt;&gt;label16.ZOrder" xml:space="preserve">
-    <value>8</value>
-  </data>
-  <data name="&gt;&gt;AllFamilyMembers.Name" xml:space="preserve">
-    <value>AllFamilyMembers</value>
-  </data>
-  <data name="&gt;&gt;AllFamilyMembers.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;AllFamilyMembers.Parent" xml:space="preserve">
-    <value>panel1</value>
-  </data>
-  <data name="&gt;&gt;AllFamilyMembers.ZOrder" xml:space="preserve">
-    <value>9</value>
-  </data>
-  <data name="&gt;&gt;AddChildren.Name" xml:space="preserve">
-    <value>AddChildren</value>
-  </data>
-  <data name="&gt;&gt;AddChildren.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;AddChildren.Parent" xml:space="preserve">
-    <value>panel1</value>
-  </data>
-  <data name="&gt;&gt;AddChildren.ZOrder" xml:space="preserve">
-    <value>10</value>
-  </data>
-  <data name="&gt;&gt;ThirdPartyName.Name" xml:space="preserve">
-    <value>ThirdPartyName</value>
-  </data>
-  <data name="&gt;&gt;ThirdPartyName.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;ThirdPartyName.Parent" xml:space="preserve">
-    <value>panel1</value>
-  </data>
-  <data name="&gt;&gt;ThirdPartyName.ZOrder" xml:space="preserve">
-    <value>11</value>
-  </data>
-  <data name="&gt;&gt;label10.Name" xml:space="preserve">
-    <value>label10</value>
-  </data>
-  <data name="&gt;&gt;label10.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label10.Parent" xml:space="preserve">
-    <value>panel1</value>
-  </data>
-  <data name="&gt;&gt;label10.ZOrder" xml:space="preserve">
-    <value>12</value>
-  </data>
-  <data name="panel1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>-1, 61</value>
-  </data>
-  <data name="panel1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>427, 359</value>
-  </data>
-  <data name="panel1.TabIndex" type="System.Int32, mscorlib">
-    <value>477</value>
-  </data>
-  <data name="panel1.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="&gt;&gt;panel1.Name" xml:space="preserve">
-    <value>panel1</value>
-  </data>
-  <data name="&gt;&gt;panel1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;panel1.Parent" xml:space="preserve">
-    <value>mainpanel</value>
-  </data>
-  <data name="&gt;&gt;panel1.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
   <data name="ThirdPartyDesc.Font" type="System.Drawing.Font, System.Drawing">
     <value>Arabic Typesetting, 18pt</value>
   </data>
@@ -1905,40 +1737,64 @@
   <data name="&gt;&gt;label10.ZOrder" xml:space="preserve">
     <value>12</value>
   </data>
-  <data name="ApplicantSex.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
+  <data name="panel1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>-1, 61</value>
   </data>
-  <data name="ApplicantSex.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Arabic Typesetting, 18pt</value>
+  <data name="panel1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>427, 359</value>
   </data>
-  <data name="ApplicantSex.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
+  <data name="panel1.TabIndex" type="System.Int32, mscorlib">
+    <value>477</value>
   </data>
-  <data name="ApplicantSex.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1105, 159</value>
+  <data name="panel1.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
   </data>
-  <data name="ApplicantSex.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
-    <value>Yes</value>
+  <data name="&gt;&gt;panel1.Name" xml:space="preserve">
+    <value>panel1</value>
   </data>
-  <data name="ApplicantSex.Size" type="System.Drawing.Size, System.Drawing">
-    <value>49, 31</value>
+  <data name="&gt;&gt;panel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="ApplicantSex.TabIndex" type="System.Int32, mscorlib">
-    <value>478</value>
-  </data>
-  <data name="ApplicantSex.Text" xml:space="preserve">
-    <value>ذكر</value>
-  </data>
-  <data name="&gt;&gt;ApplicantSex.Name" xml:space="preserve">
-    <value>ApplicantSex</value>
-  </data>
-  <data name="&gt;&gt;ApplicantSex.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;ApplicantSex.Parent" xml:space="preserve">
+  <data name="&gt;&gt;panel1.Parent" xml:space="preserve">
     <value>mainpanel</value>
   </data>
-  <data name="&gt;&gt;ApplicantSex.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;panel1.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="النوع.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="النوع.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Arabic Typesetting, 18pt</value>
+  </data>
+  <data name="النوع.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="النوع.Location" type="System.Drawing.Point, System.Drawing">
+    <value>1105, 159</value>
+  </data>
+  <data name="النوع.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
+    <value>Yes</value>
+  </data>
+  <data name="النوع.Size" type="System.Drawing.Size, System.Drawing">
+    <value>49, 31</value>
+  </data>
+  <data name="النوع.TabIndex" type="System.Int32, mscorlib">
+    <value>478</value>
+  </data>
+  <data name="النوع.Text" xml:space="preserve">
+    <value>ذكر</value>
+  </data>
+  <data name="&gt;&gt;النوع.Name" xml:space="preserve">
+    <value>النوع</value>
+  </data>
+  <data name="&gt;&gt;النوع.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;النوع.Parent" xml:space="preserve">
+    <value>mainpanel</value>
+  </data>
+  <data name="&gt;&gt;النوع.ZOrder" xml:space="preserve">
     <value>28</value>
   </data>
   <data name="SponserCase.Font" type="System.Drawing.Font, System.Drawing">
@@ -2334,70 +2190,70 @@
   <data name="&gt;&gt;panel2.ZOrder" xml:space="preserve">
     <value>23</value>
   </data>
-  <data name="ApplicantIdocType.Font" type="System.Drawing.Font, System.Drawing">
+  <data name="نوع_الهوية.Font" type="System.Drawing.Font, System.Drawing">
     <value>Arabic Typesetting, 18pt</value>
   </data>
-  <data name="ApplicantIdocType.Items" xml:space="preserve">
+  <data name="نوع_الهوية.Items" xml:space="preserve">
     <value>جواز سفر</value>
   </data>
-  <data name="ApplicantIdocType.Items1" xml:space="preserve">
+  <data name="نوع_الهوية.Items1" xml:space="preserve">
     <value>اقامة</value>
   </data>
-  <data name="ApplicantIdocType.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="نوع_الهوية.Location" type="System.Drawing.Point, System.Drawing">
     <value>886, 195</value>
   </data>
-  <data name="ApplicantIdocType.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
+  <data name="نوع_الهوية.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
     <value>Yes</value>
   </data>
-  <data name="ApplicantIdocType.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="نوع_الهوية.Size" type="System.Drawing.Size, System.Drawing">
     <value>270, 35</value>
   </data>
-  <data name="ApplicantIdocType.TabIndex" type="System.Int32, mscorlib">
+  <data name="نوع_الهوية.TabIndex" type="System.Int32, mscorlib">
     <value>482</value>
   </data>
-  <data name="ApplicantIdocType.Text" xml:space="preserve">
+  <data name="نوع_الهوية.Text" xml:space="preserve">
     <value>جواز سفر</value>
   </data>
-  <data name="&gt;&gt;ApplicantIdocType.Name" xml:space="preserve">
-    <value>ApplicantIdocType</value>
+  <data name="&gt;&gt;نوع_الهوية.Name" xml:space="preserve">
+    <value>نوع_الهوية</value>
   </data>
-  <data name="&gt;&gt;ApplicantIdocType.Type" xml:space="preserve">
+  <data name="&gt;&gt;نوع_الهوية.Type" xml:space="preserve">
     <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;ApplicantIdocType.Parent" xml:space="preserve">
+  <data name="&gt;&gt;نوع_الهوية.Parent" xml:space="preserve">
     <value>mainpanel</value>
   </data>
-  <data name="&gt;&gt;ApplicantIdocType.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;نوع_الهوية.ZOrder" xml:space="preserve">
     <value>22</value>
   </data>
-  <data name="ApplicantIdocNo.Font" type="System.Drawing.Font, System.Drawing">
+  <data name="رقم_الهوية.Font" type="System.Drawing.Font, System.Drawing">
     <value>Arabic Typesetting, 18pt</value>
   </data>
-  <data name="ApplicantIdocNo.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="رقم_الهوية.Location" type="System.Drawing.Point, System.Drawing">
     <value>886, 238</value>
   </data>
-  <data name="ApplicantIdocNo.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
+  <data name="رقم_الهوية.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
     <value>No</value>
   </data>
-  <data name="ApplicantIdocNo.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="رقم_الهوية.Size" type="System.Drawing.Size, System.Drawing">
     <value>270, 35</value>
   </data>
-  <data name="ApplicantIdocNo.TabIndex" type="System.Int32, mscorlib">
+  <data name="رقم_الهوية.TabIndex" type="System.Int32, mscorlib">
     <value>480</value>
   </data>
-  <data name="ApplicantIdocNo.Text" xml:space="preserve">
+  <data name="رقم_الهوية.Text" xml:space="preserve">
     <value>P0</value>
   </data>
-  <data name="&gt;&gt;ApplicantIdocNo.Name" xml:space="preserve">
-    <value>ApplicantIdocNo</value>
+  <data name="&gt;&gt;رقم_الهوية.Name" xml:space="preserve">
+    <value>رقم_الهوية</value>
   </data>
-  <data name="&gt;&gt;ApplicantIdocNo.Type" xml:space="preserve">
+  <data name="&gt;&gt;رقم_الهوية.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;ApplicantIdocNo.Parent" xml:space="preserve">
+  <data name="&gt;&gt;رقم_الهوية.Parent" xml:space="preserve">
     <value>mainpanel</value>
   </data>
-  <data name="&gt;&gt;ApplicantIdocNo.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;رقم_الهوية.ZOrder" xml:space="preserve">
     <value>20</value>
   </data>
   <data name="AttendViceConsul.Font" type="System.Drawing.Font, System.Drawing">
@@ -2436,31 +2292,31 @@
   <data name="&gt;&gt;AttendViceConsul.ZOrder" xml:space="preserve">
     <value>18</value>
   </data>
-  <data name="IssuedSource.Font" type="System.Drawing.Font, System.Drawing">
+  <data name="مكان_الإصدار.Font" type="System.Drawing.Font, System.Drawing">
     <value>Arabic Typesetting, 18pt</value>
   </data>
-  <data name="IssuedSource.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="مكان_الإصدار.Location" type="System.Drawing.Point, System.Drawing">
     <value>886, 279</value>
   </data>
-  <data name="IssuedSource.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
+  <data name="مكان_الإصدار.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
     <value>Yes</value>
   </data>
-  <data name="IssuedSource.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="مكان_الإصدار.Size" type="System.Drawing.Size, System.Drawing">
     <value>270, 35</value>
   </data>
-  <data name="IssuedSource.TabIndex" type="System.Int32, mscorlib">
+  <data name="مكان_الإصدار.TabIndex" type="System.Int32, mscorlib">
     <value>467</value>
   </data>
-  <data name="&gt;&gt;IssuedSource.Name" xml:space="preserve">
-    <value>IssuedSource</value>
+  <data name="&gt;&gt;مكان_الإصدار.Name" xml:space="preserve">
+    <value>مكان_الإصدار</value>
   </data>
-  <data name="&gt;&gt;IssuedSource.Type" xml:space="preserve">
+  <data name="&gt;&gt;مكان_الإصدار.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;IssuedSource.Parent" xml:space="preserve">
+  <data name="&gt;&gt;مكان_الإصدار.Parent" xml:space="preserve">
     <value>mainpanel</value>
   </data>
-  <data name="&gt;&gt;IssuedSource.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;مكان_الإصدار.ZOrder" xml:space="preserve">
     <value>16</value>
   </data>
   <data name="label7.AutoSize" type="System.Boolean, mscorlib">
@@ -2535,31 +2391,31 @@
   <data name="&gt;&gt;label3.ZOrder" xml:space="preserve">
     <value>12</value>
   </data>
-  <data name="ApplicantName.Font" type="System.Drawing.Font, System.Drawing">
+  <data name="مقدم_الطلب.Font" type="System.Drawing.Font, System.Drawing">
     <value>Arabic Typesetting, 18pt</value>
   </data>
-  <data name="ApplicantName.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="مقدم_الطلب.Location" type="System.Drawing.Point, System.Drawing">
     <value>886, 116</value>
   </data>
-  <data name="ApplicantName.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
+  <data name="مقدم_الطلب.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
     <value>Yes</value>
   </data>
-  <data name="ApplicantName.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="مقدم_الطلب.Size" type="System.Drawing.Size, System.Drawing">
     <value>270, 35</value>
   </data>
-  <data name="ApplicantName.TabIndex" type="System.Int32, mscorlib">
+  <data name="مقدم_الطلب.TabIndex" type="System.Int32, mscorlib">
     <value>463</value>
   </data>
-  <data name="&gt;&gt;ApplicantName.Name" xml:space="preserve">
-    <value>ApplicantName</value>
+  <data name="&gt;&gt;مقدم_الطلب.Name" xml:space="preserve">
+    <value>مقدم_الطلب</value>
   </data>
-  <data name="&gt;&gt;ApplicantName.Type" xml:space="preserve">
+  <data name="&gt;&gt;مقدم_الطلب.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;ApplicantName.Parent" xml:space="preserve">
+  <data name="&gt;&gt;مقدم_الطلب.Parent" xml:space="preserve">
     <value>mainpanel</value>
   </data>
-  <data name="&gt;&gt;ApplicantName.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;مقدم_الطلب.ZOrder" xml:space="preserve">
     <value>10</value>
   </data>
   <data name="labelName.AutoSize" type="System.Boolean, mscorlib">

@@ -310,6 +310,10 @@ namespace PersAhwal
 
         private void button1_Click(object sender, EventArgs e)
         {
+             
+            
+            
+            
             string part4 = رقم_المعاملة.Text.Split('/')[4];
             string part1to3 = رقم_المعاملة.Text.Split('/')[0] + "/" + رقم_المعاملة.Text.Split('/')[1] + "/" + رقم_المعاملة.Text.Split('/')[2] + "/" + رقم_المعاملة.Text.Split('/')[3] + "/";
             //MessageBox.Show(part4);
@@ -355,7 +359,211 @@ namespace PersAhwal
                 colIDs[7] = "new";
                 addarchives(colIDs);
             }
+            addNewAppNameInfo1(اسم_الزوج);
+            addNewAppNameInfo2(اسم_الزوجة);
+            addNewAppNameInfo3(الشاهد_الاول, وثيقة_الشاهد_الاول);
+            addNewAppNameInfo3(الشاهد_الثاني, وثيقة_الشاهد_الثاني);
             this.Close();
+        }
+        private void addNewAppNameInfo1(TextBox textName)
+        {
+
+            string query = "insert into TableGenNames ([الاسم], رقم_الهوية,تاريخ_الميلاد,المهنة) values (@col1,@col2,@col3,@col4) ;SELECT @@IDENTITY as lastid";
+            string id = checkExist(textName.Text);
+            if (id != "0")
+            {
+                query = "update TableGenNames set [الاسم] =  @col1,[رقم_الهوية] = @col2,[تاريخ_الميلاد] = @col3,[المهنة] = @col4 where ID = " + id;
+                //MessageBox.Show(query);
+            }
+            SqlConnection sqlConnection = new SqlConnection(DataSource);
+            if (sqlConnection.State == ConnectionState.Closed)
+                sqlConnection.Open();
+
+            SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.Parameters.AddWithValue("@col1", اسم_الزوج.Text);
+            sqlCommand.Parameters.AddWithValue("@col2", جواز_الزوج.Text);
+            sqlCommand.Parameters.AddWithValue("@col3", تاريخ_الميلاد.Text);
+            sqlCommand.Parameters.AddWithValue("@col4", المهنة.Text);
+
+            var reader = sqlCommand.ExecuteReader();
+            if (reader.Read())
+            {
+                //MessageBox.Show(reader["lastid"].ToString());
+            }
+            try
+            {
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("addNewAppNameInfo");
+            }
+        }
+        
+        private void addNewAppNameInfo2(TextBox textName)
+        {
+
+            string query = "insert into TableGenNames ([الاسم], رقم_الهوية,تاريخ_الميلاد) values (@col1,@col2,@col3) ;SELECT @@IDENTITY as lastid";
+            string id = checkExist(textName.Text);
+            if (id != "0")
+            {
+                query = "update TableGenNames set [الاسم] =  @col1,[رقم_الهوية] = @col2,[تاريخ_الميلاد] = @col3 where ID = " + id;
+                //MessageBox.Show(query);
+            }
+            SqlConnection sqlConnection = new SqlConnection(DataSource);
+            if (sqlConnection.State == ConnectionState.Closed)
+                sqlConnection.Open();
+
+            SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.Parameters.AddWithValue("@col1", اسم_الزوجة.Text);
+            sqlCommand.Parameters.AddWithValue("@col2", جواز_الزوجة.Text);
+            sqlCommand.Parameters.AddWithValue("@col3", ميلاد_الزوجة.Text);
+
+            var reader = sqlCommand.ExecuteReader();
+            if (reader.Read())
+            {
+                //MessageBox.Show(reader["lastid"].ToString());
+            }
+            try
+            {
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("addNewAppNameInfo");
+            }
+        }
+        
+        private void addNewAppNameInfo3(TextBox textName,TextBox textDoc)
+        {
+
+            string query = "insert into TableGenNames ([الاسم], رقم_الهوية) values (@col1,@col2) ;SELECT @@IDENTITY as lastid";
+            string id = checkExist(textName.Text);
+            if (id != "0")
+            {
+                query = "update TableGenNames set [الاسم] =  @col1,[رقم_الهوية] = @col2 where ID = " + id;
+                //MessageBox.Show(query);
+            }
+            SqlConnection sqlConnection = new SqlConnection(DataSource);
+            if (sqlConnection.State == ConnectionState.Closed)
+                sqlConnection.Open();
+
+            SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.Parameters.AddWithValue("@col1", textName.Text);
+            sqlCommand.Parameters.AddWithValue("@col2", textDoc.Text);
+
+            var reader = sqlCommand.ExecuteReader();
+            if (reader.Read())
+            {
+                //MessageBox.Show(reader["lastid"].ToString());
+            }
+            try
+            {
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("addNewAppNameInfo");
+            }
+        }
+        public string checkExist(string name)
+        {
+            string id = "0";
+            string query = "SELECT ID FROM TableGenNames where الاسم like N'" + name + "%'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            foreach (DataRow row in dtbl.Rows)
+            {
+                id = row["ID"].ToString();
+            }
+            return id;
+        }
+        private bool checkGender(Panel panel, string controlType, string control2type)
+        {
+            int index = 0;
+            foreach (Control control in panel.Controls)
+            {
+                if (control.Name == controlType + index + ".")
+                {
+                    string gender = getGender(control.Text.Split(' ')[0]);
+                    foreach (Control control2 in panel.Controls)
+                    {
+                        if (control2.Name == control2type + index + ".")
+                        {
+                            if (gender != control2.Text)
+                            {
+                                var selectedOption = MessageBox.Show("هل تود تغيير إعدادات البرنامج الداخلية والمتابعة للصفحة التالية؟", "يرجى مراحعة جنس   " + control.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                                if (selectedOption == DialogResult.No)
+                                {
+                                    return false;
+                                }
+                                else if (selectedOption == DialogResult.Yes)
+                                {
+                                    updateGender(control2.Text, getSexIndex);
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                    index++;
+                }
+            }
+            return true;
+        }
+        string getSexIndex = "0";
+        public string getGender(string name)
+        {
+            string sex = "ذكر";
+            string query = "SELECT ID,النوع FROM TableGenGender where الاسم = N'" + name + "'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            foreach (DataRow row in dtbl.Rows)
+            {
+                getSexIndex = row["ID"].ToString();
+                sex = row["النوع"].ToString();
+            }
+            return sex;
+        }
+
+        private void updateGender(string newGender, string id)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                    SqlCommand sqlCmd = new SqlCommand("UPDATE TableGenGender SET النوع=N'" + newGender + "' WHERE ID=" + id, sqlCon);
+                    MessageBox.Show("UPDATE TableGenGender SET النوع=N'" + newGender + "' WHERE ID=" + id);
+                    sqlCmd.CommandType = CommandType.Text;
+                    sqlCmd.ExecuteNonQuery();
+                    sqlCon.Close();
+
+                }
+
+                catch (Exception ex)
+                {
+                    return;
+                }
+                finally
+                {
+                }
         }
         private void updateGenName(string name, string idDoc)
         {
@@ -493,16 +701,7 @@ namespace PersAhwal
             }
         }
 
-        private void طريقة_الإجراء_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (طريقة_الإجراء.SelectedIndex == 1)
-            {
-                labhusSideName.Visible = وكيل_الزوج.Visible = labhusSidePass.Visible = جواز_وكيل_الزوج.Visible = labhusSideIqama.Visible = إقامة_وكيل_الزوج.Visible = true;
-            }
-            else
-                labhusSideName.Visible = وكيل_الزوج.Visible = labhusSidePass.Visible = جواز_وكيل_الزوج.Visible = labhusSideIqama.Visible = إقامة_وكيل_الزوج.Visible = false;
-
-        }
+        
         string lastInput2 = "";
         private void ميلاد_الزوجة_TextChanged(object sender, EventArgs e)
         {
@@ -568,6 +767,226 @@ namespace PersAhwal
         {
             //MessageBox.Show(رقم_الوثيقة.Text);
 
+        }
+
+        private void PanelMain_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void FormDivorce_Load(object sender, EventArgs e)
+        {
+            autoCompleteTextBox1(اسم_الزوج, DataSource, "الاسم", "TableGenNames");
+            autoCompleteTextBox1(اسم_الزوجة, DataSource, "الاسم", "TableGenNames");
+            autoCompleteTextBox1(الشاهد_الاول, DataSource, "الاسم", "TableGenNames");
+            autoCompleteTextBox1(الشاهد_الثاني, DataSource, "الاسم", "TableGenNames");
+            autoCompleteTextBox(المهنة, DataSource, "jobs", "TableListCombo");
+        }
+        private void autoCompleteTextBox(TextBox textbox, string source, string comlumnName, string tableName)
+        {
+
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                saConn.Open();
+
+                string query = "select " + comlumnName + " from " + tableName;
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.ExecuteNonQuery();
+                DataTable Textboxtable = new DataTable();
+                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                dataAdapter.Fill(Textboxtable);
+                AutoCompleteStringCollection autoComplete = new AutoCompleteStringCollection();
+                bool newSrt = true;
+                foreach (DataRow dataRow in Textboxtable.Rows)
+                {
+                    if (!string.IsNullOrEmpty(dataRow[comlumnName].ToString()))
+                    {
+                        for (int x = 0; x < Textboxtable.Rows.Count; x++)
+                            if (dataRow[comlumnName].ToString().Equals(Textboxtable.Rows[x]))
+                                newSrt = false;
+
+                        if (newSrt) autoComplete.Add(dataRow[comlumnName].ToString());
+                    }
+                }
+                textbox.AutoCompleteMode = AutoCompleteMode.Suggest;
+                textbox.AutoCompleteSource = AutoCompleteSource.CustomSource;
+                textbox.AutoCompleteCustomSource = autoComplete;
+                saConn.Close();
+            }
+        }
+        private void autoCompleteTextBox1(TextBox textbox, string source, string comlumnName, string tableName)
+        {
+            textbox.Multiline = false;
+            //MessageBox.Show(textbox.Name);
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                if (saConn.State == ConnectionState.Closed)
+                    try
+                    {
+                        saConn.Open();
+                    }
+                    catch (Exception ex) { }
+
+                string query = "select " + comlumnName + " from " + tableName;
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.ExecuteNonQuery();
+                DataTable Textboxtable = new DataTable();
+                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                dataAdapter.Fill(Textboxtable);
+                AutoCompleteStringCollection autoComplete = new AutoCompleteStringCollection();
+                bool newSrt = true;
+                foreach (DataRow dataRow in Textboxtable.Rows)
+                {
+                    string text = dataRow[comlumnName].ToString().Trim();
+                    Console.WriteLine("autoCompleteTextBox " + text);
+                    autoComplete.Add(text);
+                }
+                textbox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+                textbox.AutoCompleteSource = AutoCompleteSource.CustomSource;
+                textbox.AutoCompleteCustomSource = autoComplete;
+                saConn.Close();
+            }
+        }
+
+        private void اسم_الزوج_TextChanged(object sender, EventArgs e)
+        {
+            getID(جواز_الزوج, تاريخ_الميلاد, المهنة, اسم_الزوج.Text);
+        }
+        bool gridFill = true;
+        public void getID(TextBox رقم_الهوية_1, TextBox تاريخ_الميلاد_1, TextBox المهنة_1, string name)
+        {
+            if (gridFill) return;
+            string query = "SELECT * FROM TableGenNames where الاسم = N'" + name + "'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex)
+            {
+                رقم_الهوية_1.Text = "P0";
+                المهنة_1.Text = "";
+                تاريخ_الميلاد_1.Text = "";
+                return;
+            }
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+
+            رقم_الهوية_1.Text = "P0";
+            المهنة_1.Text = "";
+            تاريخ_الميلاد_1.Text = "";
+            foreach (DataRow row in dtbl.Rows)
+            {
+                رقم_الهوية_1.Text = row["رقم_الهوية"].ToString();
+                المهنة_1.Text = row["المهنة"].ToString();
+                تاريخ_الميلاد_1.Text = row["تاريخ_الميلاد"].ToString();
+                return;
+            }
+            //MessageBox.Show(رقم_الهوية_1.Text);
+        }
+        public void getID(TextBox رقم_الهوية_1, TextBox تاريخ_الميلاد_1, string name)
+        {
+            if (gridFill) return;
+            string query = "SELECT * FROM TableGenNames where الاسم = N'" + name + "'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex)
+            {
+                رقم_الهوية_1.Text = "P0";
+                تاريخ_الميلاد_1.Text = "";
+                return;
+            }
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+
+            رقم_الهوية_1.Text = "P0";
+            تاريخ_الميلاد_1.Text = "";
+            foreach (DataRow row in dtbl.Rows)
+            {
+                رقم_الهوية_1.Text = row["رقم_الهوية"].ToString();
+                تاريخ_الميلاد_1.Text = row["تاريخ_الميلاد"].ToString();
+                return;
+            }
+            //MessageBox.Show(رقم_الهوية_1.Text);
+        }
+        public void getID(TextBox رقم_الهوية_1, string name)
+        {
+            if (gridFill) return;
+            string query = "SELECT * FROM TableGenNames where الاسم = N'" + name + "'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex)
+            {
+                رقم_الهوية_1.Text = "P0";
+                return;
+            }
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+
+            رقم_الهوية_1.Text = "P0";
+            foreach (DataRow row in dtbl.Rows)
+            {
+                رقم_الهوية_1.Text = row["رقم_الهوية"].ToString();
+                return;
+            }
+            //MessageBox.Show(رقم_الهوية_1.Text);
+        }
+
+
+        private void اسم_الزوجة_TextChanged(object sender, EventArgs e)
+        {
+            getID(جواز_الزوجة, ميلاد_الزوجة, اسم_الزوجة.Text);
+        }
+
+        private void الشاهد_الاول_TextChanged(object sender, EventArgs e)
+        {
+            getID(وثيقة_الشاهد_الاول, الشاهد_الاول.Text, "رقم_الهوية", "P0");
+        }
+
+        private void الشاهد_الثاني_TextChanged(object sender, EventArgs e)
+        {
+            getID(وثيقة_الشاهد_الثاني, الشاهد_الثاني.Text, "رقم_الهوية", "P0");
+        }
+        public void getID(TextBox textTo, string name, string controlType, string def)
+        {
+            if (gridFill) return;
+            string query = "SELECT " + controlType + " FROM TableGenNames where الاسم like N'" + name + "%'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            int index = 0;
+            textTo.Text = "";
+            foreach (DataRow row in dtbl.Rows)
+            {
+                if (index == 0)
+                    textTo.Text = row[controlType].ToString();
+                else if (!textTo.Text.Contains(row[controlType].ToString()))
+                    textTo.Text = textTo.Text + "_" + row[controlType].ToString();
+                index++;
+            }
+            int AllIndex = textTo.Text.Split('_').Length;
+            textTo.Text = textTo.Text.Split('_')[AllIndex - 1];
+            if (index == 0)
+                textTo.Text = def;
         }
     }
 }

@@ -31,8 +31,8 @@ namespace PersAhwal
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form5));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.label2 = new System.Windows.Forms.Label();
@@ -84,7 +84,7 @@ namespace PersAhwal
             this.AddChildren = new System.Windows.Forms.Button();
             this.ThirdPartyName = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
-            this.ApplicantSex = new System.Windows.Forms.CheckBox();
+            this.النوع = new System.Windows.Forms.CheckBox();
             this.SponserCase = new System.Windows.Forms.ComboBox();
             this.labeldoctype = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -97,24 +97,24 @@ namespace PersAhwal
             this.label8 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.ApplicantIdocType = new System.Windows.Forms.ComboBox();
-            this.ApplicantIdocNo = new System.Windows.Forms.TextBox();
+            this.نوع_الهوية = new System.Windows.Forms.ComboBox();
+            this.رقم_الهوية = new System.Windows.Forms.TextBox();
             this.AttendViceConsul = new System.Windows.Forms.ComboBox();
-            this.IssuedSource = new System.Windows.Forms.TextBox();
+            this.مكان_الإصدار = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.ApplicantName = new System.Windows.Forms.TextBox();
+            this.مقدم_الطلب = new System.Windows.Forms.TextBox();
             this.labelName = new System.Windows.Forms.Label();
             this.timer3 = new System.Windows.Forms.Timer(this.components);
             this.timer4 = new System.Windows.Forms.Timer(this.components);
             this.mainpanel = new System.Windows.Forms.Panel();
+            this.التاريخ_الميلادي_off = new System.Windows.Forms.TextBox();
             this.txtEditID2 = new System.Windows.Forms.TextBox();
             this.btnEditID = new System.Windows.Forms.Button();
             this.txtEditID1 = new System.Windows.Forms.TextBox();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.PanelFiles = new System.Windows.Forms.Panel();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.التاريخ_الميلادي_off = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.mainpanel.SuspendLayout();
@@ -453,18 +453,19 @@ namespace PersAhwal
             resources.ApplyResources(this.ThirdPartyName, "ThirdPartyName");
             this.ThirdPartyName.HideSelection = false;
             this.ThirdPartyName.Name = "ThirdPartyName";
+            this.ThirdPartyName.TextChanged += new System.EventHandler(this.ThirdPartyName_TextChanged);
             // 
             // label10
             // 
             resources.ApplyResources(this.label10, "label10");
             this.label10.Name = "label10";
             // 
-            // ApplicantSex
+            // النوع
             // 
-            resources.ApplyResources(this.ApplicantSex, "ApplicantSex");
-            this.ApplicantSex.Name = "ApplicantSex";
-            this.ApplicantSex.UseVisualStyleBackColor = true;
-            this.ApplicantSex.CheckedChanged += new System.EventHandler(this.ApplicantSex_CheckedChanged_1);
+            resources.ApplyResources(this.النوع, "النوع");
+            this.النوع.Name = "النوع";
+            this.النوع.UseVisualStyleBackColor = true;
+            this.النوع.CheckedChanged += new System.EventHandler(this.ApplicantSex_CheckedChanged_1);
             // 
             // SponserCase
             // 
@@ -521,6 +522,7 @@ namespace PersAhwal
             // 
             resources.ApplyResources(this.SponcerName, "SponcerName");
             this.SponcerName.Name = "SponcerName";
+            this.SponcerName.TextChanged += new System.EventHandler(this.SponcerName_TextChanged);
             // 
             // label8
             // 
@@ -548,19 +550,19 @@ namespace PersAhwal
             resources.ApplyResources(this.panel2, "panel2");
             this.panel2.Name = "panel2";
             // 
-            // ApplicantIdocType
+            // نوع_الهوية
             // 
-            resources.ApplyResources(this.ApplicantIdocType, "ApplicantIdocType");
-            this.ApplicantIdocType.FormattingEnabled = true;
-            this.ApplicantIdocType.Items.AddRange(new object[] {
-            resources.GetString("ApplicantIdocType.Items"),
-            resources.GetString("ApplicantIdocType.Items1")});
-            this.ApplicantIdocType.Name = "ApplicantIdocType";
+            resources.ApplyResources(this.نوع_الهوية, "نوع_الهوية");
+            this.نوع_الهوية.FormattingEnabled = true;
+            this.نوع_الهوية.Items.AddRange(new object[] {
+            resources.GetString("نوع_الهوية.Items"),
+            resources.GetString("نوع_الهوية.Items1")});
+            this.نوع_الهوية.Name = "نوع_الهوية";
             // 
-            // ApplicantIdocNo
+            // رقم_الهوية
             // 
-            resources.ApplyResources(this.ApplicantIdocNo, "ApplicantIdocNo");
-            this.ApplicantIdocNo.Name = "ApplicantIdocNo";
+            resources.ApplyResources(this.رقم_الهوية, "رقم_الهوية");
+            this.رقم_الهوية.Name = "رقم_الهوية";
             // 
             // AttendViceConsul
             // 
@@ -572,10 +574,10 @@ namespace PersAhwal
             resources.GetString("AttendViceConsul.Items2")});
             this.AttendViceConsul.Name = "AttendViceConsul";
             // 
-            // IssuedSource
+            // مكان_الإصدار
             // 
-            resources.ApplyResources(this.IssuedSource, "IssuedSource");
-            this.IssuedSource.Name = "IssuedSource";
+            resources.ApplyResources(this.مكان_الإصدار, "مكان_الإصدار");
+            this.مكان_الإصدار.Name = "مكان_الإصدار";
             // 
             // label7
             // 
@@ -587,10 +589,11 @@ namespace PersAhwal
             resources.ApplyResources(this.label3, "label3");
             this.label3.Name = "label3";
             // 
-            // ApplicantName
+            // مقدم_الطلب
             // 
-            resources.ApplyResources(this.ApplicantName, "ApplicantName");
-            this.ApplicantName.Name = "ApplicantName";
+            resources.ApplyResources(this.مقدم_الطلب, "مقدم_الطلب");
+            this.مقدم_الطلب.Name = "مقدم_الطلب";
+            this.مقدم_الطلب.TextChanged += new System.EventHandler(this.مقدم_الطلب_TextChanged);
             // 
             // labelName
             // 
@@ -609,25 +612,25 @@ namespace PersAhwal
             this.mainpanel.Controls.Add(this.label26);
             this.mainpanel.Controls.Add(this.labelName);
             this.mainpanel.Controls.Add(this.Employee);
-            this.mainpanel.Controls.Add(this.ApplicantName);
+            this.mainpanel.Controls.Add(this.مقدم_الطلب);
             this.mainpanel.Controls.Add(this.label24);
             this.mainpanel.Controls.Add(this.label3);
             this.mainpanel.Controls.Add(this.Comment);
             this.mainpanel.Controls.Add(this.label7);
             this.mainpanel.Controls.Add(this.btnprintOnly);
-            this.mainpanel.Controls.Add(this.IssuedSource);
+            this.mainpanel.Controls.Add(this.مكان_الإصدار);
             this.mainpanel.Controls.Add(this.SaveOnly);
             this.mainpanel.Controls.Add(this.AttendViceConsul);
             this.mainpanel.Controls.Add(this.btnSavePrint);
-            this.mainpanel.Controls.Add(this.ApplicantIdocNo);
+            this.mainpanel.Controls.Add(this.رقم_الهوية);
             this.mainpanel.Controls.Add(this.ResetAll);
-            this.mainpanel.Controls.Add(this.ApplicantIdocType);
+            this.mainpanel.Controls.Add(this.نوع_الهوية);
             this.mainpanel.Controls.Add(this.panel2);
             this.mainpanel.Controls.Add(this.label18);
             this.mainpanel.Controls.Add(this.label4);
             this.mainpanel.Controls.Add(this.labeldoctype);
             this.mainpanel.Controls.Add(this.SponserCase);
-            this.mainpanel.Controls.Add(this.ApplicantSex);
+            this.mainpanel.Controls.Add(this.النوع);
             this.mainpanel.Controls.Add(this.label19);
             this.mainpanel.Controls.Add(this.label22);
             this.mainpanel.Controls.Add(this.Iqrarid);
@@ -644,6 +647,11 @@ namespace PersAhwal
             this.mainpanel.Controls.Add(this.label21);
             resources.ApplyResources(this.mainpanel, "mainpanel");
             this.mainpanel.Name = "mainpanel";
+            // 
+            // التاريخ_الميلادي_off
+            // 
+            resources.ApplyResources(this.التاريخ_الميلادي_off, "التاريخ_الميلادي_off");
+            this.التاريخ_الميلادي_off.Name = "التاريخ_الميلادي_off";
             // 
             // txtEditID2
             // 
@@ -684,23 +692,23 @@ namespace PersAhwal
             // 
             this.dataGridView1.AllowUserToDeleteRows = false;
             resources.ApplyResources(this.dataGridView1, "dataGridView1");
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle8;
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
             this.dataGridView1.RowTemplate.DefaultCellStyle.BackColor = System.Drawing.Color.White;
@@ -711,11 +719,6 @@ namespace PersAhwal
             this.dataGridView1.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dataGridView1.RowTemplate.Height = 30;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
-            // 
-            // التاريخ_الميلادي_off
-            // 
-            resources.ApplyResources(this.التاريخ_الميلادي_off, "التاريخ_الميلادي_off");
-            this.التاريخ_الميلادي_off.Name = "التاريخ_الميلادي_off";
             // 
             // Form5
             // 
@@ -796,7 +799,7 @@ namespace PersAhwal
         private System.Windows.Forms.Button AddChildren;
         private System.Windows.Forms.TextBox ThirdPartyName;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.CheckBox ApplicantSex;
+        private System.Windows.Forms.CheckBox النوع;
         private System.Windows.Forms.ComboBox SponserCase;
         private System.Windows.Forms.Label labeldoctype;
         private System.Windows.Forms.Label label4;
@@ -809,13 +812,13 @@ namespace PersAhwal
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.ComboBox ApplicantIdocType;
-        private System.Windows.Forms.TextBox ApplicantIdocNo;
+        private System.Windows.Forms.ComboBox نوع_الهوية;
+        private System.Windows.Forms.TextBox رقم_الهوية;
         private System.Windows.Forms.ComboBox AttendViceConsul;
-        private System.Windows.Forms.TextBox IssuedSource;
+        private System.Windows.Forms.TextBox مكان_الإصدار;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox ApplicantName;
+        private System.Windows.Forms.TextBox مقدم_الطلب;
         private System.Windows.Forms.Label labelName;
         private System.Windows.Forms.Timer timer3;
         private System.Windows.Forms.Timer timer4;

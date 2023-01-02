@@ -20,6 +20,7 @@ namespace PersAhwal
         static int i = 0;
         public static string[] DaughterMother = new string[10];
         public static string VisaLine = "";
+        bool gridFill = false;
         int VisaIndex = 0;
         public static string[] titleEngFamily = new string[10];
         AutoCompleteStringCollection autoComplete;
@@ -176,10 +177,10 @@ namespace PersAhwal
             Rowindex--;
             ApplicantID = Convert.ToInt32(dataGridView1.Rows[Rowindex].Cells[0].Value.ToString());
             NextRelId = dataGridView1.Rows[Rowindex].Cells[1].Value.ToString();
-            ApplicantName1.Text = dataGridView1.Rows[Rowindex].Cells[2].Value.ToString();
+            مقدم_الطلب_1.Text = dataGridView1.Rows[Rowindex].Cells[2].Value.ToString();
             language.Text = dataGridView1.Rows[Rowindex].Cells[3].Value.ToString();
-            ApplicantIdoc1.Text = dataGridView1.Rows[Rowindex].Cells[5].Value.ToString();
-            IssuedSource1.Text = dataGridView1.Rows[Rowindex].Cells[6].Value.ToString();
+            رقم_الهوية_1.Text = dataGridView1.Rows[Rowindex].Cells[5].Value.ToString();
+            مكان_الإصدار_1.Text = dataGridView1.Rows[Rowindex].Cells[6].Value.ToString();
             string IssueDate = dataGridView1.Rows[Rowindex].Cells[7].Value.ToString();
             string[] YearMonthDay = IssueDate.Split('/');
             //yy1.Text = YearMonthDay[2];
@@ -261,6 +262,12 @@ namespace PersAhwal
 
         private void Save2DataBase(bool newData)
         {
+            addNewAppNameInfo(مقدم_الطلب_1, رقم_الهوية_1, مكان_الإصدار_1);
+            if (مقدم_الطلب_2.Text != "") addNewAppNameInfo(مقدم_الطلب_2, رقم_الهوية_2, مكان_الإصدار_2);
+            if (مقدم_الطلب_3.Text != "") addNewAppNameInfo(مقدم_الطلب_3, رقم_الهوية_3, مكان_الإصدار_3);
+            if (مقدم_الطلب_4.Text != "") addNewAppNameInfo(مقدم_الطلب_4, رقم_الهوية_4, مكان_الإصدار_4);
+            if (مقدم_الطلب_5.Text != "") addNewAppNameInfo(مقدم_الطلب_5, رقم_الهوية_5, مكان_الإصدار_5);
+
             SqlConnection sqlCon = new SqlConnection(DataSource);
             string[] strLines = VisaLine.Split('*');
             string[] str = strLines[0].Split('-');
@@ -392,7 +399,7 @@ namespace PersAhwal
                 title5.Visible = true;
                 
                 autoCompleteTextBox(textBox1, DataSource, "ForiegnCountries", "TableListCombo");
-                autoCompleteTextBox(IssuedSource1, DataSource, "KSAIssureSource", "TableListCombo");
+                autoCompleteTextBox(مكان_الإصدار_1, DataSource, "KSAIssureSource", "TableListCombo");
                 System.Globalization.CultureInfo TypeOfLanguage = new System.Globalization.CultureInfo("en-US");
                 InputLanguage.CurrentInputLanguage = InputLanguage.FromCulture(TypeOfLanguage);
                 dataGridView3.Columns[0].Visible = false;
@@ -411,7 +418,7 @@ namespace PersAhwal
                 title4.Visible = false;
                 title5.Visible = false;
                 autoCompleteTextBox(textBox1, DataSource, "ArabCountries", "TableListCombo");
-                autoCompleteTextBox(IssuedSource1, DataSource, "SDNIssueSource", "TableListCombo");
+                autoCompleteTextBox(مكان_الإصدار_1, DataSource, "SDNIssueSource", "TableListCombo");
                 System.Globalization.CultureInfo TypeOfLanguage = new System.Globalization.CultureInfo("ar-SA");
                 InputLanguage.CurrentInputLanguage = InputLanguage.FromCulture(TypeOfLanguage);
                 dataGridView3.Columns[0].Visible = true;
@@ -531,6 +538,12 @@ namespace PersAhwal
         private void Form4_Load(object sender, EventArgs e)
         {
             FillDataGridAdd();
+            autoCompleteTextBox1(مقدم_الطلب_1, DataSource, "الاسم", "TableGenNames");
+            autoCompleteTextBox1(مقدم_الطلب_2, DataSource, "الاسم", "TableGenNames");
+            autoCompleteTextBox1(مقدم_الطلب_3, DataSource, "الاسم", "TableGenNames");
+            autoCompleteTextBox1(مقدم_الطلب_4, DataSource, "الاسم", "TableGenNames");
+            autoCompleteTextBox1(مقدم_الطلب_5, DataSource, "الاسم", "TableGenNames");
+
             fileComboBox(mandoubName, DataSource, "MandoubNames", "TableListCombo");
             //autoCompleteTextBox(countryNonArab);
             //autoCompleteTextBox(countryArab);
@@ -551,9 +564,44 @@ namespace PersAhwal
             //sqlCon.Close();
             fileComboBox(AttendViceConsul, DataSource, "ArabicAttendVC", "TableListCombo");
 
-            autoCompleteTextBox(IssuedSource1, DataSource, "SDNIssueSource", "TableListCombo");
+            autoCompleteTextBox(مكان_الإصدار_1, DataSource, "SDNIssueSource", "TableListCombo");
             //autoCompleteTextBox(textBox1, DataSource, "ArabCountries", "TableListCombo");
             AttendViceConsul.SelectedIndex = ATVC;
+        }
+
+        private void autoCompleteTextBox1(TextBox textbox, string source, string comlumnName, string tableName)
+        {
+            textbox.Multiline = false;
+            //MessageBox.Show(textbox.Name);
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                if (saConn.State == ConnectionState.Closed)
+                    try
+                    {
+                        saConn.Open();
+                    }
+                    catch (Exception ex) { }
+
+                string query = "select " + comlumnName + " from " + tableName;
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.ExecuteNonQuery();
+                DataTable Textboxtable = new DataTable();
+                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                dataAdapter.Fill(Textboxtable);
+                AutoCompleteStringCollection autoComplete = new AutoCompleteStringCollection();
+                bool newSrt = true;
+                foreach (DataRow dataRow in Textboxtable.Rows)
+                {
+                    string text = dataRow[comlumnName].ToString().Trim();
+                    Console.WriteLine("autoCompleteTextBox " + text);
+                    autoComplete.Add(text);
+                }
+                textbox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+                textbox.AutoCompleteSource = AutoCompleteSource.CustomSource;
+                textbox.AutoCompleteCustomSource = autoComplete;
+                saConn.Close();
+            }
+
         }
         private void autoCompleteTextBox(TextBox textbox, string source, string comlumnName, string tableName)
         {
@@ -660,15 +708,15 @@ namespace PersAhwal
             التاريخ_الميلادي.Text = DateTime.Now.ToString("dd-MM-yyyy"); language.Enabled = true;
             VisaIndex = 0;
             VisaLine = "";
-            ApplicantName1.Text = IssuedSource1.Text = "";
+            مقدم_الطلب_1.Text = مكان_الإصدار_1.Text = "";
             AttendViceConsul.SelectedIndex = 2;
-            ApplicantIdoc1.Text = "P0";yy1.Text = "";
+            رقم_الهوية_1.Text = "P0";yy1.Text = "";
 
             language.Text = "العربية";
 
             TravPurpose.SelectedIndex = 0;
             EditSave = false;
-            ApplicantIdoc1.Text = "P0";
+            رقم_الهوية_1.Text = "P0";
             txtCountry.Text = "";
             language.CheckState = CheckState.Checked;
 
@@ -810,6 +858,13 @@ namespace PersAhwal
 
         private void btnprintOnly_Click(object sender, EventArgs e)
         {
+            
+            addNewAppNameInfo(مقدم_الطلب_1, رقم_الهوية_1, مكان_الإصدار_1);
+            if(مقدم_الطلب_2.Text != "") addNewAppNameInfo(مقدم_الطلب_2, رقم_الهوية_2, مكان_الإصدار_2);
+            if(مقدم_الطلب_3.Text != "") addNewAppNameInfo(مقدم_الطلب_3, رقم_الهوية_3, مكان_الإصدار_3);
+            if(مقدم_الطلب_4.Text != "") addNewAppNameInfo(مقدم_الطلب_4, رقم_الهوية_4, مكان_الإصدار_4);
+            if(مقدم_الطلب_5.Text != "") addNewAppNameInfo(مقدم_الطلب_5, رقم_الهوية_5, مكان_الإصدار_5);
+            
             if (VisaAppId.Text == "")
             {
                 MessageBox.Show("رقم خطاب خاطئ");
@@ -876,7 +931,7 @@ namespace PersAhwal
 
         private void button1_Click_2(object sender, EventArgs e)
         {
-            if (ApplicantName1.Text == "") return;
+            if (مقدم_الطلب_1.Text == "") return;
             AddData(true);
         }
 
@@ -889,39 +944,39 @@ namespace PersAhwal
             if (language.Text == "العربية")
                 title = sex1.Text;
             else title = title1.Text;
-            VisaLine = language.Text + "-" + title + "-" + ApplicantName1.Text + "-" + ApplicantIdoc1.Text + "-" + IssuedSource1.Text + "-" + dd1.Text + "/" + mm1.Text + "/" + yy1.Text + "-" + txtCountry.Text + "-" + TravPurpose.Text;
+            VisaLine = language.Text + "-" + title + "-" + مقدم_الطلب_1.Text + "-" + رقم_الهوية_1.Text + "-" + مكان_الإصدار_1.Text + "-" + dd1.Text + "/" + mm1.Text + "/" + yy1.Text + "-" + txtCountry.Text + "-" + TravPurpose.Text;
             VisaIndex = 1;
             if (language.Text == "العربية")
                 title = sex2.Text;
             else title = title2.Text;
-            if (ApplicantName2.Text != "")
+            if (مقدم_الطلب_2.Text != "")
             {
-                VisaLine = VisaLine + "*" + language.Text + "-" + title + "-" + ApplicantName2.Text + "-" + ApplicantIdoc2.Text + "-" + IssuedSource2.Text + "-" + dd2.Text + "/" + mm2.Text + "/" + yy2.Text + "-" + txtCountry.Text + "-" + TravPurpose.Text;
+                VisaLine = VisaLine + "*" + language.Text + "-" + title + "-" + مقدم_الطلب_2.Text + "-" + رقم_الهوية_2.Text + "-" + مكان_الإصدار_2.Text + "-" + dd2.Text + "/" + mm2.Text + "/" + yy2.Text + "-" + txtCountry.Text + "-" + TravPurpose.Text;
                 VisaIndex = 2;
             }
 
             if (language.Text == "العربية")
                 title = sex3.Text;
             else title = title3.Text;
-            if (ApplicantName2.Text != "" && ApplicantName3.Text != "")
+            if (مقدم_الطلب_2.Text != "" && مقدم_الطلب_3.Text != "")
             {
-                VisaLine = VisaLine + "*" + language.Text + "-" + title + "-" + ApplicantName3.Text + "-" + ApplicantIdoc3.Text + "-" + IssuedSource3.Text + "-" + dd3.Text + "/" + mm3.Text + "/" + yy3.Text + "-" + txtCountry.Text + "-" + TravPurpose.Text;
+                VisaLine = VisaLine + "*" + language.Text + "-" + title + "-" + مقدم_الطلب_3.Text + "-" + رقم_الهوية_3.Text + "-" + مكان_الإصدار_3.Text + "-" + dd3.Text + "/" + mm3.Text + "/" + yy3.Text + "-" + txtCountry.Text + "-" + TravPurpose.Text;
                 VisaIndex = 3;
             }
             if (language.Text == "العربية")
                 title = sex4.Text;
             else title = title4.Text;
-            if (ApplicantName2.Text != "" && ApplicantName3.Text != ""&& ApplicantName4.Text != "")
+            if (مقدم_الطلب_2.Text != "" && مقدم_الطلب_3.Text != ""&& مقدم_الطلب_4.Text != "")
             {
-                VisaLine = VisaLine + "*" + language.Text + "-" + title + "-" + ApplicantName4.Text + "-" + ApplicantIdoc4.Text + "-" + IssuedSource4.Text + "-" + dd4.Text + "/" + mm4.Text + "/" + yy4.Text + "-" + txtCountry.Text + "-" + TravPurpose.Text;
+                VisaLine = VisaLine + "*" + language.Text + "-" + title + "-" + مقدم_الطلب_4.Text + "-" + رقم_الهوية_4.Text + "-" + مكان_الإصدار_4.Text + "-" + dd4.Text + "/" + mm4.Text + "/" + yy4.Text + "-" + txtCountry.Text + "-" + TravPurpose.Text;
                 VisaIndex = 4;
             }
             if (language.Text == "العربية")
                 title = sex5.Text;
             else title = title5.Text;
-            if (ApplicantName2.Text != "" && ApplicantName3.Text != "" && ApplicantName4.Text != "" && ApplicantName5.Text != "")
+            if (مقدم_الطلب_2.Text != "" && مقدم_الطلب_3.Text != "" && مقدم_الطلب_4.Text != "" && مقدم_الطلب_5.Text != "")
             {
-                VisaLine = VisaLine + "*" + language.Text + "-" + title + "-" + ApplicantName5.Text + "-" + ApplicantIdoc5.Text + "-" + IssuedSource5.Text + "-" + dd5.Text + "/" + mm5.Text + "/" + yy5.Text + "-" + txtCountry.Text + "-" + TravPurpose.Text;
+                VisaLine = VisaLine + "*" + language.Text + "-" + title + "-" + مقدم_الطلب_5.Text + "-" + رقم_الهوية_5.Text + "-" + مكان_الإصدار_5.Text + "-" + dd5.Text + "/" + mm5.Text + "/" + yy5.Text + "-" + txtCountry.Text + "-" + TravPurpose.Text;
 
                 VisaIndex = 5;
             }
@@ -961,9 +1016,9 @@ namespace PersAhwal
                 txtCountry.Text = strLine[6];
             }
 
-            ApplicantName1.Text = strLine[2];
-            ApplicantIdoc1.Text = strLine[3];
-            IssuedSource1.Text = strLine[4];
+            مقدم_الطلب_1.Text = strLine[2];
+            رقم_الهوية_1.Text = strLine[3];
+            مكان_الإصدار_1.Text = strLine[4];
             string[] YearMonthDay = strLine[5].Split('/');
             yy1.Text = YearMonthDay[2];
             dd1.Text = YearMonthDay[0];
@@ -1051,6 +1106,12 @@ namespace PersAhwal
 
         private void SaveOnly_Click(object sender, EventArgs e)
         {
+            //if (!checkGender(PanelMain, "مقدم_الطلب", "النوع"))
+            //{
+            //    return;
+            //}
+            //else addNewAppNameInfo(مقدم_الطلب_1); 
+            
             if (VisaAppId.Text == "")
             {
                 MessageBox.Show("رقم خطاب خاطئ");
@@ -1066,6 +1127,135 @@ namespace PersAhwal
             
         }
 
+        private void addNewAppNameInfo(TextBox مقدم_الطلب, TextBox رقم_الهوية, TextBox مكان_الإصدار)
+        {
+
+            string query = "insert into TableGenNames ([الاسم], رقم_الهوية,نوع_الهوية,مكان_الإصدار) values (@col1,@col2,@col6,@col7) ;SELECT @@IDENTITY as lastid";
+            string id = checkExist(مقدم_الطلب.Text);
+            if (id != "0")
+            {
+                query = "update TableGenNames set [الاسم] =  @col1,[رقم_الهوية] = @col2,نوع_الهوية = @col6,مكان_الإصدار = @col7 where ID = " + id;
+                //MessageBox.Show(query);
+            }
+            SqlConnection sqlConnection = new SqlConnection(DataSource);
+            if (sqlConnection.State == ConnectionState.Closed)
+                sqlConnection.Open();
+
+            SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.Parameters.AddWithValue("@col1", مقدم_الطلب.Text);
+            sqlCommand.Parameters.AddWithValue("@col2", رقم_الهوية.Text);            
+            sqlCommand.Parameters.AddWithValue("@col6", "جواز سفر");
+            sqlCommand.Parameters.AddWithValue("@col7", مكان_الإصدار.Text);
+
+            var reader = sqlCommand.ExecuteReader();
+            if (reader.Read())
+            {
+                //MessageBox.Show(reader["lastid"].ToString());
+            }
+            try
+            {
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("addNewAppNameInfo");
+            }
+        }
+        private bool checkGender(Panel panel, string controlType, string control2type)
+        {
+            int index = 0;
+            foreach (Control control in panel.Controls)
+            {
+                if (control.Name == controlType + index + ".")
+                {
+                    string gender = getGender(control.Text.Split(' ')[0]);
+                    foreach (Control control2 in panel.Controls)
+                    {
+                        if (control2.Name == control2type + index + ".")
+                        {
+                            if (gender != control2.Text)
+                            {
+                                var selectedOption = MessageBox.Show("هل تود تغيير إعدادات البرنامج الداخلية والمتابعة للصفحة التالية؟", "يرجى مراحعة جنس   " + control.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                                if (selectedOption == DialogResult.No)
+                                {
+                                    return false;
+                                }
+                                else if (selectedOption == DialogResult.Yes)
+                                {
+                                    updateGender(control2.Text, getSexIndex);
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                    index++;
+                }
+            }
+            return true;
+        }
+        string getSexIndex = "0";
+        public string getGender(string name)
+        {
+            string sex = "ذكر";
+            string query = "SELECT ID,النوع FROM TableGenGender where الاسم = N'" + name + "'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            foreach (DataRow row in dtbl.Rows)
+            {
+                getSexIndex = row["ID"].ToString();
+                sex = row["النوع"].ToString();
+            }
+            return sex;
+        }
+
+        private void updateGender(string newGender, string id)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                    SqlCommand sqlCmd = new SqlCommand("UPDATE TableGenGender SET النوع=N'" + newGender + "' WHERE ID=" + id, sqlCon);
+                    MessageBox.Show("UPDATE TableGenGender SET النوع=N'" + newGender + "' WHERE ID=" + id);
+                    sqlCmd.CommandType = CommandType.Text;
+                    sqlCmd.ExecuteNonQuery();
+                    sqlCon.Close();
+
+                }
+
+                catch (Exception ex)
+                {
+                    return;
+                }
+                finally
+                {
+                }
+        }
+        public string checkExist(string name)
+        {
+            string id = "0";
+            string query = "SELECT ID FROM TableGenNames where الاسم like N'" + name + "%'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            foreach (DataRow row in dtbl.Rows)
+            {
+                id = row["ID"].ToString();
+            }
+            return id;
+        }
         private void dataGridView1_Click(object sender, EventArgs e)
         {
             
@@ -1121,6 +1311,7 @@ namespace PersAhwal
         {
             if (dataGridView1.CurrentRow.Index != -1)
             {
+                gridFill = true;
                 PanelMain.Visible = true;
                 dataGridView1.Visible = false;
                 colIDs[1] = dataGridView1.CurrentRow.Cells[0].Value.ToString();
@@ -1143,16 +1334,18 @@ namespace PersAhwal
                     //OpenFileDoc(Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value.ToString()), 1);
                     FillDatafromGenArch("data1", colIDs[1], "TableVisaApp");
                     if (Jobposition.Contains("قنصل")) deleteRow.Visible = true;
+                    gridFill = false;
                     return;
                 }
+                gridFill = false;
                 colIDs[7] = "old";
                 rowIndexTodelete = ApplicantID = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value.ToString());
                 if (Jobposition.Contains("قنصل")) deleteRow.Visible = true;
                 NextRelId = VisaAppId.Text = dataGridView1.CurrentRow.Cells[1].Value.ToString();
-                ApplicantName1.Text = dataGridView1.CurrentRow.Cells[2].Value.ToString();
+                مقدم_الطلب_1.Text = dataGridView1.CurrentRow.Cells[2].Value.ToString();
                 language.Text = dataGridView1.CurrentRow.Cells[3].Value.ToString();
-                ApplicantIdoc1.Text = dataGridView1.CurrentRow.Cells[5].Value.ToString();
-                IssuedSource1.Text = dataGridView1.CurrentRow.Cells[6].Value.ToString();
+                رقم_الهوية_1.Text = dataGridView1.CurrentRow.Cells[5].Value.ToString();
+                مكان_الإصدار_1.Text = dataGridView1.CurrentRow.Cells[6].Value.ToString();
                 string IssueDate = dataGridView1.CurrentRow.Cells[7].Value.ToString();
 
                 string[] YearMonthDay = IssueDate.Split('/');
@@ -1222,9 +1415,9 @@ namespace PersAhwal
                 }
                 TravPurpose.Text = strList[0].Split('-')[7];
                 textBox3.Text = strList[0].Split('-')[5];
-                ApplicantName1.Text = strList[0].Split('-')[2];
-                ApplicantIdoc1.Text = strList[0].Split('-')[3];
-                IssuedSource1.Text = strList[0].Split('-')[4];
+                مقدم_الطلب_1.Text = strList[0].Split('-')[2];
+                رقم_الهوية_1.Text = strList[0].Split('-')[3];
+                مكان_الإصدار_1.Text = strList[0].Split('-')[4];
 
                 yy1.Text = textBox3.Text.Split('/')[2];
                 //MessageBox.Show(strList[0].Split('-')[5].Split('/')[2]);
@@ -1238,16 +1431,16 @@ namespace PersAhwal
                     //الانجليزية - Miss - HUYAM SAIFELDIN IBRAHIM MOHAMEDALI - P08295472 - JEDDAH - 28 / 08 / 2021 - the Republic of Turkey - زيارة عائلية
                     if (VisaLine.Split('*').Length == 2)
                         {
-                            ApplicantName1.Text = strList[0].Split('-')[2];
-                            ApplicantIdoc1.Text = strList[0].Split('-')[3];
-                            IssuedSource1.Text = strList[0].Split('-')[4];
+                            مقدم_الطلب_1.Text = strList[0].Split('-')[2];
+                            رقم_الهوية_1.Text = strList[0].Split('-')[3];
+                            مكان_الإصدار_1.Text = strList[0].Split('-')[4];
                             yy1.Text = strList[0].Split('-')[5].Split('/')[2];
                             dd1.Text = strList[0].Split('-')[5].Split('/')[1];
                             mm1.Text = strList[0].Split('-')[5].Split('/')[0];
 
-                            ApplicantName2.Text = strList[1].Split('-')[2];
-                            ApplicantIdoc2.Text = strList[1].Split('-')[3];
-                            IssuedSource2.Text = strList[1].Split('-')[4];
+                            مقدم_الطلب_2.Text = strList[1].Split('-')[2];
+                            رقم_الهوية_2.Text = strList[1].Split('-')[3];
+                            مكان_الإصدار_2.Text = strList[1].Split('-')[4];
                             yy2.Text = strList[1].Split('-')[5].Split('/')[2];
                             dd2.Text = strList[1].Split('-')[5].Split('/')[1];
                             mm2.Text = strList[1].Split('-')[5].Split('/')[0];
@@ -1255,23 +1448,23 @@ namespace PersAhwal
 
                         if (VisaLine.Split('*').Length == 3)
                         {
-                            ApplicantName1.Text = strList[0].Split('-')[2];
-                            ApplicantIdoc1.Text = strList[0].Split('-')[3];
-                            IssuedSource1.Text = strList[0].Split('-')[4];
+                            مقدم_الطلب_1.Text = strList[0].Split('-')[2];
+                            رقم_الهوية_1.Text = strList[0].Split('-')[3];
+                            مكان_الإصدار_1.Text = strList[0].Split('-')[4];
                             yy1.Text = strList[0].Split('-')[5].Split('/')[2];
                             dd1.Text = strList[0].Split('-')[5].Split('/')[1];
                             mm1.Text = strList[0].Split('-')[5].Split('/')[0];
 
-                            ApplicantName2.Text = strList[1].Split('-')[2];
-                            ApplicantIdoc2.Text = strList[1].Split('-')[3];
-                            IssuedSource2.Text = strList[1].Split('-')[4];
+                            مقدم_الطلب_2.Text = strList[1].Split('-')[2];
+                            رقم_الهوية_2.Text = strList[1].Split('-')[3];
+                            مكان_الإصدار_2.Text = strList[1].Split('-')[4];
                             yy2.Text = strList[1].Split('-')[5].Split('/')[2];
                             dd2.Text = strList[1].Split('-')[5].Split('/')[1];
                             mm2.Text = strList[1].Split('-')[5].Split('/')[0];
 
-                            ApplicantName3.Text = strList[2].Split('-')[2];
-                            ApplicantIdoc3.Text = strList[2].Split('-')[3];
-                            IssuedSource3.Text = strList[2].Split('-')[4];
+                            مقدم_الطلب_3.Text = strList[2].Split('-')[2];
+                            رقم_الهوية_3.Text = strList[2].Split('-')[3];
+                            مكان_الإصدار_3.Text = strList[2].Split('-')[4];
                             yy3.Text = strList[2].Split('-')[5].Split('/')[2];
                             dd3.Text = strList[2].Split('-')[5].Split('/')[1];
                             mm3.Text = strList[2].Split('-')[5].Split('/')[0];
@@ -1279,30 +1472,30 @@ namespace PersAhwal
 
                         if (VisaLine.Split('*').Length == 4)
                         {
-                            ApplicantName1.Text = strList[0].Split('-')[2];
-                            ApplicantIdoc1.Text = strList[0].Split('-')[3];
-                            IssuedSource1.Text = strList[0].Split('-')[4];
+                            مقدم_الطلب_1.Text = strList[0].Split('-')[2];
+                            رقم_الهوية_1.Text = strList[0].Split('-')[3];
+                            مكان_الإصدار_1.Text = strList[0].Split('-')[4];
                             yy1.Text = strList[0].Split('-')[5].Split('/')[2];
                             dd1.Text = strList[0].Split('-')[5].Split('/')[1];
                             mm1.Text = strList[0].Split('-')[5].Split('/')[0];
 
-                            ApplicantName2.Text = strList[1].Split('-')[2];
-                            ApplicantIdoc2.Text = strList[1].Split('-')[3];
-                            IssuedSource2.Text = strList[1].Split('-')[4];
+                            مقدم_الطلب_2.Text = strList[1].Split('-')[2];
+                            رقم_الهوية_2.Text = strList[1].Split('-')[3];
+                            مكان_الإصدار_2.Text = strList[1].Split('-')[4];
                             yy2.Text = strList[1].Split('-')[5].Split('/')[2];
                             dd2.Text = strList[1].Split('-')[5].Split('/')[1];
                             mm2.Text = strList[1].Split('-')[5].Split('/')[0];
 
-                            ApplicantName3.Text = strList[2].Split('-')[2];
-                            ApplicantIdoc3.Text = strList[2].Split('-')[3];
-                            IssuedSource3.Text = strList[2].Split('-')[4];
+                            مقدم_الطلب_3.Text = strList[2].Split('-')[2];
+                            رقم_الهوية_3.Text = strList[2].Split('-')[3];
+                            مكان_الإصدار_3.Text = strList[2].Split('-')[4];
                             yy3.Text = strList[2].Split('-')[5].Split('/')[2];
                             dd3.Text = strList[2].Split('-')[5].Split('/')[1];
                             mm3.Text = strList[2].Split('-')[5].Split('/')[0];
 
-                            ApplicantName4.Text = strList[3].Split('-')[2];
-                            ApplicantIdoc4.Text = strList[3].Split('-')[3];
-                            IssuedSource4.Text = strList[3].Split('-')[4];
+                            مقدم_الطلب_4.Text = strList[3].Split('-')[2];
+                            رقم_الهوية_4.Text = strList[3].Split('-')[3];
+                            مكان_الإصدار_4.Text = strList[3].Split('-')[4];
                             yy4.Text = strList[3].Split('-')[5].Split('/')[2];
                             dd4.Text = strList[3].Split('-')[5].Split('/')[1];
                             mm4.Text = strList[3].Split('-')[5].Split('/')[0];
@@ -1310,37 +1503,37 @@ namespace PersAhwal
 
                         if (VisaLine.Split('*').Length == 5)
                         {
-                            ApplicantName1.Text = strList[0].Split('-')[2];
-                            ApplicantIdoc1.Text = strList[0].Split('-')[3];
-                            IssuedSource1.Text = strList[0].Split('-')[4];
+                            مقدم_الطلب_1.Text = strList[0].Split('-')[2];
+                            رقم_الهوية_1.Text = strList[0].Split('-')[3];
+                            مكان_الإصدار_1.Text = strList[0].Split('-')[4];
                             yy1.Text = strList[0].Split('-')[5].Split('/')[2];
                             dd1.Text = strList[0].Split('-')[5].Split('/')[1];
                             mm1.Text = strList[0].Split('-')[5].Split('/')[0];
 
-                            ApplicantName2.Text = strList[1].Split('-')[2];
-                            ApplicantIdoc2.Text = strList[1].Split('-')[3];
-                            IssuedSource2.Text = strList[1].Split('-')[4];
+                            مقدم_الطلب_2.Text = strList[1].Split('-')[2];
+                            رقم_الهوية_2.Text = strList[1].Split('-')[3];
+                            مكان_الإصدار_2.Text = strList[1].Split('-')[4];
                             yy2.Text = strList[1].Split('-')[5].Split('/')[2];
                             dd2.Text = strList[1].Split('-')[5].Split('/')[1];
                             mm2.Text = strList[1].Split('-')[5].Split('/')[0];
 
-                            ApplicantName3.Text = strList[2].Split('-')[2];
-                            ApplicantIdoc3.Text = strList[2].Split('-')[3];
-                            IssuedSource3.Text = strList[2].Split('-')[4];
+                            مقدم_الطلب_3.Text = strList[2].Split('-')[2];
+                            رقم_الهوية_3.Text = strList[2].Split('-')[3];
+                            مكان_الإصدار_3.Text = strList[2].Split('-')[4];
                             yy3.Text = strList[2].Split('-')[5].Split('/')[2];
                             dd3.Text = strList[2].Split('-')[5].Split('/')[1];
                             mm3.Text = strList[2].Split('-')[5].Split('/')[0];
 
-                            ApplicantName4.Text = strList[3].Split('-')[2];
-                            ApplicantIdoc4.Text = strList[3].Split('-')[3];
-                            IssuedSource4.Text = strList[3].Split('-')[4];
+                            مقدم_الطلب_4.Text = strList[3].Split('-')[2];
+                            رقم_الهوية_4.Text = strList[3].Split('-')[3];
+                            مكان_الإصدار_4.Text = strList[3].Split('-')[4];
                             yy4.Text = strList[3].Split('-')[5].Split('/')[2];
                             dd4.Text = strList[3].Split('-')[5].Split('/')[1];
                             mm4.Text = strList[3].Split('-')[5].Split('/')[0];
 
-                            ApplicantName5.Text = strList[4].Split('-')[2];
-                            ApplicantIdoc5.Text = strList[4].Split('-')[3];
-                            IssuedSource5.Text = strList[4].Split('-')[4];
+                            مقدم_الطلب_5.Text = strList[4].Split('-')[2];
+                            رقم_الهوية_5.Text = strList[4].Split('-')[3];
+                            مكان_الإصدار_5.Text = strList[4].Split('-')[4];
                             yy5.Text = strList[4].Split('-')[5].Split('/')[2];
                             dd5.Text = strList[4].Split('-')[5].Split('/')[1];
                             mm5.Text = strList[4].Split('-')[5].Split('/')[0];
@@ -1395,6 +1588,7 @@ namespace PersAhwal
                 SaveOnly.Visible = true;
                 btnSavePrint.Text = "حفظ";
                 btnSavePrint.Visible = false;
+                gridFill = true;
             }
         }
 
@@ -1605,11 +1799,11 @@ namespace PersAhwal
 
         private void pictureBox13_Click(object sender, EventArgs e)
         {
-            ApplicantName1.Text = "";
-            ApplicantIdoc1.Text = "";
+            مقدم_الطلب_1.Text = "";
+            رقم_الهوية_1.Text = "";
             title1.Text = "";
             sex1.Text = "";
-            IssuedSource1.Text = "";
+            مكان_الإصدار_1.Text = "";
             dd1.Text = "يوم";
             mm1.Text = "شهر";
             yy1.Text = "عام";
@@ -1617,11 +1811,11 @@ namespace PersAhwal
 
         private void pictureBox4_Click(object sender, EventArgs e)
         {
-            ApplicantName2.Text = "";
-            ApplicantIdoc2.Text = "";
+            مقدم_الطلب_2.Text = "";
+            رقم_الهوية_2.Text = "";
             title2.Text = "";
             sex2.Text = "";
-            IssuedSource2.Text = "";
+            مكان_الإصدار_2.Text = "";
             dd2.Text = "يوم";
             mm2.Text = "شهر";
             yy2.Text = "عام";
@@ -1629,11 +1823,11 @@ namespace PersAhwal
 
         private void pictureBox5_Click(object sender, EventArgs e)
         {
-            ApplicantName3.Text = "";
-            ApplicantIdoc3.Text = "";
+            مقدم_الطلب_3.Text = "";
+            رقم_الهوية_3.Text = "";
             title3.Text = "";
             sex3.Text = "";
-            IssuedSource3.Text = "";
+            مكان_الإصدار_3.Text = "";
             dd3.Text = "يوم";
             mm3.Text = "شهر";
             yy3.Text = "عام";
@@ -1641,11 +1835,11 @@ namespace PersAhwal
 
         private void pictureBox6_Click(object sender, EventArgs e)
         {
-            ApplicantName4.Text = "";
-            ApplicantIdoc4.Text = "";
+            مقدم_الطلب_4.Text = "";
+            رقم_الهوية_4.Text = "";
             title4.Text = "";
             sex4.Text = "";
-            IssuedSource4.Text = "";
+            مكان_الإصدار_4.Text = "";
             dd4.Text = "يوم";
             mm4.Text = "شهر";
             yy4.Text = "عام";
@@ -1653,11 +1847,11 @@ namespace PersAhwal
 
         private void pictureBox7_Click(object sender, EventArgs e)
         {
-            ApplicantName5.Text = "";
-            ApplicantIdoc5.Text = "";
+            مقدم_الطلب_5.Text = "";
+            رقم_الهوية_5.Text = "";
             title5.Text = "";
             sex5.Text = "";
-            IssuedSource5.Text = "";
+            مكان_الإصدار_5.Text = "";
             dd5.Text = "يوم";
             mm5.Text = "شهر";
             yy5.Text = "عام";
@@ -1716,7 +1910,7 @@ namespace PersAhwal
 
 
             string ActiveCopy;
-            ActiveCopy = FilesPathOut + ApplicantName1.Text + ReportName + ".docx";
+            ActiveCopy = FilesPathOut + مقدم_الطلب_1.Text + ReportName + ".docx";
             
 
             System.IO.File.Copy(route, ActiveCopy);
@@ -1911,8 +2105,8 @@ namespace PersAhwal
 
             //oBDoc.Bookmarks.Add("MarkAuthorization", ref rangeAuthorization);
 
-            string docxouput = FilesPathOut + ApplicantName1.Text + DateTime.Now.ToString("ssmm") + ".docx";
-            string pdfouput = FilesPathOut + ApplicantName1.Text + DateTime.Now.ToString("ssmm") + ".pdf";
+            string docxouput = FilesPathOut + مقدم_الطلب_1.Text + DateTime.Now.ToString("ssmm") + ".docx";
+            string pdfouput = FilesPathOut + مقدم_الطلب_1.Text + DateTime.Now.ToString("ssmm") + ".pdf";
             oBDoc.SaveAs2(docxouput);
             oBDoc.ExportAsFixedFormat(pdfouput, Word.WdExportFormat.wdExportFormatPDF);
             oBDoc.Close(false, oBMiss);
@@ -1972,6 +2166,55 @@ namespace PersAhwal
         private void التاريخ_الهجري_TextChanged(object sender, EventArgs e)
         {
             //التاريخ_الميلادي_off.Text = التاريخ_الميلادي.Text.Split('-')[1] + " - " + التاريخ_الميلادي.Text.Split('-')[0] + " - " + التاريخ_الميلادي.Text.Split('-')[2];
+        }
+
+        private void مقدم_الطلب_1_TextChanged(object sender, EventArgs e)
+        {
+            getID(رقم_الهوية_1, مكان_الإصدار_1, مقدم_الطلب_1.Text);
+        }
+
+        public void getID(TextBox رقم_الهوية_1 , TextBox مكان_الإصدار_1, string name)
+        {
+            if (gridFill) {
+                //MessageBox.Show("show"); 
+                return; }
+            string query = "SELECT * FROM TableGenNames where الاسم like N'" + name + "%'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+
+            رقم_الهوية_1.Text = "P0";            
+            مكان_الإصدار_1.Text = "";
+            
+            foreach (DataRow row in dtbl.Rows)
+            {
+                رقم_الهوية_1.Text = row["رقم_الهوية"].ToString();
+                مكان_الإصدار_1.Text = row["مكان_الإصدار"].ToString();            
+            }
+        }
+
+        private void مقدم_الطلب_2_TextChanged(object sender, EventArgs e)
+        {
+            getID(رقم_الهوية_2, مكان_الإصدار_2, مقدم_الطلب_2.Text);
+        }
+
+        private void مقدم_الطلب_3_TextChanged(object sender, EventArgs e)
+        {
+            getID(رقم_الهوية_3, مكان_الإصدار_3, مقدم_الطلب_3.Text);
+        }
+
+        private void مقدم_الطلب_4_TextChanged(object sender, EventArgs e)
+        {
+            getID(رقم_الهوية_4, مكان_الإصدار_4, مقدم_الطلب_4.Text);
+        }
+
+        private void مقدم_الطلب_5_TextChanged(object sender, EventArgs e)
+        {
+            getID(رقم_الهوية_5, مكان_الإصدار_5, مقدم_الطلب_5.Text);
         }
 
         private void addarchives(string[] text)

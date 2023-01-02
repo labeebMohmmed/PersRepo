@@ -83,6 +83,7 @@ namespace PersAhwal
                 المأذون.SelectedIndex = AtVCIndex;
             else المأذون.SelectedIndex = 0;
             طريقة_الطلب.SelectedIndex = 0;
+            طريقة_الإجراء.SelectedIndex = 0;
             اسم_المندوب.Text = "";
             definColumn(DataSource);
         }
@@ -262,7 +263,7 @@ namespace PersAhwal
             SqlConnection sqlCon = new SqlConnection(dataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();            
-            SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableMerrageDoc", sqlCon);
+            SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableMerrageDoc order by ID desc", sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtblMain = new DataTable();
             sqlDa.Fill(dtblMain);
@@ -292,19 +293,21 @@ namespace PersAhwal
                     }
                     
                 }
+                gridFill = false;
                 if (dataGridView1.CurrentRow.Cells["اسم_الزوج"].Value.ToString() == "")
                 {
                     newData = true;
                     FillDatafromGenArch("data1", genIDNo.ToString(), "TableMerrageDoc");
                 }
-                    AddEdit = false;
+                
+                AddEdit = false;
                 labDescribed.Visible = dataGridView1.Visible = false;
                 PanelMain.Visible = true;
                 backgroundWorker1.RunWorkerAsync();
             }
-            if (رقم_الوثيقة.Text != "" && رقم_الوثيقة.Text != "بدون") 
-                رقم_الوثيقة.Enabled = false;
-            else رقم_الوثيقة.Enabled = true;
+            //if (رقم_الوثيقة.Text != "" && رقم_الوثيقة.Text != "بدون") 
+            //    رقم_الوثيقة.Enabled = false;
+            //else رقم_الوثيقة.Enabled = true;
             
         }
 
@@ -391,8 +394,11 @@ namespace PersAhwal
         private void button1_Click(object sender, EventArgs e)
         {            
             string part1to3 = رقم_المعاملة.Text.Split('/')[0] + "/" + رقم_المعاملة.Text.Split('/')[1] + "/" + رقم_المعاملة.Text.Split('/')[2] + "/" + رقم_المعاملة.Text.Split('/')[3] + "/";
-            if (رقم_الوثيقة.Text != "" && رقم_الوثيقة.Text != "بدون")
-                رقم_المعاملة.Text = part1to3 + رقم_الوثيقة.Text; 
+            رقم_المعاملة.Text = part1to3 + رقم_الوثيقة.Text;
+            addNewAppNameInfo1(اسم_الزوج);
+            addNewAppNameInfo2(اسم_الزوجة);
+            addNewAppNameInfo3(الشاهد_الاول, وثيقة_الشاهد_الاول);
+            addNewAppNameInfo3(الشاهد_الثاني, وثيقة_الشاهد_الثاني);
             if (!ready()) return;
             SqlConnection sqlConnection = new SqlConnection(DataSource);
             if (sqlConnection.State == ConnectionState.Closed)
@@ -432,11 +438,137 @@ namespace PersAhwal
                 colIDs[7] = "new";
                 addarchives(colIDs);
             }
+            fillPreDoc();
             fillDocFileAppInfo();
             fillPrintDocx();
+            
             this.Close();
         }
+        private void addNewAppNameInfo1(TextBox textName)
+        {
 
+            string query = "insert into TableGenNames ([الاسم], رقم_الهوية,تاريخ_الميلاد,المهنة) values (@col1,@col2,@col3,@col4) ;SELECT @@IDENTITY as lastid";
+            string id = checkExist(textName.Text);
+            if (id != "0")
+            {
+                query = "update TableGenNames set [الاسم] =  @col1,[رقم_الهوية] = @col2,[تاريخ_الميلاد] = @col3,[المهنة] = @col4 where ID = " + id;
+                //MessageBox.Show(query);
+            }
+            SqlConnection sqlConnection = new SqlConnection(DataSource);
+            if (sqlConnection.State == ConnectionState.Closed)
+                sqlConnection.Open();
+
+            SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.Parameters.AddWithValue("@col1", اسم_الزوج.Text);
+            sqlCommand.Parameters.AddWithValue("@col2", جواز_الزوج.Text);
+            sqlCommand.Parameters.AddWithValue("@col3", تاريخ_الميلاد.Text);
+            sqlCommand.Parameters.AddWithValue("@col4", المهنة.Text);
+
+            var reader = sqlCommand.ExecuteReader();
+            if (reader.Read())
+            {
+                MessageBox.Show(reader["lastid"].ToString());
+            }
+            try
+            {
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("addNewAppNameInfo");
+            }
+        }
+
+        private void addNewAppNameInfo2(TextBox textName)
+        {
+
+            string query = "insert into TableGenNames ([الاسم], رقم_الهوية,تاريخ_الميلاد) values (@col1,@col2,@col3) ;SELECT @@IDENTITY as lastid";
+            string id = checkExist(textName.Text);
+            if (id != "0")
+            {
+                query = "update TableGenNames set [الاسم] =  @col1,[رقم_الهوية] = @col2,[تاريخ_الميلاد] = @col3 where ID = " + id;
+                //MessageBox.Show(query);
+            }
+            SqlConnection sqlConnection = new SqlConnection(DataSource);
+            if (sqlConnection.State == ConnectionState.Closed)
+                sqlConnection.Open();
+
+            SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.Parameters.AddWithValue("@col1", اسم_الزوجة.Text);
+            sqlCommand.Parameters.AddWithValue("@col2", جواز_الزوجة.Text);
+            sqlCommand.Parameters.AddWithValue("@col3", ميلاد_الزوجة.Text);
+
+            var reader = sqlCommand.ExecuteReader();
+            if (reader.Read())
+            {
+                //MessageBox.Show(reader["lastid"].ToString());
+            }
+            try
+            {
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("addNewAppNameInfo");
+            }
+        }
+
+        private void addNewAppNameInfo3(TextBox textName, TextBox textDoc)
+        {
+
+            string query = "insert into TableGenNames ([الاسم], رقم_الهوية) values (@col1,@col2) ;SELECT @@IDENTITY as lastid";
+            string id = checkExist(textName.Text);
+            if (id != "0")
+            {
+                query = "update TableGenNames set [الاسم] =  @col1,[رقم_الهوية] = @col2 where ID = " + id;
+                //MessageBox.Show(query);
+            }
+            SqlConnection sqlConnection = new SqlConnection(DataSource);
+            if (sqlConnection.State == ConnectionState.Closed)
+                sqlConnection.Open();
+
+            SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.Parameters.AddWithValue("@col1", textName.Text);
+            sqlCommand.Parameters.AddWithValue("@col2", textDoc.Text);
+
+            var reader = sqlCommand.ExecuteReader();
+            if (reader.Read())
+            {
+                //MessageBox.Show(reader["lastid"].ToString());
+            }
+            try
+            {
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("addNewAppNameInfo");
+            }
+        }
+
+        public string checkExist(string name)
+        {
+            string id = "0";
+            string query = "SELECT ID FROM TableGenNames where الاسم like N'" + name + "%'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            foreach (DataRow row in dtbl.Rows)
+            {
+                id = row["ID"].ToString();
+            }
+            return id;
+        }
         private void fillPrintDocx( )
         {
             string pdfFile = localCopy_off.Replace("docx", "pdf");
@@ -475,14 +607,18 @@ namespace PersAhwal
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
-            string query = "update TableGeneralArch set رقم_معاملة_القسم=N'" + name + "' where رقم_المرجع = '" + idDoc + "' and docTable=N'TableMerrageDoc'";
-            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
-            sqlCmd.CommandType = CommandType.Text;
-            sqlCmd.ExecuteNonQuery();
-            sqlCon.Close();
+                try
+                {
+                    sqlCon.Open();
+                    string query = "update TableGeneralArch set رقم_معاملة_القسم=N'" + name + "' where رقم_المرجع = '" + idDoc + "' and docTable=N'TableMerrageDoc'";
+                    SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+                    if (sqlCon.State == ConnectionState.Closed)
+                        sqlCon.Open();
+                    sqlCmd.CommandType = CommandType.Text;
+                    sqlCmd.ExecuteNonQuery();
+                    sqlCon.Close();
+                }
+                catch (Exception ex) { }
         }
 
         private void SMS(int id, string table)
@@ -572,7 +708,78 @@ namespace PersAhwal
         }
         private void MerriageDoc_Load(object sender, EventArgs e)
         {
-            
+            autoCompleteTextBox1(اسم_الزوج, DataSource, "الاسم", "TableGenNames");
+            autoCompleteTextBox1(اسم_الزوجة, DataSource, "الاسم", "TableGenNames");
+            autoCompleteTextBox1(الشاهد_الاول, DataSource, "الاسم", "TableGenNames");
+            autoCompleteTextBox1(الشاهد_الثاني, DataSource, "الاسم", "TableGenNames");
+            autoCompleteTextBox1(وكيل_الزوج, DataSource, "الاسم", "TableGenNames");
+            autoCompleteTextBox1(وكيل_الزوجة, DataSource, "الاسم", "TableGenNames");
+            autoCompleteTextBox(المهنة, DataSource, "jobs", "TableListCombo"); autoCompleteTextBox(المهنة, DataSource, "jobs", "TableListCombo");
+        }
+        private void autoCompleteTextBox(TextBox textbox, string source, string comlumnName, string tableName)
+        {
+
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                saConn.Open();
+
+                string query = "select " + comlumnName + " from " + tableName;
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.ExecuteNonQuery();
+                DataTable Textboxtable = new DataTable();
+                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                dataAdapter.Fill(Textboxtable);
+                AutoCompleteStringCollection autoComplete = new AutoCompleteStringCollection();
+                bool newSrt = true;
+                foreach (DataRow dataRow in Textboxtable.Rows)
+                {
+                    if (!string.IsNullOrEmpty(dataRow[comlumnName].ToString()))
+                    {
+                        for (int x = 0; x < Textboxtable.Rows.Count; x++)
+                            if (dataRow[comlumnName].ToString().Equals(Textboxtable.Rows[x]))
+                                newSrt = false;
+
+                        if (newSrt) autoComplete.Add(dataRow[comlumnName].ToString());
+                    }
+                }
+                textbox.AutoCompleteMode = AutoCompleteMode.Suggest;
+                textbox.AutoCompleteSource = AutoCompleteSource.CustomSource;
+                textbox.AutoCompleteCustomSource = autoComplete;
+                saConn.Close();
+            }
+        }
+        private void autoCompleteTextBox1(TextBox textbox, string source, string comlumnName, string tableName)
+        {
+            textbox.Multiline = false;
+            //MessageBox.Show(textbox.Name);
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                if (saConn.State == ConnectionState.Closed)
+                    try
+                    {
+                        saConn.Open();
+                    }
+                    catch (Exception ex) { }
+
+                string query = "select " + comlumnName + " from " + tableName;
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.ExecuteNonQuery();
+                DataTable Textboxtable = new DataTable();
+                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                dataAdapter.Fill(Textboxtable);
+                AutoCompleteStringCollection autoComplete = new AutoCompleteStringCollection();
+                bool newSrt = true;
+                foreach (DataRow dataRow in Textboxtable.Rows)
+                {
+                    string text = dataRow[comlumnName].ToString().Trim();
+                    Console.WriteLine("autoCompleteTextBox " + text);
+                    autoComplete.Add(text);
+                }
+                textbox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+                textbox.AutoCompleteSource = AutoCompleteSource.CustomSource;
+                textbox.AutoCompleteCustomSource = autoComplete;
+                saConn.Close();
+            }
         }
         private string commentInfo()
         {
@@ -828,7 +1035,32 @@ namespace PersAhwal
             oBMicroWord.Selection.Find.Replacement.ClearFormatting();
 
         }
-        private void fillDocFileAppInfo()
+        private void fillPreDoc()
+        {
+            اسم_الزوج1_off.Text =اسم_الزوج2_off.Text =اسم_الزوج3_off.Text = اسم_الزوج.Text;
+            اسم_الزوجة1_off.Text = اسم_الزوجة2_off.Text = اسم_الزوجة.Text;
+            وكيل_الزوجة1_off.Text = وكيل_الزوجة.Text;
+                
+            if (حالة_الزوجة.SelectedIndex == 0) {
+                صفة_الزوجة2_off.Text =  صفة_الزوجة1_off.Text = "البكر البالغ الرشيد";
+            }
+            else صفة_الزوجة2_off.Text = صفة_الزوجة1_off.Text = "البالغ الرشيد";
+
+            if (طريقة_الإجراء.SelectedIndex == 0)
+            {
+                ضمير_الزوج1_off.Text = "ك";
+                ضمير_الزوج2_off.Text = "";
+                اسم_الزوج1_off.Text = "";
+                وكيل_الزوج1_off.Text = اسم_الزوج.Text;
+            }
+            else {
+                ضمير_الزوج1_off.Text = "";
+                ضمير_الزوج2_off.Text = " إلى موكلك";
+                ضمير_الزوج3_off.Text = " إلى موكلي";
+                وكيل_الزوج1_off.Text = وكيل_الزوج.Text;
+            }
+        }
+            private void fillDocFileAppInfo()
         {
             foreach (Control control in PanelMain.Controls)
             {
@@ -866,6 +1098,161 @@ namespace PersAhwal
         private void timer2_Tick(object sender, EventArgs e)
         {
             ColorFulGrid9();
+        }
+
+        private void اسم_الزوج_TextChanged(object sender, EventArgs e)
+        {
+            getID(جواز_الزوج, تاريخ_الميلاد, المهنة, اسم_الزوج.Text);
+        }
+        bool gridFill = true;
+        public void getID(TextBox رقم_الهوية_1,  TextBox تاريخ_الميلاد_1, TextBox المهنة_1, string name)
+        {
+            if (gridFill) return;
+            DataTable dtbl = new DataTable();
+            string query = "SELECT * FROM TableGenNames where الاسم = N'" + name + "'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            
+           
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            
+            sqlDa.Fill(dtbl);
+            }
+
+            catch (Exception ex)
+            {
+                رقم_الهوية_1.Text = "P0";
+                المهنة_1.Text = "";
+                تاريخ_الميلاد_1.Text = "";
+                return;
+            }
+            رقم_الهوية_1.Text = "P0";
+            المهنة_1.Text = "";
+            تاريخ_الميلاد_1.Text = "";
+            foreach (DataRow row in dtbl.Rows)
+            {
+                رقم_الهوية_1.Text = row["رقم_الهوية"].ToString();
+                المهنة_1.Text = row["المهنة"].ToString();
+                تاريخ_الميلاد_1.Text = row["تاريخ_الميلاد"].ToString();
+                return;
+            }
+            //MessageBox.Show(رقم_الهوية_1.Text);
+        }
+        public void getID(TextBox رقم_الهوية_1,  TextBox تاريخ_الميلاد_1, string name)
+        {
+            if (gridFill) return;
+            DataTable dtbl = new DataTable();
+            string query = "SELECT * FROM TableGenNames where الاسم = N'" + name + "'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            
+            sqlDa.Fill(dtbl);
+            }
+            catch (Exception ex)
+            {
+                رقم_الهوية_1.Text = "P0";
+                تاريخ_الميلاد_1.Text = "";
+                return;
+            }
+            رقم_الهوية_1.Text = "P0";
+            تاريخ_الميلاد_1.Text = "";
+            foreach (DataRow row in dtbl.Rows)
+            {
+                رقم_الهوية_1.Text = row["رقم_الهوية"].ToString();
+                تاريخ_الميلاد_1.Text = row["تاريخ_الميلاد"].ToString();
+                return;
+            }
+            //MessageBox.Show(رقم_الهوية_1.Text);
+        }
+        public void getID(TextBox رقم_الهوية_1 , string name)
+        {
+            if (gridFill) return;
+            DataTable dtbl = new DataTable();
+            string query = "SELECT * FROM TableGenNames where الاسم = N'" + name + "'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            
+            sqlDa.Fill(dtbl);
+            }
+            catch (Exception ex)
+            {
+                رقم_الهوية_1.Text = "P0";
+                return;
+            }
+            رقم_الهوية_1.Text = "P0";
+            foreach (DataRow row in dtbl.Rows)
+            {
+                رقم_الهوية_1.Text = row["رقم_الهوية"].ToString();
+                return;
+            }
+            //MessageBox.Show(رقم_الهوية_1.Text);
+        }
+
+        private void اسم_الزوجة_TextChanged(object sender, EventArgs e)
+        {
+            getID(جواز_الزوجة, ميلاد_الزوجة, اسم_الزوجة.Text);
+        }
+
+        private void وكيل_الزوجة_TextChanged(object sender, EventArgs e)
+        {
+            getID(جواز_وكيل_الزوجة, وكيل_الزوجة.Text, "رقم_الهوية", "P0");
+        }
+
+        private void الشاهد_الاول_TextChanged(object sender, EventArgs e)
+        {
+            getID(وثيقة_الشاهد_الاول, الشاهد_الاول.Text, "رقم_الهوية", "P0");
+        }
+
+        private void الشاهد_الثاني_TextChanged(object sender, EventArgs e)
+        {
+            getID(وثيقة_الشاهد_الثاني, الشاهد_الثاني.Text, "رقم_الهوية", "P0");
+        }
+
+        private void وكيل_الزوج_TextChanged(object sender, EventArgs e)
+        {
+            getID(جواز_وكيل_الزوج, وكيل_الزوج.Text, "رقم_الهوية", "P0");             
+        }
+        public void getID(TextBox textTo, string name, string controlType, string def)
+        {
+            if (gridFill) return;
+            string query = "SELECT " + controlType + " FROM TableGenNames where الاسم like N'" + name + "%'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            int index = 0;
+            textTo.Text = "";
+            foreach (DataRow row in dtbl.Rows)
+            {
+                if (index == 0)
+                    textTo.Text = row[controlType].ToString();
+                else if (!textTo.Text.Contains(row[controlType].ToString()))
+                    textTo.Text = textTo.Text + "_" + row[controlType].ToString();
+                index++;
+            }
+            int AllIndex = textTo.Text.Split('_').Length;
+            textTo.Text = textTo.Text.Split('_')[AllIndex - 1];
+            if (index == 0)
+                textTo.Text = def;
         }
     }
 }

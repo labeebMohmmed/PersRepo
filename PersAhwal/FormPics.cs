@@ -1143,6 +1143,7 @@ namespace PersAhwal
                 sqlCon.Close();
             }
             catch (Exception ex) {
+                printOut = false;
                 MessageBox.Show(GenQuery);
             }
             return 0;
@@ -2190,11 +2191,12 @@ namespace PersAhwal
             return Convert.ToInt32(rowCnt);
 
         }
-         
 
 
+        bool printOut = true;
         private void CreatePic(string[] location)
         {
+            printOut = true;
             if (ArchiveState && newEntry)
             {                                
                 int docid = NewReportEntry(DataSource);
@@ -2381,7 +2383,7 @@ namespace PersAhwal
                 btnSaveEnd.Visible = panelFinalArch.Visible = false;
                 btnSaveEnd.Location = new System.Drawing.Point(754, 662);
             }
-            else
+            else if (name != "")
             {
                 btnSaveEnd.Visible = panelFinalArch.Visible = false;
                 btnSaveEnd.Location = new System.Drawing.Point(754, 662);
@@ -2661,6 +2663,8 @@ namespace PersAhwal
         {
            
             btnSaveEnd.Enabled = false;
+            CreatePic(PathImage);
+            if (!printOut)return;
             if (ArchiveState)
             {
                 if (docId.Text == "") return;
@@ -2716,7 +2720,7 @@ namespace PersAhwal
             }
             //else {
                 
-                CreatePic(PathImage);
+                
                
             //}
 
@@ -3106,28 +3110,29 @@ namespace PersAhwal
         {
             bool view = true;
             foreach (Control control in drawPic.Controls)
+            {
+                if (control is Button)
                 {
-                    if (control is Button)
+                    if (!control.Enabled && !control.Text.Contains("أخرى") && control.Visible)
                     {
-                        if (!control.Enabled && !control.Text.Contains("أخرى") && control.Visible)
-                        {
-                            view = false;
-                                break;                            
-                        }
+                        view = false;
+                        break;
                     }
                 }
-                if(ServerType != "56") 
-                    btnSaveEnd.Visible = view;
+            }
+            if (ServerType != "56")
+                btnSaveEnd.Visible = view;
 
-                if (imagecount > 0)
+
+            if (imagecount > 0)
             {
                 btnAuth.Size = new System.Drawing.Size(153, 59);
                 btnAuth.Location = new System.Drawing.Point(164, 3);
                 loadPic.Size = new System.Drawing.Size(153, 59);
                 loadPic.Location = new System.Drawing.Point(164, 69);
-                        reLoadPic.Visible = button2.Visible = true;
-                
-                
+                reLoadPic.Visible = button2.Visible = true;
+
+
             }
             else
             {
@@ -3135,7 +3140,7 @@ namespace PersAhwal
                 loadPic.Location = new System.Drawing.Point(3, 69);
                 loadPic.Width = btnAuth.Width = 311;
                 button2.Visible = false;
-                
+                btnSaveEnd.Visible = false;
             }
         }
 
@@ -3569,7 +3574,7 @@ namespace PersAhwal
 
 
 
-        checkBasicInfo(docIDNumber);            
+        checkBasicInfo(docIDNumber);
             string CheckState = checkArch(docIDNumber);
             requiredDocument.Text = CheckState;
            // panelFinalArch.Visible = true;  
@@ -3709,6 +3714,11 @@ namespace PersAhwal
             }
             else
                 btnSaveEnd.Enabled = true;
+            if (mandoubName.Text != "حضور مباشرة إلى القنصلية") 
+                panel3.Visible = button5.Visible = true;
+            else 
+                panel3.Visible = button5.Visible = false;
+            
         }
 
         private void DocType_CheckedChanged(object sender, EventArgs e)

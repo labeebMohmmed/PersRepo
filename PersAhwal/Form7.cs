@@ -160,12 +160,12 @@ namespace PersAhwal
             Rowindex--;
             ApplicantID = Convert.ToInt32(dataGridView1.Rows[Rowindex].Cells[0].Value.ToString());
             PreAppId = dataGridView1.Rows[Rowindex].Cells[1].Value.ToString();
-            ApplicantIdocName.Text = dataGridView1.Rows[Rowindex].Cells[2].Value.ToString();
-            if (dataGridView1.Rows[Rowindex].Cells[3].Value.ToString().ToString() == "ذكر") ApplicantSex.CheckState = CheckState.Unchecked;
-            else if (dataGridView1.Rows[Rowindex].Cells[3].Value.ToString().ToString() == "أنثى") ApplicantSex.CheckState = CheckState.Checked;
-            DocType.Text = dataGridView1.Rows[Rowindex].Cells[4].Value.ToString();
-            DocNo.Text = dataGridView1.Rows[Rowindex].Cells[5].Value.ToString();
-            IssuedSource.Text = dataGridView1.Rows[Rowindex].Cells[6].Value.ToString();
+            مقدم_الطلب.Text = dataGridView1.Rows[Rowindex].Cells[2].Value.ToString();
+            if (dataGridView1.Rows[Rowindex].Cells[3].Value.ToString().ToString() == "ذكر") النوع.CheckState = CheckState.Unchecked;
+            else if (dataGridView1.Rows[Rowindex].Cells[3].Value.ToString().ToString() == "أنثى") النوع.CheckState = CheckState.Checked;
+            نوع_الهوية.Text = dataGridView1.Rows[Rowindex].Cells[4].Value.ToString();
+            رقم_الهوية.Text = dataGridView1.Rows[Rowindex].Cells[5].Value.ToString();
+            مكان_الإصدار.Text = dataGridView1.Rows[Rowindex].Cells[6].Value.ToString();
             AppTrueName.Text = dataGridView1.Rows[Rowindex].Cells[7].Value.ToString();
             AppWrongName.Text = dataGridView1.Rows[Rowindex].Cells[8].Value.ToString();
             التاريخ_الميلادي.Text = dataGridView1.Rows[Rowindex].Cells[9].Value.ToString();
@@ -257,10 +257,16 @@ namespace PersAhwal
 
         private void Save2DataBase()
         {
+            if (!checkGender(PanelMain, "مقدم_الطلب", "النوع"))
+            {
+                return;
+            }
+            else addNewAppNameInfo(مقدم_الطلب);
+
             SqlConnection sqlCon = new SqlConnection(DataSource);
 
             string AppGender;
-            if (ApplicantSex.CheckState == CheckState.Unchecked) AppGender = "ذكر"; else AppGender = "أنثى";
+            if (النوع.CheckState == CheckState.Unchecked) AppGender = "ذكر"; else AppGender = "أنثى";
             try
             {
                 if (sqlCon.State == ConnectionState.Closed)
@@ -274,11 +280,11 @@ namespace PersAhwal
                     sqlCmd.Parameters.AddWithValue("@ID", 0);
                     sqlCmd.Parameters.AddWithValue("@mode", "Add");
                     sqlCmd.Parameters.AddWithValue("@DocID", Iqrarid.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@AppName", ApplicantIdocName.Text.Trim());
+                    sqlCmd.Parameters.AddWithValue("@AppName", مقدم_الطلب.Text.Trim());
                     sqlCmd.Parameters.AddWithValue("@Gender", AppGender.Trim());
-                    sqlCmd.Parameters.AddWithValue("@DocType", DocType.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@DocNo", DocNo.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@DocIssueSource", IssuedSource.Text.Trim());
+                    sqlCmd.Parameters.AddWithValue("@DocType", نوع_الهوية.Text.Trim());
+                    sqlCmd.Parameters.AddWithValue("@DocNo", رقم_الهوية.Text.Trim());
+                    sqlCmd.Parameters.AddWithValue("@DocIssueSource", مكان_الإصدار.Text.Trim());
                     sqlCmd.Parameters.AddWithValue("@AppTrueName", AppTrueName.Text.Trim());
                     sqlCmd.Parameters.AddWithValue("@AppWrongName", AppWrongName.Text.Trim());
                     sqlCmd.Parameters.AddWithValue("@GriDate", التاريخ_الميلادي.Text.Trim());
@@ -314,11 +320,11 @@ namespace PersAhwal
                     sqlCmd.Parameters.AddWithValue("@ID", ApplicantID);
                     sqlCmd.Parameters.AddWithValue("@mode", "Edit");
                     sqlCmd.Parameters.AddWithValue("@DocID", Iqrarid.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@AppName", ApplicantIdocName.Text.Trim());
+                    sqlCmd.Parameters.AddWithValue("@AppName", مقدم_الطلب.Text.Trim());
                     sqlCmd.Parameters.AddWithValue("@Gender", AppGender.Trim());
-                    sqlCmd.Parameters.AddWithValue("@DocType", DocType.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@DocNo", DocNo.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@DocIssueSource", IssuedSource.Text.Trim());
+                    sqlCmd.Parameters.AddWithValue("@DocType", نوع_الهوية.Text.Trim());
+                    sqlCmd.Parameters.AddWithValue("@DocNo", رقم_الهوية.Text.Trim());
+                    sqlCmd.Parameters.AddWithValue("@DocIssueSource", مكان_الإصدار.Text.Trim());
                     sqlCmd.Parameters.AddWithValue("@AppTrueName", AppTrueName.Text.Trim());
                     sqlCmd.Parameters.AddWithValue("@AppWrongName", AppWrongName.Text.Trim());
                     sqlCmd.Parameters.AddWithValue("@GriDate", التاريخ_الميلادي.Text.Trim());
@@ -388,7 +394,7 @@ namespace PersAhwal
             dataGridView1.Columns[1].Width = 150;
             dataGridView1.Columns[2].Width = 200;
             sqlCon.Close();
-            NewFileName = ApplicantIdocName.Text + IqrarNumberPart + "_07";
+            NewFileName = مقدم_الطلب.Text + IqrarNumberPart + "_07";
         }
         private void timer2_Tick_1(object sender, EventArgs e)
         {
@@ -451,15 +457,15 @@ namespace PersAhwal
 
         private void ApplicantSex_CheckedChanged_1(object sender, EventArgs e)
         {
-            if (ApplicantSex.CheckState == CheckState.Unchecked)
+            if (النوع.CheckState == CheckState.Unchecked)
             {
 
-                ApplicantSex.Text = "ذكر";
+                النوع.Text = "ذكر";
                 labelName.Text = "الاسم الصحيح لمقدم الطلب:";
             }
-            else if (ApplicantSex.CheckState == CheckState.Checked)
+            else if (النوع.CheckState == CheckState.Checked)
             {
-                ApplicantSex.Text = "إنثى";
+                النوع.Text = "إنثى";
                 labelName.Text = "الاسم الصحيح لمقدمة الطلب:";
             }
         }
@@ -472,10 +478,47 @@ namespace PersAhwal
         private void Form7_Load(object sender, EventArgs e)
         {
             fileComboBox(mandoubName, DataSource, "MandoubNames", "TableListCombo");
-            fileComboBox(DocType, DataSource, "DocType", "TableListCombo");            
-            autoCompleteTextBox(IssuedSource, DataSource, "SDNIssueSource", "TableListCombo");            
+            fileComboBox(نوع_الهوية, DataSource, "DocType", "TableListCombo");            
+            autoCompleteTextBox(مكان_الإصدار, DataSource, "SDNIssueSource", "TableListCombo");            
             fileComboBox(AttendViceConsul, DataSource, "ArabicAttendVC", "TableListCombo");
             AttendViceConsul.SelectedIndex = ATVC;
+            autoCompleteTextBox1(مقدم_الطلب, DataSource, "الاسم", "TableGenNames");
+
+        }
+
+        private void autoCompleteTextBox1(TextBox textbox, string source, string comlumnName, string tableName)
+        {
+            textbox.Multiline = false;
+            //MessageBox.Show(textbox.Name);
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                if (saConn.State == ConnectionState.Closed)
+                    try
+                    {
+                        saConn.Open();
+                    }
+                    catch (Exception ex) { }
+
+                string query = "select " + comlumnName + " from " + tableName;
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.ExecuteNonQuery();
+                DataTable Textboxtable = new DataTable();
+                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                dataAdapter.Fill(Textboxtable);
+                AutoCompleteStringCollection autoComplete = new AutoCompleteStringCollection();
+                bool newSrt = true;
+                foreach (DataRow dataRow in Textboxtable.Rows)
+                {
+                    string text = dataRow[comlumnName].ToString().Trim();
+                    Console.WriteLine("autoCompleteTextBox " + text);
+                    autoComplete.Add(text);
+                }
+                textbox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+                textbox.AutoCompleteSource = AutoCompleteSource.CustomSource;
+                textbox.AutoCompleteCustomSource = autoComplete;
+                saConn.Close();
+            }
+
         }
 
         private void autoCompleteTextBox(TextBox textbox, string source, string comlumnName, string tableName)
@@ -547,7 +590,7 @@ namespace PersAhwal
         private void CreateWordFile()
         {
             string ReportName = DateTime.Now.ToString("mmss");
-            if (ApplicantSex.CheckState == CheckState.Unchecked)
+            if (النوع.CheckState == CheckState.Unchecked)
             {
 
                 labelName.ForeColor = Color.Black;
@@ -556,7 +599,7 @@ namespace PersAhwal
                     route = FilesPathIn + "IqrarTwoRightdocM.docx";
                 else route = FilesPathIn + "IqrarTrueNameM.docx";
             }
-            else if (ApplicantSex.CheckState == CheckState.Checked)
+            else if (النوع.CheckState == CheckState.Checked)
             {
                 labelName.Text = "مقدمة الطلب:";
                 labelName.ForeColor = Color.Black;
@@ -565,7 +608,7 @@ namespace PersAhwal
                 else route = FilesPathIn + "IqrarTrueNameF.docx";
             }
             string ActiveCopy;
-            ActiveCopy = FilesPathOut + ApplicantIdocName.Text + ReportName + ".docx";
+            ActiveCopy = FilesPathOut + مقدم_الطلب.Text + ReportName + ".docx";
             if (!File.Exists(ActiveCopy))
             {
                 System.IO.File.Copy(route, ActiveCopy);
@@ -613,7 +656,7 @@ namespace PersAhwal
                 BookGreData.Text = التاريخ_الميلادي_off.Text;
                 colIDs[2] = التاريخ_الميلادي.Text;
                 BookHijriData.Text = التاريخ_الهجري.Text;
-                BookDocName.Text = BookDocName2.Text = colIDs[3] = ApplicantIdocName.Text;
+                BookDocName.Text = BookDocName2.Text = colIDs[3] = مقدم_الطلب.Text;
                 colIDs[5] = AppType.Text;
                 colIDs[6] = mandoubName.Text;
                 string[] docs = new string[2];
@@ -625,13 +668,13 @@ namespace PersAhwal
                 }
                 else
                     BookTrueName1.Text = BookTrueName2.Text = AppTrueName.Text;
-                BookAppDocType.Text = DocType.Text;
-                BookAppPass.Text = DocNo.Text;
-                BookAppPassSource.Text = IssuedSource.Text;
+                BookAppDocType.Text = نوع_الهوية.Text;
+                BookAppPass.Text = رقم_الهوية.Text;
+                BookAppPassSource.Text = مكان_الإصدار.Text;
                 if (AppType.CheckState == CheckState.Checked)
                 {
-                    if (ApplicantSex.CheckState == CheckState.Unchecked) BookAuthorization.Text = "أشهد أنا/" + AttendViceConsul.Text + " نائب قنصل بالقنصلية العامة لجمهورية السودان بجدة، بأن المذكور أعلاه قد حضر للقنصلية ووقع بتوقيعه على هذا الإقرار بعد تلاوته عليه وبعد أن فهم مضمونه ومحتواه. ";
-                    if (ApplicantSex.CheckState == CheckState.Checked) BookAuthorization.Text = "أشهد أنا/" + AttendViceConsul.Text + " نائب قنصل بالقنصلية العامة لجمهورية السودان بجدة، بأن المذكورة أعلاه قد حضرت للقنصلية ووقعت بتوقيعها على هذا الإقرار بعد تلاوته عليها وبعد أن فهمت مضمونه ومحتواه. ";
+                    if (النوع.CheckState == CheckState.Unchecked) BookAuthorization.Text = "أشهد أنا/" + AttendViceConsul.Text + " نائب قنصل بالقنصلية العامة لجمهورية السودان بجدة، بأن المذكور أعلاه قد حضر للقنصلية ووقع بتوقيعه على هذا الإقرار بعد تلاوته عليه وبعد أن فهم مضمونه ومحتواه. ";
+                    if (النوع.CheckState == CheckState.Checked) BookAuthorization.Text = "أشهد أنا/" + AttendViceConsul.Text + " نائب قنصل بالقنصلية العامة لجمهورية السودان بجدة، بأن المذكورة أعلاه قد حضرت للقنصلية ووقعت بتوقيعها على هذا الإقرار بعد تلاوته عليها وبعد أن فهمت مضمونه ومحتواه. ";
                 }
                 else
                 {
@@ -639,13 +682,13 @@ namespace PersAhwal
                     strmandoub = mandoubName.Text.Split('-');
                     if (strmandoub[1].Trim() != "القنصلية العامة لجمهورية السودان بجدة")
                     {
-                        if (ApplicantSex.CheckState == CheckState.Unchecked) BookAuthorization.Text = "المواطن المذكور أعلاه حضر ووقع بتوقيعه على هذا الإقرار أمام مندوب جالية منطقة" + strmandoub[1] + " السيد/ " + strmandoub[0] + "، وذلك بموجب التفويض الممنوح له من القنصلية العامة، ";
-                        if (ApplicantSex.CheckState == CheckState.Checked) BookAuthorization.Text = "المواطنة المذكورة أعلاه حضرت ووقعت بتوقيعها على هذا الإقرار أمام مندوب جالية منطقة" + strmandoub[1] + " السيد/ " + strmandoub[0] + "، وذلك بموجب التفويض الممنوح له من القنصلية العامة، ";
+                        if (النوع.CheckState == CheckState.Unchecked) BookAuthorization.Text = "المواطن المذكور أعلاه حضر ووقع بتوقيعه على هذا الإقرار أمام مندوب جالية منطقة" + strmandoub[1] + " السيد/ " + strmandoub[0] + "، وذلك بموجب التفويض الممنوح له من القنصلية العامة، ";
+                        if (النوع.CheckState == CheckState.Checked) BookAuthorization.Text = "المواطنة المذكورة أعلاه حضرت ووقعت بتوقيعها على هذا الإقرار أمام مندوب جالية منطقة" + strmandoub[1] + " السيد/ " + strmandoub[0] + "، وذلك بموجب التفويض الممنوح له من القنصلية العامة، ";
                     }
                     else
                     {
-                        if (ApplicantSex.CheckState == CheckState.Unchecked) BookAuthorization.Text = "المواطن المذكور أعلاه حضر ووقع بتوقيعه على هذا الإقرار أمام مندوب " + strmandoub[1] + " السيد/ " + strmandoub[0] + "، وذلك بموجب التفويض الممنوح له من القنصلية العامة، ";
-                        if (ApplicantSex.CheckState == CheckState.Checked) BookAuthorization.Text = "المواطنة المذكورة أعلاه حضرت ووقعت بتوقيعها على هذا الإقرار أمام مندوب " + strmandoub[1] + " السيد/ " + strmandoub[0] + "، وذلك بموجب التفويض الممنوح له من القنصلية العامة، ";
+                        if (النوع.CheckState == CheckState.Unchecked) BookAuthorization.Text = "المواطن المذكور أعلاه حضر ووقع بتوقيعه على هذا الإقرار أمام مندوب " + strmandoub[1] + " السيد/ " + strmandoub[0] + "، وذلك بموجب التفويض الممنوح له من القنصلية العامة، ";
+                        if (النوع.CheckState == CheckState.Checked) BookAuthorization.Text = "المواطنة المذكورة أعلاه حضرت ووقعت بتوقيعها على هذا الإقرار أمام مندوب " + strmandoub[1] + " السيد/ " + strmandoub[0] + "، وذلك بموجب التفويض الممنوح له من القنصلية العامة، ";
                     }
                     
                 }
@@ -771,19 +814,19 @@ namespace PersAhwal
 
         private void ApplicantIdocName_TextChanged(object sender, EventArgs e)
         {
-            if (PersonDesc.SelectedIndex != 1) AppTrueName.Text = ApplicantIdocName.Text;
+            if (PersonDesc.SelectedIndex != 1) AppTrueName.Text = مقدم_الطلب.Text;
         }
 
         private void DocType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (DocType.SelectedIndex == 0)
+            if (نوع_الهوية.SelectedIndex == 0)
             {
                 labeldoctype.Text = "رقم جواز السفر: ";
-                DocNo.Text = "P";
+                رقم_الهوية.Text = "P";
             }
             else
             {
-                DocNo.Text = ""; labeldoctype.Text = "رقم الإقامة:";
+                رقم_الهوية.Text = ""; labeldoctype.Text = "رقم الإقامة:";
             }
         }
 
@@ -812,12 +855,12 @@ namespace PersAhwal
 
         private void Clear_Fields()
         {
-            AppWrongName.Text = AppTrueName.Text = ApplicantIdocName.Text = IssuedSource.Text = PersonDesc.Text = ApplicantIdocName.Text = "";
-            ApplicantSex.CheckState = CheckState.Checked;
+            AppWrongName.Text = AppTrueName.Text = مقدم_الطلب.Text = مكان_الإصدار.Text = PersonDesc.Text = مقدم_الطلب.Text = "";
+            النوع.CheckState = CheckState.Checked;
             labeldoctype.Text = "رقم جواز السفر: ";
-            DocNo.Text = "P";
+            رقم_الهوية.Text = "P";
             AttendViceConsul.SelectedIndex = 2;
-            DocType.SelectedIndex = 0;
+            نوع_الهوية.SelectedIndex = 0;
             System.Globalization.CultureInfo TypeOfLanguage = new System.Globalization.CultureInfo("ar-SA");
             InputLanguage.CurrentInputLanguage = InputLanguage.FromCulture(TypeOfLanguage);
             CultureInfo arSA = new CultureInfo("ar-SA");
@@ -830,7 +873,7 @@ namespace PersAhwal
             التاريخ_الميلادي.Text = DateTime.Now.ToString("dd-MM-yyyy");
             Iqrarid.Text = "ق س ج/80/" + التاريخ_الميلادي.Text.Split('-')[2].Replace("20", "") + "/07/" + loadRerNo(loadIDNo());
             mandoubName.Text = ListSearch.Text = "";
-            ApplicantSex.CheckState = CheckState.Checked;
+            النوع.CheckState = CheckState.Checked;
             mandoubVisibilty();
             btnprintOnly.Visible = false;
             btnSavePrint.Text = "طباعة وحفظ";
@@ -908,13 +951,147 @@ namespace PersAhwal
         
         private void btnprintOnly_Click(object sender, EventArgs e)
         {
+            if (!checkGender(PanelMain, "مقدم_الطلب", "النوع"))
+            {
+                return;
+            }
+            else addNewAppNameInfo(مقدم_الطلب); 
             btnprintOnly.Text = "طباعة";
             CreateWordFile();
             btnprintOnly.Text = "حفظ وطباعة";
             btnprintOnly.Enabled = true;
             Clear_Fields();
         }
+        private void addNewAppNameInfo(TextBox textName)
+        {
 
+            string query = "insert into TableGenNames ([الاسم], رقم_الهوية,النوع,نوع_الهوية,مكان_الإصدار) values (@col1,@col2,@col5,@col6,@col7) ;SELECT @@IDENTITY as lastid";
+            string id = checkExist(textName.Text);
+            if (id != "0")
+            {
+                query = "update TableGenNames set [الاسم] =  @col1,[رقم_الهوية] = @col2,النوع = @col5,نوع_الهوية = @col6,مكان_الإصدار = @col7 where ID = " + id;
+                //MessageBox.Show(query);
+            }
+            SqlConnection sqlConnection = new SqlConnection(DataSource);
+            if (sqlConnection.State == ConnectionState.Closed)
+                sqlConnection.Open();
+
+            SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.Parameters.AddWithValue("@col1", مقدم_الطلب.Text);
+            sqlCommand.Parameters.AddWithValue("@col2", رقم_الهوية.Text);                        
+            sqlCommand.Parameters.AddWithValue("@col5", النوع.Text);
+            sqlCommand.Parameters.AddWithValue("@col6", نوع_الهوية.Text);
+            sqlCommand.Parameters.AddWithValue("@col7", مكان_الإصدار.Text);
+
+            var reader = sqlCommand.ExecuteReader();
+            if (reader.Read())
+            {
+                //MessageBox.Show(reader["lastid"].ToString());
+            }
+            try
+            {
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("addNewAppNameInfo");
+            }
+        }
+        private bool checkGender(Panel panel, string controlType, string control2type)
+        {
+            int index = 0;
+            foreach (Control control in panel.Controls)
+            {
+                if (control.Name == controlType + index + ".")
+                {
+                    string gender = getGender(control.Text.Split(' ')[0]);
+                    foreach (Control control2 in panel.Controls)
+                    {
+                        if (control2.Name == control2type + index + ".")
+                        {
+                            if (gender != control2.Text)
+                            {
+                                var selectedOption = MessageBox.Show("هل تود تغيير إعدادات البرنامج الداخلية والمتابعة للصفحة التالية؟", "يرجى مراحعة جنس   " + control.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                                if (selectedOption == DialogResult.No)
+                                {
+                                    return false;
+                                }
+                                else if (selectedOption == DialogResult.Yes)
+                                {
+                                    updateGender(control2.Text, getSexIndex);
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                    index++;
+                }
+            }
+            return true;
+        }
+        string getSexIndex = "0";
+        public string getGender(string name)
+        {
+            string sex = "ذكر";
+            string query = "SELECT ID,النوع FROM TableGenGender where الاسم = N'" + name + "'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            foreach (DataRow row in dtbl.Rows)
+            {
+                getSexIndex = row["ID"].ToString();
+                sex = row["النوع"].ToString();
+            }
+            return sex;
+        }
+
+        private void updateGender(string newGender, string id)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                    SqlCommand sqlCmd = new SqlCommand("UPDATE TableGenGender SET النوع=N'" + newGender + "' WHERE ID=" + id, sqlCon);
+                    MessageBox.Show("UPDATE TableGenGender SET النوع=N'" + newGender + "' WHERE ID=" + id);
+                    sqlCmd.CommandType = CommandType.Text;
+                    sqlCmd.ExecuteNonQuery();
+                    sqlCon.Close();
+
+                }
+
+                catch (Exception ex)
+                {
+                    return;
+                }
+                finally
+                {
+                }
+        }
+        public string checkExist(string name)
+        {
+            string id = "0";
+            string query = "SELECT ID FROM TableGenNames where الاسم like N'" + name + "%'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            foreach (DataRow row in dtbl.Rows)
+            {
+                id = row["ID"].ToString();
+            }
+            return id;
+        }
         private void SearchFile_TextChanged(object sender, EventArgs e)
         {
 
@@ -954,6 +1131,7 @@ namespace PersAhwal
         {
             if (dataGridView1.CurrentRow.Index != -1)
             {
+                gridFill = true;
                 dataGridView1.Visible = false;
                 PanelFiles.Visible = true;
                 PanelMain.Visible = true;
@@ -979,19 +1157,21 @@ namespace PersAhwal
                     //OpenFileDoc(Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value.ToString()), 1);
                     FillDatafromGenArch("data1", colIDs[1], "TableTRName");
                     if (Jobposition.Contains("قنصل")) deleteRow.Visible = true;
+                    gridFill = false;
                     return;
                 }
+                gridFill = false;
                 colIDs[7] = "old";
                 SaveEdit = false;
                 ApplicantID = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value.ToString());
                 if (Jobposition.Contains("قنصل")) deleteRow.Visible = true;
                 Iqrarid.Text = PreAppId = dataGridView1.CurrentRow.Cells[1].Value.ToString();
-                ApplicantIdocName.Text = dataGridView1.CurrentRow.Cells[2].Value.ToString();
-                if (dataGridView1.CurrentRow.Cells[3].Value.ToString().ToString() == "ذكر") ApplicantSex.CheckState = CheckState.Unchecked;
-                else if (dataGridView1.CurrentRow.Cells[3].Value.ToString().ToString() == "أنثى") ApplicantSex.CheckState = CheckState.Checked;
-                DocType.Text = dataGridView1.CurrentRow.Cells[4].Value.ToString();
-                DocNo.Text = dataGridView1.CurrentRow.Cells[5].Value.ToString();
-                IssuedSource.Text = dataGridView1.CurrentRow.Cells[6].Value.ToString();
+                مقدم_الطلب.Text = dataGridView1.CurrentRow.Cells[2].Value.ToString();
+                if (dataGridView1.CurrentRow.Cells[3].Value.ToString().ToString() == "ذكر") النوع.CheckState = CheckState.Unchecked;
+                else if (dataGridView1.CurrentRow.Cells[3].Value.ToString().ToString() == "أنثى") النوع.CheckState = CheckState.Checked;
+                نوع_الهوية.Text = dataGridView1.CurrentRow.Cells[4].Value.ToString();
+                رقم_الهوية.Text = dataGridView1.CurrentRow.Cells[5].Value.ToString();
+                مكان_الإصدار.Text = dataGridView1.CurrentRow.Cells[6].Value.ToString();
                 AppTrueName.Text = dataGridView1.CurrentRow.Cells[7].Value.ToString();
                 AppWrongName.Text = dataGridView1.CurrentRow.Cells[8].Value.ToString();
                 التاريخ_الميلادي.Text = dataGridView1.CurrentRow.Cells[9].Value.ToString();
@@ -1141,6 +1321,36 @@ namespace PersAhwal
         private void التاريخ_الميلادي_TextChanged(object sender, EventArgs e)
         {
             التاريخ_الميلادي_off.Text = التاريخ_الميلادي.Text.Split('-')[1] + " - " + التاريخ_الميلادي.Text.Split('-')[0] + " - " + التاريخ_الميلادي.Text.Split('-')[2];
+        }
+
+        private void مقدم_الطلب_TextChanged(object sender, EventArgs e)
+        {
+            getID(رقم_الهوية, نوع_الهوية, مكان_الإصدار, النوع, مقدم_الطلب.Text);
+        }
+        bool gridFill = false;
+        public void getID(TextBox رقم_الهوية_1, ComboBox نوع_الهوية_1, TextBox مكان_الإصدار_1, CheckBox النوع_1  , string name)
+        {
+            if (gridFill) return;
+            string query = "SELECT * FROM TableGenNames where الاسم like N'" + name + "%'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+
+            رقم_الهوية_1.Text = "P0";
+            نوع_الهوية_1.Text = "جواز سفر";
+            مكان_الإصدار_1.Text = "";
+            النوع_1.Text = "ذكر";
+            foreach (DataRow row in dtbl.Rows)
+            {
+                رقم_الهوية_1.Text = row["رقم_الهوية"].ToString();
+                نوع_الهوية_1.Text = row["نوع_الهوية"].ToString();
+                مكان_الإصدار_1.Text = row["مكان_الإصدار"].ToString();
+                النوع_1.Text = row["النوع"].ToString();
+            }
         }
 
         private void button2_Click_1(object sender, EventArgs e)
