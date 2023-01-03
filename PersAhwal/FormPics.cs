@@ -1544,8 +1544,8 @@ namespace PersAhwal
                 {
                     var device = AvailableScanner.Connect(); //Connect to the available scanner.
                     var ScanerItem = device.Items[1]; // select the scanner.
-                    var imgFile = (ImageFile)ScanerItem.Transfer(FormatID.wiaFormatJPEG);                    
-                    PathImage[imagecount] = PrimariFiles + btnName + "_" + rowCount + imagecount.ToString() + ".jpg";
+                    var imgFile = (ImageFile)ScanerItem.Transfer(FormatID.wiaFormatJPEG);
+                    PathImage[imagecount] = FilespathIn + btnName + "_" + rowCount + imagecount.ToString() + ".jpg";
                     
                     if (File.Exists(PathImage[imagecount]))
                     {
@@ -1632,7 +1632,7 @@ namespace PersAhwal
             if (fileName != "")
             {
                 //fileName = fileName.Replace(extn, btnName) + extn; ;
-                PathImage[imagecount] = PrimariFiles + btnName + "_" + rowCount + imagecount.ToString() + ".jpg";
+                PathImage[imagecount] = FilespathIn + btnName + "_" + rowCount + imagecount.ToString();
                 PathImage[imagecount] = fileName;
                 drawTempPics(PathImage[imagecount]);
                 imagecount++;

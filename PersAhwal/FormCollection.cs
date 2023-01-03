@@ -320,17 +320,17 @@ namespace PersAhwal
                     //إقرار 
                     if (index == 1)
                     {
-                        نص_مقدم_الطلب0_off.Text = "I " ;
+                        نص_مقدم_الطلب0_off.Text = "I" ;
                         نص_مقدم_الطلب1_off.Text = title.Text + ". ";// + مقدم_الطلب.Text + "holding a " + نوع_الهوية.Text + " No. " + نوع_الهوية.Text + " رقم " + رقم_الهوية.Text.Replace("p", "P")+ " issued on " + مكان_الإصدار.Text + " solemnly declare and affirm that, ";
                     }
                     else if (index > 1)
                     {
-                        نص_مقدم_الطلب0_off.Text = "I ";
+                        نص_مقدم_الطلب0_off.Text = "I";
                         نص_مقدم_الطلب1_off.Text = title.Text + ". ";// + مقدم_الطلب.Text + "holding a " + نوع_الهوية.Text + " No. " + نوع_الهوية.Text + " رقم " + رقم_الهوية.Text.Replace("p", "P") + " issued on " + مكان_الإصدار.Text + " solemnly declare and affirm that, ";
                         return;
                     }
 
-                    موقع_المعاملة_off.Text = "/" + موقع_المعاملة.Text.Trim();
+                    موقع_المعاملة_off.Text = "/" + مقدم_الطلب.Text.Trim();
                     break;
                 case 2:
                     // افادة وشهادة لمن يهمه الامر
