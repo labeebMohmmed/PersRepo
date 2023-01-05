@@ -676,10 +676,14 @@ namespace PersAhwal
         private void button1_Click(object sender, EventArgs e)
         {
             string DataSource = DataSource56;
-            //if (Server == "U")
-            //    DataSource = DataSource57;
+            string serverType = "شؤون رعايا";
+            if (Server == "57")
+            {
+                DataSource = DataSource57;
+                serverType = "احوال شخصية";
+            }
 
-            SignUp signUp = new SignUp("جديد", "غير محدد", DataSource);
+                SignUp signUp = new SignUp("جديد", "غير محدد", DataSource, serverType, GregorianDate);
             signUp.Show();
         }
 

@@ -308,7 +308,7 @@ namespace PersAhwal
             sqlCon.Close();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void button1_Clickl(object sender, EventArgs e)
         {
              
             

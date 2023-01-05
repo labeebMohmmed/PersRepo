@@ -167,10 +167,12 @@ namespace PersAhwal
             //Application.Run(new PassAway(2,dataSource100A,  @"D:\PrimariFiles\ModelFiles\", archFile, JobPossition,EmployeeName, "29-06-2022", "28-11-1443"));
             //Application.Run(new FormAuth(2, -1, "", dataSource100A, @"D:\PrimariFiles\ModelFiles\", archFile, EmployeeName, JobPossition, "12-26-2022", "28-11-1443", true));
             //Application.Run(new FormCollection(2, -1, 0, EmployeeName,dataSource100A, @"D:\PrimariFiles\ModelFiles\", archFile, JobPossition, "10-26-2022", "28-11-1443"));
-            Application.Run(new MainForm("موظف ارشفة", 3, "57", "لبيب محمد أحمد", "نائب قنصل", dataSource100S, dataSource100A, @"D:\PrimariFiles\ModelFiles\", archFile, @"D:\PrimariFiles\FormData\", FormDataFile + @"\", true, "12-28-2022", "28-11-1443", Modelfilespath, FormDataFile, false));
+            //Application.Run(new MainForm("موظف ارشفة", 3, "57", "لبيب محمد أحمد", "نائب قنصل", dataSource100S, dataSource100A, @"D:\PrimariFiles\ModelFiles\", archFile, @"D:\PrimariFiles\FormData\", FormDataFile + @"\", true, "12-28-2022", "28-11-1443", Modelfilespath, FormDataFile, false));
             //string[] str = new string[1] { ""};
             //Application.Run(new FormPics("57", EmployeeName, "لبيب محمد أحمد", "نائب قنصل", dataSource100A, 0, FormDataFile, archFile, 3, str, str, false, str, str));
             //Application.Run(new Settings("57", false, dataSource100S, dataSource100A, false, Modelfilespath + @"\", archFile, archFile, FormDataFile + @"\", ""));
+            //Application.Run(new SignUp("جديد", "موظف محلي", dataSource100A, "احوال شخصية"));
+            Application.Run(new SignUp("جديد", "نائب قنصل", dataSource100A, "احوال شخصية","01-05-2023"));
 
             //if (source56)
             //{

@@ -181,6 +181,7 @@ namespace PersAhwal
         string LocalModelForms = "";
         string docidMess = "";
         bool Realwork = false;
+        string رقم_معاملة_القسم = "";
         public MainForm(string career, int id, string server, string Employee, string jobposition, string dataSource56, string dataSource57, string filepathIn, string filepathOut, string archFile, string formDataFile, bool pers_Peope, string gregorianDate, string hijriDate, string modelFiles, string modelForms, bool realwork)
         {
             InitializeComponent();
@@ -2485,19 +2486,13 @@ namespace PersAhwal
 
 
         }
-        
-        private void CreateMarDivReport(string reportName, string month)
+
+        private void CreateMarDivReport1(string reportName, string month, string year)
         {
-            loadMessageNo(); string year = DateTime.Now.Year.ToString().Replace("20", "");
-                
+            loadMessageNo();
+            string CurrentYear = DateTime.Now.Year.ToString().Replace("20", "");
 
-
-            
-
-
-
-
-            string noID = MessageNo + "/" + year + "/" + (MessageDocNo + 1).ToString();
+            string noID = MessageNo + "/" + CurrentYear + "/" + (MessageDocNo + 1).ToString();
             route = FilespathIn + @"\DailyReport.docx";
             string ActiveCopy = FilespathOut + reportName;
             System.IO.File.Copy(route, ActiveCopy);
@@ -2511,23 +2506,23 @@ namespace PersAhwal
                 .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
                 .FontSize(16d)
                 .Alignment = Alignment.center;
-                string MessageDir = "الى : القنصل العام" + Environment.NewLine;
+                string MessageDir = "الى : القنصل العام" + Environment.NewLine+"من:" + attendedVC.Text;
                 document.InsertParagraph(MessageDir)
                     .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
                     .FontSize(18d)
                     .Direction = Direction.RightToLeft;
 
-                string MessageSub = "الموضوع : أسترداد استحقاق المأذون من معاملات المأذونية لشهر " + Monthorder(Convert.ToInt32( month)+1) + Environment.NewLine;                    
+                string MessageSub = "الموضوع : أسترداد استحقاق المأذون من معاملات المأذونية لشهر " + Monthorder(Convert.ToInt32(month) + 1) + Environment.NewLine;
                 document.InsertParagraph(MessageSub)
                     .Bold(true)
                     .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
                     .FontSize(18d).Alignment = Alignment.center;
-                
-                string MessageText = " باإشارة إلى الموضوع أعلاه، نرجو التكرم بتصديق استرداد استحقاق المأذون من معاملات الزواج واثبات إشهاد الطلاق، وذلك بحسب نا هو بالقائمة أدناه:" + Environment.NewLine;                    
+
+                string MessageText = " باإشارة إلى الموضوع أعلاه، نرجو التكرم بتصديق استرداد استحقاق المأذون من معاملات الزواج واثبات إشهاد الطلاق، وذلك بحسب نا هو بالقائمة أدناه:" + Environment.NewLine;
                 document.InsertParagraph(MessageText)
                     .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
-                    .FontSize(18d).Alignment = Alignment.right;
-                    
+                    .FontSize(18d).Alignment = Alignment.left;
+
 
                 var t = document.AddTable(1, 4);
                 t.Design = TableDesign.TableGrid;
@@ -2544,12 +2539,15 @@ namespace PersAhwal
 
                 int CurrentRows = 1;
                 string[] table = new string[2] { "TableMerrageDoc", "TableDivorce" };
-                string[] tableName = new string[2] {"قسيمة زواج","إشهاد طلاق"};
-                for (int x = 0; x < 2; x++) {
-                    string query = "select * from TableGeneralArch where DATEPART (MONTH, التاريخ) = " + (Convert.ToInt32(month) + 1).ToString() + " and docTable = '" + table[x] + "' and المستند like N'الإيصال المالي%'";
+                string[] tableName = new string[2] { "قسيمة زواج", "إشهاد اثبات طلاق" };
+                for (int x = 0; x < 2; x++)
+                {
+                    string query =
+                        "select ID, اسم_الزوج as الاسم, رقم_المعاملة as رقم_معاملة_القسم from " + table[x] + " " +
+                        "where رقم_المعاملة in (select رقم_معاملة_القسم from TableGeneralArch " +
+                        "where DATEPART (MONTH, التاريخ) = " + (Convert.ToInt32(month) + 1).ToString() + " and DATEPART (YEAR, التاريخ) = " + year + " and docTable = N'" + table[x] + "' and المستند like N'الإيصال المالي%')";
 
-
-                string column = "@" + items;
+                    string column = "@" + items;
                     DataTable dataRowTable = new DataTable();
                     SqlConnection sqlCon = new SqlConnection(DataSource);
                     if (sqlCon.State == ConnectionState.Closed)
@@ -2563,25 +2561,134 @@ namespace PersAhwal
                     sqlDa.Fill(dataRowTable);
                     sqlCon.Close();
                     Console.WriteLine(query);
-                    MessageBox.Show(dataRowTable.Rows.Count.ToString());
+                    //MessageBox.Show(dataRowTable.Rows.Count.ToString());
                     foreach (DataRow dataRow in dataRowTable.Rows)
                     {
-                        t.InsertRow();
+                        if (dataRow["الاسم"].ToString() != "")
+                        {
+                            t.InsertRow();
 
-                        t.Rows[CurrentRows].Cells[0].Paragraphs[0].Append(dataRow["رقم_معاملة_القسم"].ToString().Split('/')[4]).Font(new Xceed.Document.NET.Font("Arabic Typesetting")).FontSize(20d).Direction = Direction.RightToLeft;
-                        t.Rows[CurrentRows].Cells[1].Paragraphs[0].Append(tableName[x]).Font(new Xceed.Document.NET.Font("Arabic Typesetting")).FontSize(20d).Direction = Direction.RightToLeft;
-                        t.Rows[CurrentRows].Cells[2].Paragraphs[0].Append(dataRow["الاسم"].ToString()).Font(new Xceed.Document.NET.Font("Arabic Typesetting")).FontSize(20d).Direction = Direction.RightToLeft;
-                        t.Rows[CurrentRows].Cells[3].Paragraphs[0].Append(CurrentRows.ToString() + ".").Font(new Xceed.Document.NET.Font("Arabic Typesetting")).FontSize(20d).Direction = Direction.RightToLeft;
-                        CurrentRows++;
+                            t.Rows[CurrentRows].Cells[0].Paragraphs[0].Append(dataRow["رقم_معاملة_القسم"].ToString().Split('/')[4]).Font(new Xceed.Document.NET.Font("Arabic Typesetting")).FontSize(20d).Direction = Direction.RightToLeft;
+                            t.Rows[CurrentRows].Cells[1].Paragraphs[0].Append(tableName[x]).Font(new Xceed.Document.NET.Font("Arabic Typesetting")).FontSize(20d).Direction = Direction.RightToLeft;
+                            t.Rows[CurrentRows].Cells[2].Paragraphs[0].Append(dataRow["الاسم"].ToString()).Font(new Xceed.Document.NET.Font("Arabic Typesetting")).FontSize(20d).Direction = Direction.RightToLeft;
+                            t.Rows[CurrentRows].Cells[3].Paragraphs[0].Append(CurrentRows.ToString() + ".").Font(new Xceed.Document.NET.Font("Arabic Typesetting")).FontSize(20d).Direction = Direction.RightToLeft;
+                            CurrentRows++;
+                            GenArch(dataRow["ID"].ToString(), table[x]);
+                        }
                     }
 
                 }
 
+                var p = document.InsertParagraph(Environment.NewLine);
+                p.InsertTableAfterSelf(t);
+
+                string strAttvCo = Environment.NewLine + " بناءً عى ما سبق، أرجو التكرم بتصديق استرداد مبلغ وقدره )" + (92.5 * CurrentRows).ToString() + "( ريال سعودي";
+                var AttvCo = document.InsertParagraph(strAttvCo)
+                    .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
+                    .FontSize(20d)
+                    .Bold().FontSize(18d).Alignment = Alignment.left;
+
+
+
+
+                document.Save();
+                Process.Start("WINWORD.EXE", ActiveCopy);
+                NewMessageNo();
+            }
+
+
+
+        }
+        private void CreateMarDivReport2(string reportName, string month, string year)
+        {
+            loadMessageNo();
+            string CurrentYear = DateTime.Now.Year.ToString().Replace("20", "");
+
+            string noID = MessageNo + "/" + CurrentYear + "/" + (MessageDocNo + 1).ToString();
+            route = FilespathIn + @"\DailyReport.docx";
+            string ActiveCopy = FilespathOut + reportName;
+            System.IO.File.Copy(route, ActiveCopy);
+            using (var document = DocX.Load(ActiveCopy))
+            {
+                System.Globalization.CultureInfo TypeOfLanguage = new System.Globalization.CultureInfo("ar-SA");
+                InputLanguage.CurrentInputLanguage = InputLanguage.FromCulture(TypeOfLanguage);
+
+                string strHeader = "الرقم : " + noID + "     " + "التاريخ :" + GregorianDate + " م" + "     " + "الموافق : " + HijriDate + "هـ" + Environment.NewLine;
+                document.InsertParagraph(strHeader)
+                .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
+                .FontSize(16d)
+                .Alignment = Alignment.center;
+                string MessageDir = "الى : خارجية - الخرطوم" + Environment.NewLine + "من سوداني - جدة" + Environment.NewLine + "لعناية السيد/ مدير إدارة التوثيق"
+                    + Environment.NewLine + "ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ"
+                    + Environment.NewLine + "نرجو أن نفيد بإجراء القنصلية العامة بجدة للمعاملات المذكورة أدناه بالجدول أدناه والمتعلقة بأعمال المأذونية، وذلك لشهر  " + Monthorder(Convert.ToInt32(month) + 1) +" للعام "+ year+"م:";
+                document.InsertParagraph(MessageDir)
+                    .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
+                    .FontSize(18d).FontSize(18d).Alignment = Alignment.left;
+
+
+                var t = document.AddTable(1, 4);
+                t.Design = TableDesign.TableGrid;
+                t.Alignment = Alignment.center;
+                t.SetColumnWidth(3, 40);
+                t.SetColumnWidth(2, 220);
+                t.SetColumnWidth(1, 170);
+                t.SetColumnWidth(0, 100);
+
+                t.Rows[0].Cells[0].Paragraphs[0].Append("رقم  الوثيقة").Font(new Xceed.Document.NET.Font("Arabic Typesetting")).FontSize(20d).Bold().Alignment = Alignment.center;
+                t.Rows[0].Cells[1].Paragraphs[0].Append("نوع الوثيقة").Font(new Xceed.Document.NET.Font("Arabic Typesetting")).FontSize(20d).Bold().Alignment = Alignment.center;
+                t.Rows[0].Cells[2].Paragraphs[0].Append("اسم صاحب الإجراء").Font(new Xceed.Document.NET.Font("Arabic Typesetting")).FontSize(20d).Bold().Alignment = Alignment.center;
+                t.Rows[0].Cells[3].Paragraphs[0].Append("الرقم").Font(new Xceed.Document.NET.Font("Arabic Typesetting")).FontSize(20d).Bold().Alignment = Alignment.center;
+
+                int CurrentRows = 1;
+                string[] table = new string[2] { "TableMerrageDoc", "TableDivorce" };
+                string[] tableName = new string[2] { "قسيمة زواج", "إشهاداثبات طلاق" };
+                for (int x = 0; x < 2; x++)
+                {
+                    string query =
+                        "select ID, اسم_الزوج as الاسم, رقم_المعاملة as رقم_معاملة_القسم from " + table[x] + " " +
+                        "where رقم_المعاملة in (select رقم_معاملة_القسم from TableGeneralArch " +
+                        "where DATEPART (MONTH, التاريخ) = " + (Convert.ToInt32(month) + 1).ToString() + " and DATEPART (YEAR, التاريخ) = " + year + " and docTable = N'" + table[x] + "' and المستند like N'الإيصال المالي%')";
+
+                    string column = "@" + items;
+                    DataTable dataRowTable = new DataTable();
+                    SqlConnection sqlCon = new SqlConnection(DataSource);
+                    if (sqlCon.State == ConnectionState.Closed)
+                        try
+                        {
+                            sqlCon.Open();
+                        }
+                        catch (Exception ex) { return; }
+                    SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+                    sqlDa.SelectCommand.CommandType = CommandType.Text;
+                    sqlDa.Fill(dataRowTable);
+                    sqlCon.Close();
+                    Console.WriteLine(query);
+                    //MessageBox.Show(dataRowTable.Rows.Count.ToString());
+                    foreach (DataRow dataRow in dataRowTable.Rows)
+                    {
+                        if (dataRow["الاسم"].ToString() != "")
+                        {
+                            t.InsertRow();
+
+                            t.Rows[CurrentRows].Cells[0].Paragraphs[0].Append(dataRow["رقم_معاملة_القسم"].ToString().Split('/')[4]).Font(new Xceed.Document.NET.Font("Arabic Typesetting")).FontSize(20d).Direction = Direction.RightToLeft;
+                            t.Rows[CurrentRows].Cells[1].Paragraphs[0].Append(tableName[x]).Font(new Xceed.Document.NET.Font("Arabic Typesetting")).FontSize(20d).Direction = Direction.RightToLeft;
+                            t.Rows[CurrentRows].Cells[2].Paragraphs[0].Append(dataRow["الاسم"].ToString()).Font(new Xceed.Document.NET.Font("Arabic Typesetting")).FontSize(20d).Direction = Direction.RightToLeft;
+                            t.Rows[CurrentRows].Cells[3].Paragraphs[0].Append(CurrentRows.ToString() + ".").Font(new Xceed.Document.NET.Font("Arabic Typesetting")).FontSize(20d).Direction = Direction.RightToLeft;
+                            CurrentRows++;
+                        }
+                    }
+
+                }
 
                 var p = document.InsertParagraph(Environment.NewLine);
                 p.InsertTableAfterSelf(t);
 
-                string strAttvCo = Environment.NewLine + " بناءً عى ما سبق، لأرجو التكرم بتصديق مبلغ وقدره )" + (92.5 * CurrentRows).ToString() + "( ريال سعودي";
+                string MessageDir1 = Environment.NewLine + "للتكرم بالعلم والإحاطة وإعتمادها طرفكم(.) وتفضلو بقبول وافر الشكر والتقدير";
+                document.InsertParagraph(MessageDir1)
+                    .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
+                    .FontSize(18d).FontSize(18d).Alignment = Alignment.left;
+
+                string strAttvCo = Environment.NewLine + "ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ سوداتي جدة ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ" + Environment.NewLine + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + attendedVC.Text + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + "ع/ القنصل العام بالإنابة";
                 var AttvCo = document.InsertParagraph(strAttvCo)
                     .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
                     .FontSize(20d)
@@ -3809,6 +3916,41 @@ namespace PersAhwal
             }
 
         }
+        
+        private void getAuthGenArch(string search, string doc, Button button)
+        {
+
+           
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableGeneralArch where  رقم_معاملة_القسم=N'" + search + "' and نوع_المستند='" + doc + "'", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            foreach (DataRow reader in dtbl.Rows)
+            {
+                var name = reader["المستند"].ToString();
+                if (name == "") return;
+                try
+                {
+                    var Data = (byte[])reader["Data1"];
+                    var ext = reader["Extension1"].ToString();
+                    var NewFileName = name.Replace(ext, DateTime.Now.ToString("ddMMyyyyhhmmss")) + ext;
+                    button.Enabled = false;
+                    File.WriteAllBytes(NewFileName, Data);
+                    System.Diagnostics.Process.Start(NewFileName);
+                    button.Enabled = true;
+                }
+                catch (Exception ex) { }
+            }
+
+        }
 
 
 
@@ -4214,6 +4356,9 @@ namespace PersAhwal
 
         private void ReportType_SelectedIndexChanged_1(object sender, EventArgs e)
         {
+            yearReport.Width = 290;
+            yearReport.Visible = button24.Visible = false;
+            monthReport.Visible = button5.Visible = false;
             switch (ReportType.SelectedIndex)
             {
                 case 0:
@@ -4398,11 +4543,13 @@ namespace PersAhwal
                     break;
                 case 11:
                     //تقرير المأذونية
-                    yearReport.Items.Clear();
+                    yearReport.Width = 113;
+                    monthReport.Items.Clear();
                     for (int x = 1; x <= 12; x++) {
-                        yearReport.Items.Add(Monthorder(x));
+                        monthReport.Items.Add(Monthorder(x));
                     }
                     yearReport.Visible = button24.Visible = true;
+                    monthReport.Visible = button5.Visible = true;
                     button24.Text = "الشهر";
                     
                     break;
@@ -4552,7 +4699,7 @@ namespace PersAhwal
         //}
         private string DocIDGenerator()
         {
-            string formtype = "18";
+            string formtype = "21";
             string year = DateTime.Now.Year.ToString().Replace("20", "");
             string query = "select max(cast (right(رقم_معاملة_القسم,LEN(رقم_معاملة_القسم) - 15) as int)) as newDocID from TableGeneralArch where رقم_معاملة_القسم like N'ق س ج/80/" + year + "/" + formtype + "%'";
             
@@ -6556,7 +6703,7 @@ namespace PersAhwal
 
         }
 
-        void FillDatafromGenArch(string doc, string id, string table)
+        private string FillDatafromGenArch(string doc, string id, string table)
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
@@ -6566,8 +6713,10 @@ namespace PersAhwal
             DataTable dtbl = new DataTable();
             sqlDa.Fill(dtbl);
             sqlCon.Close();
+            رقم_معاملة_القسم = "";
             foreach (DataRow reader in dtbl.Rows)
             {
+                رقم_معاملة_القسم = reader["رقم_معاملة_القسم"].ToString();
                 var name = reader["المستند"].ToString();
                 var Data = (byte[])reader["Data1"];
                 var ext = reader["Extension1"].ToString();
@@ -6585,6 +6734,74 @@ namespace PersAhwal
 
 
             sqlCon.Close();
+            return رقم_معاملة_القسم;
+        }
+        
+        private string GenArch(string id, string table)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableGeneralArch where  رقم_المرجع='" + id + "' and نوع_المستند='data2' and docTable='" + table + "' and المستند like N'الإيصال المالي%'", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            رقم_معاملة_القسم = "";
+            foreach (DataRow reader in dtbl.Rows)
+            {
+                رقم_معاملة_القسم = reader["رقم_معاملة_القسم"].ToString();
+                var name = reader["المستند"].ToString();
+                var Data = (byte[])reader["Data1"];
+                var ext = reader["Extension1"].ToString();
+                var NewFileName = name.Replace(ext, DateTime.Now.ToString("ddMMyyyyhhmmss")) + ext;
+                File.WriteAllBytes(NewFileName, Data);
+                //if (ext.Contains("doc"))
+                    System.Diagnostics.Process.Start(NewFileName);
+                //else
+                //{
+                //    ArchivePic.ImageLocation = NewFileName;
+                //    ArchivePic.BringToFront();
+                //    ArchivePic.Visible = true;
+                //}
+            }
+
+
+            sqlCon.Close();
+            return رقم_معاملة_القسم;
+        }
+        private string FillGenArch(string id, string table)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableGeneralArch where  رقم_المرجع='" + id + "' and نوع_المستند='data2' and docTable='" + table + "' and المستند like N'الإيصال المالي%'", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            رقم_معاملة_القسم = "";
+            foreach (DataRow reader in dtbl.Rows)
+            {
+                رقم_معاملة_القسم = reader["رقم_معاملة_القسم"].ToString();
+                var name = reader["المستند"].ToString();
+                var Data = (byte[])reader["Data1"];
+                var ext = reader["Extension1"].ToString();
+                var NewFileName = name.Replace(ext, DateTime.Now.ToString("ddMMyyyyhhmmss")) + ext;
+                File.WriteAllBytes(NewFileName, Data);
+                //if (ext.Contains("doc"))
+                    System.Diagnostics.Process.Start(NewFileName);
+                //else
+                //{
+                //    ArchivePic.ImageLocation = NewFileName;
+                //    ArchivePic.BringToFront();
+                //    ArchivePic.Visible = true;
+                //}
+            }
+
+
+            sqlCon.Close();
+            return رقم_معاملة_القسم;
         }
         Image ZoomPicture(Image img, Size size)
         {
@@ -7100,8 +7317,9 @@ namespace PersAhwal
         {
             if (ReportType.SelectedIndex == 11)
             {
-                string ReportName1 = "Report1" + DateTime.Now.ToString("mmss") + ".docx";
-                CreateMarDivReport(ReportName1, yearReport.SelectedIndex.ToString());
+
+                monthReport.Visible = button5.Visible = true;
+                
             }
             else
             {
@@ -7489,8 +7707,9 @@ namespace PersAhwal
             }
         }
 
-        private void CreatePic( string[] location, string id)
+        private void CreatePic( string[] location, string id, string رقم_معاملة_القسم)
         {
+            
             for (int x = 0; x < imagecount; x++)
             {
                 //MessageBox.Show(location[x]);
@@ -7504,11 +7723,11 @@ namespace PersAhwal
                         string extn1 = fileinfo1.Extension;
                         string DocName1 = fileinfo1.Name;
 
-                        insertDocx(id.ToString(), txtHandAuthNo.Text, GregorianDate, EmployeeName, DataSource, extn1, DocName1, txtHAAuthentic.Text+ "_"+id.ToString(), "data2", buffer1);
+                        insertDocx(id.ToString(), txtHandAuthNo.Text, GregorianDate, EmployeeName, DataSource, extn1, DocName1, رقم_معاملة_القسم, "data2", buffer1);
                         //Console.WriteLine(docid);
                     }
                 }
-            }
+            }            
         }
         private void insertDocx(string id, string name, string date, string employee, string dataSource, string extn1, string DocName1, string messNo, string docType, byte[] buffer1)
         {
@@ -7575,16 +7794,19 @@ namespace PersAhwal
             if (btnSaveArch.Text == "حفظ وتأكيد")
             {
                 // Console.WriteLine("حفظ وتأكيد");
+                رقم_معاملة_القسم = DocIDGenerator();
                 iD = SubAuthData(1, txtHandAuthNo.Text, txtHAAuthentic.Text, checkHASex.Text, comboBox2.Text, txtHAGredate.Text, GregorianDate + "_تمت معالجة الملف بواسطة" + EmployeeName, combCount.Text, comment);
-                if(iD != 0) CreatePic(PathImages, iD.ToString());
+                if(iD != 0) CreatePic(PathImages, iD.ToString(), رقم_معاملة_القسم);
             }
             else if (btnSaveArch.Text == "تعديل وتأكيد")
             {
                 iD = Messid;                
                 SubAuthData(iD, txtHandAuthNo.Text, txtHAAuthentic.Text, checkHASex.Text, comboBox2.Text, txtHAGredate.Text, GregorianDate + "_تمت معالجة الملف بواسطة" + EmployeeName, combCount.Text, comment);
-                CreatePic(PathImages, Messid.ToString());
+                CreatePic(PathImages, Messid.ToString(), رقم_معاملة_القسم);
             }
-            MessageBox.Show("الرقم المرجعي " + iD.ToString());
+            string PaperiD =  رقم_معاملة_القسم.Split('/')[4]; ;
+
+            MessageBox.Show("الرقم المرجعي " + PaperiD);
             btnSaveArch.Text = "حفظ وتأكيد";
             txtHandAuthNo.Text = txtHAAuthentic.Text = checkHASex.Text = comboBox2.Text = txtHAGredate.Text = ArchfilePath = "";
 
@@ -7605,7 +7827,6 @@ namespace PersAhwal
             loadPic.Size = new System.Drawing.Size(392, 35);
             reLoadPic.Visible = RescanPic.Visible = false;
         }
-
         private void comboBox1_SelectedIndexChanged_3(object sender, EventArgs e)
         {
             if (comboBox1.SelectedIndex == 0)
@@ -7744,8 +7965,14 @@ namespace PersAhwal
 
         private void Aprove_Click(object sender, EventArgs e)
         {
+            string serverType = "شؤون رعايا";
+            if (Server == "57")
+            {
+                DataSource = DataSource57;
+                serverType = "احوال شخصية";
+            }
             dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
-            SignUp signUp = new SignUp(EmployeeName, UserJobposition, DataSource);
+            SignUp signUp = new SignUp(EmployeeName, UserJobposition, DataSource, serverType, GregorianDate);
             signUp.ShowDialog();
         }
 
@@ -8202,6 +8429,14 @@ namespace PersAhwal
         private void button5_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void monthReport_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string ReportName1 = "Report1" + DateTime.Now.ToString("mmss") + ".docx";
+            CreateMarDivReport1(ReportName1, monthReport.SelectedIndex.ToString(),yearReport.Text);
+            string ReportName2 = "Report2" + DateTime.Now.ToString("mmss") + ".docx";
+            CreateMarDivReport2(ReportName2, monthReport.SelectedIndex.ToString(),yearReport.Text);
         }
 
         private string[] getColList(string table)
