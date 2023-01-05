@@ -158,7 +158,7 @@ namespace PersAhwal
                 if (!Directory.Exists(directory + @"PrimariFiles\SuddaneseAffairs"))
                     System.IO.Directory.CreateDirectory(directory + @"PrimariFiles\SuddaneseAffairs");
             }
-            //Application.Run(new DeepStatistics(dataSource100A, dataSource100S, Modelfilespath + @"\", archFile));
+            Application.Run(new DeepStatistics(dataSource100A, dataSource100S, Modelfilespath + @"\", archFile));
 
             //Application.Run(new Form4(0, -1, EmployeeName, dataSource57, Modelfilespath + @"\", archFile, JobPossition));
 
@@ -172,7 +172,7 @@ namespace PersAhwal
             //Application.Run(new FormPics("57", EmployeeName, "لبيب محمد أحمد", "نائب قنصل", dataSource100A, 0, FormDataFile, archFile, 3, str, str, false, str, str));
             //Application.Run(new Settings("57", false, dataSource100S, dataSource100A, false, Modelfilespath + @"\", archFile, archFile, FormDataFile + @"\", ""));
             //Application.Run(new SignUp("جديد", "موظف محلي", dataSource100A, "احوال شخصية"));
-            Application.Run(new SignUp("جديد", "نائب قنصل", dataSource100A, "احوال شخصية","01-05-2023"));
+            //Application.Run(new SignUp("جديد", "نائب قنصل", dataSource100A, "احوال شخصية","01-05-2023"));
 
             //if (source56)
             //{

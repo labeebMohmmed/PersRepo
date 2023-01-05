@@ -1265,7 +1265,7 @@ namespace PersAhwal
             }
             if (chartAreas2 == 0)
             {
-                chart2.ChartAreas[chartAreas2].AxisX.Title = "الفترة الزمنية"; 
+                chart2.ChartAreas[chartAreas2].AxisX.Title = "الفترة الزمنية";
                 chart2.ChartAreas[chartAreas2].AxisY.Title = YaxisTitle;
                 chart2.ChartAreas[chartAreas2].AxisX.LabelStyle.Interval = 1;
                 chart2.ChartAreas[chartAreas2].AxisY.LabelStyle.Interval = Convert.ToInt32(combGrad2.Text); ;
@@ -1308,6 +1308,7 @@ namespace PersAhwal
                 try
                 {
                     //if(data[x-1] >= 10|| data[x + 1] >= 10)
+                    Console.WriteLine(Monthorder(Convert.ToInt32(month_Year[x]))+" - "+ data[x].ToString());
                     chart2.Series[name].Points.AddXY(Monthorder(Convert.ToInt32(month_Year[x])), data[x]);
                 }
                 catch (Exception e)
@@ -1315,6 +1316,7 @@ namespace PersAhwal
 
                 }
             }
+            MessageBox.Show("");
             //int overSum = 0;
             //string[] reArrange = new string[comboBox.Items.Count];
             //int[] itemIndex = new int[comboBox.Items.Count];

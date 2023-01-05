@@ -134,7 +134,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>xkK5IPl97sNdWWenwHUue++SPm5w+MiLBOMR5ZvppJ0=</dsig:DigestValue>
+        <dsig:DigestValue>Y39JkJABSHzCYMUFs+c0QS8M0/g9tg5krTm1meuHp90=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -967,14 +967,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="PersAhwal.exe" size="5321728">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="PersAhwal.exe" size="5322240">
       <assemblyIdentity name="PersAhwal" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>m4pXi/qhH7aCH9DDQChb2V9xwQSItsY9xRXC3fl194k=</dsig:DigestValue>
+        <dsig:DigestValue>0BnvyeoEd/MWUnIgpR1KCnDVv4PqezHf01g0M1ExX3A=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -986,7 +986,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>1uOTX+ia7o25xFwNkmd9XjxhMlmvbUAmdQ0NUZMGPj8=</dsig:DigestValue>
+        <dsig:DigestValue>o93lFtldCcqLF31ocXMCA1ZPgPw3tGl/1SLPFC1WwFo=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
