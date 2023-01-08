@@ -158,7 +158,8 @@ namespace PersAhwal
                 if (!Directory.Exists(directory + @"PrimariFiles\SuddaneseAffairs"))
                     System.IO.Directory.CreateDirectory(directory + @"PrimariFiles\SuddaneseAffairs");
             }
-            Application.Run(new DeepStatistics(dataSource100A, dataSource100S, Modelfilespath + @"\", archFile));
+            //Application.Run(new DeepStatistics(dataSource100A, dataSource100S, Modelfilespath + @"\", archFile));
+            //Application.Run(new Authentication(dataSource100A, "لبيب محمد أحمد",  archFile, "لبيب محمد أحمد", Modelfilespath, "16-06-1444", "01-08-2023"));
 
             //Application.Run(new Form4(0, -1, EmployeeName, dataSource57, Modelfilespath + @"\", archFile, JobPossition));
 
@@ -174,16 +175,16 @@ namespace PersAhwal
             //Application.Run(new SignUp("جديد", "موظف محلي", dataSource100A, "احوال شخصية"));
             //Application.Run(new SignUp("جديد", "نائب قنصل", dataSource100A, "احوال شخصية","01-05-2023"));
 
-            //if (source56)
-            //{
-            //    Console.WriteLine("server is 56");
-            //    Application.Run(new FormDataBase("56", dataSource100S, dataSource100A, Modelfilespath + @"\", archFile, archFile, FormDataFile + @"\", newFiles));
-            //}
-            //else if (source57)
-            //{
-            //    Console.WriteLine(dataSource100A);
-            //    Application.Run(new FormDataBase("57", dataSource100S, dataSource100A, Modelfilespath + @"\", archFile, archFile, FormDataFile + @"\", newFiles));
-            //}
+            if (source56)
+            {
+                Console.WriteLine("server is 56");
+                Application.Run(new FormDataBase("56", dataSource100S, dataSource100A, Modelfilespath + @"\", archFile, archFile, FormDataFile + @"\", newFiles));
+            }
+            else if (source57)
+            {
+                Console.WriteLine(dataSource100A);
+                Application.Run(new FormDataBase("57", dataSource100S, dataSource100A, Modelfilespath + @"\", archFile, archFile, FormDataFile + @"\", newFiles));
+            }
         }
     }
 }

@@ -3974,7 +3974,7 @@ namespace PersAhwal
 
         }
 
-        private void CreateMessageAuthentication(string EmbassySource, string IqrarNo, string MessageType, string ApplicantSex, string GregorianDate, string HijriDate, string ViseConsul)
+        private void CreateMessageAuthentication(string GregorianDate, string HijriDate, string ViseConsul)
         {
             string ActiveCopy;
             string ReportName = DateTime.Now.ToString("mmss");
@@ -5290,6 +5290,10 @@ namespace PersAhwal
 
         private void button5_Click_1(object sender, EventArgs e)
         {
+            Authentication authentication = new Authentication(DataSource, attendedVC.Text, FilespathOut, EmployeeName, FilespathIn, HijriDate, GregorianDate); ;
+            authentication.ShowDialog();
+
+            return;
             autoCompleteTextBox(txtHAAuthentic, DataSource, "AppName", "TableHandAuth");
             autoCompleteTextBox(txtHandAuthNo, DataSource, "DocID", "TableHandAuth");
             fillDataGrid("");
@@ -7762,7 +7766,7 @@ namespace PersAhwal
             if (panelText.Visible && اسم_الجهة.Text != "" && اسم_صاحب_الشهادة.Text != "" && رقم_الشهادة.Text != "")
             {
                 comment = "في انتظار تأكيد صحتها";
-                CreateMessageAuthentication(txtEmbassey.Text, txtSearch.Text, strMessageType, bolApplicantSex, date.Text, HijriDate, attendedVC.Text);
+                CreateMessageAuthentication(date.Text, HijriDate, attendedVC.Text);
             }
             if (PathImage == "")
             {
@@ -8437,6 +8441,11 @@ namespace PersAhwal
             CreateMarDivReport1(ReportName1, monthReport.SelectedIndex.ToString(),yearReport.Text);
             string ReportName2 = "Report2" + DateTime.Now.ToString("mmss") + ".docx";
             CreateMarDivReport2(ReportName2, monthReport.SelectedIndex.ToString(),yearReport.Text);
+        }
+
+        private void HandProcess_TextChanged(object sender, EventArgs e)
+        {
+
         }
 
         private string[] getColList(string table)
