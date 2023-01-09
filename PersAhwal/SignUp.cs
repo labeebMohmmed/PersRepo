@@ -66,6 +66,7 @@ namespace PersAhwal
 
         private void fillDatagrid()
         {
+            //MessageBox.Show(DataSource);
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
@@ -126,7 +127,7 @@ namespace PersAhwal
                 sqlCmd.Parameters.AddWithValue("@ID", IDEmp);
                 sqlCmd.Parameters.AddWithValue("@Pass", password2.Text);
                 sqlCmd.Parameters.AddWithValue("@RestPAss", "done");
-                sqlCmd.Parameters.AddWithValue("@comment", addInfo + التعليقات_السابقة_Off.Tag);
+                sqlCmd.Parameters.AddWithValue("@comment", addInfo + التعليقات_السابقة_Off.Text);
                 
                 sqlCmd.ExecuteNonQuery();
                 MessageBox.Show("تم إعادة ضبط كلمة المرور");
@@ -162,7 +163,7 @@ namespace PersAhwal
                         sqlCmd.Parameters.AddWithValue("@Pass", password1.Text);
                         sqlCmd.Parameters.AddWithValue("@Aproved", "غير مؤكد");
                         sqlCmd.Parameters.AddWithValue("@Purpose", ServerType);
-                        sqlCmd.Parameters.AddWithValue("@comment", addInfo + التعليقات_السابقة_Off.Tag);
+                        sqlCmd.Parameters.AddWithValue("@comment", addInfo + التعليقات_السابقة_Off.Text);
                         try
                         {
                             sqlCmd.ExecuteNonQuery();
@@ -253,17 +254,27 @@ namespace PersAhwal
             if (dataGridView1.CurrentRow.Index != -1)
             {
                 grdview = true;
-                //ID,EmployeeName,JobPosition,Gender,UserName,Email 
                 IDEmp = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value.ToString());
-                ApplicantName.Text = dataGridView1.CurrentRow.Cells[1].Value.ToString();
-                JobPossition.Text = dataGridView1.CurrentRow.Cells[2].Value.ToString();
-                EmpGender.Text = dataGridView1.CurrentRow.Cells[3].Value.ToString();
-                if (EmpGender.Text == "ذكر") EmpGender.CheckState = CheckState.Unchecked;
-                else EmpGender.CheckState = CheckState.Checked;
-                userName.Text = dataGridView1.CurrentRow.Cells[4].Value.ToString();
+                if (panelEmployee.Visible)
+                {
+                    ApplicantName.Text = dataGridView1.CurrentRow.Cells[1].Value.ToString();
+                    JobPossition.Text = dataGridView1.CurrentRow.Cells[2].Value.ToString();
+                    EmpGender.Text = dataGridView1.CurrentRow.Cells[3].Value.ToString();
+                    if (EmpGender.Text == "ذكر") EmpGender.CheckState = CheckState.Unchecked;
+                    else EmpGender.CheckState = CheckState.Checked;
+                    userName.Text = dataGridView1.CurrentRow.Cells[4].Value.ToString();                    
+                    Register.Text = "تعديل";
+                }
+                else {
+                    اسم_المندوب.Text = dataGridView1.CurrentRow.Cells["MandoubNames"].Value.ToString();
+                    رقم_الهاتف.Text = dataGridView1.CurrentRow.Cells["MandoubPhones"].Value.ToString();
+                    اسم_المنطقة.Text = dataGridView1.CurrentRow.Cells["MandoubAreas"].Value.ToString();
+                    الصفة.Text = dataGridView1.CurrentRow.Cells["الصفة"].Value.ToString();
+                    يوم_المراجعة.Text = dataGridView1.CurrentRow.Cells["مواعيد_الحضور"].Value.ToString();
+                    بيانات_المندوب.Text = "تعديل";
+                }
                 التعليقات_السابقة_Off.Text = dataGridView1.CurrentRow.Cells["comment"].Value.ToString();
                 dataGridView1.Height = 195;
-                //email.Text = dataGridView1.CurrentRow.Cells[5].Value.ToString();                
                 password1.Visible = false;
                 password2.Visible = false;
                 labelpass2.Visible = false;
@@ -389,8 +400,33 @@ namespace PersAhwal
         {
             if (JobPossition.SelectedIndex == 5) {
                 comJob2.SelectedIndex = 5;
-                panelMandoub.Visible = true;
-                panelEmployee.Visible = false;
+                btnActiveteM.Visible = btnDeActiveteM.Visible = panelMandoub.Visible = true;
+                btnActivete.Visible = btnDeActivete.Visible = panelEmployee.Visible = false;
+                fillMandoubGrid();
+            }
+        }
+
+        private void fillMandoubGrid()
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT ID,MandoubNames,MandoubAreas,MandoubPhones,مواعيد_الحضور,الصفة,وضع_المندوب,comment FROM TableMandoudList", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable table = new DataTable();
+            sqlDa.Fill(table);
+            sqlCon.Close();
+            dataGridView1.DataSource = table;
+            if (dataGridView1.Rows.Count > 1)
+            {
+                dataGridView1.Columns[0].Visible = false;
+                dataGridView1.Columns[1].Width = 180;
+                dataGridView1.Columns[2].Width = 80;
+                dataGridView1.Columns[3].Width = 120;
             }
         }
 
@@ -399,9 +435,151 @@ namespace PersAhwal
             if (comJob2.SelectedIndex != 5)
             {
                 JobPossition.SelectedIndex = comJob2.SelectedIndex ;
-                panelMandoub.Visible = false;
-                panelEmployee.Visible = true;
+                btnActiveteM.Visible = btnDeActiveteM.Visible = panelMandoub.Visible = false;
+                btnActivete.Visible = btnDeActivete.Visible = panelEmployee.Visible = true;
+                fillDatagrid();
             }
+        }
+
+        private void بيانات_المندوب_Click(object sender, EventArgs e)
+        {
+            string query = "insert into TableMandoudList (MandoubNames,MandoubAreas,MandoubPhones,مواعيد_الحضور,الصفة,وضع_المندوب,comment) values (@MandoubNames,@MandoubAreas,@MandoubPhones,@مواعيد_الحضور,@الصفة,@وضع_المندوب,@comment)";
+            string addInfo = "تم تسجيل حساب المندوب/" + اسم_المندوب.Text + " بتاريخ " + GriDate + Environment.NewLine + "----------------------------------------------";
+            if (بيانات_المندوب.Text == "تعديل")
+                query = "update TableMandoudList set MandoubNames=@MandoubNames,MandoubAreas=@MandoubAreas,MandoubPhones=@MandoubPhones,مواعيد_الحضور=@مواعيد_الحضور,الصفة=@الصفة,وضع_المندوب=@وضع_المندوب,comment=@comment where ID=@id";
+
+                SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            try
+            {
+                if (بيانات_المندوب.Text == "تعديل")
+                {
+                    addInfo = "تم تعديل حساب المندوب/" + اسم_المندوب.Text + " بتاريخ " + GriDate + Environment.NewLine + "----------------------------------------------";
+
+                    sqlCmd.CommandType = CommandType.Text;
+                    sqlCmd.Parameters.AddWithValue("@id", IDEmp);
+                    sqlCmd.Parameters.AddWithValue("@MandoubNames", اسم_المندوب.Text);
+                    sqlCmd.Parameters.AddWithValue("@MandoubAreas", اسم_المنطقة.Text);
+                    sqlCmd.Parameters.AddWithValue("@MandoubPhones", رقم_الهاتف.Text);
+                    sqlCmd.Parameters.AddWithValue("@وضع_المندوب", "في انتظار تفعيل الحساب");
+                    sqlCmd.Parameters.AddWithValue("@الصفة", الصفة.Text);
+                    sqlCmd.Parameters.AddWithValue("@مواعيد_الحضور", يوم_المراجعة.Text);
+                    sqlCmd.Parameters.AddWithValue("@comment", addInfo + التعليقات_السابقة_Off.Text);
+                    try
+                    {
+                        sqlCmd.ExecuteNonQuery();
+                        MessageBox.Show("تم التعديل بنجاح");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("خطأ في تعديل البيانات");
+                    }
+                }
+                else
+                {
+
+                    sqlCmd.CommandType = CommandType.Text;
+                    sqlCmd.Parameters.AddWithValue("@MandoubNames", اسم_المندوب.Text);
+                    sqlCmd.Parameters.AddWithValue("@MandoubAreas", اسم_المنطقة.Text);
+                    sqlCmd.Parameters.AddWithValue("@MandoubPhones", رقم_الهاتف.Text);
+                    sqlCmd.Parameters.AddWithValue("@وضع_المندوب", "في انتظار تفعيل الحساب");
+                    sqlCmd.Parameters.AddWithValue("@الصفة", الصفة.Text);
+                    sqlCmd.Parameters.AddWithValue("@مواعيد_الحضور", يوم_المراجعة.Text);
+                    sqlCmd.Parameters.AddWithValue("@comment", addInfo + التعليقات_السابقة_Off.Text);
+                    try
+                    {
+                        sqlCmd.ExecuteNonQuery();
+                        MessageBox.Show("تم التسجيل بنجاح");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("خطأ في تسجيل البيانات");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error Message");
+            }
+            finally
+            {
+                sqlCon.Close();
+            }
+            this.Close();
+        }
+
+        private void btnDeActiveteM_Click(object sender, EventArgs e)
+        {
+            string query = "update TableMandoudList set وضع_المندوب=@وضع_المندوب,comment=@comment where ID=@id";
+            string addInfo = "تم تسجيل تعطيل المندوب/" + اسم_المندوب.Text + " بتاريخ " + GriDate + Environment.NewLine + "----------------------------------------------";
+
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            try
+            {
+                if (بيانات_المندوب.Text == "تعديل")
+                {
+                   
+
+                    sqlCmd.CommandType = CommandType.Text;
+                    sqlCmd.Parameters.AddWithValue("@id", IDEmp);
+                    sqlCmd.Parameters.AddWithValue("@وضع_المندوب", "الحساب معطل");
+                    sqlCmd.Parameters.AddWithValue("@comment", addInfo + التعليقات_السابقة_Off.Text);
+                    try
+                    {
+                        sqlCmd.ExecuteNonQuery();
+                        MessageBox.Show("تم تعطيل حساب المندوب بنجاح");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("خطأ في البيانات");
+                    }
+                }
+            }
+            catch (Exception ex) { 
+            }
+
+            this.Close();
+        }
+
+        private void btnActiveteM_Click(object sender, EventArgs e)
+        {
+            string query = "update TableMandoudList set وضع_المندوب=@وضع_المندوب,comment=@comment where ID=@id";
+            string addInfo = "تم تسجيل تفعيل المندوب/" + اسم_المندوب.Text + " بتاريخ " + GriDate + Environment.NewLine + "----------------------------------------------";
+
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            try
+            {
+                if (بيانات_المندوب.Text == "تعديل")
+                {
+
+
+                    sqlCmd.CommandType = CommandType.Text;
+                    sqlCmd.Parameters.AddWithValue("@id", IDEmp);
+                    sqlCmd.Parameters.AddWithValue("@وضع_المندوب", "الحساب مفعل");
+                    sqlCmd.Parameters.AddWithValue("@comment", addInfo + التعليقات_السابقة_Off.Text);
+                    try
+                    {
+                        sqlCmd.ExecuteNonQuery();
+                        MessageBox.Show("تم تفعيل حساب المندوب بنجاح");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("خطأ في البيانات");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            this.Close();
         }
     }
 }

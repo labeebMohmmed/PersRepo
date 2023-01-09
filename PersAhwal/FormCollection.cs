@@ -104,6 +104,7 @@ namespace PersAhwal
             FillDataGridView(DataSource);
             Console.WriteLine("3");
             getMaxRange(DataSource);
+            backgroundWorker2.RunWorkerAsync();
         }
         private void getMaxRange(string dataSource)
         {
@@ -264,7 +265,7 @@ namespace PersAhwal
                     panelAuthRights.Visible = btnNext.Visible = true;
                     PanelDataGrid.Visible = panelapplicationInfo.Visible = false;
                     timer1.Enabled = true;
-                    if (LibtnAdd1.Visible)
+                    if (LibtnAdd1.Visible && (Vitext1.Text.Contains("_")||Vitext2.Text.Contains("_")||Vitext3.Text.Contains("_")||Vitext4.Text.Contains("_")||Vitext5.Text.Contains("_")))
                     {
                         LibtnAdd1Vis = true;
                         fillTextBoxesInvers();
@@ -1842,11 +1843,7 @@ namespace PersAhwal
             //autoCompleteTextBox(DocSource, DataSource, "SDNIssueSource", "TableListCombo");
             fileComboBox(موقع_المعاملة, DataSource, "ArabicAttendVC", "TableListCombo");
             fileComboBoxMandoub(اسم_المندوب, DataSource, "TableMandoudList");
-            autoCompleteTextBox(Vitext1, DataSource, "itext1", "TableAuth");
-            autoCompleteTextBox(Vitext2, DataSource, "itext2", "TableAuth");
-            autoCompleteTextBox(Vitext3, DataSource, "itext3", "TableAuth");
-            autoCompleteTextBox(Vitext4, DataSource, "itext4", "TableAuth");
-            autoCompleteTextBox(Vitext5, DataSource, "itext5", "TableAuth");
+            
 
         }
         private void fileComboBoxMandoub(ComboBox combbox, string source, string tableName)
@@ -3085,6 +3082,15 @@ namespace PersAhwal
                 fs.Write(info, 0, info.Length);
                 fs.Close();
             }
+        }
+
+        private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
+        {
+            autoCompleteTextBox(Vitext1, DataSource, "Vitext1", "TableCollection");
+            autoCompleteTextBox(Vitext2, DataSource, "Vitext2", "TableCollection");
+            autoCompleteTextBox(Vitext3, DataSource, "Vitext3", "TableCollection");
+            autoCompleteTextBox(Vitext4, DataSource, "Vitext4", "TableCollection");
+            autoCompleteTextBox(Vitext5, DataSource, "Vitext5", "TableCollection");
         }
     }    
 }

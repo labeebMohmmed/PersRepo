@@ -7177,7 +7177,7 @@ namespace PersAhwal
             {
                 Console.WriteLine("deleteEmptyRows");
                 {
-                    DeleteEmptyFiles(parrtialAll);
+                    //DeleteEmptyFiles(parrtialAll);
                 }
             }
 
