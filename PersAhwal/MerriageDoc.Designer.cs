@@ -44,23 +44,31 @@
             this.btnFileUpload = new System.Windows.Forms.Button();
             this.btnFileDownload = new System.Windows.Forms.Button();
             this.PanelMain = new System.Windows.Forms.Panel();
+            this.button1 = new System.Windows.Forms.Button();
+            this.وكيل_الزوج1_off = new System.Windows.Forms.TextBox();
+            this.وكيل_الزوجة1_off = new System.Windows.Forms.TextBox();
+            this.اسم_الزوج1_off = new System.Windows.Forms.TextBox();
+            this.ضمير_الزوج3_off = new System.Windows.Forms.TextBox();
+            this.ضمير_الزوج2_off = new System.Windows.Forms.TextBox();
+            this.ضمير_الزوج1_off = new System.Windows.Forms.TextBox();
+            this.صفة_الزوجة2_off = new System.Windows.Forms.TextBox();
+            this.صفة_الزوجة1_off = new System.Windows.Forms.TextBox();
+            this.اسم_الزوجة2_off = new System.Windows.Forms.TextBox();
+            this.اسم_الزوج3_off = new System.Windows.Forms.TextBox();
+            this.اسم_الزوجة1_off = new System.Windows.Forms.TextBox();
+            this.اسم_الزوج2_off = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.رقم_الوثيقة = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.المهنة = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
-            this.طريقة_الطلب = new System.Windows.Forms.ComboBox();
-            this.اسم_المندوب = new System.Windows.Forms.ComboBox();
-            this.mandoubLabel = new System.Windows.Forms.Label();
-            this.label29 = new System.Windows.Forms.Label();
             this.label30 = new System.Windows.Forms.Label();
             this.موظف_الإدخال = new System.Windows.Forms.TextBox();
             this.label28 = new System.Windows.Forms.Label();
             this.ميلاد_الزوجة = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
             this.تاريخ_الميلاد = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
             this.label14 = new System.Windows.Forms.Label();
             this.المأذون = new System.Windows.Forms.ComboBox();
             this.label13 = new System.Windows.Forms.Label();
@@ -109,18 +117,6 @@
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.labDescribed = new System.Windows.Forms.Button();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
-            this.اسم_الزوج2_off = new System.Windows.Forms.TextBox();
-            this.اسم_الزوجة1_off = new System.Windows.Forms.TextBox();
-            this.اسم_الزوجة2_off = new System.Windows.Forms.TextBox();
-            this.اسم_الزوج3_off = new System.Windows.Forms.TextBox();
-            this.صفة_الزوجة2_off = new System.Windows.Forms.TextBox();
-            this.صفة_الزوجة1_off = new System.Windows.Forms.TextBox();
-            this.ضمير_الزوج2_off = new System.Windows.Forms.TextBox();
-            this.ضمير_الزوج1_off = new System.Windows.Forms.TextBox();
-            this.ضمير_الزوج3_off = new System.Windows.Forms.TextBox();
-            this.اسم_الزوج1_off = new System.Windows.Forms.TextBox();
-            this.وكيل_الزوج1_off = new System.Windows.Forms.TextBox();
-            this.وكيل_الزوجة1_off = new System.Windows.Forms.TextBox();
             this.PanelFiles.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView6)).BeginInit();
             this.PanelMain.SuspendLayout();
@@ -296,10 +292,6 @@
             this.PanelMain.Controls.Add(this.label1);
             this.PanelMain.Controls.Add(this.المهنة);
             this.PanelMain.Controls.Add(this.label15);
-            this.PanelMain.Controls.Add(this.طريقة_الطلب);
-            this.PanelMain.Controls.Add(this.اسم_المندوب);
-            this.PanelMain.Controls.Add(this.mandoubLabel);
-            this.PanelMain.Controls.Add(this.label29);
             this.PanelMain.Controls.Add(this.label30);
             this.PanelMain.Controls.Add(this.موظف_الإدخال);
             this.PanelMain.Controls.Add(this.label28);
@@ -353,6 +345,139 @@
             this.PanelMain.Size = new System.Drawing.Size(1351, 679);
             this.PanelMain.TabIndex = 692;
             this.PanelMain.Visible = false;
+            // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.button1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.Location = new System.Drawing.Point(695, 608);
+            this.button1.Name = "button1";
+            this.button1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.button1.Size = new System.Drawing.Size(512, 34);
+            this.button1.TabIndex = 921;
+            this.button1.Text = "إنهاء";
+            this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // وكيل_الزوج1_off
+            // 
+            this.وكيل_الزوج1_off.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.وكيل_الزوج1_off.Location = new System.Drawing.Point(747, 372);
+            this.وكيل_الزوج1_off.Name = "وكيل_الزوج1_off";
+            this.وكيل_الزوج1_off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.وكيل_الزوج1_off.Size = new System.Drawing.Size(56, 35);
+            this.وكيل_الزوج1_off.TabIndex = 975;
+            this.وكيل_الزوج1_off.Visible = false;
+            // 
+            // وكيل_الزوجة1_off
+            // 
+            this.وكيل_الزوجة1_off.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.وكيل_الزوجة1_off.Location = new System.Drawing.Point(675, 375);
+            this.وكيل_الزوجة1_off.Name = "وكيل_الزوجة1_off";
+            this.وكيل_الزوجة1_off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.وكيل_الزوجة1_off.Size = new System.Drawing.Size(56, 35);
+            this.وكيل_الزوجة1_off.TabIndex = 974;
+            this.وكيل_الزوجة1_off.Visible = false;
+            // 
+            // اسم_الزوج1_off
+            // 
+            this.اسم_الزوج1_off.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.اسم_الزوج1_off.Location = new System.Drawing.Point(613, 375);
+            this.اسم_الزوج1_off.Name = "اسم_الزوج1_off";
+            this.اسم_الزوج1_off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.اسم_الزوج1_off.Size = new System.Drawing.Size(56, 35);
+            this.اسم_الزوج1_off.TabIndex = 973;
+            this.اسم_الزوج1_off.Visible = false;
+            // 
+            // ضمير_الزوج3_off
+            // 
+            this.ضمير_الزوج3_off.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ضمير_الزوج3_off.Location = new System.Drawing.Point(541, 378);
+            this.ضمير_الزوج3_off.Name = "ضمير_الزوج3_off";
+            this.ضمير_الزوج3_off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.ضمير_الزوج3_off.Size = new System.Drawing.Size(56, 35);
+            this.ضمير_الزوج3_off.TabIndex = 972;
+            this.ضمير_الزوج3_off.Visible = false;
+            // 
+            // ضمير_الزوج2_off
+            // 
+            this.ضمير_الزوج2_off.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ضمير_الزوج2_off.Location = new System.Drawing.Point(479, 375);
+            this.ضمير_الزوج2_off.Name = "ضمير_الزوج2_off";
+            this.ضمير_الزوج2_off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.ضمير_الزوج2_off.Size = new System.Drawing.Size(56, 35);
+            this.ضمير_الزوج2_off.TabIndex = 971;
+            this.ضمير_الزوج2_off.Visible = false;
+            // 
+            // ضمير_الزوج1_off
+            // 
+            this.ضمير_الزوج1_off.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ضمير_الزوج1_off.Location = new System.Drawing.Point(408, 375);
+            this.ضمير_الزوج1_off.Name = "ضمير_الزوج1_off";
+            this.ضمير_الزوج1_off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.ضمير_الزوج1_off.Size = new System.Drawing.Size(56, 35);
+            this.ضمير_الزوج1_off.TabIndex = 970;
+            this.ضمير_الزوج1_off.Visible = false;
+            // 
+            // صفة_الزوجة2_off
+            // 
+            this.صفة_الزوجة2_off.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.صفة_الزوجة2_off.Location = new System.Drawing.Point(346, 375);
+            this.صفة_الزوجة2_off.Name = "صفة_الزوجة2_off";
+            this.صفة_الزوجة2_off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.صفة_الزوجة2_off.Size = new System.Drawing.Size(56, 35);
+            this.صفة_الزوجة2_off.TabIndex = 969;
+            this.صفة_الزوجة2_off.Visible = false;
+            // 
+            // صفة_الزوجة1_off
+            // 
+            this.صفة_الزوجة1_off.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.صفة_الزوجة1_off.Location = new System.Drawing.Point(275, 375);
+            this.صفة_الزوجة1_off.Name = "صفة_الزوجة1_off";
+            this.صفة_الزوجة1_off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.صفة_الزوجة1_off.Size = new System.Drawing.Size(56, 35);
+            this.صفة_الزوجة1_off.TabIndex = 968;
+            this.صفة_الزوجة1_off.Visible = false;
+            // 
+            // اسم_الزوجة2_off
+            // 
+            this.اسم_الزوجة2_off.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.اسم_الزوجة2_off.Location = new System.Drawing.Point(213, 378);
+            this.اسم_الزوجة2_off.Name = "اسم_الزوجة2_off";
+            this.اسم_الزوجة2_off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.اسم_الزوجة2_off.Size = new System.Drawing.Size(56, 35);
+            this.اسم_الزوجة2_off.TabIndex = 967;
+            this.اسم_الزوجة2_off.Visible = false;
+            // 
+            // اسم_الزوج3_off
+            // 
+            this.اسم_الزوج3_off.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.اسم_الزوج3_off.Location = new System.Drawing.Point(142, 378);
+            this.اسم_الزوج3_off.Name = "اسم_الزوج3_off";
+            this.اسم_الزوج3_off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.اسم_الزوج3_off.Size = new System.Drawing.Size(56, 35);
+            this.اسم_الزوج3_off.TabIndex = 966;
+            this.اسم_الزوج3_off.Visible = false;
+            // 
+            // اسم_الزوجة1_off
+            // 
+            this.اسم_الزوجة1_off.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.اسم_الزوجة1_off.Location = new System.Drawing.Point(80, 378);
+            this.اسم_الزوجة1_off.Name = "اسم_الزوجة1_off";
+            this.اسم_الزوجة1_off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.اسم_الزوجة1_off.Size = new System.Drawing.Size(56, 35);
+            this.اسم_الزوجة1_off.TabIndex = 965;
+            this.اسم_الزوجة1_off.Visible = false;
+            // 
+            // اسم_الزوج2_off
+            // 
+            this.اسم_الزوج2_off.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.اسم_الزوج2_off.Location = new System.Drawing.Point(9, 378);
+            this.اسم_الزوج2_off.Name = "اسم_الزوج2_off";
+            this.اسم_الزوج2_off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.اسم_الزوج2_off.Size = new System.Drawing.Size(56, 35);
+            this.اسم_الزوج2_off.TabIndex = 964;
+            this.اسم_الزوج2_off.Visible = false;
             // 
             // label3
             // 
@@ -417,58 +542,6 @@
             this.label15.TabIndex = 956;
             this.label15.Text = "مهنة الزوج:";
             // 
-            // طريقة_الطلب
-            // 
-            this.طريقة_الطلب.Enabled = false;
-            this.طريقة_الطلب.Font = new System.Drawing.Font("Arabic Typesetting", 18F);
-            this.طريقة_الطلب.FormattingEnabled = true;
-            this.طريقة_الطلب.Items.AddRange(new object[] {
-            "حضور مباشرة إلى القنصلية",
-            "عن طريق مندوب للقنصلية"});
-            this.طريقة_الطلب.Location = new System.Drawing.Point(1006, 567);
-            this.طريقة_الطلب.Name = "طريقة_الطلب";
-            this.طريقة_الطلب.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.طريقة_الطلب.Size = new System.Drawing.Size(201, 35);
-            this.طريقة_الطلب.TabIndex = 954;
-            this.طريقة_الطلب.SelectedIndexChanged += new System.EventHandler(this.طريقة_الطلب_SelectedIndexChanged);
-            // 
-            // اسم_المندوب
-            // 
-            this.اسم_المندوب.Enabled = false;
-            this.اسم_المندوب.Font = new System.Drawing.Font("Arabic Typesetting", 18F);
-            this.اسم_المندوب.FormattingEnabled = true;
-            this.اسم_المندوب.Location = new System.Drawing.Point(696, 567);
-            this.اسم_المندوب.Name = "اسم_المندوب";
-            this.اسم_المندوب.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.اسم_المندوب.Size = new System.Drawing.Size(219, 35);
-            this.اسم_المندوب.TabIndex = 952;
-            this.اسم_المندوب.Visible = false;
-            // 
-            // mandoubLabel
-            // 
-            this.mandoubLabel.AutoSize = true;
-            this.mandoubLabel.Font = new System.Drawing.Font("Arabic Typesetting", 18F);
-            this.mandoubLabel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.mandoubLabel.Location = new System.Drawing.Point(921, 570);
-            this.mandoubLabel.Name = "mandoubLabel";
-            this.mandoubLabel.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.mandoubLabel.Size = new System.Drawing.Size(79, 27);
-            this.mandoubLabel.TabIndex = 953;
-            this.mandoubLabel.Text = "اسم المندوب:";
-            this.mandoubLabel.Visible = false;
-            // 
-            // label29
-            // 
-            this.label29.AutoSize = true;
-            this.label29.Font = new System.Drawing.Font("Arabic Typesetting", 18F);
-            this.label29.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label29.Location = new System.Drawing.Point(1225, 570);
-            this.label29.Name = "label29";
-            this.label29.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label29.Size = new System.Drawing.Size(115, 27);
-            this.label29.TabIndex = 951;
-            this.label29.Text = "طريقة تقديم الطلب:";
-            // 
             // label30
             // 
             this.label30.AutoSize = true;
@@ -531,19 +604,6 @@
             this.تاريخ_الميلاد.Size = new System.Drawing.Size(84, 35);
             this.تاريخ_الميلاد.TabIndex = 924;
             this.تاريخ_الميلاد.TextChanged += new System.EventHandler(this.تاريخ_الميلاد_TextChanged);
-            // 
-            // button1
-            // 
-            this.button1.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.button1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(695, 608);
-            this.button1.Name = "button1";
-            this.button1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.button1.Size = new System.Drawing.Size(512, 34);
-            this.button1.TabIndex = 921;
-            this.button1.Text = "إنهاء";
-            this.button1.UseVisualStyleBackColor = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // label14
             // 
@@ -1094,114 +1154,6 @@
             this.timer2.Interval = 1000;
             this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
             // 
-            // اسم_الزوج2_off
-            // 
-            this.اسم_الزوج2_off.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.اسم_الزوج2_off.Location = new System.Drawing.Point(9, 378);
-            this.اسم_الزوج2_off.Name = "اسم_الزوج2_off";
-            this.اسم_الزوج2_off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.اسم_الزوج2_off.Size = new System.Drawing.Size(56, 35);
-            this.اسم_الزوج2_off.TabIndex = 964;
-            // 
-            // اسم_الزوجة1_off
-            // 
-            this.اسم_الزوجة1_off.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.اسم_الزوجة1_off.Location = new System.Drawing.Point(80, 378);
-            this.اسم_الزوجة1_off.Name = "اسم_الزوجة1_off";
-            this.اسم_الزوجة1_off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.اسم_الزوجة1_off.Size = new System.Drawing.Size(56, 35);
-            this.اسم_الزوجة1_off.TabIndex = 965;
-            // 
-            // اسم_الزوجة2_off
-            // 
-            this.اسم_الزوجة2_off.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.اسم_الزوجة2_off.Location = new System.Drawing.Point(213, 378);
-            this.اسم_الزوجة2_off.Name = "اسم_الزوجة2_off";
-            this.اسم_الزوجة2_off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.اسم_الزوجة2_off.Size = new System.Drawing.Size(56, 35);
-            this.اسم_الزوجة2_off.TabIndex = 967;
-            // 
-            // اسم_الزوج3_off
-            // 
-            this.اسم_الزوج3_off.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.اسم_الزوج3_off.Location = new System.Drawing.Point(142, 378);
-            this.اسم_الزوج3_off.Name = "اسم_الزوج3_off";
-            this.اسم_الزوج3_off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.اسم_الزوج3_off.Size = new System.Drawing.Size(56, 35);
-            this.اسم_الزوج3_off.TabIndex = 966;
-            // 
-            // صفة_الزوجة2_off
-            // 
-            this.صفة_الزوجة2_off.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.صفة_الزوجة2_off.Location = new System.Drawing.Point(346, 375);
-            this.صفة_الزوجة2_off.Name = "صفة_الزوجة2_off";
-            this.صفة_الزوجة2_off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.صفة_الزوجة2_off.Size = new System.Drawing.Size(56, 35);
-            this.صفة_الزوجة2_off.TabIndex = 969;
-            // 
-            // صفة_الزوجة1_off
-            // 
-            this.صفة_الزوجة1_off.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.صفة_الزوجة1_off.Location = new System.Drawing.Point(275, 375);
-            this.صفة_الزوجة1_off.Name = "صفة_الزوجة1_off";
-            this.صفة_الزوجة1_off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.صفة_الزوجة1_off.Size = new System.Drawing.Size(56, 35);
-            this.صفة_الزوجة1_off.TabIndex = 968;
-            // 
-            // ضمير_الزوج2_off
-            // 
-            this.ضمير_الزوج2_off.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ضمير_الزوج2_off.Location = new System.Drawing.Point(479, 375);
-            this.ضمير_الزوج2_off.Name = "ضمير_الزوج2_off";
-            this.ضمير_الزوج2_off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.ضمير_الزوج2_off.Size = new System.Drawing.Size(56, 35);
-            this.ضمير_الزوج2_off.TabIndex = 971;
-            // 
-            // ضمير_الزوج1_off
-            // 
-            this.ضمير_الزوج1_off.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ضمير_الزوج1_off.Location = new System.Drawing.Point(408, 375);
-            this.ضمير_الزوج1_off.Name = "ضمير_الزوج1_off";
-            this.ضمير_الزوج1_off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.ضمير_الزوج1_off.Size = new System.Drawing.Size(56, 35);
-            this.ضمير_الزوج1_off.TabIndex = 970;
-            // 
-            // ضمير_الزوج3_off
-            // 
-            this.ضمير_الزوج3_off.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ضمير_الزوج3_off.Location = new System.Drawing.Point(541, 378);
-            this.ضمير_الزوج3_off.Name = "ضمير_الزوج3_off";
-            this.ضمير_الزوج3_off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.ضمير_الزوج3_off.Size = new System.Drawing.Size(56, 35);
-            this.ضمير_الزوج3_off.TabIndex = 972;
-            // 
-            // اسم_الزوج1_off
-            // 
-            this.اسم_الزوج1_off.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.اسم_الزوج1_off.Location = new System.Drawing.Point(613, 375);
-            this.اسم_الزوج1_off.Name = "اسم_الزوج1_off";
-            this.اسم_الزوج1_off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.اسم_الزوج1_off.Size = new System.Drawing.Size(56, 35);
-            this.اسم_الزوج1_off.TabIndex = 973;
-            // 
-            // وكيل_الزوج1_off
-            // 
-            this.وكيل_الزوج1_off.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.وكيل_الزوج1_off.Location = new System.Drawing.Point(747, 372);
-            this.وكيل_الزوج1_off.Name = "وكيل_الزوج1_off";
-            this.وكيل_الزوج1_off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.وكيل_الزوج1_off.Size = new System.Drawing.Size(56, 35);
-            this.وكيل_الزوج1_off.TabIndex = 975;
-            // 
-            // وكيل_الزوجة1_off
-            // 
-            this.وكيل_الزوجة1_off.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.وكيل_الزوجة1_off.Location = new System.Drawing.Point(675, 375);
-            this.وكيل_الزوجة1_off.Name = "وكيل_الزوجة1_off";
-            this.وكيل_الزوجة1_off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.وكيل_الزوجة1_off.Size = new System.Drawing.Size(56, 35);
-            this.وكيل_الزوجة1_off.TabIndex = 974;
-            // 
             // MerriageDoc
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1293,10 +1245,6 @@
         private System.Windows.Forms.Label الموظف;
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.TextBox موظف_الإدخال;
-        private System.Windows.Forms.ComboBox طريقة_الطلب;
-        private System.Windows.Forms.ComboBox اسم_المندوب;
-        private System.Windows.Forms.Label mandoubLabel;
-        private System.Windows.Forms.Label label29;
         private System.Windows.Forms.TextBox المهنة;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Timer timer1;

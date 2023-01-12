@@ -266,12 +266,14 @@ namespace PersAhwal
                     Register.Text = "تعديل";
                 }
                 else {
+                    btnActiveteM.Enabled = false;
                     اسم_المندوب.Text = dataGridView1.CurrentRow.Cells["MandoubNames"].Value.ToString();
                     رقم_الهاتف.Text = dataGridView1.CurrentRow.Cells["MandoubPhones"].Value.ToString();
                     اسم_المنطقة.Text = dataGridView1.CurrentRow.Cells["MandoubAreas"].Value.ToString();
                     الصفة.Text = dataGridView1.CurrentRow.Cells["الصفة"].Value.ToString();
                     يوم_المراجعة.Text = dataGridView1.CurrentRow.Cells["مواعيد_الحضور"].Value.ToString();
                     بيانات_المندوب.Text = "تعديل";
+                    FillDatafromGenArch("data2", IDEmp.ToString(), "TableMandoudList");
                 }
                 التعليقات_السابقة_Off.Text = dataGridView1.CurrentRow.Cells["comment"].Value.ToString();
                 dataGridView1.Height = 195;
@@ -284,7 +286,39 @@ namespace PersAhwal
                 grdview = false;
             }
         }
-        
+        void FillDatafromGenArch(string doc, string id, string table)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableGeneralArch where  رقم_المرجع='" + id + "' and نوع_المستند='" + doc + "' and docTable='" + table + "'", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            if(dtbl.Rows.Count > 0) {
+                var selectedOption = MessageBox.Show("عرض الخطاب؟", "للمندوب خطاب تفويض مؤرشف",  MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (selectedOption == DialogResult.Yes)
+                {
+                    foreach (DataRow reader in dtbl.Rows)
+                    {
+                        var name = reader["المستند"].ToString();
+                        var Data = (byte[])reader["Data1"];
+                        var ext = reader["Extension1"].ToString();
+                        var NewFileName = name.Replace(ext, DateTime.Now.ToString("ddMMyyyyhhmmss")) + ext;
+                        File.WriteAllBytes(NewFileName, Data);
+                        System.Diagnostics.Process.Start(NewFileName);
+                        
+                    }
+                }
+                btnActiveteM.Enabled = true;
+            }
+            
+
+
+            sqlCon.Close();
+        }
         private void dataGridView1_RowIndex(int ID)
         {
             if (dataGridView1.Rows.Count > 1)

@@ -1838,7 +1838,8 @@ namespace PersAhwal
             fileComboBox2(نوع_المعاملة, DataSource, "ArabicGenIgrar", "TableListCombo");
             
             fileComboBox(وجهة_المعاملة, DataSource, "ArabCountries", "TableListCombo");
-            if(وجهة_المعاملة.Items.Count > 0 ) وجهة_المعاملة.SelectedIndex = 0; 
+            if(وجهة_المعاملة.Items.Count > 0 ) 
+                وجهة_المعاملة.SelectedIndex = 0; 
             //fileComboBoxAttend(DocType, DataSource, "DocType", "TableListCombo");
             //autoCompleteTextBox(DocSource, DataSource, "SDNIssueSource", "TableListCombo");
             fileComboBox(موقع_المعاملة, DataSource, "ArabicAttendVC", "TableListCombo");
@@ -1846,6 +1847,8 @@ namespace PersAhwal
             
 
         }
+       
+
         private void fileComboBoxMandoub(ComboBox combbox, string source, string tableName)
         {
             //combbox.Visible = true;
@@ -2980,6 +2983,7 @@ namespace PersAhwal
         {
             if (طريقة_الإجراء.Checked) return;
             else طريقة_الطلب.Checked = true;
+            
         }
 
         private void نوع_الموقع_CheckedChanged(object sender, EventArgs e)
@@ -3091,6 +3095,11 @@ namespace PersAhwal
             autoCompleteTextBox(Vitext3, DataSource, "Vitext3", "TableCollection");
             autoCompleteTextBox(Vitext4, DataSource, "Vitext4", "TableCollection");
             autoCompleteTextBox(Vitext5, DataSource, "Vitext5", "TableCollection");
+        }
+
+        private void timer3_Tick(object sender, EventArgs e)
+        {
+            ColorFulGrid9();
         }
     }    
 }

@@ -44,6 +44,7 @@ using DocumentFormat.OpenXml.Office2016.Drawing.Charts;
 using System.Text.RegularExpressions;
 using static Azure.Core.HttpHeader;
 using System.Security.Cryptography.X509Certificates;
+using SautinSoft.Document;
 
 namespace PersAhwal
 {
@@ -77,7 +78,7 @@ namespace PersAhwal
             جنسية_الدبلوماسي.SelectedIndex = 0;
             نوع_تاريخ_التوثيق.SelectedIndex = 0;
             عدد_المستندات_off.SelectedIndex = 0;
-            نوع_تاريخ_التوثيق.SelectedIndex = 2;
+            نوع_تاريخ_التوثيق.SelectedIndex = 4;
             HijriDate = hijriDate;
             FilespathIn = filespathIn;
             FilespathOut = filespathOut;// + @"\";    
@@ -139,7 +140,7 @@ namespace PersAhwal
         {
             
             SqlConnection sqlCon = new SqlConnection(DataSource);
-            string query1 = "SELECT ID,اسم_موقع_المكاتبة ,نوع_المكاتبة,جنسية_الدبلوماسي,تاريخ_الأرشفة,Viewed,تاريخ_توقيع_المكاتبة,العدد,تعليق,مدير_القسم,موظف_الأرشقة,اسم_الجهة,اسم_صاحب_الشهادة,رقم_الشهادة FROM TableHandAuth order by ID desc";
+            string query1 = "SELECT ID,اسم_موقع_المكاتبة ,نوع_المكاتبة,جنسية_الدبلوماسي,تاريخ_الأرشفة,Viewed,تاريخ_توقيع_المكاتبة,العدد,تعليق,مدير_القسم,موظف_الأرشقة,اسم_الجهة,اسم_صاحب_الشهادة,رقم_الشهادة,رقم_معاملة_القسم FROM TableHandAuth order by ID desc";
             //try
             //{
                 if (sqlCon.State == ConnectionState.Closed)
@@ -388,7 +389,7 @@ namespace PersAhwal
             var selectedOption = MessageBox.Show("", "هل الشهادة صحيحة؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (selectedOption == DialogResult.Yes)
             {
-                comment = "هادة صحيحة";
+                comment = "شهادة صحيحة";
             }
             else if (selectedOption == DialogResult.No)
                 comment = "مستند غير صحيح";
@@ -575,7 +576,7 @@ namespace PersAhwal
                 //MessageBox.Show(dateAuth.Text);
                 BindingSource bs = new BindingSource();
                 bs.DataSource = dataGridView1.DataSource;
-                bs.Filter = dataGridView1.Columns[4].HeaderText.ToString() + " LIKE '%" + البحث_بتاريخ.Text + "%'";
+                bs.Filter = dataGridView1.Columns[4].HeaderText.ToString() + " LIKE '" + البحث_بتاريخ.Text + "%'";
                 dataGridView1.DataSource = dataGridView1.DataSource = bs;
             }
 
@@ -701,7 +702,10 @@ namespace PersAhwal
 
                     pictureBox1.ImageLocation = PathImages[imagecount];
                     drawTempPics(PathImages[imagecount]);
-                    dataGridView1.Visible = false;
+                    dataGridView1.Visible = txtSearch.Visible = btnSearch.Visible = false;
+                    عرض_القائمة.Visible = pictureBox1.Visible = true;
+                    
+                    pictureBox1.BringToFront();
                     جنسية_الدبلوماسي.Location = new System.Drawing.Point(115, 0);
                     جنسية_الدبلوماسي.Width = 190;
 
@@ -761,7 +765,7 @@ namespace PersAhwal
             pictureBox1.ImageLocation = PathImages[PicID];
             dataGridView1.SendToBack();
             pictureBox1.BringToFront();
-            pictureBox1.Visible = true;
+            عرض_القائمة.Visible = pictureBox1.Visible = true;
             var selectedOption = MessageBox.Show("حذف المستند من قائمة الأرشفة؟", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (selectedOption == DialogResult.Yes)
             {
@@ -814,22 +818,60 @@ namespace PersAhwal
         private void button7_Click(object sender, EventArgs e)
         {
             fillDataGrid("");
-            عرض_القائمة.Visible = false;
+            dataGridView1.Visible = txtSearch.Visible = btnSearch.Visible = true;
+            pictureBox1.Visible = عرض_القائمة.Visible = false;
         }
 
         private void نوع_تاريخ_التوثيق_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (نوع_تاريخ_التوثيق.SelectedIndex < 2)
+
+            if (نوع_تاريخ_التوثيق.SelectedIndex == 0)
+            {
+                البحث_بتاريخ.Text = تاريخ_الأرشفة.Text;
+                نوع_تاريخ_التوثيق.Width = 286;
+                نوع_تاريخ_التوثيق.Location = new System.Drawing.Point(19, 44);
+                btnYear.Visible = combYear.Visible = comboMonth.Visible = btnMonth.Visible = false;
+            }
+
+            else if (نوع_تاريخ_التوثيق.SelectedIndex == 1)
             {
                 نوع_تاريخ_التوثيق.Width = 190;
                 نوع_تاريخ_التوثيق.Location = new System.Drawing.Point(115, 44);
+                btnYear.Visible = combYear.Visible = comboMonth.Visible = btnMonth.Visible = false;
             }
-            else
-            {
-                نوع_تاريخ_التوثيق.Width = 286;
-                نوع_تاريخ_التوثيق.Location = new System.Drawing.Point(19, 44);
+            else if (نوع_تاريخ_التوثيق.SelectedIndex == 2) {
+                combYear.Visible = btnYear.Visible = true;
+                comboMonth.Visible = btnMonth.Visible = false;
             }
-            
+            else if (نوع_تاريخ_التوثيق.SelectedIndex == 3) {
+                combYear.Visible = comboMonth.Visible = true;
+                btnYear.Visible = btnMonth.Visible = true;
+            }
+            else if (نوع_تاريخ_التوثيق.SelectedIndex == 4) {
+                fillDataGrid("");
+            }
+        }
+
+        private void fillYears(ComboBox combo)
+        {
+            combo.Items.Clear();
+            string query = "select distinct DATENAME(YEAR, تاريخ_الأرشفة)  as years from TableHandAuth order by DATENAME(YEAR, تاريخ_الأرشفة) desc";
+            SqlConnection Con = new SqlConnection(DataSource);
+            if (Con.State == ConnectionState.Closed)
+                try
+                {
+                    Con.Open();
+                    SqlDataAdapter sqlDa = new SqlDataAdapter(query, Con);
+                    sqlDa.SelectCommand.CommandType = CommandType.Text;
+                    DataTable dtbl2 = new DataTable();
+                    sqlDa.Fill(dtbl2);
+                    Con.Close();
+                    foreach (DataRow dataRow in dtbl2.Rows)
+                    {
+                        combo.Items.Add(dataRow["years"].ToString());
+                    }
+                }
+                catch (Exception ex) { }
         }
 
         private void fileUpdate_Click(object sender, EventArgs e)
@@ -859,7 +901,7 @@ namespace PersAhwal
                     pictureBox1.ImageLocation = PathImages[PicID];
                     picUpdate.ImageLocation = PathImages[PicID];
                     //drawTempPics(PathImages[PicID]);
-                    dataGridView1.Visible = false;
+                    dataGridView1.Visible = txtSearch.Visible = btnSearch.Visible = false; 
                     جنسية_الدبلوماسي.Location = new System.Drawing.Point(115, 0);
                     جنسية_الدبلوماسي.Width = 190;
                     fileUpdate.Enabled = false;
@@ -907,6 +949,7 @@ namespace PersAhwal
         {
             autoCompleteTextBox(اسم_موقع_المكاتبة, DataSource, "اسم_موقع_المكاتبة", "TableHandAuth");
             autoCompleteTextBox(نوع_المكاتبة, DataSource, "نوع_المكاتبة", "TableHandAuth");
+            fillYears(combYear);
         }
         private void autoCompleteTextBox(TextBox textbox, string source, string comlumnName, string tableName)
         {
@@ -955,6 +998,53 @@ namespace PersAhwal
                 byte[] info = new UTF8Encoding(true).GetBytes(dataasstring);
                 fs.Write(info, 0, info.Length);
                 fs.Close();
+            }
+        }
+
+        private void button35_Click(object sender, EventArgs e)
+        {
+            اسم_الجهة.Enabled = اسم_صاحب_الشهادة.Enabled = رقم_الشهادة.Enabled = true;
+        }
+
+        private void txtSearch_TextChanged(object sender, EventArgs e)
+        {
+            string year  = SpecificDigit(txtSearch.Text, 1, 2);
+            string docID = SpecificDigit(txtSearch.Text, 3, 10);
+            if (docID.Length != 0)
+            {
+                string id = "ق س ج/80/" + year + "/21/" + docID;
+                //MessageBox.Show(id);
+                BindingSource bs = new BindingSource();
+                bs.DataSource = dataGridView1.DataSource;
+                bs.Filter = dataGridView1.Columns["رقم_معاملة_القسم"].HeaderText.ToString() + " LIKE '" + id + "'";
+                dataGridView1.DataSource = bs;
+                Console.WriteLine(id);
+                //ColorFulGrid9();
+
+                //MessageBox.Show(docID);
+            }
+        }
+
+        private void combYear_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            fillDataGrid(""); 
+            if (نوع_تاريخ_التوثيق.SelectedIndex == 2) {
+                BindingSource bs = new BindingSource();
+                bs.DataSource = dataGridView1.DataSource;
+                bs.Filter = dataGridView1.Columns["تاريخ_الأرشفة"].HeaderText.ToString() + " LIKE '%-" + combYear.Text + "'";
+                dataGridView1.DataSource = bs;
+            }
+        }
+
+        private void comboMonth_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            fillDataGrid("");
+            if (نوع_تاريخ_التوثيق.SelectedIndex == 3)
+            {
+                BindingSource bs = new BindingSource();
+                bs.DataSource = dataGridView1.DataSource;
+                bs.Filter = dataGridView1.Columns["تاريخ_الأرشفة"].HeaderText.ToString() + " LIKE '" + comboMonth.Text +"-%-"+combYear.Text + "'";
+                dataGridView1.DataSource = bs;
             }
         }
     }

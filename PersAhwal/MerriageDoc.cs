@@ -82,9 +82,9 @@ namespace PersAhwal
             if(المأذون.Items.Count> AtVCIndex)
                 المأذون.SelectedIndex = AtVCIndex;
             else المأذون.SelectedIndex = 0;
-            طريقة_الطلب.SelectedIndex = 0;
+            
             طريقة_الإجراء.SelectedIndex = 0;
-            اسم_المندوب.Text = "";
+            
             definColumn(DataSource);
         }
         private void definColumn(string dataSource)
@@ -893,16 +893,7 @@ namespace PersAhwal
             }
         }
 
-        private void طريقة_الطلب_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (طريقة_الطلب.SelectedIndex != 0)
-                اسم_المندوب.Visible = true;
-            else
-            {
-                اسم_المندوب.Text = "";
-                اسم_المندوب.Visible = false;
-            }
-        }
+        
         string lastInput2 = "";
         bool عمر_الزوج_الحرج = true;
         private void تاريخ_الميلاد_TextChanged(object sender, EventArgs e)

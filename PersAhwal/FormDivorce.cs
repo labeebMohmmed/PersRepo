@@ -314,56 +314,7 @@ namespace PersAhwal
             
             
             
-            string part4 = رقم_المعاملة.Text.Split('/')[4];
-            string part1to3 = رقم_المعاملة.Text.Split('/')[0] + "/" + رقم_المعاملة.Text.Split('/')[1] + "/" + رقم_المعاملة.Text.Split('/')[2] + "/" + رقم_المعاملة.Text.Split('/')[3] + "/";
-            //MessageBox.Show(part4);
-            //MessageBox.Show(part1to3);
-            //MessageBox.Show(part1to3+ رقم_الوثيقة.Text);
-            if(رقم_الوثيقة.Text!=""&&رقم_الوثيقة.Text!="بدون")
-                رقم_المعاملة.Text = part1to3 + رقم_الوثيقة.Text;
-            if (!ready()) return;
             
-            SqlConnection sqlConnection = new SqlConnection(DataSource);
-            if (sqlConnection.State == ConnectionState.Closed)
-                sqlConnection.Open();
-            SqlCommand sqlCommand = new SqlCommand(updateAll, sqlConnection);
-            sqlCommand.CommandType = CommandType.Text;
-            sqlCommand.Parameters.AddWithValue("@id", genIDNo);
-            for (int i = 0; i < allList.Length; i++)
-            {
-                if (allList[i] == "تعليق")
-                {
-                    sqlCommand.Parameters.AddWithValue("@" + allList[i], commentInfo());
-                }
-                else
-                    foreach (Control control in PanelMain.Controls)
-                    {
-                        if (control.Name == allList[i])
-                        {
-                            sqlCommand.Parameters.AddWithValue("@" + allList[i], control.Text);
-                            break;
-                        }
-                    }
-            }
-            sqlCommand.ExecuteNonQuery();
-            updateGenName(رقم_المعاملة.Text, genIDNo.ToString());
-            if (newData)
-            {
-                colIDs[0] = رقم_المعاملة.Text;
-                colIDs[1] = genIDNo.ToString();
-                colIDs[2] = GregorianDate;
-                colIDs[3] = اسم_الزوج.Text;
-                colIDs[4] = الموظف.Text;
-                colIDs[5] = "";
-                colIDs[6] = "";
-                colIDs[7] = "new";
-                addarchives(colIDs);
-            }
-            addNewAppNameInfo1(اسم_الزوج);
-            addNewAppNameInfo2(اسم_الزوجة);
-            addNewAppNameInfo3(الشاهد_الاول, وثيقة_الشاهد_الاول);
-            addNewAppNameInfo3(الشاهد_الثاني, وثيقة_الشاهد_الثاني);
-            this.Close();
         }
         private void addNewAppNameInfo1(TextBox textName)
         {
@@ -987,6 +938,60 @@ namespace PersAhwal
             textTo.Text = textTo.Text.Split('_')[AllIndex - 1];
             if (index == 0)
                 textTo.Text = def;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string part4 = رقم_المعاملة.Text.Split('/')[4];
+            string part1to3 = رقم_المعاملة.Text.Split('/')[0] + "/" + رقم_المعاملة.Text.Split('/')[1] + "/" + رقم_المعاملة.Text.Split('/')[2] + "/" + رقم_المعاملة.Text.Split('/')[3] + "/";
+            //MessageBox.Show(part4);
+            //MessageBox.Show(part1to3);
+            //MessageBox.Show(part1to3+ رقم_الوثيقة.Text);
+            if (رقم_الوثيقة.Text != "" && رقم_الوثيقة.Text != "بدون")
+                رقم_المعاملة.Text = part1to3 + رقم_الوثيقة.Text;
+            if (!ready()) return;
+
+            SqlConnection sqlConnection = new SqlConnection(DataSource);
+            if (sqlConnection.State == ConnectionState.Closed)
+                sqlConnection.Open();
+            SqlCommand sqlCommand = new SqlCommand(updateAll, sqlConnection);
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.Parameters.AddWithValue("@id", genIDNo);
+            for (int i = 0; i < allList.Length; i++)
+            {
+                if (allList[i] == "تعليق")
+                {
+                    sqlCommand.Parameters.AddWithValue("@" + allList[i], commentInfo());
+                }
+                else
+                    foreach (Control control in PanelMain.Controls)
+                    {
+                        if (control.Name == allList[i])
+                        {
+                            sqlCommand.Parameters.AddWithValue("@" + allList[i], control.Text);
+                            break;
+                        }
+                    }
+            }
+            sqlCommand.ExecuteNonQuery();
+            updateGenName(رقم_المعاملة.Text, genIDNo.ToString());
+            if (newData)
+            {
+                colIDs[0] = رقم_المعاملة.Text;
+                colIDs[1] = genIDNo.ToString();
+                colIDs[2] = GregorianDate;
+                colIDs[3] = اسم_الزوج.Text;
+                colIDs[4] = الموظف.Text;
+                colIDs[5] = "";
+                colIDs[6] = "";
+                colIDs[7] = "new";
+                addarchives(colIDs);
+            }
+            addNewAppNameInfo1(اسم_الزوج);
+            addNewAppNameInfo2(اسم_الزوجة);
+            addNewAppNameInfo3(الشاهد_الاول, وثيقة_الشاهد_الاول);
+            addNewAppNameInfo3(الشاهد_الثاني, وثيقة_الشاهد_الثاني);
+            this.Close();
         }
     }
 }
