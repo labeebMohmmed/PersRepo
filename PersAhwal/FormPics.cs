@@ -121,6 +121,7 @@ namespace PersAhwal
         bool ArchMandoub = false;
         string ArchMandoubID = "";
         string getComment = "";
+        string getProcedName= "";
         public FormPics( string serverType, string empName, string aVcName,string jobPosition,string dataSource, int index, string filespathIn, string filespathOut, int formType, string[] strData, string[] strSubData, bool archiveState, string[] mandounList, string[] griDate)
         {
             InitializeComponent();
@@ -1335,7 +1336,7 @@ namespace PersAhwal
             using (SqlConnection saConn = new SqlConnection(source))
             {
                 saConn.Open();
-                string query = "select MandoubNames,MandoubAreas from " + tableName;
+                string query = "select MandoubNames,MandoubAreas,وضع_المندوب from " + tableName;
                 SqlCommand cmd = new SqlCommand(query, saConn);
                 cmd.CommandType = CommandType.Text;
                 cmd.ExecuteNonQuery();
@@ -1344,7 +1345,7 @@ namespace PersAhwal
                 dataAdapter.Fill(table);
                 foreach (DataRow dataRow in table.Rows)
                 {
-                    if (dataRow["MandoubNames"].ToString() != "") 
+                    if (dataRow["MandoubNames"].ToString() != ""&&dataRow["وضع_المندوب"].ToString() == "الحساب مفعل") 
                         combbox.Items.Add(dataRow["MandoubNames"].ToString() + " - "+ dataRow["MandoubAreas"].ToString());
                 }
                 saConn.Close();
@@ -1373,7 +1374,11 @@ namespace PersAhwal
                 foreach (DataRow dataRow in table.Rows)
                 {
                     if (dataRow["MandoubNames"].ToString() == name)
+                    {
                         str = " خاصة بالسيد " + dataRow["MandoubNames"].ToString() + " مندوب جالية منطقة " + dataRow["MandoubAreas"].ToString() + Environment.NewLine + " موعد المواجعة  " + dataRow["مواعيد_الحضور"].ToString() + " رقم الهاتف " + dataRow["MandoubPhones"].ToString();
+                        if (dataRow["MandoubAreas"].ToString() == "القنصلية العامة لجمهورية السودان - جدة")
+                            str = " خاصة بالسيد " + dataRow["MandoubNames"].ToString() + " مندوب القنصلية العامة لجمهورية السودان - جدة رقم الهاتف " + dataRow["MandoubPhones"].ToString();
+                    }
                 }
                 saConn.Close();
             }
@@ -1864,7 +1869,7 @@ namespace PersAhwal
                 query = "Select ID," + allInsertNamesList[0] + "," + allInsertNamesList[7] + " from " + TableList + " where " + allInsertNamesList[2] + "=@" + allInsertNamesList[2];
             SqlCommand sqlCmd1 = new SqlCommand(query, Con);
             sqlCmd1.Parameters.Add("@" + allInsertNamesList[2], SqlDbType.NVarChar).Value = documenNo;
-            //MessageBox.Show(query);
+            //MessageBox.Show("query "+query);
             if (Con.State == ConnectionState.Closed)
                 Con.Open();
 
@@ -2234,7 +2239,7 @@ namespace PersAhwal
             {
                 for (int x = 0; x < imagecount; x++)
                 {
-                    MessageBox.Show(ArchMandoubID);
+                    //MessageBox.Show(ArchMandoubID);
                     if (location[x] != "")
                     {
                         using (Stream stream = File.OpenRead(location[x]))
@@ -2329,7 +2334,7 @@ namespace PersAhwal
                             var fileinfo1 = new FileInfo(location[x]);
                             string extn1 = fileinfo1.Extension;
                             string DocName1 = fileinfo1.Name;
-                            insertDoc(FileIDNo, GregorianDate, EmpName, DataSource, extn1, DocName1, docIDNumber, "data2", buffer1);
+                            insertDoc(getProcedName, FileIDNo, GregorianDate, EmpName, DataSource, extn1, DocName1, docIDNumber, "data2", buffer1);
                         }
                     }
                 }
@@ -2373,7 +2378,7 @@ namespace PersAhwal
                             var fileinfo1 = new FileInfo(location[x]);
                             string extn1 = fileinfo1.Extension;
                             string DocName1 = fileinfo1.Name;
-                            insertDoc(FileIDNo, GregorianDate, EmpName, DataSource, extn1, DocName1, docIDNumber, "data2", buffer1);
+                            insertDoc(getProcedName,FileIDNo, GregorianDate, EmpName, DataSource, extn1, DocName1, docIDNumber, "data2", buffer1);
                         }
                     }
                 }
@@ -2419,7 +2424,7 @@ namespace PersAhwal
             {
                 data3check = true;
                 name = row["الاسم"].ToString();
-                
+                //MessageBox.Show(name);
                 if (name != "")
                 {
                     if (row["نوع_المستند"].ToString() == "data1")
@@ -2693,6 +2698,27 @@ namespace PersAhwal
 
         }
 
+        private void insertDoc(string name, string id, string date, string employee, string dataSource, string extn1, string DocName1, string messNo, string docType, byte[] buffer1)
+        {
+            string query = "INSERT INTO TableGeneralArch (Data1,Extension1,نوع_المستند,رقم_معاملة_القسم,المستند,الموظف,التاريخ,رقم_المرجع,docTable,الاسم) values (@Data1,@Extension1,@نوع_المستند,@رقم_معاملة_القسم,@المستند,@الموظف,@التاريخ,@رقم_المرجع,@docTable,@الاسم)";
+            SqlConnection sqlCon = new SqlConnection(dataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.Parameters.AddWithValue("@رقم_معاملة_القسم", messNo);
+            sqlCmd.Parameters.AddWithValue("@نوع_المستند", docType);
+            sqlCmd.Parameters.AddWithValue("@الموظف", employee);
+            sqlCmd.Parameters.AddWithValue("@التاريخ", date);
+            sqlCmd.Parameters.AddWithValue("@رقم_المرجع", id);
+            sqlCmd.Parameters.AddWithValue("@الاسم", name);
+            sqlCmd.Parameters.Add("@Data1", SqlDbType.VarBinary).Value = buffer1;
+            sqlCmd.Parameters.Add("@Extension1", SqlDbType.Char).Value = extn1;
+            sqlCmd.Parameters.Add("@المستند", SqlDbType.NVarChar).Value = DocName1;
+            sqlCmd.Parameters.Add("@docTable", SqlDbType.NVarChar).Value = TableList;            
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
+        }
         private void insertDoc(string id, string date, string employee, string dataSource, string extn1, string DocName1, string messNo, string docType, byte[] buffer1)
         {
             string query = "INSERT INTO TableGeneralArch (Data1,Extension1,نوع_المستند,رقم_معاملة_القسم,المستند,الموظف,التاريخ,رقم_المرجع,docTable) values (@Data1,@Extension1,@نوع_المستند,@رقم_معاملة_القسم,@المستند,@الموظف,@التاريخ,@رقم_المرجع,@docTable)";
@@ -2705,7 +2731,7 @@ namespace PersAhwal
             sqlCmd.Parameters.AddWithValue("@نوع_المستند", docType);
             sqlCmd.Parameters.AddWithValue("@الموظف", employee);
             sqlCmd.Parameters.AddWithValue("@التاريخ", date);
-            sqlCmd.Parameters.AddWithValue("@رقم_المرجع", id);
+            sqlCmd.Parameters.AddWithValue("@رقم_المرجع", id);            
             sqlCmd.Parameters.Add("@Data1", SqlDbType.VarBinary).Value = buffer1;
             sqlCmd.Parameters.Add("@Extension1", SqlDbType.Char).Value = extn1;
             sqlCmd.Parameters.Add("@المستند", SqlDbType.NVarChar).Value = DocName1;
@@ -2785,7 +2811,7 @@ namespace PersAhwal
 
         private void button1_Click(object sender, EventArgs e)
         {
-            btnSaveEnd.Enabled = false;
+            //tnSaveEnd.Enabled = false;
             CreatePic(PathImage);
             if (!printOut)return;
             if (ArchiveState)
@@ -3269,7 +3295,8 @@ namespace PersAhwal
                 loadPic.Size = new System.Drawing.Size(153, 59);
                 loadPic.Location = new System.Drawing.Point(164, 69);
                 reLoadPic.Visible = button2.Visible = true;
-
+                if (ServerType == "56")
+                    btnSaveEnd.Visible = true;
 
             }
             else
@@ -3703,19 +3730,8 @@ namespace PersAhwal
                 drawBoxesTitle("استمارة الطلب", 40);
                 drawBoxes(formName, false, wordInFile);
             }
-            //}
-
-        //CreateAuth(date.Split('-')[2].Replace("20", "") + SubNo + rowCount + Environment.NewLine + date, wordInFile, wordOutFile);
-
-
-        //MessageBox.Show(Combo2.Text);
-
-
-
-
-
-        checkBasicInfo(docIDNumber);
-            //MessageBox.Show(Combo2.Text);
+            getProcedName = checkBasicInfo(docIDNumber);
+            //MessageBox.Show(FileIDNo +" -- "+getProcedName);
             string CheckState = checkArch(docIDNumber);
             requiredDocument.Text = CheckState;
            // panelFinalArch.Visible = true;  
@@ -3850,7 +3866,7 @@ namespace PersAhwal
                 int found = todayList(mandoubName.Text.Trim(), Labdate);            
             if(found != 0 && ArchiveState )
             {
-                btnSaveEnd.Enabled = false;
+                //btnSaveEnd.Enabled = false;
                 MessageBox.Show("المندوب لدية عدد " + found.ToString() + " مكاتبات غير مكتملة،،، لا يمكن المتابعة");                
             }
             else
@@ -3981,8 +3997,8 @@ namespace PersAhwal
             button5.Enabled = false;
             reqFile = "";
             OpenFile("استمارات المناديب", false);
-            string DocxOutFile = FilespathOut + Combo1.Text.Trim() + DateTime.Now.ToString("ssmm") + ".docx";
-            string PDFOutFile = FilespathOut + Combo1.Text.Trim() + DateTime.Now.ToString("ssmm") + ".pdf";
+            string DocxOutFile = FilespathOut + mandoubName.Text.Trim() + DateTime.Now.ToString("ssmm") + ".docx";
+            string PDFOutFile = FilespathOut + mandoubName.Text.Trim() + DateTime.Now.ToString("ssmm") + ".pdf";
 
             object oBMiss = System.Reflection.Missing.Value;
             Word.Application oBMicroWord = new Word.Application();

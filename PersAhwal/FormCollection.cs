@@ -582,16 +582,16 @@ namespace PersAhwal
         {
             string comment = "";
             if (تعليق_جديد_Off.Text == "" && التعليقات_السابقة_Off.Text == "")
-                comment = "";
+                comment = "قام  " + EmpName + " بإدخال البيانات " + Environment.NewLine + DateTime.Now.ToString("G") + Environment.NewLine + "--------------" + Environment.NewLine;
 
             if (تعليق_جديد_Off.Text == "" && التعليقات_السابقة_Off.Text != "")
-                comment = التعليقات_السابقة_Off.Text;
+                comment = "قام  " + EmpName + " ببعض التعديلات " + Environment.NewLine + DateTime.Now.ToString("G") + Environment.NewLine + "--------------" + Environment.NewLine + التعليقات_السابقة_Off.Text;
 
             if (تعليق_جديد_Off.Text != "" && التعليقات_السابقة_Off.Text == "")
-                comment = تعليق_جديد_Off.Text.Trim() + Environment.NewLine + التاريخ_الميلادي.Text + Environment.NewLine + "--------------" + Environment.NewLine;
+                comment = تعليق_جديد_Off.Text.Trim() + Environment.NewLine + "قام  " + EmpName + " ببعض التعديلات " + Environment.NewLine + DateTime.Now.ToString("G") + Environment.NewLine + "--------------" + Environment.NewLine;
 
             if (تعليق_جديد_Off.Text != "" && التعليقات_السابقة_Off.Text != "")
-                comment = تعليق_جديد_Off.Text.Trim() + Environment.NewLine + التاريخ_الميلادي.Text + Environment.NewLine + "--------------" + Environment.NewLine + "*" + التعليقات_السابقة_Off.Text.Trim();
+                comment = تعليق_جديد_Off.Text.Trim() + Environment.NewLine + "قام  " + EmpName + " ببعض التعديلات " + Environment.NewLine + DateTime.Now.ToString("G") + Environment.NewLine + "--------------" + Environment.NewLine + "*" + التعليقات_السابقة_Off.Text.Trim();
 
             return comment;
         }
@@ -1847,17 +1847,17 @@ namespace PersAhwal
             
 
         }
-       
+
 
         private void fileComboBoxMandoub(ComboBox combbox, string source, string tableName)
         {
-            //combbox.Visible = true;
+            combbox.Visible = true;
             combbox.Items.Clear();
-            //combbox.Items.Add("حضور مباشرة إلى القنصلية");
+            combbox.Items.Add("حضور مباشرة إلى القنصلية");
             using (SqlConnection saConn = new SqlConnection(source))
             {
                 saConn.Open();
-                string query = "select MandoubNames,MandoubAreas from " + tableName;
+                string query = "select MandoubNames,MandoubAreas,وضع_المندوب from " + tableName;
                 SqlCommand cmd = new SqlCommand(query, saConn);
                 cmd.CommandType = CommandType.Text;
                 cmd.ExecuteNonQuery();
@@ -1866,12 +1866,14 @@ namespace PersAhwal
                 dataAdapter.Fill(table);
                 foreach (DataRow dataRow in table.Rows)
                 {
-                    if (dataRow["MandoubNames"].ToString() != "")
+                    if (dataRow["MandoubNames"].ToString() != "" && dataRow["وضع_المندوب"].ToString() == "الحساب مفعل")
                         combbox.Items.Add(dataRow["MandoubNames"].ToString() + " - " + dataRow["MandoubAreas"].ToString());
                 }
                 saConn.Close();
             }
-        }
+            if (combbox.Items.Count > 0)
+                combbox.SelectedIndex = 0;
+        } 
         private void fileComboBoxAttend(ComboBox combbox, string source, string comlumnName, string tableName)
         {
             combbox.Items.Clear();
@@ -2055,15 +2057,23 @@ namespace PersAhwal
                 موقع_المعاملة.Width = 150; 
                 System.Globalization.CultureInfo TypeOfLanguage = new System.Globalization.CultureInfo("ar-SA");
                 InputLanguage.CurrentInputLanguage = InputLanguage.FromCulture(TypeOfLanguage);
+                نوع_الإجراء.Width = 329;
+                موقع_المعاملة.Width = 184;
+                موقع_المعاملة.RightToLeft = RightToLeft.Yes;
             }
             else
             {
-                اللغة.Text = "الامجليزية";
+                //MessageBox.Show("checked");
+                اللغة.Text = "الانجليزية";
+                نوع_الإجراء.Width = 300;
+                
                 fileComboBox(نوع_المعاملة, DataSource, "EnglishGenIgrar", "TableListCombo");
                 fileComboBoxAttend(موقع_المعاملة, DataSource, "EnglishAttendVC", "TableListCombo");
-                موقع_المعاملة.Width = 250;
+                
                 System.Globalization.CultureInfo TypeOfLanguage = new System.Globalization.CultureInfo("en-US");
                 InputLanguage.CurrentInputLanguage = InputLanguage.FromCulture(TypeOfLanguage);
+                موقع_المعاملة.Width = 300;
+                موقع_المعاملة.RightToLeft = RightToLeft.No;
             }
             if (نوع_المعاملة.Items.Count > 0) نوع_المعاملة.SelectedIndex = 0;
             if (موقع_المعاملة.Items.Count > AtVCIndex) موقع_المعاملة.SelectedIndex = AtVCIndex;

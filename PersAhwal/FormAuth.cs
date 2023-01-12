@@ -26,6 +26,9 @@ using static System.Net.WebRequestMethods;
 using File = System.IO.File;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using Color = System.Drawing.Color;
+using Chart = System.Windows.Forms.DataVisualization.Charting.Chart;
+using ChartArea = System.Windows.Forms.DataVisualization.Charting.ChartArea;
+using Legend = System.Windows.Forms.DataVisualization.Charting.Legend  ;
 using Microsoft.Office.Core;
 using static Azure.Core.HttpHeader;
 using Aspose.Words.Settings;
@@ -39,6 +42,7 @@ using System.Data.SqlTypes;
 using SautinSoft.Document;
 using Path = System.IO.Path;
 using OfficeOpenXml.Drawing.Controls;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace PersAhwal
 {
@@ -138,9 +142,16 @@ namespace PersAhwal
         int autoFillIndex = 0;
         bool gridFill = true;
         string getSexIndex = "1";
+        Chart chart1 ;
+        Legend legend1 ;
+        ChartArea chartArea1 ;
+        int chartAreas1 = 0;
+        bool holdData1 = false;
+        int borderDashStyle1 = 0;
         public FormAuth(int atvc, int rowid, string AuthNo, string datasource, string filespathIn, string filespathOut, string empName, string jobposition, string greDate, string hijriDate,bool testItems )
         {
             InitializeComponent();
+           
             FilespathIn = filespathIn;
             FilespathOut =  filespathOut + @"\" ;
             test = testItems;
@@ -155,7 +166,10 @@ namespace PersAhwal
             FillDataGridView(DataSource);
             getMaxRange(DataSource);
             اسم_الموظف.Text = EmpName;
-            
+            fillChart();
+            chart1 = new Chart();
+            legend1 = new Legend();
+            chartArea1 = new ChartArea();
             //dataSourceWrite(FilespathOut + "autoDocs.txt", "No");
             //FindAndReplace(@"D:\ArchiveFiles\aa195648.docx", "إجراءات التنازل وتحويل السجل في إسمه", false);
         }
@@ -2883,7 +2897,7 @@ namespace PersAhwal
             else return;
             panelShow(currentPanelIndex);
 
-           
+            fillChart();
         }
         
         private void btnPrevious_Click(object sender, EventArgs e)
@@ -2910,8 +2924,8 @@ namespace PersAhwal
                     //false
                     btnSettings.Visible = btnDelete.Visible = btnFile1.Visible = btnFile2.Visible = btnFile3.Visible = Panelapp.Visible = false;
                     finalPanel.Visible = panelAuthRights.Visible = panelAuthRights.Visible = btnPrevious.Visible = panelapplicationInfo.Visible = false;
-
                     
+
                     break;                    
                 case 1:
                     //Basic Info
@@ -3139,13 +3153,13 @@ namespace PersAhwal
         }
         private void fileComboBoxMandoub(ComboBox combbox, string source, string tableName)
         {
-            //combbox.Visible = true;
+            combbox.Visible = true;
             combbox.Items.Clear();
-            //combbox.Items.Add("حضور مباشرة إلى القنصلية");
+            combbox.Items.Add("حضور مباشرة إلى القنصلية");
             using (SqlConnection saConn = new SqlConnection(source))
             {
                 saConn.Open();
-                string query = "select MandoubNames,MandoubAreas from " + tableName;
+                string query = "select MandoubNames,MandoubAreas,وضع_المندوب from " + tableName;
                 SqlCommand cmd = new SqlCommand(query, saConn);
                 cmd.CommandType = CommandType.Text;
                 cmd.ExecuteNonQuery();
@@ -3154,13 +3168,13 @@ namespace PersAhwal
                 dataAdapter.Fill(table);
                 foreach (DataRow dataRow in table.Rows)
                 {
-                    if (dataRow["MandoubNames"].ToString() != "")
+                    if (dataRow["MandoubNames"].ToString() != "" && dataRow["وضع_المندوب"].ToString() == "الحساب مفعل")
                         combbox.Items.Add(dataRow["MandoubNames"].ToString() + " - " + dataRow["MandoubAreas"].ToString());
                 }
                 saConn.Close();
             }
-            //if (combbox.Items.Count > 0)
-            //    combbox.SelectedIndex = 0;
+            if (combbox.Items.Count > 0)
+                combbox.SelectedIndex = 0;
         }
 
         private void fileComboBox(ComboBox combbox, string source, string comlumnName, string tableName, bool order)
@@ -4125,17 +4139,16 @@ namespace PersAhwal
             private void commentInfo()
         {
             if (تعليق_جديد_Off.Text == "" && التعليقات_السابقة_Off.Text == "")
-                تعليق.Text = "";
+                تعليق.Text = "قام  " + اسم_الموظف.Text + " بإدخال البيانات " + Environment.NewLine + DateTime.Now.ToString("G") + Environment.NewLine + "--------------" + Environment.NewLine;
 
             if (تعليق_جديد_Off.Text == "" && التعليقات_السابقة_Off.Text != "")
-                تعليق.Text = التعليقات_السابقة_Off.Text;
+                تعليق.Text = "قام  " + اسم_الموظف.Text + " ببعض التعديلات " + Environment.NewLine + DateTime.Now.ToString("G") + Environment.NewLine + "--------------" + Environment.NewLine + التعليقات_السابقة_Off.Text;
 
             if (تعليق_جديد_Off.Text != "" && التعليقات_السابقة_Off.Text == "")
-                تعليق.Text = تعليق_جديد_Off.Text.Trim() + Environment.NewLine + DateTime.Now.ToString("g") + Environment.NewLine + "--------------" + Environment.NewLine;
+                تعليق.Text = تعليق_جديد_Off.Text.Trim() + Environment.NewLine + "قام  " + اسم_الموظف.Text + " ببعض التعديلات " + Environment.NewLine + DateTime.Now.ToString("G") + Environment.NewLine + "--------------" + Environment.NewLine;
 
             if (تعليق_جديد_Off.Text != "" && التعليقات_السابقة_Off.Text != "")
-                تعليق.Text = تعليق_جديد_Off.Text.Trim() + Environment.NewLine + DateTime.Now.ToString("g") + Environment.NewLine + "--------------" + Environment.NewLine + "*" + التعليقات_السابقة_Off.Text.Trim();
-
+                تعليق.Text = تعليق_جديد_Off.Text.Trim() + Environment.NewLine + "قام  " + اسم_الموظف.Text + " ببعض التعديلات " + Environment.NewLine + DateTime.Now.ToString("G") + Environment.NewLine + "--------------" + Environment.NewLine + "*" + التعليقات_السابقة_Off.Text.Trim();
         }
 
         private void وجهة_التوكيل_SelectedIndexChanged(object sender, EventArgs e)
@@ -5191,6 +5204,194 @@ namespace PersAhwal
                 addButtonInfo(Vitext1.Text.Split('_')[x], Vitext2.Text.Split('_')[x], Vitext3.Text.Split('_')[x], Vitext4.Text.Split('_')[x], Vitext5.Text.Split('_')[x]);
             }
             Vitext1.Text = Vitext2.Text = Vitext3.Text = Vitext4.Text = Vitext5.Text = "";
+        }
+        private void fillChart() {
+            // 
+            // chart1
+            // 
+            
+            chart1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            chart1.BorderSkin.BorderWidth = 4;            
+            chartArea1.AxisX.IntervalAutoMode = System.Windows.Forms.DataVisualization.Charting.IntervalAutoMode.VariableCount;
+            chartArea1.AxisX.IsLabelAutoFit = false;
+            chartArea1.AxisX.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)((((((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont)
+            | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.StaggeredLabels)
+            | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep30)
+            | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep45)
+            | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.WordWrap)));
+            chartArea1.AxisX.LabelStyle.Angle = -30;
+            chartArea1.AxisX.LabelStyle.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            chartArea1.AxisX.LabelStyle.Interval = 0D;
+            chartArea1.AxisX.TitleFont = new System.Drawing.Font("Arabic Typesetting", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            chartArea1.AxisY.IsLabelAutoFit = false;
+            chartArea1.AxisY.LabelStyle.Font = new System.Drawing.Font("Arabic Typesetting", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            chartArea1.AxisY.TitleFont = new System.Drawing.Font("Arabic Typesetting", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            chartArea1.BorderColor = System.Drawing.Color.IndianRed;
+            chartArea1.Name = "ChartArea1";
+            chart1.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            chart1.Legends.Add(legend1);
+            chart1.Location = new System.Drawing.Point(22, 96);
+            chart1.Name = "chart1";
+            chart1.Size = new System.Drawing.Size(1521, 552);
+            chart1.TabIndex = 823;
+            chart1.Text = "0";
+            chart1.Click += new System.EventHandler(chart1_Click);
+            chart1.BringToFront();
+            this.Controls.Add(chart1);
+            chart1.Visible = true;
+            PanelDataGrid.Visible = false;
+            MessageBox.Show("chart1");
+        }
+        //private void comSeriers()
+        //{
+        //    this.comSeriers.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+        //    this.comSeriers.FormattingEnabled = true;
+        //    this.comSeriers.Location = new System.Drawing.Point(203, 12);
+        //    this.comSeriers.MaxDropDownItems = 20;
+        //    this.comSeriers.Name = "comSeriers";
+        //    this.comSeriers.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+        //    this.comSeriers.Size = new System.Drawing.Size(250, 35);
+        //    this.comSeriers.TabIndex = 832;
+        //    this.comSeriers.Text = "المخططات";
+        //    this.comSeriers.SelectedIndexChanged += new System.EventHandler(this.comSeriers_SelectedIndexChanged);
+        //}
+        private void chart1_Click(object sender, EventArgs e)
+        {
+            //holdData1 = true;
+            //holdData1count++;
+            //holdData2 = true;
+            //holdData2count++;
+        }
+        private void AddAchartData(ComboBox comboBox, string name, int[] data, bool col_Graph, string yAxisTitle, bool col)
+        {
+            int sum = 0;
+            if (!holdData1)
+            {
+                while (chart1.Series.Count > 0)
+                {
+                    chart1.Series.RemoveAt(0);
+                    comSeriers.Items.RemoveAt(0);
+
+                }
+                borderDashStyle1 = 0;
+            }
+            else borderDashStyle1++;
+            bool found = false;
+            for (int x = 0; x < comSeriers.Items.Count; x++)
+            {
+                if (comSeriers.Items[x].ToString() == name)
+                {
+                    found = true;
+                }
+            }
+            if (!found)
+            {
+                chart1.Series.Add(name);
+                comSeriers.Items.Add(name);
+                //MessageBox.Show(name);
+                //chart1.Series[name].IsValueShownAsLabel = بشم;
+
+            }
+            if (chartAreas1 == 0)
+            {
+
+                chart1.ChartAreas[chartAreas1].AxisY.Title = yAxisTitle;
+                chart1.ChartAreas[chartAreas1].AxisX.LabelStyle.Interval = 1;
+                chart1.ChartAreas[chartAreas1].AxisY.LabelStyle.Interval = 100;
+                chart1.ChartAreas[chartAreas1].AxisY.LabelStyle.Font = new System.Drawing.Font("Arabic Typesetting", 16F, System.Drawing.FontStyle.Regular);
+
+            }
+            if (col_Graph)
+            {
+                switch (borderDashStyle1)
+                {
+                    case 0:
+                        chart1.Series[name].BorderDashStyle = ChartDashStyle.Solid;
+                        break;
+                    case 1:
+                        chart1.Series[name].BorderDashStyle = ChartDashStyle.Dot;
+                        break;
+                    case 2:
+                        chart1.Series[name].BorderDashStyle = ChartDashStyle.Dash;
+                        break;
+                    case 3:
+                        chart1.Series[name].BorderDashStyle = ChartDashStyle.DashDot;
+                        break;
+                    case 4:
+                        chart1.Series[name].BorderDashStyle = ChartDashStyle.DashDotDot;
+                        borderDashStyle1 = 0;
+                        break;
+                }
+
+                chart1.Series[name].BorderWidth = 3;
+                //chart1.Series[name].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            }
+            //if (radioColumns.Checked)
+                chart1.Series[name].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Column;
+            //else
+            //    chart1.Series[name].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+
+            for (int x = 0; x < comboBox.Items.Count; x++)
+            {
+                chart1.Series[name].Points.AddXY(comboBox.Items[x], data[x]);
+            }
+
+            int overSum = 0;
+            string[] reArrange = new string[comboBox.Items.Count];
+            int[] itemIndex = new int[comboBox.Items.Count];
+            for (int x = 0; x < comboBox.Items.Count; x++)
+                reArrange[x] = comboBox.Items[x].ToString();
+
+            for (int x = 0; x < comboBox.Items.Count; x++)
+
+                itemIndex[x] = x;
+
+            for (int x = 0; x < data.Length; x++)
+            {
+                overSum = overSum + data[x];
+                for (int y = 0; y < comboBox.Items.Count - 1; y++)
+                    if (data[y] < data[y])
+                    {
+                        int temp1 = data[y];
+                        data[y] = data[y + 1];
+                        data[y + 1] = temp1;
+
+                        string temp2 = reArrange[y];
+                        reArrange[y] = reArrange[y + 1];
+                        reArrange[y + 1] = temp2;
+
+                        int temp3 = itemIndex[y];
+                        itemIndex[y] = itemIndex[y + 1];
+                        itemIndex[y + 1] = temp3;
+                    }
+            }
+
+            OverallStatis.Items.Clear();
+            for (int x = 0; x < data.Length; x++)
+            {
+                for (int y = 0; y < data.Length - 1; y++)
+                {
+                    int temp = data[y];
+                    data[y] = data[y + 1];
+                    data[y + 1] = temp;
+                }
+            }
+
+            for (int x = 0; x < comboBox.Items.Count; x++)
+            {
+                int avg = 1;
+                if (overSum != 0)
+                    avg = 1 + (100 * data[x]) / overSum;
+                OverallStatis.Items.Add(reArrange[x] + " % " + avg.ToString());
+
+                //drawColumns(itemIndex[x-1], avg, reArrange[x-1]);
+                //MessageBox.Show(data[x - 1].ToString());
+            }
+            chartAreas1++;
+            //btnSumStatis.Text = overSum.ToString() + " معاملة";
         }
     }
 }

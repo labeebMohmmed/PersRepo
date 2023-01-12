@@ -64,12 +64,12 @@ namespace PersAhwal
             fillFileBox(DataSource);
             if (AddEdit)
             {
-                dataGridView1.Visible = false;
+                dataGridView1.Visible = labDescribed.Visible = false;
                 PanelMain.Visible = true;
             }
             else
             {
-                dataGridView1.Visible = true;
+                dataGridView1.Visible = labDescribed.Visible = true;
                 PanelMain.Visible = false;
             }
 
@@ -144,7 +144,28 @@ namespace PersAhwal
             return false;
         }
 
+        private void ColorFulGrid9()
+        {
 
+            int arch = 0;
+            int inComb = 0;
+            int i = 0;
+            for (; i < dataGridView1.Rows.Count - 1; i++)
+            {
+                if (dataGridView1.Rows[i].Cells[2].Value.ToString() == "")
+                {
+                    inComb++;
+                }
+                if (dataGridView1.Rows[i].Cells["حالة_الارشفة"].Value.ToString() == "مؤرشف نهائي")
+                {
+                    dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
+
+                    arch++;
+                }
+            }
+            labDescribed.Text = "عدد (" + i.ToString() + ") معاملة .. عدد (" + inComb.ToString() + ") غير مكتمل.. والمؤرشف منها عدد (" + arch.ToString() + ")...";
+
+        }
         private string[] getColList(string table)
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
@@ -236,16 +257,19 @@ namespace PersAhwal
                     {
                         if (!control.Name.Contains("التاريخ") && !control.Name.Contains("موظف"))
                             control.Text = dataGridView1.CurrentRow.Cells[control.Name].Value.ToString();
+                        
+                            
                     }
 
                 }
+                التعليقات_السابقة_Off.Text = dataGridView1.CurrentRow.Cells["تعليق"].Value.ToString();
                 if (dataGridView1.CurrentRow.Cells["اسم_الزوج"].Value.ToString() == "")
                 {
                     newData = true;
                     FillDatafromGenArch("data1", genIDNo.ToString(), "TableDivorce");
                 }
                 AddEdit = false;
-                dataGridView1.Visible = false;
+                dataGridView1.Visible = labDescribed.Visible = false;
                 PanelMain.Visible = true;
             }
         }
@@ -533,16 +557,16 @@ namespace PersAhwal
         {
             string comment = "";
             if (تعليق_جديد_Off.Text == "" && التعليقات_السابقة_Off.Text == "")
-                comment = "";
+                comment = "قام  " + الموظف.Text + " بإدخال البيانات " + Environment.NewLine + DateTime.Now.ToString("G") + Environment.NewLine + "--------------" + Environment.NewLine;
 
             if (تعليق_جديد_Off.Text == "" && التعليقات_السابقة_Off.Text != "")
-                comment = التعليقات_السابقة_Off.Text;
+                comment = "قام  " + الموظف.Text + " ببعض التعديلات " + Environment.NewLine + DateTime.Now.ToString("G") + Environment.NewLine + "--------------" + Environment.NewLine + التعليقات_السابقة_Off.Text;
 
             if (تعليق_جديد_Off.Text != "" && التعليقات_السابقة_Off.Text == "")
-                comment = تعليق_جديد_Off.Text.Trim() + Environment.NewLine + GregorianDate + Environment.NewLine + "--------------" + Environment.NewLine;
+                comment = تعليق_جديد_Off.Text.Trim() + Environment.NewLine + "قام  " + الموظف.Text + " ببعض التعديلات " + Environment.NewLine + DateTime.Now.ToString("G") + Environment.NewLine + "--------------" + Environment.NewLine;
 
             if (تعليق_جديد_Off.Text != "" && التعليقات_السابقة_Off.Text != "")
-                comment = تعليق_جديد_Off.Text.Trim() + Environment.NewLine + GregorianDate + Environment.NewLine + "--------------" + Environment.NewLine + "*" + التعليقات_السابقة_Off.Text.Trim();
+                comment = تعليق_جديد_Off.Text.Trim() + Environment.NewLine + "قام  " + الموظف.Text + " ببعض التعديلات " + Environment.NewLine + DateTime.Now.ToString("G") + Environment.NewLine + "--------------" + Environment.NewLine + "*" + التعليقات_السابقة_Off.Text.Trim();
 
             return comment;
         }
@@ -612,13 +636,13 @@ namespace PersAhwal
         {
             if (PanelMain.Visible)
             {
-                dataGridView1.Visible = true;
+                dataGridView1.Visible = labDescribed.Visible = true;
                 PanelMain.Visible = false;
                 dataGridView1.BringToFront();
             }
             else
             {
-                dataGridView1.Visible = false;
+                dataGridView1.Visible = labDescribed.Visible = false;
                 PanelMain.Visible = true;
                 dataGridView1.SendToBack();
             }
@@ -959,8 +983,10 @@ namespace PersAhwal
             sqlCommand.Parameters.AddWithValue("@id", genIDNo);
             for (int i = 0; i < allList.Length; i++)
             {
+                
                 if (allList[i] == "تعليق")
                 {
+                    //MessageBox.Show(allList[i] + " - " + commentInfo());
                     sqlCommand.Parameters.AddWithValue("@" + allList[i], commentInfo());
                 }
                 else
@@ -992,6 +1018,11 @@ namespace PersAhwal
             addNewAppNameInfo3(الشاهد_الاول, وثيقة_الشاهد_الاول);
             addNewAppNameInfo3(الشاهد_الثاني, وثيقة_الشاهد_الثاني);
             this.Close();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            ColorFulGrid9();
         }
     }
 }

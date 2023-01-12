@@ -15,6 +15,8 @@ using Path = System.IO.Path;
 using static Azure.Core.HttpHeader;
 using System.Runtime.InteropServices;
 using Excel = Microsoft.Office.Interop.Excel;
+using OfficeOpenXml;
+
 namespace PersAhwal
 {
     public partial class Settings : Form
@@ -73,7 +75,8 @@ namespace PersAhwal
         string[] itemsicheck1 = new string[5];
         bool AuthType = true;
         bool reqGrid = false;
-        
+        string[] IDList = new string[100];
+        string[] rightColNames;
         public Settings(string server, bool newSettings, string dataSource56, string dataSource57, bool setDataBase, string filepathIn, string filepathOut, string archFile, string formDataFile, string colName)
         {
             InitializeComponent();
@@ -4076,6 +4079,395 @@ namespace PersAhwal
 
         }
 
+        private void button12_Click_1(object sender, EventArgs e)
+        {
+            panelChar.Visible = true;
+            panelChar.Height = 475;
+        }
+
+        private void button34_Click(object sender, EventArgs e)
+        {
+
+        }
+        private void StaredColumns()
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+            SqlDataAdapter sqlDa1 = new SqlDataAdapter("select * from TableAuthRights", sqlCon);
+            sqlDa1.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa1.Fill(dtbl);
+            dataGridView7.DataSource = dtbl;
+
+            sqlCon.Close();
+
+
+            using (SaveFileDialog sfd = new SaveFileDialog() { Filter = "Excel workbook|*.xlsx" })
+            {
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        var fileinfo = new FileInfo(sfd.FileName);
+                        using (var package = new ExcelPackage(fileinfo))
+                        {
+                            ExcelWorksheet excelsheet = package.Workbook.Worksheets.Add("Rights");
+                            excelsheet.Cells.LoadFromDataTable(dtbl);
+
+                            //excelsheet.Cells.LoadFromCollection(dataGridView7.DataSource); 
+                            package.Save();
+
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+
+
+                }
+            }
+        }
+
+        private void StaredColumns1()
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+            SqlDataAdapter sqlDa1 = new SqlDataAdapter("select * from TableAddContext", sqlCon);
+            sqlDa1.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa1.Fill(dtbl);
+            dataGridView7.DataSource = dtbl;
+
+            sqlCon.Close();
+
+
+            using (SaveFileDialog sfd = new SaveFileDialog() { Filter = "Excel workbook|*.xlsx" })
+            {
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        var fileinfo = new FileInfo(sfd.FileName);
+                        using (var package = new ExcelPackage(fileinfo))
+                        {
+                            ExcelWorksheet excelsheet = package.Workbook.Worksheets.Add("Context");
+                            excelsheet.Cells.LoadFromDataTable(dtbl);
+
+                            //excelsheet.Cells.LoadFromCollection(dataGridView7.DataSource); 
+                            package.Save();
+
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+
+
+                }
+            }
+        }
+
+        private void button34_Click_1(object sender, EventArgs e)
+        {
+            StaredColumns();
+            var selectedOption = MessageBox.Show("", "قوائم المعاملات؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (selectedOption == DialogResult.Yes)
+            {
+                StaredColumns1();
+            }
+        }
+
+        private void button35_Click_1(object sender, EventArgs e)
+        {
+            string[] colName = getColName();
+            for (int col = 0; col < colName.Length; col++)
+            {
+                //MessageBox.Show(colName[col]);
+                if (!checkColumnNames(colName[col].Replace("-", "_"), IDList[col]))
+                {
+                    //MessageBox.Show("colName " +colName[col]);
+                    CreateColumns(colName[col].Replace("-", "_"));
+                    if (checkID("1"))
+                        UpdateColumn1(DataSource, colName[col].Replace("-", "_"), 1, colName[col], "TableAuthRights");
+                    else InsertColumn(DataSource, colName[col].Replace("-", "_"), 1, colName[col], "TableAuthRights");
+                }
+            }
+
+            //checkQllReightsFun(newFun());
+            newFun();
+            xlWorkBook.Close(true, null, null);
+            xlApp.Quit();
+            Marshal.ReleaseComObject(xlWorkSheet);
+            Marshal.ReleaseComObject(xlWorkBook);
+            Marshal.ReleaseComObject(xlApp);
+        }
+
+        private Excel.Range newFun()
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.ShowDialog();
+            xlApp = new Excel.Application();
+            xlWorkBook = xlApp.Workbooks.Open(@dlg.FileName, 0, true, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
+            xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
+
+            range = xlWorkSheet.UsedRange;
+            rw = range.Rows.Count;
+            cl = range.Columns.Count;
+            button23.Enabled = false;
+            ColumnNamesLoad();
+
+            for (cCnt = 2; cCnt <= cl; cCnt++)
+            {
+                //Console.WriteLine("rightColNames " + rightColNames.Length.ToString() + " cCnt " + cCnt.ToString());
+                string cols = "";
+                try
+                {
+                    string colname = (string)(range.Cells[1, cCnt] as Excel.Range).Value2;
+
+                    if (string.IsNullOrEmpty(colname)) continue;
+
+                    cols = colname.Replace(" ", "_").Replace("-", "_");
+                    if (!checkColumnNames(cols, ""))
+                    {
+                        CreateColumns(cols);
+                        if (checkID("1"))
+                            UpdateColumn1(DataSource, cols, 1, cols, "TableAuthRights");
+                        else InsertColumn(DataSource, cols, 1, cols, "TableAuthRights");
+                    }
+                    else
+                    {
+                        UpdateColumn1(DataSource, cols, 1, cols, "TableAuthRights");
+                    }
+                    for (rCnt = 2; rCnt < rw; rCnt++)
+                    {
+                        try
+                        {
+                            string strData = (string)(range.Cells[rCnt, cCnt] as Excel.Range).Value2;
+                            if (String.IsNullOrEmpty(strData)) strData = "";
+
+                            if (checkID(rCnt.ToString()))
+                                UpdateColumn1(DataSource, cols, rCnt, strData, "TableAuthRights");
+                            else InsertColumn(DataSource, cols, rCnt, strData, "TableAuthRights");
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+
+            button23.Enabled = true;
+
+
+
+
+            return range;
+        }
+        private void ColumnNamesLoad()
+        {
+            bool found = false;
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter("SP_COLUMNS TableAuthRights", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            int colIndex = 0;
+            rightColNames = new string[dtbl.Rows.Count - 1];
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                if (dataRow["COLUMN_NAME"].ToString() != "" && dataRow["COLUMN_NAME"].ToString() != "ID")
+                {
+                    rightColNames[colIndex] = dataRow["COLUMN_NAME"].ToString();
+                    colIndex++;
+                }
+            }
+        }
+        private void InsertColumn(string source, string comlumnName, int id, string data, string table)
+        {
+            SqlConnection sqlCon = new SqlConnection(source);
+            string column = "@" + comlumnName;
+            string qurey = "SET IDENTITY_INSERT dbo." + table + " ON;  insert into " + table + " (ID," + comlumnName + ") values ('" + id.ToString() + "', N'" + data + "')";
+            SqlCommand sqlCmd = new SqlCommand(qurey, sqlCon);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
+        }
+
+        private void UpdateColumn1(string source, string comlumnName, int id, string data, string table)
+        {
+            SqlConnection sqlCon = new SqlConnection(source);
+            string column = "@" + comlumnName;
+            string qurey = "UPDATE " + table + " SET " + comlumnName + " = " + column + " WHERE ID=@ID";
+
+            SqlCommand sqlCmd = new SqlCommand(qurey, sqlCon);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+            sqlCmd.CommandType = CommandType.Text;
+
+            sqlCmd.Parameters.AddWithValue("@ID", id);
+            sqlCmd.Parameters.AddWithValue(column, data.Trim());
+            try
+            {
+                sqlCmd.ExecuteNonQuery();
+            }
+            catch (Exception ex) { MessageBox.Show(column + "-" + data); }
+
+            sqlCon.Close();
+        }
+
+        private bool checkID(string id)
+        {
+            //MessageBox.Show(id);
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return false; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter("select ID from TableAuthRights", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                if (dataRow["ID"].ToString() == id)
+                {
+                    //MessageBox.Show(dataRow["ID"].ToString());
+                    return true;
+                }
+            }
+            //MessageBox.Show(id + " not found");
+            return false;
+        }
+        private void CreateColumns(string Columnname)
+        {
+            string query = "alter table TableAuthRights add " + Columnname + " nvarchar(1000)";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { MessageBox.Show("query " + query + "DataSource " + DataSource); return; }
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            //MessageBox.Show(Columnname);
+            try
+            {
+                sqlCmd.ExecuteNonQuery();
+                //MessageBox.Show(Columnname);
+            }
+            catch (Exception ex)
+            {
+                // MessageBox.Show("query " + query + "DataSource " + DataSource);
+            }
+            sqlCon.Close();
+        }
+        private bool checkColumnNames(string colNo, string id)
+        {
+
+            string query = "select " + colNo + " from TableAuthRights";
+
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return false; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            try
+            {
+                sqlDa.Fill(dtbl);
+            }
+            catch (Exception ex)
+            {
+                //MessageBox.Show(id.ToString() + " - " + colNo + "not found");
+                return false;
+            }
+
+
+
+            sqlCon.Close();
+
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                try
+                {
+                    //Console.WriteLine("dataRow " + dataRow[colNo].ToString().TrimEnd().TrimStart() + " == colNo" + colNo);
+                }
+                catch (Exception ex)
+                {
+                    //MessageBox.Show(id.ToString() + " - "+colNo + "not found");
+                    return false;
+                }
+            }
+            //else MessageBox.Show(colNo + "found");
+            return true;
+        }
+
+        private string[] getColName()
+        {
+            string[] colName = new string[1];
+            SqlConnection sqlCon = new SqlConnection(DataSource57);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return colName; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter("select ID, ColName from TableAddContext where ColRight <> '' and ColName is not null", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            colName = new string[dtbl.Rows.Count];
+            int index = 0;
+            foreach (DataRow row in dtbl.Rows)
+            {
+                colName[index] = row["ColName"].ToString().Replace("-", "_").TrimEnd().TrimStart();
+                colName[index] = colName[index].Replace(" ", "_");
+                IDList[index] = row["ID"].ToString();
+                Console.WriteLine("colName[" + index.ToString() + "] " + colName[index]);
+                index++;
+            }
+            return colName;
+        }
         private void button116_Click(object sender, EventArgs e)
         {
             ColumnJobs();

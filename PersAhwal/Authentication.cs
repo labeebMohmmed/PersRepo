@@ -45,6 +45,7 @@ using System.Text.RegularExpressions;
 using static Azure.Core.HttpHeader;
 using System.Security.Cryptography.X509Certificates;
 using SautinSoft.Document;
+using Color = System.Drawing.Color;
 
 namespace PersAhwal
 {
@@ -812,7 +813,7 @@ namespace PersAhwal
                 حفظ_وإنهاء_الارشفة.Visible = true;
                 panelpicTemp.Height = 577;
             }
-
+            ColorFulGrid9();
         }
 
         private void button7_Click(object sender, EventArgs e)
@@ -1028,24 +1029,54 @@ namespace PersAhwal
         private void combYear_SelectedIndexChanged(object sender, EventArgs e)
         {
             fillDataGrid(""); 
-            if (نوع_تاريخ_التوثيق.SelectedIndex == 2) {
+            //if (نوع_تاريخ_التوثيق.SelectedIndex == 2) {
                 BindingSource bs = new BindingSource();
                 bs.DataSource = dataGridView1.DataSource;
                 bs.Filter = dataGridView1.Columns["تاريخ_الأرشفة"].HeaderText.ToString() + " LIKE '%-" + combYear.Text + "'";
                 dataGridView1.DataSource = bs;
-            }
+            //}
         }
 
         private void comboMonth_SelectedIndexChanged(object sender, EventArgs e)
         {
             fillDataGrid("");
+            BindingSource bs = new BindingSource();
+            bs.DataSource = dataGridView1.DataSource;
+            bs.Filter = dataGridView1.Columns["تاريخ_الأرشفة"].HeaderText.ToString() + " LIKE '%-" + combYear.Text + "'";
+            dataGridView1.DataSource = bs;
+
             if (نوع_تاريخ_التوثيق.SelectedIndex == 3)
             {
-                BindingSource bs = new BindingSource();
+                bs = new BindingSource();
                 bs.DataSource = dataGridView1.DataSource;
-                bs.Filter = dataGridView1.Columns["تاريخ_الأرشفة"].HeaderText.ToString() + " LIKE '" + comboMonth.Text +"-%-"+combYear.Text + "'";
+                bs.Filter = dataGridView1.Columns["تاريخ_الأرشفة"].HeaderText.ToString() + " LIKE '" + comboMonth.Text+ "%'";
                 dataGridView1.DataSource = bs;
             }
+        }
+        private void ColorFulGrid9()
+        {
+            int i = 0;
+            int countSudan = 0;
+            int countSaudi = 0;
+            for (; i < dataGridView1.Rows.Count - 1; i++)
+            {
+                if (dataGridView1.Rows[i].Cells["جنسية_الدبلوماسي"].Value.ToString() == "دبلوماسيون سودانيون")
+                {
+                    // timerColor = false;
+                    dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
+                    countSudan++;
+
+                }
+                else if (dataGridView1.Rows[i].Cells["جنسية_الدبلوماسي"].Value.ToString() == "دبلوماسيون سعوديون")
+                {
+                    // timerColor = false;
+                    //dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightPink;
+                    countSaudi++;
+                }
+                
+            }
+            labDescribed.Text = "عدد (" + i.ToString() + ") مستند (" + countSudan.ToString() + "/"+ countSaudi.ToString()+")";
+
         }
     }
 }

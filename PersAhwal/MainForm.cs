@@ -203,7 +203,7 @@ namespace PersAhwal
             if (Server == "57")
             {
 
-
+                label2.Text = "نافذة قسم الأحوال الشخصية";
                 panel2.BackColor = System.Drawing.SystemColors.ButtonShadow;
 
             }
@@ -211,7 +211,7 @@ namespace PersAhwal
             {
                 DataSource = dataSource56;
                 this.Name = "القائمة الرئيسة نافذة قسم شؤون الرعايا";
-
+                label2.Text = "نافذة قسم شؤون الرعايا";
             }
 
             if (Directory.Exists(@"D:\"))
@@ -278,12 +278,12 @@ namespace PersAhwal
                         control.BringToFront();
                     }
                 }
-                persbtn6.Visible = false;
+                persbtn6.Visible = docCollectCombo.Visible = false;
                 Combtn0.Location = new System.Drawing.Point(427, 402);
                 Combtn1.Location = new System.Drawing.Point(427, 402 + 39);
                 Combtn2.Location = new System.Drawing.Point(427, 402 + (39 * 2));
                 Combtn3.Location = new System.Drawing.Point(427, 402 + (39 * 3));
-                Combtn4.Location = new System.Drawing.Point(427, 402 + (39 * 4));
+                بيانات_الموظفين_والملحقين_بالموظفين.Location = new System.Drawing.Point(427, 402 + (39 * 4));
             }
             perbtn1.Visible = false;
             Pers_Peope = pers_Peope;
@@ -329,7 +329,6 @@ namespace PersAhwal
             else
             {
                 picSettings.Visible = false;
-                Aprove.Text = "تعديل بيانات الدخول";
                 empUpdate.BringToFront();
                 empUpdate.Visible = true;
             }
@@ -5851,57 +5850,6 @@ namespace PersAhwal
             }
         }
 
-        private void merriageTable()
-        {
-            OpenFileDialog dlg = new OpenFileDialog();
-            dlg.ShowDialog();
-            xlApp = new Excel.Application();
-            xlWorkBook = xlApp.Workbooks.Open(@dlg.FileName, 0, true, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
-            xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
-
-            range = xlWorkSheet.UsedRange;
-            rw = range.Rows.Count;
-            cl = range.Columns.Count;
-            button23.Enabled = false;
-
-            string col = "Col0";
-
-
-            SqlConnection sqlCon = new SqlConnection(DataSource);
-            if (sqlCon.State == ConnectionState.Closed)
-                try
-                {
-                    sqlCon.Open();
-                }
-                catch (Exception ex) { return; }
-            for (rCnt = 1; rCnt < 67; rCnt++)
-            {
-                string strDate = (string)(range.Cells[rCnt, 1] as Excel.Range).Value2;
-                int strMarriage = (int)(range.Cells[rCnt, 2] as Excel.Range).Value2;
-                int strDivorce = (int)(range.Cells[rCnt, 3] as Excel.Range).Value2;
-                //MessageBox.Show(strDate + " - " + strMarriage.ToString() + " - " + strDivorce.ToString());
-                for (int x = 0; x < strMarriage; x++)
-                {
-                    UpdateMaririageColumn(DataSource, "زواج", strDate);
-
-                }
-                for (int x = 0; x < strDivorce; x++)
-                {
-                    UpdateMaririageColumn(DataSource, "طلاق", strDate);
-                }
-            }
-
-            sqlCon.Close();
-            xlWorkBook.Close(true, null, null);
-            xlApp.Quit();
-            Marshal.ReleaseComObject(xlWorkSheet);
-            Marshal.ReleaseComObject(xlWorkBook);
-            Marshal.ReleaseComObject(xlApp);
-
-            button23.Enabled = true;
-
-
-        }
         private void CreateColumn(string Columnname)
         {
 
@@ -6138,96 +6086,8 @@ namespace PersAhwal
                 }
             }
         }
-        private void button23_Click(object sender, EventArgs e)
-        {
-            //oldFun();
-            //
-
-            string[] colName = getColName();
-            for (int col = 0; col < colName.Length; col++)
-            {
-                //MessageBox.Show(colName[col]);
-                if (!checkColumnNames(colName[col].Replace("-", "_"), IDList[col]))
-                {
-                    //MessageBox.Show("colName " +colName[col]);
-                    CreateColumns(colName[col].Replace("-", "_"));
-                    if (checkID("1"))
-                        UpdateColumn(DataSource, colName[col].Replace("-","_"), 1, colName[col], "TableAuthRights");
-                    else InsertColumn(DataSource, colName[col].Replace("-", "_"), 1, colName[col], "TableAuthRights");
-                }
-            }
-
-            //checkQllReightsFun(newFun());
-            newFun();
-            xlWorkBook.Close(true, null, null);
-            xlApp.Quit();
-            Marshal.ReleaseComObject(xlWorkSheet);
-            Marshal.ReleaseComObject(xlWorkBook);
-            Marshal.ReleaseComObject(xlApp);
-        }
-
-        private Excel.Range newFun() {
-            OpenFileDialog dlg = new OpenFileDialog();
-            dlg.ShowDialog();
-            xlApp = new Excel.Application();
-            xlWorkBook = xlApp.Workbooks.Open(@dlg.FileName, 0, true, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
-            xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
-
-            range = xlWorkSheet.UsedRange;
-            rw = range.Rows.Count;
-            cl = range.Columns.Count;
-            button23.Enabled = false;
-            ColumnNamesLoad();
-            
-            for (cCnt = 2; cCnt <= cl; cCnt++)
-            {
-                Console.WriteLine("rightColNames " + rightColNames.Length.ToString() + " cCnt " + cCnt.ToString());
-                string cols = "";
-                try
-                {
-                    string colname = (string)(range.Cells[1, cCnt] as Excel.Range).Value2;
-
-                    if (string.IsNullOrEmpty(colname)) continue;
-
-                     cols = colname.Replace(" ", "_").Replace("-", "_");
-                    if (!checkColumnNames(cols, ""))
-                    {
-                        CreateColumns(cols);
-                        if (checkID("1"))
-                            UpdateColumn(DataSource, cols, 1, cols, "TableAuthRights");
-                        else InsertColumn(DataSource, cols, 1, cols, "TableAuthRights");
-                    }
-                    else {
-                        UpdateColumn(DataSource, cols, 1, cols, "TableAuthRights");
-                    }
-                    for (rCnt = 2; rCnt < rw; rCnt++)
-                    {
-                        try
-                        {
-                            string strData = (string)(range.Cells[rCnt, cCnt] as Excel.Range).Value2;
-                            if (String.IsNullOrEmpty(strData)) strData = "";
-
-                            if (checkID(rCnt.ToString()))
-                                UpdateColumn(DataSource, cols, rCnt, strData, "TableAuthRights");
-                            else InsertColumn(DataSource, cols, rCnt, strData, "TableAuthRights");
-                        }
-                        catch (Exception ex)
-                        {
-                            
-                        }
-                    }
-                }
-                catch (Exception ex) {
-                }
-            }
-
-            button23.Enabled = true;
-
-
-
-
-            return range;
-        }
+        
+        
 
         private void checkQllReightsFun(Excel.Range range) {
 
@@ -6279,53 +6139,7 @@ namespace PersAhwal
             }
             return colName;
         }
-        private void oldFun() {
-            OpenFileDialog dlg = new OpenFileDialog();
-            dlg.ShowDialog();
-            xlApp = new Excel.Application();
-            xlWorkBook = xlApp.Workbooks.Open(@dlg.FileName, 0, true, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
-            xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
-
-            range = xlWorkSheet.UsedRange;
-            rw = range.Rows.Count;
-            cl = range.Columns.Count;
-            button23.Enabled = false;
-            string col = "Col0";
-            for (cCnt = 1; cCnt <= cl; cCnt++)
-            {
-                col = "Col" + (cCnt - 1).ToString();
-                if (!checkColumnName(col))
-                    CreateColumn(col);
-            }
-
-
-
-            SqlConnection sqlCon = new SqlConnection(DataSource);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
-            for (cCnt = 1; cCnt <= cl; cCnt++)
-            {
-                col = "Col" + (cCnt - 1).ToString();
-
-
-                for (rCnt = 1; rCnt < 24; rCnt++)
-                {
-                    string strData = (string)(range.Cells[rCnt, cCnt] as Excel.Range).Value2;
-                    if (String.IsNullOrEmpty(strData)) strData = "";
-                    UpdateColumn(DataSource, col, rCnt, strData, "TableAuthRight");
-                    //MessageBox.Show(rCnt.ToString());
-                }
-            }
-
-            sqlCon.Close();
-            xlWorkBook.Close(true, null, null);
-            xlApp.Quit();
-            Marshal.ReleaseComObject(xlWorkSheet);
-            Marshal.ReleaseComObject(xlWorkBook);
-            Marshal.ReleaseComObject(xlApp);
-
-            button23.Enabled = true;
-        }
+        
         private void pictremovemonth_Click(object sender, EventArgs e)
         {
 
@@ -7888,15 +7702,15 @@ namespace PersAhwal
 
         private void button30_Click_1(object sender, EventArgs e)
         {
-            fillMandoubGrid();
-            if (PanelMandounb.Visible == false)
+            string serverType = "شؤون رعايا";
+            if (Server == "57")
             {
-                PanelMandounb.Visible = true;
-                panel4.Visible = false;
-                SearchPanel.Visible = fileManagePanel2.Visible = panelAuthAknow.Visible = panelReceMess.Visible = ReportPanel.Visible = false;
-
+                DataSource = DataSource57;
+                serverType = "احوال شخصية";
             }
-            else PanelMandounb.Visible = false;
+            dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
+            SignUp signUp = new SignUp(EmployeeName, UserJobposition, DataSource, serverType, GregorianDate);
+            signUp.ShowDialog();
         }
 
         private void reportpass_TextChanged(object sender, EventArgs e)
@@ -8446,6 +8260,104 @@ namespace PersAhwal
         private void HandProcess_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void Combtn3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Aprove_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox4_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button21_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox5_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button29_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox6_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button30_Click_2(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dateTimePicker2_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button34_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox7_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button36_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox3_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button37_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button20_Click_1(object sender, EventArgs e)
+        {
+            if (!panelDate.Visible)
+            {
+                panelDate.Visible = true;
+                panelDate.BringToFront();
+            }
+            else {
+                panelDate.Visible = false;
+                panelDate.SendToBack();
+            }
         }
 
         private string[] getColList(string table)

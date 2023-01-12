@@ -30,10 +30,10 @@ namespace PersAhwal
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             this.labelarch = new System.Windows.Forms.Label();
             this.button12 = new System.Windows.Forms.Button();
             this.txtMessNo = new System.Windows.Forms.TextBox();
@@ -61,7 +61,6 @@ namespace PersAhwal
             this.labelVA = new System.Windows.Forms.Label();
             this.dataGridView4 = new System.Windows.Forms.DataGridView();
             this.labelmonth = new System.Windows.Forms.Label();
-            this.Aprove = new System.Windows.Forms.Button();
             this.labelPro = new System.Windows.Forms.Label();
             this.button19 = new System.Windows.Forms.Button();
             this.txtHandAuthNo = new System.Windows.Forms.TextBox();
@@ -94,6 +93,9 @@ namespace PersAhwal
             this.button35 = new System.Windows.Forms.Button();
             this.ConsulateEmployee = new System.Windows.Forms.Label();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.labelM = new System.Windows.Forms.Label();
             this.dataGridView5 = new System.Windows.Forms.DataGridView();
             this.dataGridView6 = new System.Windows.Forms.DataGridView();
@@ -138,9 +140,14 @@ namespace PersAhwal
             this.Combtn1 = new System.Windows.Forms.Button();
             this.Combtn0 = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.fileUpdate = new System.Windows.Forms.PictureBox();
             this.labversio = new System.Windows.Forms.Label();
-            this.button23 = new System.Windows.Forms.Button();
-            this.button21 = new System.Windows.Forms.Button();
+            this.picaddmonth = new System.Windows.Forms.PictureBox();
+            this.pictremovemonth = new System.Windows.Forms.PictureBox();
+            this.picadd = new System.Windows.Forms.PictureBox();
+            this.picremove = new System.Windows.Forms.PictureBox();
+            this.picVersio = new System.Windows.Forms.PictureBox();
+            this.empUpdate = new System.Windows.Forms.PictureBox();
             this.mangerArch = new System.Windows.Forms.CheckBox();
             this.Combtn2 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -149,6 +156,7 @@ namespace PersAhwal
             this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.dataGridView11 = new System.Windows.Forms.DataGridView();
             this.dataGridView8 = new System.Windows.Forms.DataGridView();
+            this.ArchivePic = new System.Windows.Forms.PictureBox();
             this.timer4 = new System.Windows.Forms.Timer(this.components);
             this.Affbtn0 = new System.Windows.Forms.ComboBox();
             this.Affairsbtn7 = new System.Windows.Forms.ComboBox();
@@ -160,7 +168,7 @@ namespace PersAhwal
             this.txtIndivNo = new System.Windows.Forms.TextBox();
             this.btnFileManage = new System.Windows.Forms.Button();
             this.Affbtn6 = new System.Windows.Forms.Button();
-            this.Combtn4 = new System.Windows.Forms.Button();
+            this.بيانات_الموظفين_والملحقين_بالموظفين = new System.Windows.Forms.Button();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.comMandArea = new System.Windows.Forms.ComboBox();
             this.button31 = new System.Windows.Forms.Button();
@@ -192,22 +200,17 @@ namespace PersAhwal
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.picSettings = new System.Windows.Forms.PictureBox();
-            this.fileUpdate = new System.Windows.Forms.PictureBox();
-            this.picaddmonth = new System.Windows.Forms.PictureBox();
-            this.pictremovemonth = new System.Windows.Forms.PictureBox();
-            this.picadd = new System.Windows.Forms.PictureBox();
-            this.picremove = new System.Windows.Forms.PictureBox();
-            this.picVersio = new System.Windows.Forms.PictureBox();
-            this.empUpdate = new System.Windows.Forms.PictureBox();
-            this.ArchivePic = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.button20 = new System.Windows.Forms.Button();
+            this.panelDate = new System.Windows.Forms.FlowLayoutPanel();
+            this.label2 = new System.Windows.Forms.Label();
             this.panelReceMess.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView4)).BeginInit();
             this.panelAuthAknow.SuspendLayout();
             this.panelText.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView7)).BeginInit();
@@ -217,16 +220,6 @@ namespace PersAhwal
             this.SearchPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
             this.panel2.SuspendLayout();
-            this.panel4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView11)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView8)).BeginInit();
-            this.fileManagePanel2.SuspendLayout();
-            this.flowLayoutPanel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView9)).BeginInit();
-            this.PanelMandounb.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView10)).BeginInit();
-            this.flowLayoutPanel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picSettings)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fileUpdate)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picaddmonth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictremovemonth)).BeginInit();
@@ -234,10 +227,18 @@ namespace PersAhwal
             ((System.ComponentModel.ISupportInitialize)(this.picremove)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picVersio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.empUpdate)).BeginInit();
+            this.panel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView11)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView8)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ArchivePic)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            this.fileManagePanel2.SuspendLayout();
+            this.flowLayoutPanel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView9)).BeginInit();
+            this.PanelMandounb.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView10)).BeginInit();
+            this.flowLayoutPanel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picSettings)).BeginInit();
+            this.panelDate.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelarch
@@ -529,24 +530,12 @@ namespace PersAhwal
             // 
             this.labelmonth.AutoSize = true;
             this.labelmonth.Font = new System.Drawing.Font("Arabic Typesetting", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelmonth.Location = new System.Drawing.Point(263, 41);
+            this.labelmonth.Location = new System.Drawing.Point(85, 36);
             this.labelmonth.Name = "labelmonth";
-            this.labelmonth.Size = new System.Drawing.Size(71, 24);
+            this.labelmonth.Size = new System.Drawing.Size(112, 24);
             this.labelmonth.TabIndex = 507;
-            this.labelmonth.Text = "ضبط الشهر";
+            this.labelmonth.Text = "فرق الشهر الهجري ";
             this.labelmonth.Visible = false;
-            // 
-            // Aprove
-            // 
-            this.Aprove.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Aprove.Location = new System.Drawing.Point(348, 1);
-            this.Aprove.Name = "Aprove";
-            this.Aprove.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.Aprove.Size = new System.Drawing.Size(192, 34);
-            this.Aprove.TabIndex = 474;
-            this.Aprove.Text = "تفعيل حساب موظف جديد";
-            this.Aprove.UseVisualStyleBackColor = true;
-            this.Aprove.Click += new System.EventHandler(this.Aprove_Click);
             // 
             // labelPro
             // 
@@ -950,6 +939,40 @@ namespace PersAhwal
             this.flowLayoutPanel1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.flowLayoutPanel1.Size = new System.Drawing.Size(575, 745);
             this.flowLayoutPanel1.TabIndex = 507;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::PersAhwal.Properties.Resources.archives_icon_16;
+            this.pictureBox1.Location = new System.Drawing.Point(529, 3);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(43, 21);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 499;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click_1);
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = global::PersAhwal.Properties.Resources.progress_icon_png_2;
+            this.pictureBox2.Location = new System.Drawing.Point(398, 3);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(43, 21);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox2.TabIndex = 501;
+            this.pictureBox2.TabStop = false;
+            this.pictureBox2.Visible = false;
+            this.pictureBox2.Click += new System.EventHandler(this.pictureBox2_Click);
+            // 
+            // pictureBox3
+            // 
+            this.pictureBox3.Image = global::PersAhwal.Properties.Resources.mandoub;
+            this.pictureBox3.Location = new System.Drawing.Point(286, 3);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(43, 21);
+            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox3.TabIndex = 510;
+            this.pictureBox3.TabStop = false;
+            this.pictureBox3.Click += new System.EventHandler(this.pictureBox3_Click);
             // 
             // labelM
             // 
@@ -1503,11 +1526,11 @@ namespace PersAhwal
             // 
             this.labeldate.AutoSize = true;
             this.labeldate.Font = new System.Drawing.Font("Arabic Typesetting", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labeldate.Location = new System.Drawing.Point(263, 5);
+            this.labeldate.Location = new System.Drawing.Point(90, 0);
             this.labeldate.Name = "labeldate";
-            this.labeldate.Size = new System.Drawing.Size(66, 24);
+            this.labeldate.Size = new System.Drawing.Size(107, 24);
             this.labeldate.TabIndex = 504;
-            this.labeldate.Text = "ضبط اليوم";
+            this.labeldate.Text = "فرق اليوم الهجري ";
             this.labeldate.Visible = false;
             // 
             // dataGridView3
@@ -1546,18 +1569,10 @@ namespace PersAhwal
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.panel2.Controls.Add(this.label2);
             this.panel2.Controls.Add(this.fileUpdate);
             this.panel2.Controls.Add(this.labversio);
-            this.panel2.Controls.Add(this.button23);
-            this.panel2.Controls.Add(this.button21);
-            this.panel2.Controls.Add(this.picaddmonth);
-            this.panel2.Controls.Add(this.pictremovemonth);
-            this.panel2.Controls.Add(this.labelmonth);
-            this.panel2.Controls.Add(this.picadd);
-            this.panel2.Controls.Add(this.Aprove);
-            this.panel2.Controls.Add(this.picremove);
             this.panel2.Controls.Add(this.ConsulateEmployee);
-            this.panel2.Controls.Add(this.labeldate);
             this.panel2.Controls.Add(this.picVersio);
             this.panel2.Controls.Add(this.empUpdate);
             this.panel2.Location = new System.Drawing.Point(5, 2);
@@ -1565,6 +1580,17 @@ namespace PersAhwal
             this.panel2.Size = new System.Drawing.Size(669, 82);
             this.panel2.TabIndex = 506;
             this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
+            // 
+            // fileUpdate
+            // 
+            this.fileUpdate.Image = global::PersAhwal.Properties.Resources.retacke;
+            this.fileUpdate.Location = new System.Drawing.Point(5, 46);
+            this.fileUpdate.Name = "fileUpdate";
+            this.fileUpdate.Size = new System.Drawing.Size(28, 30);
+            this.fileUpdate.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.fileUpdate.TabIndex = 515;
+            this.fileUpdate.TabStop = false;
+            this.fileUpdate.Click += new System.EventHandler(this.fileUpdate_Click_1);
             // 
             // labversio
             // 
@@ -1577,29 +1603,76 @@ namespace PersAhwal
             this.labversio.Text = "نسخة البرنامج";
             this.labversio.Visible = false;
             // 
-            // button23
+            // picaddmonth
             // 
-            this.button23.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button23.Location = new System.Drawing.Point(546, 39);
-            this.button23.Name = "button23";
-            this.button23.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.button23.Size = new System.Drawing.Size(120, 34);
-            this.button23.TabIndex = 509;
-            this.button23.Text = "رفع قائمة الحقوق";
-            this.button23.UseVisualStyleBackColor = true;
-            this.button23.Click += new System.EventHandler(this.button23_Click);
+            this.picaddmonth.Image = global::PersAhwal.Properties.Resources.add;
+            this.picaddmonth.Location = new System.Drawing.Point(51, 39);
+            this.picaddmonth.Name = "picaddmonth";
+            this.picaddmonth.Size = new System.Drawing.Size(28, 30);
+            this.picaddmonth.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picaddmonth.TabIndex = 505;
+            this.picaddmonth.TabStop = false;
+            this.picaddmonth.Visible = false;
+            this.picaddmonth.Click += new System.EventHandler(this.picaddmonth_Click);
             // 
-            // button21
+            // pictremovemonth
             // 
-            this.button21.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button21.Location = new System.Drawing.Point(546, 2);
-            this.button21.Name = "button21";
-            this.button21.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.button21.Size = new System.Drawing.Size(120, 34);
-            this.button21.TabIndex = 508;
-            this.button21.Text = "تحميل قائمة الحقوق";
-            this.button21.UseVisualStyleBackColor = true;
-            this.button21.Click += new System.EventHandler(this.button21_Click);
+            this.pictremovemonth.Image = global::PersAhwal.Properties.Resources.remove;
+            this.pictremovemonth.Location = new System.Drawing.Point(17, 39);
+            this.pictremovemonth.Name = "pictremovemonth";
+            this.pictremovemonth.Size = new System.Drawing.Size(28, 30);
+            this.pictremovemonth.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictremovemonth.TabIndex = 506;
+            this.pictremovemonth.TabStop = false;
+            this.pictremovemonth.Visible = false;
+            this.pictremovemonth.Click += new System.EventHandler(this.pictremovemonth_Click);
+            // 
+            // picadd
+            // 
+            this.picadd.Image = global::PersAhwal.Properties.Resources.add;
+            this.picadd.Location = new System.Drawing.Point(56, 3);
+            this.picadd.Name = "picadd";
+            this.picadd.Size = new System.Drawing.Size(28, 30);
+            this.picadd.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picadd.TabIndex = 492;
+            this.picadd.TabStop = false;
+            this.picadd.Visible = false;
+            this.picadd.Click += new System.EventHandler(this.picadd_Click_1);
+            // 
+            // picremove
+            // 
+            this.picremove.Image = global::PersAhwal.Properties.Resources.remove;
+            this.picremove.Location = new System.Drawing.Point(22, 3);
+            this.picremove.Name = "picremove";
+            this.picremove.Size = new System.Drawing.Size(28, 30);
+            this.picremove.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picremove.TabIndex = 493;
+            this.picremove.TabStop = false;
+            this.picremove.Visible = false;
+            this.picremove.Click += new System.EventHandler(this.picremove_Click_1);
+            // 
+            // picVersio
+            // 
+            this.picVersio.Image = global::PersAhwal.Properties.Resources.add;
+            this.picVersio.Location = new System.Drawing.Point(39, 46);
+            this.picVersio.Name = "picVersio";
+            this.picVersio.Size = new System.Drawing.Size(28, 30);
+            this.picVersio.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picVersio.TabIndex = 510;
+            this.picVersio.TabStop = false;
+            this.picVersio.Click += new System.EventHandler(this.picVersio_Click);
+            // 
+            // empUpdate
+            // 
+            this.empUpdate.Image = global::PersAhwal.Properties.Resources.update1;
+            this.empUpdate.Location = new System.Drawing.Point(39, 46);
+            this.empUpdate.Name = "empUpdate";
+            this.empUpdate.Size = new System.Drawing.Size(28, 30);
+            this.empUpdate.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.empUpdate.TabIndex = 514;
+            this.empUpdate.TabStop = false;
+            this.empUpdate.Visible = false;
+            this.empUpdate.Click += new System.EventHandler(this.empUpdate_Click_1);
             // 
             // mangerArch
             // 
@@ -1681,25 +1754,25 @@ namespace PersAhwal
             // dataGridView11
             // 
             this.dataGridView11.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Arabic Typesetting", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView11.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Arabic Typesetting", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView11.DefaultCellStyle = dataGridViewCellStyle5;
             this.dataGridView11.Location = new System.Drawing.Point(3, 15);
             this.dataGridView11.Name = "dataGridView11";
             this.dataGridView11.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle10.Font = new System.Drawing.Font("Arabic Typesetting", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView11.RowHeadersDefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Arabic Typesetting", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView11.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
             this.dataGridView11.Size = new System.Drawing.Size(565, 676);
             this.dataGridView11.TabIndex = 816;
             this.dataGridView11.Visible = false;
@@ -1707,30 +1780,40 @@ namespace PersAhwal
             // dataGridView8
             // 
             this.dataGridView8.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle11.Font = new System.Drawing.Font("Arabic Typesetting", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView8.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Arabic Typesetting", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView8.DefaultCellStyle = dataGridViewCellStyle7;
             this.dataGridView8.Location = new System.Drawing.Point(3, 14);
             this.dataGridView8.Name = "dataGridView8";
             this.dataGridView8.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle12.Font = new System.Drawing.Font("Arabic Typesetting", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView8.RowHeadersDefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Arabic Typesetting", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView8.RowHeadersDefaultCellStyle = dataGridViewCellStyle8;
             this.dataGridView8.Size = new System.Drawing.Size(565, 676);
             this.dataGridView8.TabIndex = 734;
             this.dataGridView8.Visible = false;
             this.dataGridView8.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView8_CellClick);
             this.dataGridView8.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView8_CellContentClick);
+            // 
+            // ArchivePic
+            // 
+            this.ArchivePic.Location = new System.Drawing.Point(14, 15);
+            this.ArchivePic.Name = "ArchivePic";
+            this.ArchivePic.Size = new System.Drawing.Size(557, 686);
+            this.ArchivePic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.ArchivePic.TabIndex = 733;
+            this.ArchivePic.TabStop = false;
+            this.ArchivePic.Click += new System.EventHandler(this.ArchivePic_Click);
             // 
             // timer4
             // 
@@ -1882,17 +1965,17 @@ namespace PersAhwal
             this.Affbtn6.Visible = false;
             this.Affbtn6.Click += new System.EventHandler(this.sudan_affairs_Click);
             // 
-            // Combtn4
+            // بيانات_الموظفين_والملحقين_بالموظفين
             // 
-            this.Combtn4.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Combtn4.Location = new System.Drawing.Point(427, 620);
-            this.Combtn4.Name = "Combtn4";
-            this.Combtn4.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.Combtn4.Size = new System.Drawing.Size(247, 35);
-            this.Combtn4.TabIndex = 811;
-            this.Combtn4.Text = "مندوبو جاليات القنصلية العامة";
-            this.Combtn4.UseVisualStyleBackColor = true;
-            this.Combtn4.Click += new System.EventHandler(this.button30_Click_1);
+            this.بيانات_الموظفين_والملحقين_بالموظفين.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.بيانات_الموظفين_والملحقين_بالموظفين.Location = new System.Drawing.Point(427, 620);
+            this.بيانات_الموظفين_والملحقين_بالموظفين.Name = "بيانات_الموظفين_والملحقين_بالموظفين";
+            this.بيانات_الموظفين_والملحقين_بالموظفين.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.بيانات_الموظفين_والملحقين_بالموظفين.Size = new System.Drawing.Size(247, 35);
+            this.بيانات_الموظفين_والملحقين_بالموظفين.TabIndex = 811;
+            this.بيانات_الموظفين_والملحقين_بالموظفين.Text = "بيانات الموظفين والملحقين بالموظفين";
+            this.بيانات_الموظفين_والملحقين_بالموظفين.UseVisualStyleBackColor = true;
+            this.بيانات_الموظفين_والملحقين_بالموظفين.Click += new System.EventHandler(this.button30_Click_1);
             // 
             // flowLayoutPanel2
             // 
@@ -2001,6 +2084,7 @@ namespace PersAhwal
             this.Combtn3.TabIndex = 813;
             this.Combtn3.Text = "صلاحيات الموظفين";
             this.Combtn3.UseVisualStyleBackColor = true;
+            this.Combtn3.Click += new System.EventHandler(this.Combtn3_Click);
             // 
             // PanelMandounb
             // 
@@ -2281,143 +2365,56 @@ namespace PersAhwal
             this.picSettings.TabStop = false;
             this.picSettings.Click += new System.EventHandler(this.pictureBox4_Click);
             // 
-            // fileUpdate
+            // button20
             // 
-            this.fileUpdate.Image = global::PersAhwal.Properties.Resources.retacke;
-            this.fileUpdate.Location = new System.Drawing.Point(5, 46);
-            this.fileUpdate.Name = "fileUpdate";
-            this.fileUpdate.Size = new System.Drawing.Size(28, 30);
-            this.fileUpdate.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.fileUpdate.TabIndex = 515;
-            this.fileUpdate.TabStop = false;
-            this.fileUpdate.Click += new System.EventHandler(this.fileUpdate_Click_1);
+            this.button20.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button20.Location = new System.Drawing.Point(427, 658);
+            this.button20.Name = "button20";
+            this.button20.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.button20.Size = new System.Drawing.Size(247, 35);
+            this.button20.TabIndex = 832;
+            this.button20.Text = "ضبط الوقت والتاريخ";
+            this.button20.UseVisualStyleBackColor = true;
+            this.button20.Click += new System.EventHandler(this.button20_Click_1);
             // 
-            // picaddmonth
+            // panelDate
             // 
-            this.picaddmonth.Image = global::PersAhwal.Properties.Resources.add;
-            this.picaddmonth.Location = new System.Drawing.Point(224, 35);
-            this.picaddmonth.Name = "picaddmonth";
-            this.picaddmonth.Size = new System.Drawing.Size(28, 30);
-            this.picaddmonth.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.picaddmonth.TabIndex = 505;
-            this.picaddmonth.TabStop = false;
-            this.picaddmonth.Visible = false;
-            this.picaddmonth.Click += new System.EventHandler(this.picaddmonth_Click);
+            this.panelDate.Controls.Add(this.labeldate);
+            this.panelDate.Controls.Add(this.picadd);
+            this.panelDate.Controls.Add(this.picremove);
+            this.panelDate.Controls.Add(this.labelmonth);
+            this.panelDate.Controls.Add(this.picaddmonth);
+            this.panelDate.Controls.Add(this.pictremovemonth);
+            this.panelDate.Location = new System.Drawing.Point(16, 134);
+            this.panelDate.Name = "panelDate";
+            this.panelDate.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.panelDate.Size = new System.Drawing.Size(200, 393);
+            this.panelDate.TabIndex = 833;
+            this.panelDate.Visible = false;
             // 
-            // pictremovemonth
+            // label2
             // 
-            this.pictremovemonth.Image = global::PersAhwal.Properties.Resources.remove;
-            this.pictremovemonth.Location = new System.Drawing.Point(190, 35);
-            this.pictremovemonth.Name = "pictremovemonth";
-            this.pictremovemonth.Size = new System.Drawing.Size(28, 30);
-            this.pictremovemonth.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictremovemonth.TabIndex = 506;
-            this.pictremovemonth.TabStop = false;
-            this.pictremovemonth.Visible = false;
-            this.pictremovemonth.Click += new System.EventHandler(this.pictremovemonth_Click);
-            // 
-            // picadd
-            // 
-            this.picadd.Image = global::PersAhwal.Properties.Resources.add;
-            this.picadd.Location = new System.Drawing.Point(224, -1);
-            this.picadd.Name = "picadd";
-            this.picadd.Size = new System.Drawing.Size(28, 30);
-            this.picadd.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.picadd.TabIndex = 492;
-            this.picadd.TabStop = false;
-            this.picadd.Visible = false;
-            this.picadd.Click += new System.EventHandler(this.picadd_Click_1);
-            // 
-            // picremove
-            // 
-            this.picremove.Image = global::PersAhwal.Properties.Resources.remove;
-            this.picremove.Location = new System.Drawing.Point(190, -1);
-            this.picremove.Name = "picremove";
-            this.picremove.Size = new System.Drawing.Size(28, 30);
-            this.picremove.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.picremove.TabIndex = 493;
-            this.picremove.TabStop = false;
-            this.picremove.Visible = false;
-            this.picremove.Click += new System.EventHandler(this.picremove_Click_1);
-            // 
-            // picVersio
-            // 
-            this.picVersio.Image = global::PersAhwal.Properties.Resources.add;
-            this.picVersio.Location = new System.Drawing.Point(39, 46);
-            this.picVersio.Name = "picVersio";
-            this.picVersio.Size = new System.Drawing.Size(28, 30);
-            this.picVersio.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.picVersio.TabIndex = 510;
-            this.picVersio.TabStop = false;
-            this.picVersio.Click += new System.EventHandler(this.picVersio_Click);
-            // 
-            // empUpdate
-            // 
-            this.empUpdate.Image = global::PersAhwal.Properties.Resources.update1;
-            this.empUpdate.Location = new System.Drawing.Point(39, 46);
-            this.empUpdate.Name = "empUpdate";
-            this.empUpdate.Size = new System.Drawing.Size(28, 30);
-            this.empUpdate.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.empUpdate.TabIndex = 514;
-            this.empUpdate.TabStop = false;
-            this.empUpdate.Visible = false;
-            this.empUpdate.Click += new System.EventHandler(this.empUpdate_Click_1);
-            // 
-            // ArchivePic
-            // 
-            this.ArchivePic.Location = new System.Drawing.Point(14, 15);
-            this.ArchivePic.Name = "ArchivePic";
-            this.ArchivePic.Size = new System.Drawing.Size(557, 686);
-            this.ArchivePic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.ArchivePic.TabIndex = 733;
-            this.ArchivePic.TabStop = false;
-            this.ArchivePic.Click += new System.EventHandler(this.ArchivePic_Click);
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::PersAhwal.Properties.Resources.archives_icon_16;
-            this.pictureBox1.Location = new System.Drawing.Point(529, 3);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(43, 21);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 499;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click_1);
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Image = global::PersAhwal.Properties.Resources.progress_icon_png_2;
-            this.pictureBox2.Location = new System.Drawing.Point(398, 3);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(43, 21);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox2.TabIndex = 501;
-            this.pictureBox2.TabStop = false;
-            this.pictureBox2.Visible = false;
-            this.pictureBox2.Click += new System.EventHandler(this.pictureBox2_Click);
-            // 
-            // pictureBox3
-            // 
-            this.pictureBox3.Image = global::PersAhwal.Properties.Resources.mandoub;
-            this.pictureBox3.Location = new System.Drawing.Point(286, 3);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(43, 21);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox3.TabIndex = 510;
-            this.pictureBox3.TabStop = false;
-            this.pictureBox3.Click += new System.EventHandler(this.pictureBox3_Click);
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Arabic Typesetting", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(261, 20);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(215, 34);
+            this.label2.TabIndex = 516;
+            this.label2.Text = "نافذة قسم الأحوال الشخصية";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1255, 745);
+            this.Controls.Add(this.panelDate);
+            this.Controls.Add(this.button20);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.picSettings);
             this.Controls.Add(this.Combtn2);
             this.Controls.Add(this.persbtn8);
             this.Controls.Add(this.Combtn3);
-            this.Controls.Add(this.Combtn4);
+            this.Controls.Add(this.بيانات_الموظفين_والملحقين_بالموظفين);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.attendedVC);
             this.Controls.Add(this.mangerArch);
@@ -2433,7 +2430,6 @@ namespace PersAhwal
             this.Controls.Add(this.Affbtn3);
             this.Controls.Add(this.Affbtn1);
             this.Controls.Add(this.Combtn0);
-            this.Controls.Add(this.persbtn2);
             this.Controls.Add(this.Affbtn6);
             this.Controls.Add(this.perbtn1);
             this.Controls.Add(this.Affbtn0);
@@ -2443,7 +2439,6 @@ namespace PersAhwal
             this.Controls.Add(this.Affbtn5);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.Affbtn4);
-            this.Controls.Add(this.ReportPanel);
             this.Controls.Add(this.flowLayoutPanel3);
             this.Controls.Add(this.flowLayoutPanel2);
             this.Controls.Add(this.panelAuthAknow);
@@ -2451,6 +2446,8 @@ namespace PersAhwal
             this.Controls.Add(this.panelReceMess);
             this.Controls.Add(this.SearchPanel);
             this.Controls.Add(this.PanelMandounb);
+            this.Controls.Add(this.ReportPanel);
+            this.Controls.Add(this.persbtn2);
             this.Name = "MainForm";
             this.Text = "القائمة الرئيسة";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
@@ -2466,6 +2463,9 @@ namespace PersAhwal
             this.panelText.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView7)).EndInit();
@@ -2478,9 +2478,17 @@ namespace PersAhwal
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.fileUpdate)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picaddmonth)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictremovemonth)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picadd)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picremove)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picVersio)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.empUpdate)).EndInit();
             this.panel4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView11)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView8)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ArchivePic)).EndInit();
             this.fileManagePanel2.ResumeLayout(false);
             this.fileManagePanel2.PerformLayout();
             this.flowLayoutPanel2.ResumeLayout(false);
@@ -2490,17 +2498,8 @@ namespace PersAhwal
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView10)).EndInit();
             this.flowLayoutPanel3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picSettings)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.fileUpdate)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picaddmonth)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictremovemonth)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picadd)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picremove)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picVersio)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.empUpdate)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ArchivePic)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            this.panelDate.ResumeLayout(false);
+            this.panelDate.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2538,7 +2537,6 @@ namespace PersAhwal
         private System.Windows.Forms.PictureBox pictremovemonth;
         private System.Windows.Forms.Label labelmonth;
         private System.Windows.Forms.PictureBox picadd;
-        private System.Windows.Forms.Button Aprove;
         private System.Windows.Forms.PictureBox picremove;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Label labelPro;
@@ -2588,9 +2586,7 @@ namespace PersAhwal
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.DataGridView dataGridView6;
         private System.Windows.Forms.CheckBox mangerArch;
-        private System.Windows.Forms.Button button21;
         private System.Windows.Forms.DataGridView dataGridView7;
-        private System.Windows.Forms.Button button23;
         private System.Windows.Forms.Button Combtn2;
         private System.Windows.Forms.ComboBox txtEmbassey;
         private System.Windows.Forms.Label label1;
@@ -2627,7 +2623,7 @@ namespace PersAhwal
         private System.Windows.Forms.TextBox txtIndivNo;
         private System.Windows.Forms.Button btnFileManage;
         private System.Windows.Forms.Button Affbtn6;
-        private System.Windows.Forms.Button Combtn4;
+        private System.Windows.Forms.Button بيانات_الموظفين_والملحقين_بالموظفين;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
         private System.Windows.Forms.ComboBox comMandArea;
         private System.Windows.Forms.Button button31;
@@ -2677,5 +2673,8 @@ namespace PersAhwal
         private System.Windows.Forms.TextBox رقم_الشهادة;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.ComboBox monthReport;
+        private System.Windows.Forms.Button button20;
+        private System.Windows.Forms.FlowLayoutPanel panelDate;
+        private System.Windows.Forms.Label label2;
     }
 }

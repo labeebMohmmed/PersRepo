@@ -294,6 +294,7 @@ namespace PersAhwal
                     
                 }
                 gridFill = false;
+                التعليقات_السابقة_Off.Text = dataGridView1.CurrentRow.Cells["تعليق"].Value.ToString();
                 if (dataGridView1.CurrentRow.Cells["اسم_الزوج"].Value.ToString() == "")
                 {
                     newData = true;
@@ -785,16 +786,16 @@ namespace PersAhwal
         {
             string comment = "";
             if (تعليق_جديد_Off.Text == "" && التعليقات_السابقة_Off.Text == "")
-                comment = "";
+                comment = "قام  " + الموظف.Text + " بإدخال البيانات " + Environment.NewLine + DateTime.Now.ToString("G") + Environment.NewLine + "--------------" + Environment.NewLine;
 
             if (تعليق_جديد_Off.Text == "" && التعليقات_السابقة_Off.Text != "")
-                comment = التعليقات_السابقة_Off.Text;
+                comment = "قام  " + الموظف.Text + " ببعض التعديلات " + Environment.NewLine + DateTime.Now.ToString("G") + Environment.NewLine + "--------------" + Environment.NewLine + التعليقات_السابقة_Off.Text;
 
             if (تعليق_جديد_Off.Text != "" && التعليقات_السابقة_Off.Text == "")
-                comment = تعليق_جديد_Off.Text.Trim() + Environment.NewLine + GregorianDate + Environment.NewLine + "--------------" + Environment.NewLine;
+                comment = تعليق_جديد_Off.Text.Trim() + Environment.NewLine + "قام  " + الموظف.Text + " ببعض التعديلات " + Environment.NewLine + DateTime.Now.ToString("G") + Environment.NewLine + "--------------" + Environment.NewLine;
 
             if (تعليق_جديد_Off.Text != "" && التعليقات_السابقة_Off.Text != "")
-                comment = تعليق_جديد_Off.Text.Trim() + Environment.NewLine + GregorianDate + Environment.NewLine + "--------------" + Environment.NewLine + "*" + التعليقات_السابقة_Off.Text.Trim();
+                comment = تعليق_جديد_Off.Text.Trim() + Environment.NewLine + "قام  " + الموظف.Text + " ببعض التعديلات " + Environment.NewLine + DateTime.Now.ToString("G") + Environment.NewLine + "--------------" + Environment.NewLine + "*" + التعليقات_السابقة_Off.Text.Trim();
 
             return comment;
         }
@@ -992,6 +993,7 @@ namespace PersAhwal
                 button1Enabel = false;
             else
                 button1Enabel = true;
+            ColorFulGrid9();
         }
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)

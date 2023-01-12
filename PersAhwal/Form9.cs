@@ -733,9 +733,35 @@ namespace PersAhwal
 
         private void Form9_Load(object sender, EventArgs e)
         {
-            fileComboBox(mandoubName, DataSource, "MandoubNames", "TableListCombo");
+            
             autoCompleteTextBox1(مقدم_الطلب, DataSource, "الاسم", "TableGenNames");
 
+            fileComboBoxMandoub(mandoubName, DataSource, "TableMandoudList");
+        }
+        private void fileComboBoxMandoub(ComboBox combbox, string source, string tableName)
+        {
+            combbox.Visible = true;
+            combbox.Items.Clear();
+            combbox.Items.Add("حضور مباشرة إلى القنصلية");
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                saConn.Open();
+                string query = "select MandoubNames,MandoubAreas,وضع_المندوب from " + tableName;
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.CommandType = CommandType.Text;
+                cmd.ExecuteNonQuery();
+                DataTable table = new DataTable();
+                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                dataAdapter.Fill(table);
+                foreach (DataRow dataRow in table.Rows)
+                {
+                    if (dataRow["MandoubNames"].ToString() != "" && dataRow["وضع_المندوب"].ToString() == "الحساب مفعل")
+                        combbox.Items.Add(dataRow["MandoubNames"].ToString() + " - " + dataRow["MandoubAreas"].ToString());
+                }
+                saConn.Close();
+            }
+            if (combbox.Items.Count > 0)
+                combbox.SelectedIndex = 0;
         }
 
         private void autoCompleteTextBox1(TextBox textbox, string source, string comlumnName, string tableName)
