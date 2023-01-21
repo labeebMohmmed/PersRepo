@@ -532,6 +532,116 @@ namespace PersAhwal
             addarchives(colIDs);
 
         }
+        private void CreateWordFileCertificate()
+        {
+            string ReportName = DateTime.Now.ToString("mmss");
+            if (النوع.CheckState == CheckState.Unchecked)
+            {
+
+                labelUNI.ForeColor = Color.Black;
+                labelUNI.Text = "مقدم الطلب:";
+                route = FilesPathIn + "MarriageCertificateM.docx";
+            }
+            else if (النوع.CheckState == CheckState.Checked)
+            {
+                labelUNI.Text = "مقدمة الطلب:";
+                labelUNI.ForeColor = Color.Black;
+                route = FilesPathIn + "MarriageCertificateF.docx";
+            }
+
+            string ActiveCopy;
+            ActiveCopy = FilesPathOut + مقدم_الطلب.Text + ReportName + ".docx";
+            if (!File.Exists(ActiveCopy))
+            {
+                System.IO.File.Copy(route, ActiveCopy);
+                object oBMiss = System.Reflection.Missing.Value;
+                Word.Application oBMicroWord = new Word.Application();
+                object Routseparameter = ActiveCopy;
+                Word.Document oBDoc = oBMicroWord.Documents.Open(Routseparameter, oBMiss);
+
+                object ParaIqrarNo = "MarkIqrarNo";
+                object ParaGreData = "MarkGreData";
+                object ParaHijriData = "MarkHijriData";
+                object ParaAppName = "MarkAppName";
+                object ParaDocType = "MarkDocType";
+                object ParaDocNo = "MarkDocNo";
+                object ParaAppDocSource = "MarkAppDocSource";
+                object ParaAppAppUniName = "MarkAppUniName";
+                object ParaAppFacName = "MarkAppFacName";
+                object ParaStudyLevel = "MarkStudyLevel";
+                object ParavConsul = "MarkViseConsul";
+
+                Word.Range BookIqrarNo = oBDoc.Bookmarks.get_Item(ref ParaIqrarNo).Range;
+                Word.Range BookGreData = oBDoc.Bookmarks.get_Item(ref ParaGreData).Range;
+                Word.Range BookHijriData = oBDoc.Bookmarks.get_Item(ref ParaHijriData).Range;
+                Word.Range BookDocName = oBDoc.Bookmarks.get_Item(ref ParaAppName).Range;
+                Word.Range BookDocType = oBDoc.Bookmarks.get_Item(ref ParaDocType).Range;
+                Word.Range BookDocNo = oBDoc.Bookmarks.get_Item(ref ParaDocNo).Range;
+                Word.Range BookAppDocSource = oBDoc.Bookmarks.get_Item(ref ParaAppDocSource).Range;
+                Word.Range BookAppAppUniName = oBDoc.Bookmarks.get_Item(ref ParaAppAppUniName).Range;
+                Word.Range BookAppFacName = oBDoc.Bookmarks.get_Item(ref ParaAppFacName).Range;
+                Word.Range BookStudyLevel = oBDoc.Bookmarks.get_Item(ref ParaStudyLevel).Range;
+                Word.Range BookvConsul = oBDoc.Bookmarks.get_Item(ref ParavConsul).Range;
+
+                BookIqrarNo.Text = colIDs[0] = Iqrarid.Text;
+                colIDs[2] = التاريخ_الميلادي.Text;
+                BookGreData.Text = التاريخ_الميلادي_off.Text;
+                BookHijriData.Text = التاريخ_الهجري.Text;
+                BookDocName.Text = colIDs[3] = مقدم_الطلب.Text;
+                colIDs[5] =AppType.Text;
+                colIDs[6] =mandoubName.Text;
+                BookDocType.Text = نوع_الهوية.Text;
+                BookDocNo.Text = رقم_الهوية.Text;
+                BookAppDocSource.Text = مكان_الإصدار.Text;
+                BookAppAppUniName.Text = UniName.Text;
+                BookAppFacName.Text = FacultyName.Text;
+                if (StudyYear.Text == "") BookStudyLevel.Text = "بالرقم الجامعي " + MatricNom.Text;
+                else BookStudyLevel.Text = "بالرقم الجامعي " + MatricNom.Text + " للعام الدراسي " + StudyYear.Text;
+                BookvConsul.Text = AttendViceConsul.Text;
+
+                object rangeGreData = BookGreData;
+                object rangeHijriData = BookHijriData;
+                object rangeDocName = BookDocName;
+                object rangeDocType = BookDocType;
+                object rangeDocNo = BookDocNo;
+                object rangeAppDocSource = BookAppDocSource;
+                object rangeAppPass = BookAppAppUniName;
+                object rangeAppFacName = BookAppFacName;
+                object rangeStudyLevel = BookStudyLevel;
+                object rangevConsul = BookvConsul;
+
+                oBDoc.Bookmarks.Add("MarkGreData", ref rangeGreData);
+                oBDoc.Bookmarks.Add("MarkHijiData", ref rangeHijriData);
+                oBDoc.Bookmarks.Add("MarkAppName", ref rangeDocName);
+                oBDoc.Bookmarks.Add("MarkDocType", ref rangeDocType);
+                oBDoc.Bookmarks.Add("MarkDocNo", ref rangeDocNo);
+                oBDoc.Bookmarks.Add("MarkAppDocSource", ref rangeAppDocSource);
+                oBDoc.Bookmarks.Add("MarkAppPass", ref rangeAppPass);
+                oBDoc.Bookmarks.Add("MarkAppPassSource", ref rangeAppFacName);
+                oBDoc.Bookmarks.Add("MarkStudyLevel", ref rangeStudyLevel);
+                oBDoc.Bookmarks.Add("MarkViseConsul", ref rangevConsul);
+
+                string docxouput = FilesPathOut + مقدم_الطلب.Text + DateTime.Now.ToString("ssmm") + ".docx";
+                string pdfouput = FilesPathOut + مقدم_الطلب.Text + DateTime.Now.ToString("ssmm") + ".pdf";
+                oBDoc.SaveAs2(docxouput);
+                oBDoc.ExportAsFixedFormat(pdfouput, Word.WdExportFormat.wdExportFormatPDF);
+                oBDoc.Close(false, oBMiss);
+                oBMicroWord.Quit(false, false);
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(oBMicroWord);
+                System.Diagnostics.Process.Start(pdfouput);
+                object doNotSaveChanges = Word.WdSaveOptions.wdSaveChanges;
+
+            }
+            else
+            {
+                MessageBox.Show("يرجى حذف الملف الموجودأولاً");
+                btnprintOnly.Enabled = true;
+                btnSavePrint.Enabled = true;
+
+            }
+            addarchives(colIDs);
+
+        }
         private void addarchives(string[] text)
         {
             string[] allList = getColList("archives");

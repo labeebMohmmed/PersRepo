@@ -16,6 +16,8 @@ using Xceed.Document.NET;
 using Xceed.Words.NET;
 using System.Diagnostics;
 using System.Windows.Forms.DataVisualization.Charting;
+using DocumentFormat.OpenXml;
+using System.Security.Policy;
 
 namespace PersAhwal
 {
@@ -34,6 +36,7 @@ namespace PersAhwal
         string symbol = "";
         int suitID = 0;
         string[] columnList= new string[10];
+        string columnDate= "";
         char symbolChar;
         //string mainItems = "";
         int borderDashStyle1 = 0;
@@ -57,6 +60,11 @@ namespace PersAhwal
         static string[] List0 = new string[100];
         static string[] List1 = new string[100];
         static string[] List2 = new string[100];
+
+        static string[] ListGroup; 
+        static string[] ListTimeLine; 
+        static int[] ListValue;
+
         string[] Words = new string[30000];
         int proTypeCount = 0;
         string dataSource57;
@@ -81,25 +89,22 @@ namespace PersAhwal
         string dateLike = "";
         string name = "";
         string DateSearch = "";
+        string dateType = "";
+        string dateValue = "";
+        string datePArt = "";
         public DeepStatistics(string Source57, string Source56, string filespathIn, string filespathOut)
         {
             InitializeComponent();
             dataSource = dataSource57 = Source57;
             dataSource56 = Source56;
             dataGridView5.DataSource = TrendingUpdate();
-            //TrendingWords();
-            //queryInfo = DeepStatistInfo(1);
-            ////BackupDataBase(dataSource57, "AhwalDataBase");
-            //swapData("ام بده", "امدرمان", "text4", "text5");
-            //swapData("ابوسعد", "امدرمان", "text4", "text5");
-            //swapData("الثورة", "امدرمان", "text4", "text5");
             FilespathIn = filespathIn;
             FilespathOut = filespathOut;
             AllStatistData();
             AllColumn();
             intiData();
             updateInfo();
-            //fillSatatInfoGrid("1");
+            GenPreparations();
             WorkOffices[0] = "مكة المكرمة";
             WorkOffices[1] = "الطائف";
             WorkOffices[2] = "المدينة المنورة";
@@ -115,20 +120,13 @@ namespace PersAhwal
             WorkOffices[12] = "ينبع";
             WorkOffices[13] = "القنفذة";
 
-
-            //getGroupCount0(columnList[1], "%-03-2022");
-            //
-
-            //correctDataSuit("تصنيف_عام", "TableCollective", false);
-            //correctDataSuit("المهن_المعدلة", "TableWafid", false);
-            //correctDataSuit("المهن_المعدلة", "TableWafidJed", false);
-            //correctDataSuit("المهن_المعدلة", "TableWafidMekkah", false);
-            //correctDataSuit("المهن_المعدلة", "TableTransfer", false);
-            //correctDataSuit("المهن_المعدلة", "TableTarheel", false);
-            //correctDataSuit("المهن_المعدلة", "TableCommity", false);
-
         }
 
+        private void GenPreparations()
+        {
+            comPeriode.Location = new System.Drawing.Point(1204, 18);//1320, 18
+            comPeriode.Size = new System.Drawing.Size(235, 35);
+        }
         private void correctDataSuit(string col, string table, bool contain)
         {
 
@@ -885,17 +883,17 @@ namespace PersAhwal
                         else found2 = true;
 
                     }
-                    if (!found2 && dataRow[items2].ToString().Split('-')[2].Contains("20"))
-                    {
-                        if (name2.Split('-')[2] != "")
-                        {
+                    //if (!found2 && dataRow[items2].ToString().Split('-')[2].Contains("20"))
+                    //{
+                    //    if (name2.Split('-')[2] != "")
+                    //    {
 
-                            comYear.Items.Add(name2.Split('-')[2]);
-                            comYear.SelectedIndex = 1;
+                    //        //comYear.Items.Add(name2.Split('-')[2]);
+                    //        comYear.SelectedIndex = 1;
 
-                        }
+                    //    }
 
-                    }
+                    //}
                 }
 
             }
@@ -956,7 +954,7 @@ namespace PersAhwal
 
         
 
-        private void AddAchartData(ComboBox comboBox, string name, int[] data, bool col_Graph, string yAxisTitle, bool col)
+        private void AddAchartData(string[] valueName, string name, int[] data, bool col_Graph, string yAxisTitle, bool col)
         {
             int sum = 0;
             if (!holdData1) {
@@ -1039,41 +1037,12 @@ namespace PersAhwal
             //    //}
             //}
             
-            for (int x = 0; x < comboBox.Items.Count; x++)
+            for (int x = 0; x < valueName.Length; x++)
             {
-                chart1.Series[name].Points.AddXY(comboBox.Items[x], data[x]);
+                chart1.Series[name].Points.AddXY(valueName[x], data[x]);
             }
 
-            int overSum  = 0;
-            string[] reArrange = new string[comboBox.Items.Count];
-            int[] itemIndex = new int[comboBox.Items.Count];
-            for (int x = 0; x < comboBox.Items.Count; x++)
-                reArrange[x ] = comboBox.Items[x].ToString();
-
-            for (int x = 0; x < comboBox.Items.Count; x++)
             
-                itemIndex[x ] = x;
-
-            for (int x = 0; x < data.Length; x++)
-            {
-                overSum = overSum + data[x];
-                for (int y = 0; y < comboBox.Items.Count - 1; y++)
-                    if (data[y] < data[y])
-                    {
-                        int temp1 = data[y];
-                        data[y] = data[y + 1];
-                        data[y + 1] = temp1;
-
-                        string temp2 = reArrange[y];
-                        reArrange[y] = reArrange[y + 1];
-                        reArrange[y + 1] = temp2;
-
-                        int temp3 = itemIndex[y];
-                        itemIndex[y] = itemIndex[y + 1];
-                        itemIndex[y + 1] = temp3;
-                    }
-            }
-
             OverallStatis.Items.Clear();
             for (int x = 0; x < data.Length; x++)
             {
@@ -1084,81 +1053,296 @@ namespace PersAhwal
                     data[y + 1] = temp;
                 }                   
             }
-
-            for (int x = 0; x < comboBox.Items.Count; x++)
-            {
-                int avg = 1;
-                if (overSum != 0)
-                    avg = 1 + (100 * data[x]) / overSum;
-                OverallStatis.Items.Add(reArrange[x] + " % " + avg.ToString());
-
-                //drawColumns(itemIndex[x-1], avg, reArrange[x-1]);
-                //MessageBox.Show(data[x - 1].ToString());
-            }
             chartAreas1++;
-            btnSumStatis.Text = overSum.ToString() + " معاملة";
+            //btnSumStatis.Text = overSum.ToString() + " معاملة";
+        }
+        
+        private void AddAchartTimeLine(string[] nameValue, string name, int[] data, bool col_Graph, string yAxisTitle)
+        {
+            int sum = 0;
+            if (!holdData2) {
+                while (chart2.Series.Count> 0) {
+                    chart2.Series.RemoveAt(0);                    
+                }
+                borderDashStyle2=0;
+            }
+            else borderDashStyle2++;
+            try
+            {
+                chart2.Series.Add(name);
+            }
+            catch (Exception ex) { }
+            if (chartAreas2 == 0)
+            {
+
+                chart2.ChartAreas[chartAreas2].AxisY.Title = yAxisTitle;
+                chart2.ChartAreas[chartAreas2].AxisX.LabelStyle.Interval = 1;
+                chart2.ChartAreas[chartAreas2].AxisY.LabelStyle.Interval = Convert.ToInt32(combGrad1.Text);
+                chart2.ChartAreas[chartAreas2].AxisY.LabelStyle.Font = new System.Drawing.Font("Arabic Typesetting", 16F, System.Drawing.FontStyle.Regular);
+                
+            }
+            if (col_Graph)
+            {
+                switch (borderDashStyle1)
+                {
+                    case 0:
+                        chart2.Series[name].BorderDashStyle = ChartDashStyle.Solid;
+                        break;
+                    case 1:
+                        chart2.Series[name].BorderDashStyle = ChartDashStyle.Dot;
+                        break;
+                    case 2:
+                        chart2.Series[name].BorderDashStyle = ChartDashStyle.Dash;
+                        break;
+                    case 3:
+                        chart2.Series[name].BorderDashStyle = ChartDashStyle.DashDot;
+                        break;
+                    case 4:
+                        chart2.Series[name].BorderDashStyle = ChartDashStyle.DashDotDot;
+                        borderDashStyle1 = 0;
+                        break;
+                }
+                chart2.Series[name].BorderWidth = 3;
+            }
+            if (radioColumns.Checked)
+                chart2.Series[name].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Column;
+            else
+                chart2.Series[name].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+
+            for (int x = 0; x < nameValue.Length; x++)
+            {
+                chart2.Series[name].Points.AddXY(Monthorder(nameValue[x]), data[x]);
+            }            
+            chartAreas2++;
         }
         
         private void ReportType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            bool column = true;
-            if(ReportType.SelectedIndex == 2) column = false;
-            // itemsOfSubitems(subComb0, false);
-            //MessageBox.Show(comboIndex.ToString());
-            //MessageBox.Show(comboIndex.ToString());
+            datePArt = " where DATENAME(" + dateType + ", " + columnDate + ") = " + dateValue + " and " + columnDate + " like N'%" + comYear.Text + "'";
+            if (dateValue == "ALL")
+                datePArt = "";
+            else if (dateValue == "YEAR")
+                datePArt = " dateColumn like N'%" + comYear.Text + "' ";
             switch (comboIndex)
             {
                 case 0:
-                    getGroupCount0(columnList[1], dateLike);
-                    AddAchartData(subComb0, name.Replace(" ", "_"), itemCount, false, "عدد معاملات "  + genTypes.Text , column);
-                    //MessageBox.Show(DateSearch);
-                    
-                    //MessageBox.Show(columnList[1]);
-                    AddAchart2Data(subComb0, DateSearch.Split('-'), name, itemCount, "عدد المعاملات");
-                    //if (subBtn0.Text == "الكل")
-                    //{
-                    //    //MessageBox.Show(subComb0.SelectedIndex.ToString());
-                    //    itemsOfSubitems(subComb0, true);
-                    //    itemsOfTime(subComb0, column);
-                    //}
-                    //else itemsOfSubitems(subComb0, false);
+                    getMainData(columnList[1], columnDate, dateType, dateValue);
+                    AddAchartData(ListGroup, name.Replace(" ", "_"), ListValue, false, "عدد معاملات " + genTypes.Text, true);
+                    getTimeLine();
+                    AddAchartTimeLine(ListTimeLine, "القيد الزمني للعام " + comYear.Text, ListValue, false, "عدد معاملات " + genTypes.Text);
                     break;
-
                 case 1:
-                    //MessageBox.Show(dateLike);
-                    getGroupCount1(columnList[2], dateLike, subComb0.Text);
-                    AddAchartData(subComb1, name.Replace(" ", "_"), itemCount, false, "عدد معاملات " + subComb0.Text, column);
-                    getDayCount1(columnList[1], subComb0.Text, DateSearch);
-                    //getDayCount2(columnList[1], subComb0.Text, columnList[2], subComb1.Text, DateSearch);
-                    AddAchart2Data(subComb1, DateSearch.Split('-'), name, itemCount, "عدد المعاملات");
-                    //if (subBtn1.Text == "الكل")
-                    //{
-                    //    itemsOfSubitems(subComb1, true);
-                    //    itemsOfTime(subComb1, column);
-                    //}
-                    //else itemsOfSubitems(subComb1, false);
-                    break;
-
-                case 2:
-                    if (subBtn2.Text == "الكل")
-                    {
-                        itemsOfSubitems(subComb2, true);
-                        itemsOfTime(subComb2, column);
-                    }
-                    else itemsOfSubitems(subComb2, false);
-                    break;
-                case 3:
-                    if (subBtn2.Text == "الكل")
-                    {
-                        itemsOfSubitems(subComb3, true);
-                        itemsOfTime(subComb3, column);
-                    }
-                    else itemsOfSubitems(subComb3, false);
+                    getSub1Data(columnList[1], columnList[2], columnDate, dateType, dateValue);
+                        
+                    AddAchartData(ListGroup, name.Replace(" ", "_"), ListValue, false, "عدد معاملات " + genTypes.Text, true);
+                    getTimeLine();
+                    AddAchartTimeLine(ListTimeLine, "القيد الزمني للعام " + comYear.Text, ListValue, false, "عدد معاملات " + genTypes.Text);
                     break;
             }
-            holdData1count = 0;
-            holdData1 = false;
+                    /*bool column = true;
+                    if(ReportType.SelectedIndex == 2) column = false;
+                    // itemsOfSubitems(subComb0, false);
+                    //MessageBox.Show(comboIndex.ToString());
+                    //MessageBox.Show(comboIndex.ToString());
+                    switch (comboIndex)
+                    {
+                        case 0:
+                            getGroupCount0(columnList[1], dateLike);
+                            AddAchartData(subComb0, name.Replace(" ", "_"), itemCount, false, "عدد معاملات "  + genTypes.Text , column);
+                            //MessageBox.Show(DateSearch);
+
+                            //MessageBox.Show(columnList[1]);
+                            AddAchart2Data(subComb0, DateSearch.Split('-'), name, itemCount, "عدد المعاملات");
+                            //if (subBtn0.Text == "الكل")
+                            //{
+                            //    //MessageBox.Show(subComb0.SelectedIndex.ToString());
+                            //    itemsOfSubitems(subComb0, true);
+                            //    itemsOfTime(subComb0, column);
+                            //}
+                            //else itemsOfSubitems(subComb0, false);
+                            break;
+
+                        case 1:
+                            //MessageBox.Show(dateLike);
+                            getGroupCount1(columnList[2], dateLike, subComb0.Text);
+                            AddAchartData(subComb1, name.Replace(" ", "_"), itemCount, false, "عدد معاملات " + subComb0.Text, column);
+                            getDayCount1(columnList[1], subComb0.Text, DateSearch);
+                            //getDayCount2(columnList[1], subComb0.Text, columnList[2], subComb1.Text, DateSearch);
+                            AddAchart2Data(subComb1, DateSearch.Split('-'), name, itemCount, "عدد المعاملات");
+                            //if (subBtn1.Text == "الكل")
+                            //{
+                            //    itemsOfSubitems(subComb1, true);
+                            //    itemsOfTime(subComb1, column);
+                            //}
+                            //else itemsOfSubitems(subComb1, false);
+                            break;
+
+                        case 2:
+                            if (subBtn2.Text == "الكل")
+                            {
+                                itemsOfSubitems(subComb2, true);
+                                itemsOfTime(subComb2, column);
+                            }
+                            else itemsOfSubitems(subComb2, false);
+                            break;
+                        case 3:
+                            if (subBtn2.Text == "الكل")
+                            {
+                                itemsOfSubitems(subComb3, true);
+                                itemsOfTime(subComb3, column);
+                            }
+                            else itemsOfSubitems(subComb3, false);
+                            break;
+                    }
+                    holdData1count = 0;
+                    holdData1 = false;
+                    */
+            }
+        private void getMainData(string colGroup, string dateColumn, string dateType, string dateValue)
+        {
+            
+            string query = "select  " + colGroup + " , count ( " + colGroup + " ) as dataCount from TableTempData " + datePArt + " group by  " + colGroup;
+            Console.WriteLine(query);
+            //MessageBox.Show(query);
+            SqlConnection sqlCon = new SqlConnection(dataSource57);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable table = new DataTable();
+            sqlDa.Fill(table);
+            sqlCon.Close();            
+            ListValue = new int[table.Rows.Count];
+            ListGroup = new string[table.Rows.Count];
+            int i = 0;
+            foreach (DataRow dataRow in table.Rows)
+            {
+                ListValue[i] = Convert.ToInt32(dataRow["dataCount"].ToString());
+                ListGroup[i] = dataRow[colGroup].ToString();
+                i++;
+            }
         }
+        
+        private void getMainDataGen(string colGroup)
+        {
+            subComb0.Items.Clear();
+            
+            string query = "select  " + colGroup + " , count ( " + colGroup + " ) as dataCount from TableTempData group by  " + colGroup;
+            Console.WriteLine(query);
+            //MessageBox.Show(query);
+            SqlConnection sqlCon = new SqlConnection(dataSource57);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable table = new DataTable();
+            sqlDa.Fill(table);
+            sqlCon.Close();            
+            int i = 0;
+            foreach (DataRow dataRow in table.Rows)
+            {
+                subComb0.Enabled = true;
+                subComb0.Items.Add(dataRow[colGroup].ToString());
+                i++;
+            }
+        }
+        private void getSub1Data(string colMainGroup,string colSub1Group, string dateColumn, string dateType, string dateValue)
+        {
+            string query = "select "+ colSub1Group+ " , count ( "+ colSub1Group+ " ) as dataCount from TableTempData " + datePArt+ " and "+ colSub1Group+ " <> N'إختر الإجراء' and "+ colMainGroup + " = N'"+ subComb0.Text +"' group by  " + colSub1Group;
+            Console.WriteLine(query);
+            //MessageBox.Show(query);
+            SqlConnection sqlCon = new SqlConnection(dataSource57);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable table = new DataTable();
+            sqlDa.Fill(table);
+            sqlCon.Close();
+            ListGroup = new string[table.Rows.Count];
+            ListValue = new int[table.Rows.Count];
+            int i = 0;
+            foreach (DataRow dataRow in table.Rows)
+            {
+                ListValue[i] = Convert.ToInt32(dataRow["dataCount"].ToString());
+                ListGroup[i] = dataRow[colSub1Group].ToString();
+                i++;
+            }
+        }
+        private void getSub1DataGen(string colMainGroup,string colSub1Group)
+        {
+            subComb1.Items.Clear();
+            
+            string query = "select "+ colSub1Group+ " , count ( "+ colSub1Group+" ) from TableTempData where "+ colSub1Group+ " <> N'إختر الإجراء' and "+ colMainGroup + " = N'"+ subComb0.Text +"' group by  " + colSub1Group;
+            Console.WriteLine(query);
+            //MessageBox.Show(query);
+            SqlConnection sqlCon = new SqlConnection(dataSource57);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable table = new DataTable();
+            sqlDa.Fill(table);
+            sqlCon.Close();
+            ListTimeLine = new string[table.Rows.Count];
+            ListValue = new int[table.Rows.Count];
+            int i = 0;
+            foreach (DataRow dataRow in table.Rows)
+            {
+                subComb1.Enabled = true;   
+                    subComb1.Items.Add(dataRow[colSub1Group].ToString());
+                i++;
+            }
+        }
+        private void getSub2DataGen(string colMainGroup,string colSub1Group)
+        {
+            subComb2.Items.Clear();
+            
+            string query = "select "+ colSub1Group+ " , count ( "+ colSub1Group+" ) from TableTempData where "+ colSub1Group+ " <> N'إختر الإجراء' and "+ colMainGroup + " = N'"+ subComb0.Text +"' group by  " + colSub1Group;
+            Console.WriteLine(query);
+            //MessageBox.Show(query);
+            SqlConnection sqlCon = new SqlConnection(dataSource57);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable table = new DataTable();
+            sqlDa.Fill(table);
+            sqlCon.Close();
+            ListTimeLine = new string[table.Rows.Count];
+            ListValue = new int[table.Rows.Count];
+            int i = 0;
+            foreach (DataRow dataRow in table.Rows)
+            {
+                subComb1.Enabled = true;   
+                    subComb1.Items.Add(dataRow[colSub1Group].ToString());
+                i++;
+            }
+        }
+        private void getTimeLine()
+        {
+            string query = "select DATEpart(MONTH, التاريخ_الميلادي) as timeLine ,count(*) as countTime from TableTempData where التاريخ_الميلادي like N'%"+comYear.Text+"' group by DATEpart(MONTH, التاريخ_الميلادي) order by DATEpart(MONTH, التاريخ_الميلادي)";
+            //Console.WriteLine(query);
+            //MessageBox.Show(query);
+            SqlConnection sqlCon = new SqlConnection(dataSource57);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable table = new DataTable();
+            sqlDa.Fill(table);
+            sqlCon.Close();
+            ListTimeLine = new string[table.Rows.Count];
+            ListValue = new int[table.Rows.Count];
+            int i = 0;
+            foreach (DataRow dataRow in table.Rows)
+            {
+                ListValue[i] = Convert.ToInt32(dataRow["countTime"].ToString());
+                ListTimeLine[i] = dataRow["timeLine"].ToString();                
+                i++;
+            }
+        }
+
 
         private void itemsOfSubitems(ComboBox comboBox, bool multi)
         {
@@ -1322,7 +1506,7 @@ namespace PersAhwal
             //int[] itemIndex = new int[comboBox.Items.Count];
 
             //for (int x = 0; x < comboBox.Items.Count; x++)
-            //    reArrange[x] = comboBox.Items[x].ToString();
+            //    reArrange[x] = valueName[x].ToString();
 
             //for (int x = 0; x < comboBox.Items.Count; x++)
 
@@ -1362,7 +1546,7 @@ namespace PersAhwal
             chartAreas2++;
         }
         private void itemsOfTime(ComboBox comboBox, bool column)
-        {
+        {/*
             if (shortRange) return;
             //MessageBox.Show(comboBox.SelectedIndex.ToString());
             int[] dataChart = new int[comboBox.Items.Count ];
@@ -1598,7 +1782,7 @@ namespace PersAhwal
                             break;
                     }
                     break;
-            }
+            }*/
         }
 
         private string Monthorder(int month)
@@ -1648,6 +1832,60 @@ namespace PersAhwal
 
 
                 case 12:
+                    return "ديسمبر";
+                default:
+                    return "";
+
+            }
+        }
+        
+        private string Monthorder(string month)
+        {
+            switch (month)
+            {
+                case "1":
+                    return "يناير";
+
+
+                case "2":
+                    return "فبراير";
+
+
+                case "3":
+                    return "مارس";
+
+
+                case "4":
+                    return "ابريل";
+
+                case "5":
+                    return "مايو";
+
+
+                case "6":
+                    return "يونيو";
+
+
+                case "7":
+                    return "يوليو";
+
+
+                case "8":
+                    return "أغسطس";
+
+                case "9":
+                    return "سبتمبر";
+
+
+                case "10":
+                    return "اكتوبر";
+
+
+                case "11":
+                    return "نوفمبر";
+
+
+                case "12":
                     return "ديسمبر";
                 default:
                     return "";
@@ -1809,7 +2047,7 @@ namespace PersAhwal
 
         private void comYear_SelectedIndexChanged(object sender, EventArgs e)
         {
-          
+            comPeriode.Visible = true;
 
 
         }
@@ -2080,12 +2318,16 @@ namespace PersAhwal
                 if (dataRow["iteminfo"].ToString() == genTypes.Text)
                 {
                     columnList[0] = dataRow["tablesName"].ToString();
+                    columnDate = dataRow["col1"].ToString();
                     for (; x <= 10; x++)
                         if (dataRow["Col" + x.ToString()].ToString() != "")
                         {
                             items = items + ", " + dataRow["Col" + x.ToString()].ToString();
-                            if (x >= 3) 
-                                columnList[x-2] = dataRow["Col" + x.ToString()].ToString();
+                            if (x >= 3)
+                            {
+                                columnList[x - 2] = dataRow["Col" + x.ToString()].ToString();
+                                //MessageBox.Show("Col" + x.ToString() + " - " + columnList[x - 2]);
+                            }
                         }
                     items = items + " from " + columnList[0];
                     if (dataRow["databaseFile"].ToString() == "56") 
@@ -2129,19 +2371,21 @@ namespace PersAhwal
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
-                chartAreas2 = chartAreas1 = 0;
+            chartAreas2 = chartAreas1 = 0;
             //if(subItems[genTypes.SelectedIndex, 0] == "") return; 
             subComb0.Items.Clear();
             
             comYear.Items.Clear();
             comYear.Items.Add("جميع الأعوام");
+            
             //MessageBox.Show(DeepStatistInfo(genTypes.SelectedIndex+1));
             queryInfo = DeepStatistInfo(genTypes.SelectedIndex+1);
-
+            
             // subBtn0.Text =
-            itemsType(columnList[0], columnList[1], dateItems, true, subComb0).ToString();
-
+            //itemsType(columnList[0], columnList[1], dateItems, true, subComb0).ToString();
+            createTable(genTypes.Text);
+            fillYears(comYear, columnDate);
+            getMainDataGen(columnList[1]);
             //getGroupCount0(columnList[1], dateLike, subComb0);
             //for (int x = 0; x < itemCount.Length; x++)
             //{
@@ -2167,6 +2411,46 @@ namespace PersAhwal
 
         }
 
+        private void fillYears(ComboBox combo, string column)
+        {
+            combo.Items.Clear();
+            string query = "select distinct DATENAME(YEAR, "+ column+ ")  as years from TableTempData where DATENAME(YEAR, " + column+") like '20%' order by DATENAME(YEAR, " + column+") desc";
+            //Console.WriteLine(query);
+            //MessageBox.Show(query);
+            SqlConnection Con = new SqlConnection(dataSource);
+            if (Con.State == ConnectionState.Closed)
+                try
+                {
+                    Con.Open();
+                    SqlDataAdapter sqlDa = new SqlDataAdapter(query, Con);
+                    sqlDa.SelectCommand.CommandType = CommandType.Text;
+                    DataTable dtbl2 = new DataTable();
+                    sqlDa.Fill(dtbl2);
+                    Con.Close();
+                    foreach (DataRow dataRow in dtbl2.Rows)
+                    {
+                        combo.Items.Add(dataRow["years"].ToString());
+                        combo.Visible = true;
+                        combo.Text = "إختر العام";
+                    }
+                }
+                catch (Exception ex) { }
+        }
+        private void createTable(string proName)
+        {
+            SqlConnection Con = new SqlConnection(dataSource);
+            if (Con.State == ConnectionState.Closed)
+                try
+                {
+                    Con.Open();
+                    SqlDataAdapter sqlDa = new SqlDataAdapter(proName, Con);
+                    sqlDa.SelectCommand.CommandType = CommandType.StoredProcedure;
+                    DataTable dtbl2 = new DataTable();
+                    sqlDa.Fill(dtbl2);
+                    Con.Close();
+                }
+                catch (Exception ex) { }
+        }
         private void prePareToShow(ComboBox comboBox, ComboBox gen)
         {
             shortRange = false;
@@ -2280,29 +2564,50 @@ namespace PersAhwal
             switch (comPeriode.SelectedIndex)
             {
                 case 0:
+                    dateType = "MONTH";
                     for (int month = 1; month <= 12; month++)
                         comSubPeriode.Items.Add(MonthorderInNumber(month));
+                    comSubPeriode.Text = "إختر الشهر";
+                    comPeriode.Location = new System.Drawing.Point(1320, 18);
+                    comPeriode.Size = new System.Drawing.Size(119, 35);
+                    comSubPeriode.Visible = true;
+                    ReportType.Visible = false;
+                    
                     //comSubPeriode.Items.Add(Monthorder(month));
                     break;
                 case 1:
+                    dateType = "QUARTER";
                     comSubPeriode.Items.Add("الربع الأول");
                     comSubPeriode.Items.Add("الربع الثاني");
                     comSubPeriode.Items.Add("الربع الثالث");
                     comSubPeriode.Items.Add("الربع الرابع");
+                    comSubPeriode.Text = "إختر ربع العام";
+                    comPeriode.Location = new System.Drawing.Point(1320, 18);
+                    comPeriode.Size = new System.Drawing.Size(119, 35);
+                    comSubPeriode.Visible = true;
+                    ReportType.Visible = false;
                     break;
                 case 2:
+                    dateType = "YEAR";
+                    dateValue = comYear.Text;
                     comSubPeriode.Visible = false;
                     ReportType.Visible = true;
                     name = "تقرير " + ReportType.Text + " عام " + comYear.Text;
                     dateLike = "التاريخ_الميلادي like '%" + comYear.Text + "'";
                     DateSearch = "01-02-03-04-05-06-07-08-09-10-11-12";
-                    
+
+                    ReportType.Text = "إختر نوع التقرير";
+                    ReportType.SelectedIndex = 0;
                     break;
                 case 3:
+                    dateType = "ALL";
+                    dateValue = "";
                     comSubPeriode.Visible = false;
                     ReportType.Visible = true;
                     name = "تقرير " + ReportType.Text;
                     dateLike = "التاريخ_الميلادي like '%'";
+                    ReportType.Text = "إختر نوع التقرير";
+                    ReportType.SelectedIndex = 0;
                     break;
             }
         }
@@ -2312,31 +2617,40 @@ namespace PersAhwal
             switch (comPeriode.SelectedIndex)
             {
                 case 0:
-                    DateSearch = "01-02-03-04-05-06-07-08-09-10-11-12-13-14-15-16-17-18-19-20-21-22-23-24-25-26-27-28-29-30-31";
+                    //DateSearch = "01-02-03-04-05-06-07-08-09-10-11-12-13-14-15-16-17-18-19-20-21-22-23-24-25-26-27-28-29-30-31";
 
                     name = "تقرير شهر " + Monthorder(Convert.ToInt32(comSubPeriode.Text)) + " للعام " + comYear.Text;
-                    dateLike = "التاريخ_الميلادي like '%-"+ comSubPeriode.Text + "-" + comYear.Text + "'";
+                    //dateLike = "التاريخ_الميلادي like '%-"+ comSubPeriode.Text + "-" + comYear.Text + "'";
+                    //ReportType.Text = "إختر نوع التقرير";
+                    dateValue = comSubPeriode.Text;
+                    ReportType.SelectedIndex = 0;
                     break;
                 case 1:
                     name = "تقرير " + ReportType.Text + " " + comSubPeriode.Text + " للعام " + comYear.Text;
                     switch (comSubPeriode.SelectedIndex) {
                         case 0:
-                            DateSearch = "01-02-03";
-                            dateLike = "التاريخ_الميلادي like '%-01-" + comYear.Text + "' or التاريخ_الميلادي like '%-02-" + comYear.Text + "' or التاريخ_الميلادي like '%-03-" + comYear.Text + "'";
+                            dateValue = "1";
+                            //DateSearch = "01-02-03";
+                            //dateLike = "التاريخ_الميلادي like '%-01-" + comYear.Text + "' or التاريخ_الميلادي like '%-02-" + comYear.Text + "' or التاريخ_الميلادي like '%-03-" + comYear.Text + "'";
                             break;
                         case 1:
-                            DateSearch = "04-05-06";
-                            dateLike = "التاريخ_الميلادي like '%-04-" + comYear.Text + "' or التاريخ_الميلادي like '%-05-" + comYear.Text + "' or التاريخ_الميلادي like '%-06-" + comYear.Text + "'";
+                            dateValue = "2";
+                            //DateSearch = "04-05-06";
+                            //dateLike = "التاريخ_الميلادي like '%-04-" + comYear.Text + "' or التاريخ_الميلادي like '%-05-" + comYear.Text + "' or التاريخ_الميلادي like '%-06-" + comYear.Text + "'";
                             break;
                         case 2:
-                            DateSearch = "07-08-09";
-                            dateLike = "التاريخ_الميلادي like '%-07-" + comYear.Text + "' or التاريخ_الميلادي like '%-08-" + comYear.Text + "' or التاريخ_الميلادي like '%-09-" + comYear.Text + "'";
+                            dateValue = "3";
+                            //DateSearch = "07-08-09";
+                            //dateLike = "التاريخ_الميلادي like '%-07-" + comYear.Text + "' or التاريخ_الميلادي like '%-08-" + comYear.Text + "' or التاريخ_الميلادي like '%-09-" + comYear.Text + "'";
                             break;
                         case 3:
-                            DateSearch = "10-11-12";
-                            dateLike = "التاريخ_الميلادي like '%-10-" + comYear.Text + "' or التاريخ_الميلادي like '%-11-" + comYear.Text + "' or التاريخ_الميلادي like '%-12-" + comYear.Text + "'"; 
+                            dateValue = "4";
+                            //DateSearch = "10-11-12";
+                            //dateLike = "التاريخ_الميلادي like '%-10-" + comYear.Text + "' or التاريخ_الميلادي like '%-11-" + comYear.Text + "' or التاريخ_الميلادي like '%-12-" + comYear.Text + "'"; 
                             break;
                     }
+                    ReportType.Text = "إختر نوع التقرير";
+                    ReportType.SelectedIndex = 0;
                     break;
                 
             }
@@ -2610,7 +2924,7 @@ namespace PersAhwal
                 i++;
             }            
         }
-
+        
         private int[] getGroupCount1(string groupedItem, string text, string text1)
         {
             //MessageBox.Show(groupedItem);
@@ -2743,28 +3057,28 @@ namespace PersAhwal
         
         private void subAuthTypes_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
-            //chartAreas2 = chartAreas1 = 0;
-            //if (columnList[2] == "") return;
+            getSub1DataGen(columnList[1], columnList[2]);
+            ////chartAreas2 = chartAreas1 = 0;
+            ////if (columnList[2] == "") return;
             comboIndex = 1;
-            //subComb1.Items.Clear(); subComb1.Text = "المعاملة";
-            //subComb2.Items.Clear(); subComb2.Text = "المعاملة";
-            //subComb3.Items.Clear(); subComb3.Text = "المعاملة";
-            //subComb4.Items.Clear(); subComb4.Text = "المعاملة";
+            ////subComb1.Items.Clear(); subComb1.Text = "المعاملة";
+            ////subComb2.Items.Clear(); subComb2.Text = "المعاملة";
+            ////subComb3.Items.Clear(); subComb3.Text = "المعاملة";
+            ////subComb4.Items.Clear(); subComb4.Text = "المعاملة";
 
-            addComboData1(columnList[2],columnList[1],columnList[0]);
-            
-            //if (btnPlotSearch.Text == "فحص")
-            //{
-            //    DeepStatics(subComb0);
-            //    AllStatistData();
-            //    prePareToShow(subComb1, subComb0);
-            //}
+            //addComboData1(columnList[2],columnList[1],columnList[0]);
 
-            //else
-            //{
-            //    prePareToShow(subComb1, subComb0);
-            //}
+            ////if (btnPlotSearch.Text == "فحص")
+            ////{
+            ////    DeepStatics(subComb0);
+            ////    AllStatistData();
+            ////    prePareToShow(subComb1, subComb0);
+            ////}
+
+            ////else
+            ////{
+            ////    prePareToShow(subComb1, subComb0);
+            ////}
         }
 
         
@@ -3235,19 +3549,7 @@ Create Table TableDeepStatis
 
         }
 
-        private void btnPlotSearch_Click(object sender, EventArgs e)
-        {
-            if (btnPlotSearch.Text == "عرض")
-            {
-                
-                btnPlotSearch.Text = "فحص";
-            }
-            else
-            {
-                
-                btnPlotSearch.Text = "عرض";
-            }
-        }
+        
         private void splitCol(int id, string[] text)
         {
             

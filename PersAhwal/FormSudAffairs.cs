@@ -62,7 +62,7 @@ namespace PersAhwal
         string[,] preffix = new string[20,20];
         string[] checkBoxSex = new string[10];
         string[] Names  = new string[10];
-        string[] WorkOffices = new string[15];
+        string[] WorkOffices = new string[16];
         string[] DocumentNo = new string[10];
         string[] Relativity = new string[10];
         int[] fileList;
@@ -114,6 +114,7 @@ namespace PersAhwal
             WorkOffices[12] = "مدير إدارة الوافدين بيشة";
             WorkOffices[13] = "مدير إدارة الوافدين ينبع";
             WorkOffices[14] = "مدير إدارة الوافدين القنفذة";
+            WorkOffices[15] = "مدير إدارة مكتب العمل";
             dtblMain = new DataTable();
             fillFileBox(AffairIndex,dataGridView1);
 

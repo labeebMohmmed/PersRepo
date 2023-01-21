@@ -256,8 +256,6 @@
             this.timer3 = new System.Windows.Forms.Timer(this.components);
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.timer4 = new System.Windows.Forms.Timer(this.components);
-            this.OverallStatis = new System.Windows.Forms.ComboBox();
-            this.comSeriers = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.PanelDataGrid.SuspendLayout();
             this.PanelFiles.SuspendLayout();
@@ -3113,38 +3111,11 @@
             this.timer4.Interval = 1000;
             this.timer4.Tick += new System.EventHandler(this.timer4_Tick);
             // 
-            // OverallStatis
-            // 
-            this.OverallStatis.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.OverallStatis.FormattingEnabled = true;
-            this.OverallStatis.Location = new System.Drawing.Point(648, 356);
-            this.OverallStatis.Name = "OverallStatis";
-            this.OverallStatis.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.OverallStatis.Size = new System.Drawing.Size(573, 35);
-            this.OverallStatis.TabIndex = 850;
-            this.OverallStatis.Text = "التوزيع النسبي للمعاملات";
-            this.OverallStatis.Visible = false;
-            // 
-            // comSeriers
-            // 
-            this.comSeriers.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.comSeriers.FormattingEnabled = true;
-            this.comSeriers.Location = new System.Drawing.Point(117, 313);
-            this.comSeriers.MaxDropDownItems = 20;
-            this.comSeriers.Name = "comSeriers";
-            this.comSeriers.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.comSeriers.Size = new System.Drawing.Size(250, 35);
-            this.comSeriers.TabIndex = 849;
-            this.comSeriers.Text = "المخططات";
-            this.comSeriers.Visible = false;
-            // 
             // FormAuth
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1339, 705);
-            this.Controls.Add(this.OverallStatis);
-            this.Controls.Add(this.comSeriers);
             this.Controls.Add(this.btnNext);
             this.Controls.Add(this.btnPrevious);
             this.Controls.Add(this.PanelFiles);
@@ -3416,7 +3387,5 @@
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Button button22;
         private System.Windows.Forms.TextBox تعليق;
-        private System.Windows.Forms.ComboBox OverallStatis;
-        private System.Windows.Forms.ComboBox comSeriers;
     }
 }

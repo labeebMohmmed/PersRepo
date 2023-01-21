@@ -1574,9 +1574,9 @@ namespace PersAhwal
                                 control.Enabled = true;
                                 if (reqFile == "")
                                 {
-                                    OpenFile(Combo1.Text, false);
+                                    OpenFile(Combo1.Text + "-" + Combo2.Text, false); 
                                     if (reqFile == "")
-                                        OpenFile(Combo1.Text + "-" + Combo2.Text, false);
+                                        OpenFile(Combo1.Text, false);
                                 }
                             }
                         }
@@ -1647,9 +1647,11 @@ namespace PersAhwal
                 imagecount++;
                 if (reqFile == "")
                 {
-                    OpenFile(Combo1.Text, false);
+                    OpenFile(Combo1.Text + "-" + Combo2.Text, false);
                     if (reqFile == "")
-                        OpenFile(Combo1.Text + "-" + Combo2.Text, false);
+                        OpenFile(Combo1.Text, false);
+                    
+                        
                 }
                 foreach (Control control in drawPic.Controls)
                 {
@@ -2543,7 +2545,7 @@ namespace PersAhwal
             string query = "SELECT " + getComment + " FROM " + TableList ;
 
             string qurey = "update " + TableList + " set " + getComment + "=@comment WHERE " + allUpdateNamesList[2] + " = N'" + documenNo + "'";
-            MessageBox.Show(qurey);
+            //MessageBox.Show(qurey);
             SqlConnection sqlCon = new SqlConnection(DataSource);
             SqlCommand sqlCmd = new SqlCommand(qurey, sqlCon);
             if (sqlCon.State == ConnectionState.Closed)

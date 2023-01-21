@@ -495,7 +495,7 @@ namespace PersAhwal
                             DataSource = DataSource56;
                             Pers_Peope = false;
                         }
-                        else if (division == "احوال شخصية")
+                        else if (division == "احوال شخصية" || division == "الأرشفة العامة")
                         {
                             Server = "57";
                             DataSource = DataSource57;
@@ -581,8 +581,17 @@ namespace PersAhwal
                         getModelOutFiles(DataSource);
                         Password.Clear();
                         int userID = userLogInfo(name, IP);
-                        MainForm mainForm = new MainForm(career,userID, Server, name, joposition, DataSource56, DataSource57, LocalModelFiles, FilepathOut, ArchFile, localModelForms, Pers_Peope, GregorianDate, HijriDate, ServerModelFiles, ServerModelForms, true);
-                        mainForm.ShowDialog();
+                        //MessageBox.Show(division);
+                        if (division == "الأرشفة العامة")
+                        {
+                            AllConsArchInfo allConsArchInfo = new AllConsArchInfo(DataSource57, name, GregorianDate, LocalModelFiles, ArchFile, joposition);
+                            allConsArchInfo.ShowDialog();
+                        }
+                        else
+                        {
+                            MainForm mainForm = new MainForm(career, userID, Server, name, joposition, DataSource56, DataSource57, LocalModelFiles, FilepathOut, ArchFile, localModelForms, Pers_Peope, GregorianDate, HijriDate, ServerModelFiles, ServerModelForms, true);
+                            mainForm.ShowDialog();
+                        }
                         timer1.Enabled = false;
                         Console.WriteLine("pass login1");
                         //timer1.Enabled = false;

@@ -4553,11 +4553,13 @@ namespace PersAhwal
                     
                     break;
             }
-            if(ReportType.SelectedIndex != 11)
-                fillYears(yearReport);
-            if (ReportType.SelectedIndex >= 4 && ReportType.SelectedIndex != 10)
+            if (ReportType.SelectedIndex != 11)
             {
-                getDate();
+                fillYears(yearReport);
+                if (ReportType.SelectedIndex >= 4 && ReportType.SelectedIndex != 10)
+                {
+                    getDate();
+                }
             }
         }
 

@@ -72,6 +72,7 @@ namespace PersAhwal
         bool autoCompleteMode = false;
         int PicID = 0;
         int unvalid = 0;
+        bool نوع_المكاتبة_check = false;
         public Authentication(string dataSource, string atvc, string filespathOut, string employee, string filespathIn, string hijriDate, string greDate)
         {
             InitializeComponent();
@@ -552,13 +553,10 @@ namespace PersAhwal
 
         private void اسم_موقع_المكاتبة_TextChanged(object sender, EventArgs e)
         {
-            if (button17.Text == "بحث")
-            {
-                BindingSource bs = new BindingSource();
-                bs.DataSource = dataGridView1.DataSource;
-                bs.Filter = dataGridView1.Columns["اسم_موقع_المكاتبة"].HeaderText.ToString() + " LIKE '%" + اسم_موقع_المكاتبة.Text + "%'";
-                dataGridView1.DataSource = dataGridView1.DataSource = bs;
-            }
+            BindingSource bs = new BindingSource();
+            bs.DataSource = dataGridView1.DataSource;
+            bs.Filter = dataGridView1.Columns["اسم_موقع_المكاتبة"].HeaderText.ToString() + " LIKE '%" + اسم_موقع_المكاتبة.Text + "%'";
+            dataGridView1.DataSource = dataGridView1.DataSource = bs;
         }
 
         string lastInput2 = "";
@@ -753,6 +751,7 @@ namespace PersAhwal
                 {
                     control.Name = "unvalid_" + unvalid.ToString();
                     control.Visible = false;
+                    unvalid++;
                 }
             }
         }
@@ -1077,6 +1076,23 @@ namespace PersAhwal
             }
             labDescribed.Text = "عدد (" + i.ToString() + ") مستند (" + countSudan.ToString() + "/"+ countSaudi.ToString()+")";
 
+        }
+
+        private void نوع_المكاتبة_TextChanged(object sender, EventArgs e)
+        {
+            if (نوع_المكاتبة_check)
+            {
+                BindingSource bs = new BindingSource();
+                bs.DataSource = dataGridView1.DataSource;
+                bs.Filter = dataGridView1.Columns["نوع_المكاتبة"].HeaderText.ToString() + " LIKE '%" + نوع_المكاتبة.Text + "%'";
+                dataGridView1.DataSource = dataGridView1.DataSource = bs;
+                
+            }
+        }
+
+        private void button19_Click(object sender, EventArgs e)
+        {
+            نوع_المكاتبة_check = true;
         }
     }
 }

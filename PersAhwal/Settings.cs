@@ -542,6 +542,28 @@ namespace PersAhwal
             catch (Exception ex) { }
             sqlCon.Close();
         }
+        
+        void deleteEmptyFields()
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return; }
+
+            SqlDataAdapter sqlDa = new SqlDataAdapter("delete from TableProcReq where المعاملة = ''", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            
+            try
+            {
+                DataTable dtbl = new DataTable();
+                sqlDa.Fill(dtbl);
+            }
+            catch (Exception ex) { }
+            sqlCon.Close();
+        }
 
         private string getColumnNames(string table)
         {
@@ -3583,6 +3605,7 @@ namespace PersAhwal
 
         private void button23_Click(object sender, EventArgs e)
         {
+            deleteEmptyFields();
             reqGrid = true; 
             if (dataGridView1.Visible)
             {

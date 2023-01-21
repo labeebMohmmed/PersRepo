@@ -25,7 +25,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>792</ApplicationRevision>
+    <ApplicationRevision>801</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -254,6 +254,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AllConsArchInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AllConsArchInfo.Designer.cs">
+      <DependentUpon>AllConsArchInfo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Authentication.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -444,6 +450,9 @@
     <Compile Include="UserDataView.Designer.cs">
       <DependentUpon>UserDataView.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="AllConsArchInfo.resx">
+      <DependentUpon>AllConsArchInfo.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Authentication.resx">
       <DependentUpon>Authentication.cs</DependentUpon>
     </EmbeddedResource>
@@ -746,6 +755,7 @@
     <None Include="Resources\scan.png" />
     <None Include="Resources\upload.png" />
     <None Include="Resources\noImage.png" />
+    <None Include="Resources\list.png" />
     <Content Include="SqlServerTypes\readme.htm" />
     <Content Include="SqlServerTypes\x64\msvcr120.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

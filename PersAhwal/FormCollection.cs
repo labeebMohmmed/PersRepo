@@ -1851,7 +1851,6 @@ namespace PersAhwal
 
         private void fileComboBoxMandoub(ComboBox combbox, string source, string tableName)
         {
-            combbox.Visible = true;
             combbox.Items.Clear();
             combbox.Items.Add("حضور مباشرة إلى القنصلية");
             using (SqlConnection saConn = new SqlConnection(source))

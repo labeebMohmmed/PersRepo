@@ -166,7 +166,7 @@ namespace PersAhwal
             FillDataGridView(DataSource);
             getMaxRange(DataSource);
             اسم_الموظف.Text = EmpName;
-            fillChart();
+            //fillChart();
             chart1 = new Chart();
             legend1 = new Legend();
             chartArea1 = new ChartArea();
@@ -5265,133 +5265,133 @@ namespace PersAhwal
             //holdData2 = true;
             //holdData2count++;
         }
-        private void AddAchartData(ComboBox comboBox, string name, int[] data, bool col_Graph, string yAxisTitle, bool col)
-        {
-            int sum = 0;
-            if (!holdData1)
-            {
-                while (chart1.Series.Count > 0)
-                {
-                    chart1.Series.RemoveAt(0);
-                    comSeriers.Items.RemoveAt(0);
+        //private void AddAchartData(ComboBox comboBox, string name, int[] data, bool col_Graph, string yAxisTitle, bool col)
+        //{
+        //    int sum = 0;
+        //    if (!holdData1)
+        //    {
+        //        while (chart1.Series.Count > 0)
+        //        {
+        //            chart1.Series.RemoveAt(0);
+        //            comSeriers.Items.RemoveAt(0);
 
-                }
-                borderDashStyle1 = 0;
-            }
-            else borderDashStyle1++;
-            bool found = false;
-            for (int x = 0; x < comSeriers.Items.Count; x++)
-            {
-                if (comSeriers.Items[x].ToString() == name)
-                {
-                    found = true;
-                }
-            }
-            if (!found)
-            {
-                chart1.Series.Add(name);
-                comSeriers.Items.Add(name);
-                //MessageBox.Show(name);
-                //chart1.Series[name].IsValueShownAsLabel = بشم;
+        //        }
+        //        borderDashStyle1 = 0;
+        //    }
+        //    else borderDashStyle1++;
+        //    bool found = false;
+        //    for (int x = 0; x < comSeriers.Items.Count; x++)
+        //    {
+        //        if (comSeriers.Items[x].ToString() == name)
+        //        {
+        //            found = true;
+        //        }
+        //    }
+        //    if (!found)
+        //    {
+        //        chart1.Series.Add(name);
+        //        comSeriers.Items.Add(name);
+        //        //MessageBox.Show(name);
+        //        //chart1.Series[name].IsValueShownAsLabel = بشم;
 
-            }
-            if (chartAreas1 == 0)
-            {
+        //    }
+        //    if (chartAreas1 == 0)
+        //    {
 
-                chart1.ChartAreas[chartAreas1].AxisY.Title = yAxisTitle;
-                chart1.ChartAreas[chartAreas1].AxisX.LabelStyle.Interval = 1;
-                chart1.ChartAreas[chartAreas1].AxisY.LabelStyle.Interval = 100;
-                chart1.ChartAreas[chartAreas1].AxisY.LabelStyle.Font = new System.Drawing.Font("Arabic Typesetting", 16F, System.Drawing.FontStyle.Regular);
+        //        chart1.ChartAreas[chartAreas1].AxisY.Title = yAxisTitle;
+        //        chart1.ChartAreas[chartAreas1].AxisX.LabelStyle.Interval = 1;
+        //        chart1.ChartAreas[chartAreas1].AxisY.LabelStyle.Interval = 100;
+        //        chart1.ChartAreas[chartAreas1].AxisY.LabelStyle.Font = new System.Drawing.Font("Arabic Typesetting", 16F, System.Drawing.FontStyle.Regular);
 
-            }
-            if (col_Graph)
-            {
-                switch (borderDashStyle1)
-                {
-                    case 0:
-                        chart1.Series[name].BorderDashStyle = ChartDashStyle.Solid;
-                        break;
-                    case 1:
-                        chart1.Series[name].BorderDashStyle = ChartDashStyle.Dot;
-                        break;
-                    case 2:
-                        chart1.Series[name].BorderDashStyle = ChartDashStyle.Dash;
-                        break;
-                    case 3:
-                        chart1.Series[name].BorderDashStyle = ChartDashStyle.DashDot;
-                        break;
-                    case 4:
-                        chart1.Series[name].BorderDashStyle = ChartDashStyle.DashDotDot;
-                        borderDashStyle1 = 0;
-                        break;
-                }
+        //    }
+        //    if (col_Graph)
+        //    {
+        //        switch (borderDashStyle1)
+        //        {
+        //            case 0:
+        //                chart1.Series[name].BorderDashStyle = ChartDashStyle.Solid;
+        //                break;
+        //            case 1:
+        //                chart1.Series[name].BorderDashStyle = ChartDashStyle.Dot;
+        //                break;
+        //            case 2:
+        //                chart1.Series[name].BorderDashStyle = ChartDashStyle.Dash;
+        //                break;
+        //            case 3:
+        //                chart1.Series[name].BorderDashStyle = ChartDashStyle.DashDot;
+        //                break;
+        //            case 4:
+        //                chart1.Series[name].BorderDashStyle = ChartDashStyle.DashDotDot;
+        //                borderDashStyle1 = 0;
+        //                break;
+        //        }
 
-                chart1.Series[name].BorderWidth = 3;
-                //chart1.Series[name].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            }
-            //if (radioColumns.Checked)
-                chart1.Series[name].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Column;
-            //else
-            //    chart1.Series[name].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+        //        chart1.Series[name].BorderWidth = 3;
+        //        //chart1.Series[name].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+        //    }
+        //    //if (radioColumns.Checked)
+        //        chart1.Series[name].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Column;
+        //    //else
+        //    //    chart1.Series[name].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
 
-            for (int x = 0; x < comboBox.Items.Count; x++)
-            {
-                chart1.Series[name].Points.AddXY(comboBox.Items[x], data[x]);
-            }
+        //    for (int x = 0; x < comboBox.Items.Count; x++)
+        //    {
+        //        chart1.Series[name].Points.AddXY(comboBox.Items[x], data[x]);
+        //    }
 
-            int overSum = 0;
-            string[] reArrange = new string[comboBox.Items.Count];
-            int[] itemIndex = new int[comboBox.Items.Count];
-            for (int x = 0; x < comboBox.Items.Count; x++)
-                reArrange[x] = comboBox.Items[x].ToString();
+        //    int overSum = 0;
+        //    string[] reArrange = new string[comboBox.Items.Count];
+        //    int[] itemIndex = new int[comboBox.Items.Count];
+        //    for (int x = 0; x < comboBox.Items.Count; x++)
+        //        reArrange[x] = comboBox.Items[x].ToString();
 
-            for (int x = 0; x < comboBox.Items.Count; x++)
+        //    for (int x = 0; x < comboBox.Items.Count; x++)
 
-                itemIndex[x] = x;
+        //        itemIndex[x] = x;
 
-            for (int x = 0; x < data.Length; x++)
-            {
-                overSum = overSum + data[x];
-                for (int y = 0; y < comboBox.Items.Count - 1; y++)
-                    if (data[y] < data[y])
-                    {
-                        int temp1 = data[y];
-                        data[y] = data[y + 1];
-                        data[y + 1] = temp1;
+        //    for (int x = 0; x < data.Length; x++)
+        //    {
+        //        overSum = overSum + data[x];
+        //        for (int y = 0; y < comboBox.Items.Count - 1; y++)
+        //            if (data[y] < data[y])
+        //            {
+        //                int temp1 = data[y];
+        //                data[y] = data[y + 1];
+        //                data[y + 1] = temp1;
 
-                        string temp2 = reArrange[y];
-                        reArrange[y] = reArrange[y + 1];
-                        reArrange[y + 1] = temp2;
+        //                string temp2 = reArrange[y];
+        //                reArrange[y] = reArrange[y + 1];
+        //                reArrange[y + 1] = temp2;
 
-                        int temp3 = itemIndex[y];
-                        itemIndex[y] = itemIndex[y + 1];
-                        itemIndex[y + 1] = temp3;
-                    }
-            }
+        //                int temp3 = itemIndex[y];
+        //                itemIndex[y] = itemIndex[y + 1];
+        //                itemIndex[y + 1] = temp3;
+        //            }
+        //    }
 
-            OverallStatis.Items.Clear();
-            for (int x = 0; x < data.Length; x++)
-            {
-                for (int y = 0; y < data.Length - 1; y++)
-                {
-                    int temp = data[y];
-                    data[y] = data[y + 1];
-                    data[y + 1] = temp;
-                }
-            }
+        //    OverallStatis.Items.Clear();
+        //    for (int x = 0; x < data.Length; x++)
+        //    {
+        //        for (int y = 0; y < data.Length - 1; y++)
+        //        {
+        //            int temp = data[y];
+        //            data[y] = data[y + 1];
+        //            data[y + 1] = temp;
+        //        }
+        //    }
 
-            for (int x = 0; x < comboBox.Items.Count; x++)
-            {
-                int avg = 1;
-                if (overSum != 0)
-                    avg = 1 + (100 * data[x]) / overSum;
-                OverallStatis.Items.Add(reArrange[x] + " % " + avg.ToString());
+        //    for (int x = 0; x < comboBox.Items.Count; x++)
+        //    {
+        //        int avg = 1;
+        //        if (overSum != 0)
+        //            avg = 1 + (100 * data[x]) / overSum;
+        //        OverallStatis.Items.Add(reArrange[x] + " % " + avg.ToString());
 
-                //drawColumns(itemIndex[x-1], avg, reArrange[x-1]);
-                //MessageBox.Show(data[x - 1].ToString());
-            }
-            chartAreas1++;
-            //btnSumStatis.Text = overSum.ToString() + " معاملة";
-        }
+        //        //drawColumns(itemIndex[x-1], avg, reArrange[x-1]);
+        //        //MessageBox.Show(data[x - 1].ToString());
+        //    }
+        //    chartAreas1++;
+        //    //btnSumStatis.Text = overSum.ToString() + " معاملة";
+        //}
     }
 }
