@@ -3864,7 +3864,7 @@ namespace PersAhwal
 
         private void mandoubName_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (ServerType == "56") return;
+            if (mandoubName.SelectedIndex == 0 || ServerType == "56") return;
                 int found = todayList(mandoubName.Text.Trim(), Labdate);            
             if(found != 0 && ArchiveState )
             {

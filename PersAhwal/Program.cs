@@ -159,7 +159,7 @@ namespace PersAhwal
                     System.IO.Directory.CreateDirectory(directory + @"PrimariFiles\SuddaneseAffairs");
             }
             //Application.Run(new AllConsArchInfo(dataSource100A, EmployeeName,  "17-01-2023", @"D:\PrimariFiles\ModelFiles\", archFile, "نائب قنصل"));
-            //Application.Run(new DeepStatistics(dataSource100A, dataSource100S, Modelfilespath + @"\", archFile));
+            Application.Run(new DeepStatistics(dataSource100A, dataSource100S, Modelfilespath + @"\", archFile));
             //Application.Run(new Authentication(dataSource100A, "لبيب محمد أحمد",  archFile, "لبيب محمد أحمد", Modelfilespath, "16-06-1444", "01-08-2023"));
 
             //Application.Run(new Form4(0, -1, EmployeeName, dataSource57, Modelfilespath + @"\", archFile, JobPossition));

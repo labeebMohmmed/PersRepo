@@ -141,6 +141,8 @@ namespace PersAhwal
             this.picacrived = new System.Windows.Forms.PictureBox();
             this.dataGridView4 = new System.Windows.Forms.DataGridView();
             this.btnEditID = new System.Windows.Forms.Button();
+            this.picVerify = new System.Windows.Forms.PictureBox();
+            this.picVerified = new System.Windows.Forms.PictureBox();
             this.panelStatist = new System.Windows.Forms.FlowLayoutPanel();
             this.contract = new System.Windows.Forms.CheckBox();
             this.label26 = new System.Windows.Forms.Label();
@@ -164,8 +166,6 @@ namespace PersAhwal
             this.label25 = new System.Windows.Forms.Label();
             this.check7 = new System.Windows.Forms.CheckBox();
             this.label27 = new System.Windows.Forms.Label();
-            this.picVerify = new System.Windows.Forms.PictureBox();
-            this.picVerified = new System.Windows.Forms.PictureBox();
             this.comFinalaPro = new System.Windows.Forms.ComboBox();
             this.finalPro = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
@@ -225,10 +225,10 @@ namespace PersAhwal
             ((System.ComponentModel.ISupportInitialize)(this.picnotarchived)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picacrived)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView4)).BeginInit();
-            this.panelStatist.SuspendLayout();
-            this.flowbasicInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picVerify)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picVerified)).BeginInit();
+            this.panelStatist.SuspendLayout();
+            this.flowbasicInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panelFile.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -803,7 +803,8 @@ namespace PersAhwal
             "مدير إدارة الوافدين خميس مشيط",
             "مدير إدارة الوافدين بيشة",
             "مدير إدارة الوافدين ينبع",
-            "مدير إدارة الوافدين القنفذة"});
+            "مدير إدارة الوافدين القنفذة",
+            "مدير إدارة مكتب العمل"});
             this.DocDestin.Location = new System.Drawing.Point(546, 3);
             this.DocDestin.Name = "DocDestin";
             this.DocDestin.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -1536,6 +1537,29 @@ namespace PersAhwal
             this.btnEditID.UseVisualStyleBackColor = false;
             this.btnEditID.Visible = false;
             // 
+            // picVerify
+            // 
+            this.picVerify.Image = global::PersAhwal.Properties.Resources.verify;
+            this.picVerify.Location = new System.Drawing.Point(370, 92);
+            this.picVerify.Name = "picVerify";
+            this.picVerify.Size = new System.Drawing.Size(54, 35);
+            this.picVerify.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picVerify.TabIndex = 816;
+            this.picVerify.TabStop = false;
+            this.picVerify.Click += new System.EventHandler(this.pictureBox4_Click);
+            // 
+            // picVerified
+            // 
+            this.picVerified.Image = global::PersAhwal.Properties.Resources.verified;
+            this.picVerified.Location = new System.Drawing.Point(370, 92);
+            this.picVerified.Name = "picVerified";
+            this.picVerified.Size = new System.Drawing.Size(54, 35);
+            this.picVerified.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picVerified.TabIndex = 817;
+            this.picVerified.TabStop = false;
+            this.picVerified.Visible = false;
+            this.picVerified.Click += new System.EventHandler(this.picVerified_Click);
+            // 
             // panelStatist
             // 
             this.panelStatist.AutoScroll = true;
@@ -1817,29 +1841,6 @@ namespace PersAhwal
             this.label27.TabIndex = 719;
             this.label27.Text = "للمهن المتعلقة بالمحازن أو استلام وتسليم الأموال والممتلكات كالمحاسبين، ومندوبي ا" +
     "لمبيعات، والمشتريات، والتسويق، وامين مخازن، والأطباء، والصيادلة";
-            // 
-            // picVerify
-            // 
-            this.picVerify.Image = global::PersAhwal.Properties.Resources.verify;
-            this.picVerify.Location = new System.Drawing.Point(370, 92);
-            this.picVerify.Name = "picVerify";
-            this.picVerify.Size = new System.Drawing.Size(54, 35);
-            this.picVerify.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.picVerify.TabIndex = 816;
-            this.picVerify.TabStop = false;
-            this.picVerify.Click += new System.EventHandler(this.pictureBox4_Click);
-            // 
-            // picVerified
-            // 
-            this.picVerified.Image = global::PersAhwal.Properties.Resources.verified;
-            this.picVerified.Location = new System.Drawing.Point(370, 92);
-            this.picVerified.Name = "picVerified";
-            this.picVerified.Size = new System.Drawing.Size(54, 35);
-            this.picVerified.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.picVerified.TabIndex = 817;
-            this.picVerified.TabStop = false;
-            this.picVerified.Visible = false;
-            this.picVerified.Click += new System.EventHandler(this.picVerified_Click);
             // 
             // comFinalaPro
             // 
@@ -2442,12 +2443,12 @@ namespace PersAhwal
             ((System.ComponentModel.ISupportInitialize)(this.picnotarchived)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picacrived)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picVerify)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picVerified)).EndInit();
             this.panelStatist.ResumeLayout(false);
             this.panelStatist.PerformLayout();
             this.flowbasicInfo.ResumeLayout(false);
             this.flowbasicInfo.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picVerify)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picVerified)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.panelFile.ResumeLayout(false);
             this.panelFile.PerformLayout();

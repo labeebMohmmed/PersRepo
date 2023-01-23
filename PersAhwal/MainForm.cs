@@ -3883,8 +3883,6 @@ namespace PersAhwal
         }
         void FillDatafromGenArch(string search, string doc, Button button)
         {
-
-           
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 try
@@ -3911,9 +3909,10 @@ namespace PersAhwal
                     System.Diagnostics.Process.Start(NewFileName);
                     button.Enabled = true;
                 }
-                catch (Exception ex) { }
+                catch (Exception ex) {
+                    
+                }
             }
-
         }
         
         private void getAuthGenArch(string search, string doc, Button button)
