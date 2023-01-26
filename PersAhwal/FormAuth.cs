@@ -1569,8 +1569,7 @@ namespace PersAhwal
                 try
                 {
                     sqlCon.Open();
-                    SqlCommand sqlCmd = new SqlCommand("UPDATE TableGenGender SET النوع=N'"+ newGender+"' WHERE ID="+ id, sqlCon);
-                    MessageBox.Show("UPDATE TableGenGender SET النوع=N'" + newGender + "' WHERE ID=" + id);
+                    SqlCommand sqlCmd = new SqlCommand("UPDATE TableGenGender SET النوع=N'"+ newGender+ "' WHERE ID=" + id, sqlCon);
                     sqlCmd.CommandType = CommandType.Text;
                     sqlCmd.ExecuteNonQuery();
                     sqlCon.Close();
@@ -1584,6 +1583,28 @@ namespace PersAhwal
                 finally
                 {
                 }
+        }
+        
+        private void fileUpload( string id, string text)
+        {
+            //MessageBox.Show(id);
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+
+                    sqlCon.Open();
+                }
+
+                catch (Exception ex)
+                {
+                    return;
+                }
+            
+            SqlCommand sqlCmd = new SqlCommand("UPDATE TableGeneralArch SET fileUpload=N'"+text+"' WHERE رقم_معاملة_القسم=N'" + id+"'", sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
         }
 
         public void getID(TextBox textTo, string name, string controlType, int index, string def)
@@ -1912,7 +1933,11 @@ namespace PersAhwal
             if (index > 1) index = 2;
             Microsoft.Office.Interop.Word.Table table = oBDoc.Tables[index];
             //MessageBox.Show(index.ToString());
-            if (!libtnAdd1Vis) { table.Delete(); return; }
+            if (!libtnAdd1Vis) {
+                //MessageBox.Show(index.ToString());
+                table.Delete(); 
+                return; 
+            }
 
             table.Rows[1].Cells[1].Range.Text = "الرقم";
             table.Rows[1].Cells[2].Range.Text = labl1.Text.Replace(":","");
@@ -2833,6 +2858,7 @@ namespace PersAhwal
         private void chooseDocxFile(string appName, string docId, string docType, bool visible){
             string RouteFile;
             string strID = "1";
+            string docName = docId.Split('/')[2] + docId.Split('/')[3] + docId.Split('/')[4]+"_";
             if (visible)
             {
                 strID = "2";
@@ -2852,14 +2878,10 @@ namespace PersAhwal
             if (docType == "شهادة ميلاد")
                 RouteFile = FilespathIn + "newAuthbirth" + strID + ".docx";
 
-            if (appName != "")
-                localCopy.Text = FilespathOut + appName + DateTime.Now.ToString("ddmmss") + ".docx";
-            else localCopy.Text = FilespathOut + docId.Replace("/","_") + DateTime.Now.ToString("ddmmss") + ".docx";
+            localCopy.Text = FilespathOut + docName + DateTime.Now.ToString("ddmmss") + ".docx";
             while (File.Exists(localCopy.Text))
             {
-                if (appName != "")
-                    localCopy.Text = FilespathOut + appName + DateTime.Now.ToString("ddmmss") + ".docx";
-                else localCopy.Text = FilespathOut + docId.Replace("/", "_") + DateTime.Now.ToString("ddmmss") + ".docx";
+                localCopy.Text = FilespathOut + docName + DateTime.Now.ToString("ddmmss") + ".docx";
             }
             //
             System.IO.File.Copy(RouteFile, localCopy.Text);
@@ -2897,7 +2919,7 @@ namespace PersAhwal
             else return;
             panelShow(currentPanelIndex);
 
-            fillChart();
+            //fillChart();
         }
         
         private void btnPrevious_Click(object sender, EventArgs e)
@@ -3153,7 +3175,7 @@ namespace PersAhwal
         }
         private void fileComboBoxMandoub(ComboBox combbox, string source, string tableName)
         {
-            combbox.Visible = true;
+            //combbox.Visible = true;
             combbox.Items.Clear();
             combbox.Items.Add("حضور مباشرة إلى القنصلية");
             using (SqlConnection saConn = new SqlConnection(source))
@@ -3708,6 +3730,9 @@ namespace PersAhwal
         private void button1_Click_1(object sender, EventArgs e)
         {
             //توقيع_مقدم_الطلب
+
+            if (وجهة_التوكيل.Text == "إختر نوع الإجراء") 
+                وجهة_التوكيل.SelectedIndex = 0;
             commentInfo();
             التاريخ_الميلادي.Text = GreDate;
             التاريخ_الهجري.Text = HijriDate;
@@ -3729,42 +3754,7 @@ namespace PersAhwal
             //}
             edited.Text = "YES";
             حالة_الارشفة.Text = "غير مؤرشف";
-            //if (!panellError.Visible)
-            //{
-            //    var selectedOption = MessageBox.Show("طباعة نسخة قابلة للتعديل", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            //    if (selectedOption == DialogResult.Yes)
-            //    {
-            //        panellError.Visible = true;
-            //        edited.Text = "YES";
-            //        return;
-            //    }
-            //}
-            //else
-            //{
-                
-            //    if(edited.Text == "YES" && !changeDetected)
-            //    {
-            //        MessageBox.Show("يرجى توضيح أسباب التعديل أولا");
-            //        return;
-            //    }
-                
-            //    if (count >= Convert.ToInt32(allowedEdit.Text))
-            //    {
-            //        MessageBox.Show("تجاوزت الحد الأقصى لعدد التواكيل التي يمكن التعديل عليها خلال اليوم, وعليه سيتم طباعة نسخة غير قابلة للتعديل");
-            //        edited.Text = "NO";
-            //    }
-            //    else if (count < Convert.ToInt32(allowedEdit.Text))
-            //    {
-            //        MessageBox.Show("لقد استنفذت عدد (" + (count + 1).ToString() + ") محاولات طباعة تواكيل قابلة للتعدل متاحة خلال اليوم.. يرجى مراعاة عدم استخدام هذه الخاصية إلا عند الضرورة، ويرج كذلك توضيح الاسباب التي دعت إلى ذلك ليتم معالجتها مستقبلا...");
-            //    }                
-            //}
-
             
-
-            //if (getEditedCase(رقم_التوكيل.Text) == "YES") 
-            //    edited.Text = "YES";
-
             updateerrorList(الحقوق_الممنوحة.Text, "editRights");
             
             if (checkAutoUpdate.Checked) txtRev.Text = "";
@@ -3776,6 +3766,7 @@ namespace PersAhwal
             addarchives();
             if (!وجهة_التوكيل.Text.Contains("السودان"))
                 CreateMessageWord(مقدم_الطلب.Text.Replace("_", " و"), وجهة_التوكيل.Text, رقم_التوكيل.Text, "توكيلا", preffix[صفة_مقدم_الطلب_off.SelectedIndex, 17], التاريخ_الميلادي_off.Text, HijriDate, موقع_التوكيل.Text);
+            fileUpload(رقم_التوكيل.Text, "missed");
             this.Close();
         }
         private void authJob() {

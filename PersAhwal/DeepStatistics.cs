@@ -1126,13 +1126,27 @@ namespace PersAhwal
             switch (comboIndex)
             {
                 case 0:
-                    getMainData(columnList[1], columnDate, dateType, dateValue);
+                    getMainData(columnList[1]);
                     AddAchartData(ListGroup, name.Replace(" ", "_"), ListValue, false, "عدد معاملات " + genTypes.Text, true);
                     getTimeLine();
                     AddAchartTimeLine(ListTimeLine, "القيد الزمني للعام " + comYear.Text, ListValue, false, "عدد معاملات " + genTypes.Text);
                     break;
                 case 1:
-                    getSub1Data(columnList[1], columnList[2], columnDate, dateType, dateValue);
+                    getSub1Data(columnList[1], columnList[2]);
+                        
+                    AddAchartData(ListGroup, name.Replace(" ", "_"), ListValue, false, "عدد معاملات " + genTypes.Text, true);
+                    getTimeLine();
+                    AddAchartTimeLine(ListTimeLine, "القيد الزمني للعام " + comYear.Text, ListValue, false, "عدد معاملات " + genTypes.Text);
+                    break;
+                case 2:
+                    getSub2Data(columnList[1], columnList[2],columnList[3]);
+                        
+                    AddAchartData(ListGroup, name.Replace(" ", "_"), ListValue, false, "عدد معاملات " + genTypes.Text, true);
+                    getTimeLine();
+                    AddAchartTimeLine(ListTimeLine, "القيد الزمني للعام " + comYear.Text, ListValue, false, "عدد معاملات " + genTypes.Text);
+                    break;
+                case 3:
+                    getSub3Data(columnList[1], columnList[2],columnList[3],columnList[4]);
                         
                     AddAchartData(ListGroup, name.Replace(" ", "_"), ListValue, false, "عدد معاملات " + genTypes.Text, true);
                     getTimeLine();
@@ -1198,7 +1212,7 @@ namespace PersAhwal
                     holdData1 = false;
                     */
             }
-        private void getMainData(string colGroup, string dateColumn, string dateType, string dateValue)
+        private void getMainData(string colGroup)
         {
             
             string query = "select  " + colGroup + " , count ( " + colGroup + " ) as dataCount from TableTempData " + datePArt + " group by  " + colGroup;
@@ -1246,9 +1260,32 @@ namespace PersAhwal
                 i++;
             }
         }
-        private void getSub1Data(string colMainGroup,string colSub1Group, string dateColumn, string dateType, string dateValue)
+        private void getSub1Data(string colMainGroup,string colSub1Group)
         {
             string query = "select "+ colSub1Group+ " , count ( "+ colSub1Group+ " ) as dataCount from TableTempData " + datePArt+ " and "+ colSub1Group+ " <> N'إختر الإجراء' and "+ colMainGroup + " = N'"+ subComb0.Text +"' group by  " + colSub1Group;
+            Console.WriteLine(query);
+            MessageBox.Show(query);
+            SqlConnection sqlCon = new SqlConnection(dataSource57);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable table = new DataTable();
+            sqlDa.Fill(table);
+            sqlCon.Close();
+            ListGroup = new string[table.Rows.Count];
+            ListValue = new int[table.Rows.Count];
+            int i = 0;
+            foreach (DataRow dataRow in table.Rows)
+            {
+                ListValue[i] = Convert.ToInt32(dataRow["dataCount"].ToString());
+                ListGroup[i] = dataRow[colSub1Group].ToString();
+                i++;
+            }
+        }
+        private void getSub2Data(string colMainGroup,string colSub1Group,string colSub2Group)
+        {
+            string query = "select "+ colSub2Group + " , count ( "+ colSub2Group + " ) as dataCount from TableTempData " + datePArt+ " and "+ colSub1Group+ " = N'"+ subComb1.Text+"' and " + colMainGroup + " = N'"+ subComb0.Text +"' group by  " + colSub2Group;
             Console.WriteLine(query);
             //MessageBox.Show(query);
             SqlConnection sqlCon = new SqlConnection(dataSource57);
@@ -1265,7 +1302,30 @@ namespace PersAhwal
             foreach (DataRow dataRow in table.Rows)
             {
                 ListValue[i] = Convert.ToInt32(dataRow["dataCount"].ToString());
-                ListGroup[i] = dataRow[colSub1Group].ToString();
+                ListGroup[i] = dataRow[colSub2Group].ToString();
+                i++;
+            }
+        }
+        private void getSub3Data(string colMainGroup,string colSub1Group,string colSub2Group,string colSub3Group)
+        {
+            string query = "select "+ colSub3Group + " , count ( "+ colSub3Group + " ) as dataCount from TableTempData " + datePArt+ " and "+ colSub2Group+ " = N'"+ subComb2.Text+"' and "+ colSub1Group+ " = N'"+ subComb1.Text+"' and " + colMainGroup + " = N'"+ subComb0.Text +"' group by  " + colSub3Group+ " having count( "+ colSub3Group+" ) > 3";
+            Console.WriteLine(query);
+            //MessageBox.Show(query);
+            SqlConnection sqlCon = new SqlConnection(dataSource57);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable table = new DataTable();
+            sqlDa.Fill(table);
+            sqlCon.Close();
+            ListGroup = new string[table.Rows.Count];
+            ListValue = new int[table.Rows.Count];
+            int i = 0;
+            foreach (DataRow dataRow in table.Rows)
+            {
+                ListValue[i] = Convert.ToInt32(dataRow["dataCount"].ToString());
+                ListGroup[i] = dataRow[colSub3Group].ToString();
                 i++;
             }
         }
@@ -1291,6 +1351,56 @@ namespace PersAhwal
             {
                 subComb1.Enabled = true;   
                     subComb1.Items.Add(dataRow[colSub1Group].ToString());
+                i++;
+            }
+        }
+        private void getSub2DataGen(string colMainGroup,string colSub1Group,string colSub2Group)
+        {
+            subComb2.Items.Clear();
+            
+            string query = "select "+ colSub2Group + " , count ( "+ colSub2Group + " ) from TableTempData where "+ colSub1Group+ " = N'"+ subComb1.Text+"' and " + colMainGroup + " = N'"+ subComb0.Text +"' group by  " + colSub2Group;
+            Console.WriteLine(query);
+            //MessageBox.Show(query);
+            SqlConnection sqlCon = new SqlConnection(dataSource57);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable table = new DataTable();
+            sqlDa.Fill(table);
+            sqlCon.Close();
+            ListTimeLine = new string[table.Rows.Count];
+            ListValue = new int[table.Rows.Count];
+            int i = 0;
+            foreach (DataRow dataRow in table.Rows)
+            {
+                subComb2.Enabled = true;   
+                    subComb2.Items.Add(dataRow[colSub2Group].ToString());
+                i++;
+            }
+        }
+        private void getSub3DataGen(string colMainGroup,string colSub1Group,string colSub2Group,string colSub3Group)
+        {
+            subComb3.Items.Clear();
+            
+            string query = "select "+ colSub3Group + " , count ( "+ colSub3Group + " ) from TableTempData where "+ colSub2Group+ " = N'"+ subComb2.Text+"' and " + colSub1Group+ " = N'"+ subComb1.Text+"' and " + colMainGroup + " = N'"+ subComb0.Text +"' group by  "  + colSub3Group + " having count( " + colSub3Group + " ) > 3";
+            Console.WriteLine(query);
+            //MessageBox.Show(query);
+            SqlConnection sqlCon = new SqlConnection(dataSource57);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable table = new DataTable();
+            sqlDa.Fill(table);
+            sqlCon.Close();
+            ListTimeLine = new string[table.Rows.Count];
+            ListValue = new int[table.Rows.Count];
+            int i = 0;
+            foreach (DataRow dataRow in table.Rows)
+            {
+                subComb3.Enabled = true;   
+                    subComb3.Items.Add(dataRow[colSub3Group].ToString());
                 i++;
             }
         }
@@ -3525,7 +3635,9 @@ Create Table TableDeepStatis
 
         private void subComb1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // chartAreas2 = chartAreas1 = 0; 
+            getSub2DataGen(columnList[1], columnList[2], columnList[3]);
+            ////chartAreas2 = chartAreas1 = 0;
+            ////if (columnList[2] == "") return;           
             //if (columnList[3] == "") return; 
             comboIndex = 2;
             //subComb2.Items.Clear(); subComb2.Text = "المعاملة";
@@ -3591,7 +3703,11 @@ Create Table TableDeepStatis
         }
         private void subComb2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //chartAreas2 = chartAreas1 = 0; 
+            getSub3DataGen(columnList[1], columnList[2], columnList[3], columnList[4]);
+            ////chartAreas2 = chartAreas1 = 0;
+            ////if (columnList[2] == "") return;           
+            //if (columnList[3] == "") return; 
+            comboIndex = 3;//chartAreas2 = chartAreas1 = 0; 
             //if (columnList[4] == "") return;
             ////subBtn2.Text = "محدد"; 
             ////comboIndex = 2;

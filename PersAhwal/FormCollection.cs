@@ -382,7 +382,14 @@ namespace PersAhwal
                     }
 
                     موقع_المعاملة_off.Text = موقع_المعاملة.Text.Trim();
+                    
                     التوقيع_off.Text = مقدم_الطلب.Text;
+
+                    if (نوع_الإجراء.Text == "إقرار بالإتفاق")
+                    {
+                        التوقيع_off.Text = مقدم_الطلب.Text.Split('_')[0]+Environment.NewLine + "توقيع " 
+                            + مقدم_الطلب.Text.Split('_')[1] + "/ ـ..................................";
+                    }
                     
                     // auth = " المواطن" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5] + " المذكور" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5] + " أعلاه قد حضر" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 3] + " ووقع" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 3] + " بتوقيع" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 4] + " على هذا الإقرار، وذلك بعد تلاوته علي" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 4] + " وبعد أن فهم" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 3] + " مضمونه ومحتواه";
                     //if (!طريقة_الطلب.Checked)
@@ -407,6 +414,11 @@ namespace PersAhwal
                     موقع_المعاملة_off.Text = موقع_المعاملة.Text.Trim();
 //                    MessageBox.Show(موقع_المعاملة_off.Text);
                     التوقيع_off.Text = مقدم_الطلب.Text;
+                    if (نوع_الإجراء.Text == "إقرار بالإتفاق")
+                    {
+                        التوقيع_off.Text = مقدم_الطلب.Text.Split('_')[0] + Environment.NewLine + "توقيع "
+                            + مقدم_الطلب.Text.Split('_')[1] + "/ ـ..................................";
+                    }
                     //                  MessageBox.Show(التوقيع_off.Text);
 
                     // auth = " المواطن" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5] + " المذكور" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5] + " أعلاه قد حضر" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 3] + " ووقع" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 3] + " بتوقيع" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 4] + " على هذا الإقرار، وذلك بعد تلاوته علي" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 4] + " وبعد أن فهم" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 3] + " مضمونه ومحتواه";
@@ -2099,8 +2111,31 @@ namespace PersAhwal
             if (!وجهة_المعاملة.Text.Contains("السودان"))
                 CreateMessageWord(مقدم_الطلب.Text, وجهة_المعاملة.Text, رقم_المعاملة.Text.Replace("_", " و"), "إقرار", preffix[صفة_مقدم_الطلب_off.SelectedIndex, 17], التاريخ_الميلادي_off.Text, HijriDate, موقع_المعاملة.Text);
             addarchives();
+            fileUpload(رقم_المعاملة.Text, "missed");
             this.Close();
         }
+        private void fileUpload(string id, string text)
+        {
+            //MessageBox.Show(id);
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+
+                    sqlCon.Open();
+                }
+
+                catch (Exception ex)
+                {
+                    return;
+                }
+
+            SqlCommand sqlCmd = new SqlCommand("UPDATE TableGeneralArch SET fileUpload=N'" + text + "' WHERE رقم_معاملة_القسم=N'" + id + "'", sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
+        }
+
         private void CreateMessageWord(string ApplicantName, string EmbassySource, string IqrarNo, string MessageType, string ApplicantSex, string GregorianDate, string HijriDate, string ViseConsul)
         {
             string ActiveCopy;

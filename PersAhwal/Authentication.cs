@@ -73,6 +73,7 @@ namespace PersAhwal
         int PicID = 0;
         int unvalid = 0;
         bool نوع_المكاتبة_check = false;
+        bool showGrid = false;
         public Authentication(string dataSource, string atvc, string filespathOut, string employee, string filespathIn, string hijriDate, string greDate)
         {
             InitializeComponent();
@@ -83,7 +84,7 @@ namespace PersAhwal
             نوع_تاريخ_التوثيق.SelectedIndex = 4;
             HijriDate = hijriDate;
             FilespathIn = filespathIn;
-            FilespathOut = filespathOut;// + @"\";    
+            FilespathOut = filespathOut+ @"\";    
             مدير_القسم.Text = atvc;
             تاريخ_الأرشفة.Text = greDate;
             موظف_الأرشقة.Text = employee;
@@ -634,11 +635,14 @@ namespace PersAhwal
                 var Data = (byte[])reader["Data1"];
                 var ext = reader["Extension1"].ToString();
                 
-                string NewFileName = FilespathOut+ name.Replace(ext, DateTime.Now.ToString("mmss"));
+                string NewFileName = FilespathOut+ name.Replace(ext,"")+ imagecount.ToString()+ ext;
                 // + ext;
                 //MessageBox.Show(NewFileName);
                 File.WriteAllBytes(NewFileName, Data);
-                drawTempPics(NewFileName);
+                if (ext.Contains("docx")) 
+                    drawTempDocx(NewFileName);
+                else 
+                    drawTempPics(NewFileName);
                 PathImages[imagecount] = NewFileName;
                 imagecount++;
                 //System.Diagnostics.Process.Start(NewFileName);
@@ -738,6 +742,23 @@ namespace PersAhwal
             picTemp.ImageLocation = location;
             panelpicTemp.Controls.Add(picTemp);
         }
+        
+        private void drawTempDocx(string location)
+        {
+            PictureBox picTemp = new PictureBox();
+            picTemp.Dock = System.Windows.Forms.DockStyle.Top;
+            picTemp.Location = new System.Drawing.Point(0, 0);
+            picTemp.Name = "picTemp_" + imagecount.ToString();
+            picTemp.Size = new System.Drawing.Size(123, 137);
+            picTemp.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            picTemp.TabIndex = 841;
+            picTemp.TabStop = false;
+            picTemp.Click += new System.EventHandler(this.viewDeleteDocx);
+            picTemp.Image = global::PersAhwal.Properties.Resources.docx;
+            panelpicTemp.Controls.Add(picTemp);
+        }
+
+        
 
         private void reSetPanel()
         {
@@ -766,6 +787,26 @@ namespace PersAhwal
             dataGridView1.SendToBack();
             pictureBox1.BringToFront();
             عرض_القائمة.Visible = pictureBox1.Visible = true;
+            var selectedOption = MessageBox.Show("حذف المستند من قائمة الأرشفة؟", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (selectedOption == DialogResult.Yes)
+            {
+                pictureBox.Visible = false;
+                PathImages[Convert.ToInt32(pictureBox.Name.Split('_')[1])] = "";
+            }
+            fileUpdate.Enabled = true;
+        }
+        
+        private void viewDeleteDocx(object sender, EventArgs e)
+        {
+            PictureBox pictureBox = (PictureBox)sender;
+            picUpdate = pictureBox;
+            PicID = Convert.ToInt32(pictureBox.Name.Split('_')[1]);
+            //MessageBox.Show(PathImages[PicID]);
+            System.Diagnostics.Process.Start(PathImages[PicID]);
+            //pictureBox1.ImageLocation = PathImages[PicID];
+            //dataGridView1.SendToBack();
+            //pictureBox1.BringToFront();
+            //عرض_القائمة.Visible = pictureBox1.Visible = true;
             var selectedOption = MessageBox.Show("حذف المستند من قائمة الأرشفة؟", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (selectedOption == DialogResult.Yes)
             {
@@ -889,17 +930,18 @@ namespace PersAhwal
 
                     var imgFile = (ImageFile)ScanerItem.Transfer(FormatID.wiaFormatJPEG);
 
-                    PathImages[PicID] = FilespathOut + "ScanImg" + DateTime.Now.ToString("mmss") + PicID.ToString() + ".jpg";
+                    PathImages[imagecount] = FilespathOut + "ScanImg" + DateTime.Now.ToString("mmss") + imagecount.ToString() + ".jpg";
 
 
-                    if (File.Exists(PathImages[PicID]))
+                    if (File.Exists(PathImages[imagecount]))
                     {
-                        File.Delete(PathImages[PicID]);
+                        File.Delete(PathImages[imagecount]);
                     }
-                    imgFile.SaveFile(PathImages[PicID]);
+                    imgFile.SaveFile(PathImages[imagecount]);
 
-                    pictureBox1.ImageLocation = PathImages[PicID];
-                    picUpdate.ImageLocation = PathImages[PicID];
+                    pictureBox1.ImageLocation = PathImages[imagecount];
+                    picUpdate.ImageLocation = PathImages[imagecount];
+                    imagecount++;
                     //drawTempPics(PathImages[PicID]);
                     dataGridView1.Visible = txtSearch.Visible = btnSearch.Visible = false; 
                     جنسية_الدبلوماسي.Location = new System.Drawing.Point(115, 0);
@@ -926,7 +968,7 @@ namespace PersAhwal
             if (تاريخ_توقيع_المكاتبة.Text.Length == 10)
             {
                 int month = Convert.ToInt32(SpecificDigit(تاريخ_توقيع_المكاتبة.Text, 1, 2));
-                if (month > 12)
+                if (month > 12 && !gridFill)
                 {
                     MessageBox.Show("الشهر يحب أن يكون أقل من 12");
                     //تاريخ_الميلاد.Text = "";
@@ -1094,5 +1136,6 @@ namespace PersAhwal
         {
             نوع_المكاتبة_check = true;
         }
+
     }
 }

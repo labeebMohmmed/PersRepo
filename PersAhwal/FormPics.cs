@@ -44,6 +44,9 @@ using DocumentFormat.OpenXml.Office2016.Drawing.Charts;
 using System.Text.RegularExpressions;
 using static Azure.Core.HttpHeader;
 using System.Security.Cryptography.X509Certificates;
+using IronBarCode;
+using DocumentFormat.OpenXml.Vml;
+using ImageFile = WIA.ImageFile;
 
 namespace PersAhwal
 {
@@ -142,7 +145,10 @@ namespace PersAhwal
             CombAuthType_Selected();
             updateNames();
             correctNo();
-           
+            //var qrCode = QRCodeWriter.CreateQrCode(" ق س ج/80/23/12/5412");
+            //qrCode.SaveAsPng(FilespathOut + "ScanImg" + rowCount + imagecount.ToString() + ".png");
+            //MessageBox.Show(FilespathOut + "ScanImg" + rowCount + imagecount.ToString() + ".png");            
+            //pictureBox1.ImageLocation = PathImage[imagecount];
         }
 
         private void genPreparation(string[] strData, string[] strSubData,int index)
@@ -456,12 +462,12 @@ namespace PersAhwal
 
             }
 
-                drawPic.Controls.Add(req1);
+                drawPicPanel.Controls.Add(req1);
             if (hide)
             {
-                drawPic.Controls.Add(picAddReq1);
-                drawPic.Controls.Add(picUplReq1);
-                drawPic.Controls.Add(picRemReq1);
+                drawPicPanel.Controls.Add(picAddReq1);
+                drawPicPanel.Controls.Add(picUplReq1);
+                drawPicPanel.Controls.Add(picRemReq1);
                 
             }
             drawBoxesindex++;
@@ -481,7 +487,7 @@ namespace PersAhwal
             label.TabIndex = 614;
             label.Text = text;
 
-            drawPic.Controls.Add(label);
+            drawPicPanel.Controls.Add(label);
             drawBoxesindex++;
         }
 
@@ -506,7 +512,7 @@ namespace PersAhwal
                 btnSaveEnd.Location = new System.Drawing.Point(754, 662);
 
                 drawBoxesindex = 0;
-                foreach (Control control in drawPic.Controls)
+                foreach (Control control in drawPicPanel.Controls)
                 {
                     if (control.Name != "DocType" && control.Name != "button1" && control.Name != "button6" && control.Name != "button5" && control.Name != "checkPrint" && control.Name != "jpgFile" && control.Name != "wordFile")
                         control.Visible = false;
@@ -1464,10 +1470,9 @@ namespace PersAhwal
 
 
                     var imgFile = (ImageFile)ScanerItem.Transfer(FormatID.wiaFormatJPEG);
-                    
-                    PathImage[imagecount] = PrimariFiles + "ScanImg" + rowCount + (imagecount).ToString() + ".jpg";
 
-
+                    PathImage[imagecount] = FilespathOut + "ScanImg" + rowCount + imagecount.ToString() + ".jpg";
+                    MessageBox.Show (PathImage[imagecount]);
                     if (File.Exists(PathImage[imagecount]))
                     {
                         File.Delete(PathImage[imagecount]);
@@ -1534,7 +1539,7 @@ namespace PersAhwal
             Button button = new Button();
             PictureBox pictureBox = (PictureBox)sender;
             //picIndex = Convert.ToInt32(pictureBox.Name.Split('_')[1]);
-            foreach (Control control in drawPic.Controls) 
+            foreach (Control control in drawPicPanel.Controls) 
             {
                 if (control.Name.Contains("req_") && control.Name.Split('_')[1] == pictureBox.Name.Split('_')[1])
                 {
@@ -1566,7 +1571,7 @@ namespace PersAhwal
                     imagecount++;
                     try
                     {
-                        foreach (Control control in drawPic.Controls)
+                        foreach (Control control in drawPicPanel.Controls)
                         {
                             if (control.Text == btnName)
                             {
@@ -1605,7 +1610,7 @@ namespace PersAhwal
             PictureBox pictureBox = (PictureBox)sender;
             picIndex = Convert.ToInt32(pictureBox.Name.Split('_')[1]);
 
-            foreach (Control control in drawPic.Controls)
+            foreach (Control control in drawPicPanel.Controls)
             {
                 if (control.Name == "req_" + pictureBox.Name.Split('_')[1])
                 {
@@ -1625,7 +1630,7 @@ namespace PersAhwal
             string btnName = "";
             PictureBox pictureBox = (PictureBox)sender;
             Button button = new Button();
-            foreach (Control control in drawPic.Controls)
+            foreach (Control control in drawPicPanel.Controls)
             {
                 if (control.Name.Contains("req_") && control.Name.Split('_')[1] == pictureBox.Name.Split('_')[1])
                 {
@@ -1653,7 +1658,7 @@ namespace PersAhwal
                     
                         
                 }
-                foreach (Control control in drawPic.Controls)
+                foreach (Control control in drawPicPanel.Controls)
                 {
                     if (control.Text == btnName)
                     {
@@ -3275,7 +3280,7 @@ namespace PersAhwal
         private void timer1_Tick(object sender, EventArgs e)
         {
             bool view = true;
-            foreach (Control control in drawPic.Controls)
+            foreach (Control control in drawPicPanel.Controls)
             {
                 if (control is Button)
                 {
@@ -4099,6 +4104,9 @@ namespace PersAhwal
                 primeryLink = directory + @"PrimariFiles\";
             }
             dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Allowed");
+            
+            
+            dataSourceWrite(primeryLink + @"\refresh.txt", "Allowed");
         }
         private void dataSourceWrite(string dataSourcepath, string text)
         {

@@ -63,7 +63,7 @@ namespace PersAhwal
             this.txtIDNo = new System.Windows.Forms.TextBox();
             this.button5 = new System.Windows.Forms.Button();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
-            this.drawPic = new System.Windows.Forms.Panel();
+            this.drawPicPanel = new System.Windows.Forms.Panel();
             this.تعليق = new System.Windows.Forms.TextBox();
             this.بيانات_المندوب = new System.Windows.Forms.TextBox();
             this.التاريخ_الميلادي = new System.Windows.Forms.TextBox();
@@ -85,7 +85,7 @@ namespace PersAhwal
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
-            this.drawPic.SuspendLayout();
+            this.drawPicPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
             this.panelFinalArch.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -454,18 +454,18 @@ namespace PersAhwal
             this.dataGridView2.TabIndex = 836;
             this.dataGridView2.Visible = false;
             // 
-            // drawPic
+            // drawPicPanel
             // 
-            this.drawPic.AutoScroll = true;
-            this.drawPic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.drawPic.Controls.Add(this.تعليق);
-            this.drawPic.Controls.Add(this.بيانات_المندوب);
-            this.drawPic.Controls.Add(this.التاريخ_الميلادي);
-            this.drawPic.Controls.Add(this.dataGridView3);
-            this.drawPic.Location = new System.Drawing.Point(749, 7);
-            this.drawPic.Name = "drawPic";
-            this.drawPic.Size = new System.Drawing.Size(285, 635);
-            this.drawPic.TabIndex = 839;
+            this.drawPicPanel.AutoScroll = true;
+            this.drawPicPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.drawPicPanel.Controls.Add(this.تعليق);
+            this.drawPicPanel.Controls.Add(this.بيانات_المندوب);
+            this.drawPicPanel.Controls.Add(this.التاريخ_الميلادي);
+            this.drawPicPanel.Controls.Add(this.dataGridView3);
+            this.drawPicPanel.Location = new System.Drawing.Point(749, 7);
+            this.drawPicPanel.Name = "drawPicPanel";
+            this.drawPicPanel.Size = new System.Drawing.Size(285, 635);
+            this.drawPicPanel.TabIndex = 839;
             // 
             // تعليق
             // 
@@ -533,7 +533,7 @@ namespace PersAhwal
             this.dataGridView3.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.LightGreen;
             this.dataGridView3.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dataGridView3.RowTemplate.Height = 30;
-            this.dataGridView3.Size = new System.Drawing.Size(0, 34);
+            this.dataGridView3.Size = new System.Drawing.Size(0, 51);
             this.dataGridView3.TabIndex = 840;
             this.dataGridView3.Visible = false;
             // 
@@ -710,7 +710,7 @@ namespace PersAhwal
             this.Controls.Add(this.label5);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panelFinalArch);
-            this.Controls.Add(this.drawPic);
+            this.Controls.Add(this.drawPicPanel);
             this.Controls.Add(this.btnExten);
             this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.btnArchived);
@@ -731,8 +731,8 @@ namespace PersAhwal
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
-            this.drawPic.ResumeLayout(false);
-            this.drawPic.PerformLayout();
+            this.drawPicPanel.ResumeLayout(false);
+            this.drawPicPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
             this.panelFinalArch.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
@@ -774,7 +774,7 @@ namespace PersAhwal
         private System.Windows.Forms.TextBox txtIDNo;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.DataGridView dataGridView2;
-        private System.Windows.Forms.Panel drawPic;
+        private System.Windows.Forms.Panel drawPicPanel;
         private System.Windows.Forms.DataGridView dataGridView3;
         private System.Windows.Forms.Panel panelFinalArch;
         private System.Windows.Forms.Panel panel2;
