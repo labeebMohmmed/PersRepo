@@ -38,14 +38,15 @@ namespace PersAhwal
         int ATVC = 0;
         string[] colIDs = new string[100];
         bool GridColored = false;
+        string GregorianDate = "";
+        string HijriDate = "";
         public Form9(int Atvc, int currentRow, int certificaetype, string EmpName, string dataSource, string filepathIn, string filepathOut, string jobposition, string gregorianDate, string hijriDate)
         {
             InitializeComponent();
             //timer1.Enabled = true;
             //timer2.Enabled = true;
-
-            التاريخ_الميلادي.Text = gregorianDate;
-            التاريخ_الهجري.Text = hijriDate;
+            التاريخ_الميلادي.Text = GregorianDate = gregorianDate;
+            التاريخ_الهجري.Text = HijriDate = hijriDate;
             ATVC = Atvc;
             DataSource = dataSource;
             FilesPathIn = filepathIn + @"\";
@@ -216,11 +217,6 @@ namespace PersAhwal
             }
             ArchivedSt.Visible = true;
             labelArch.Visible = true;
-            btnprintOnly.Enabled = true;
-            SaveOnly.Enabled = true;
-            btnprintOnly.Visible = true;
-            SaveOnly.Visible = true;
-            btnSavePrint.Text = "حفظ";
             btnSavePrint.Visible = false;
         }
 
@@ -439,7 +435,6 @@ namespace PersAhwal
             else
             {
                 MessageBox.Show("يرجى حذف الملف الموجودأولاً");
-                btnprintOnly.Enabled = true;
                 btnSavePrint.Enabled = true;
 
             }
@@ -594,7 +589,6 @@ namespace PersAhwal
             else
             {
                 MessageBox.Show("يرجى حذف الملف الموجودأولاً");
-                btnprintOnly.Enabled = true;
                 btnSavePrint.Enabled = true;
 
             }
@@ -834,6 +828,9 @@ namespace PersAhwal
 
         private void btnSavePrint_Click_1(object sender, EventArgs e)
         {
+
+            التاريخ_الميلادي.Text = GregorianDate;
+            التاريخ_الهجري.Text = HijriDate;
             if (تاريخ_الميلاد.Text == "")
             {
                 MessageBox.Show("يرجى إضافة تاريخ ميلاد مقدم الطلب"); return;
@@ -842,6 +839,7 @@ namespace PersAhwal
             {
                 MessageBox.Show("يرجى إختيار مهنة مقدم الطلب"); return;
             }
+
 
             Save2DataBase();
             btnSavePrint.Text = "جاري المعالجة";
@@ -890,8 +888,6 @@ namespace PersAhwal
             {
                 MessageBox.Show("يرجى إختيار مهنة مقدم الطلب"); return;
             }
-            btnprintOnly.Text = "طباعة";
-            btnprintOnly.Enabled = false;
             if(comboProNo.SelectedIndex == 0)
             CreateWordFile();
             else
@@ -1309,10 +1305,6 @@ namespace PersAhwal
                 }
                 ArchivedSt.Visible = true;
                 labelArch.Visible = true;
-                btnprintOnly.Visible = true;
-                btnprintOnly.Enabled = true;
-                SaveOnly.Visible = true;
-                btnSavePrint.Text = "حفظ";
                 btnSavePrint.Visible = false;
             }
         }
@@ -1528,11 +1520,9 @@ namespace PersAhwal
             OtherIssuedSource.Text = OtherDocNo.Text = AppDocNatio.Text = OtherDocName.Text = iqamaNo.Text = iqamaissue.Text = mandoubName.Text = ListSearch.Text = "";
             النوع.CheckState = CheckState.Checked;
             mandoubVisibilty();
-            btnprintOnly.Visible = false;
             btnSavePrint.Enabled = true;
             btnSavePrint.Text = "طباعة وحفظ";
             btnSavePrint.Visible = true;
-            SaveOnly.Visible = false;
             Comment.Text = "لا تعليق";
             FillDataGridView();
             ArchivedSt.Text = "غير مؤرشف";

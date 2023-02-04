@@ -30,8 +30,8 @@ namespace PersAhwal
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.textBox1 = new System.Windows.Forms.TextBox();
@@ -40,9 +40,7 @@ namespace PersAhwal
             this.deleteRow = new System.Windows.Forms.Button();
             this.label20 = new System.Windows.Forms.Label();
             this.yy1 = new System.Windows.Forms.TextBox();
-            this.btnprintOnly = new System.Windows.Forms.Button();
             this.label18 = new System.Windows.Forms.Label();
-            this.SaveOnly = new System.Windows.Forms.Button();
             this.btnSavePrint = new System.Windows.Forms.Button();
             this.SearchFile = new System.Windows.Forms.TextBox();
             this.ConsulateEmployee = new System.Windows.Forms.Label();
@@ -225,9 +223,9 @@ namespace PersAhwal
             // 
             this.deleteRow.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             this.deleteRow.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.deleteRow.Location = new System.Drawing.Point(203, 426);
+            this.deleteRow.Location = new System.Drawing.Point(190, 426);
             this.deleteRow.Name = "deleteRow";
-            this.deleteRow.Size = new System.Drawing.Size(39, 71);
+            this.deleteRow.Size = new System.Drawing.Size(52, 71);
             this.deleteRow.TabIndex = 522;
             this.deleteRow.Text = "مسح";
             this.deleteRow.UseVisualStyleBackColor = false;
@@ -256,18 +254,6 @@ namespace PersAhwal
             this.yy1.TabIndex = 495;
             this.yy1.Text = "عام";
             // 
-            // btnprintOnly
-            // 
-            this.btnprintOnly.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
-            this.btnprintOnly.Location = new System.Drawing.Point(56, 427);
-            this.btnprintOnly.Name = "btnprintOnly";
-            this.btnprintOnly.Size = new System.Drawing.Size(43, 71);
-            this.btnprintOnly.TabIndex = 520;
-            this.btnprintOnly.Text = "طباعة";
-            this.btnprintOnly.UseVisualStyleBackColor = false;
-            this.btnprintOnly.Visible = false;
-            this.btnprintOnly.Click += new System.EventHandler(this.btnprintOnly_Click);
-            // 
             // label18
             // 
             this.label18.AutoSize = true;
@@ -279,18 +265,6 @@ namespace PersAhwal
             this.label18.TabIndex = 496;
             this.label18.Text = "/";
             // 
-            // SaveOnly
-            // 
-            this.SaveOnly.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
-            this.SaveOnly.Location = new System.Drawing.Point(8, 427);
-            this.SaveOnly.Name = "SaveOnly";
-            this.SaveOnly.Size = new System.Drawing.Size(45, 71);
-            this.SaveOnly.TabIndex = 519;
-            this.SaveOnly.Text = "حفظ";
-            this.SaveOnly.UseVisualStyleBackColor = false;
-            this.SaveOnly.Visible = false;
-            this.SaveOnly.Click += new System.EventHandler(this.SaveOnly_Click);
-            // 
             // btnSavePrint
             // 
             this.btnSavePrint.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
@@ -300,7 +274,6 @@ namespace PersAhwal
             this.btnSavePrint.TabIndex = 518;
             this.btnSavePrint.Text = "حفظ وطباعة";
             this.btnSavePrint.UseVisualStyleBackColor = false;
-            this.btnSavePrint.Visible = false;
             this.btnSavePrint.Click += new System.EventHandler(this.btnSavePrint_Click_1);
             // 
             // SearchFile
@@ -429,7 +402,7 @@ namespace PersAhwal
             this.ResetAll.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             this.ResetAll.Location = new System.Drawing.Point(107, 426);
             this.ResetAll.Name = "ResetAll";
-            this.ResetAll.Size = new System.Drawing.Size(92, 71);
+            this.ResetAll.Size = new System.Drawing.Size(77, 71);
             this.ResetAll.TabIndex = 506;
             this.ResetAll.Text = "مسح جميع الحقول";
             this.ResetAll.UseVisualStyleBackColor = false;
@@ -765,9 +738,7 @@ namespace PersAhwal
             this.PanelMain.Controls.Add(this.textBox2);
             this.PanelMain.Controls.Add(this.TravPurpose);
             this.PanelMain.Controls.Add(this.deleteRow);
-            this.PanelMain.Controls.Add(this.btnprintOnly);
             this.PanelMain.Controls.Add(this.textBox1);
-            this.PanelMain.Controls.Add(this.SaveOnly);
             this.PanelMain.Controls.Add(this.btnSavePrint);
             this.PanelMain.Controls.Add(this.ResetAll);
             this.PanelMain.Controls.Add(this.checkedViewed);
@@ -1773,23 +1744,23 @@ namespace PersAhwal
             this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle11.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle12.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridView1.Location = new System.Drawing.Point(21, 56);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -1852,9 +1823,7 @@ namespace PersAhwal
         private System.Windows.Forms.Button deleteRow;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.TextBox yy1;
-        private System.Windows.Forms.Button btnprintOnly;
         private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.Button SaveOnly;
         private System.Windows.Forms.Button btnSavePrint;
         private System.Windows.Forms.TextBox SearchFile;
         private System.Windows.Forms.Label ConsulateEmployee;

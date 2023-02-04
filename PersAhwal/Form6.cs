@@ -44,13 +44,15 @@ namespace PersAhwal
         string Jobposition;
         int ATVC = 0;
         string[] colIDs = new string[100];
+        string GregorianDate = "";
+        string HijriDate = "";
         public Form6(int Atvc, int currentRow, string EmpName, string dataSource, string filepathIn, string filepathOut, string jobposition, string gregorianDate, string hijriDate)
         {
             InitializeComponent();
             //timer1.Enabled = true;
             //timer2.Enabled = true;
-            التاريخ_الميلادي.Text = gregorianDate;
-            التاريخ_الهجري.Text = hijriDate;
+            التاريخ_الميلادي.Text = GregorianDate = gregorianDate;
+            التاريخ_الهجري.Text = HijriDate = hijriDate;
             ATVC = Atvc;
             DataSource = dataSource;
             AttendViceConsul.SelectedIndex = 2;
@@ -238,10 +240,7 @@ namespace PersAhwal
             }
             ArchivedSt.Visible = true;
             
-            btnprintOnly.Visible = true;
-            SaveOnly.Visible = true;
             btnSavePrint.Text = "حفظ";
-            btnSavePrint.Visible = false;
         }
 
         private void timer2_Tick(object sender, EventArgs e)
@@ -392,7 +391,6 @@ namespace PersAhwal
             else
             {
                 MessageBox.Show("يرجى حذف الملف الموجودأولاً");
-                btnprintOnly.Enabled = true;
                 btnSavePrint.Enabled = true;
 
             }
@@ -743,6 +741,8 @@ namespace PersAhwal
 
         private void btnSavePrint_Click_1(object sender, EventArgs e)
         {
+            التاريخ_الميلادي.Text = GregorianDate;
+            التاريخ_الهجري.Text = HijriDate;
             if (!checkGender(PanelMain, "مقدم_الطلب", "النوع"))
             {
                 return;
@@ -899,13 +899,8 @@ namespace PersAhwal
             AppType.CheckState = CheckState.Unchecked;
             mandoubVisibilty();
             newData = false;
-            btnprintOnly.Visible = false;
             btnSavePrint.Text = "طباعة وحفظ";
             btnSavePrint.Enabled = true;
-            btnprintOnly.Enabled = true;
-            btnprintOnly.Text = "طباعة";
-            btnSavePrint.Visible = true;
-            SaveOnly.Visible = false;
             Comment.Text = "لا تعليق";
             FillDataGridView();
             ArchivedSt.Text = "غير مؤرشف";
@@ -929,8 +924,6 @@ namespace PersAhwal
         private void btnprintOnly_Click(object sender, EventArgs e)
         {
             
-            btnprintOnly.Enabled = false;
-            btnprintOnly.Text = "طباعة";
             CreateWordFile();
             this.Close();
             //Clear_Fields();
@@ -1160,11 +1153,8 @@ namespace PersAhwal
                 }
                 ArchivedSt.Visible = true;
 
-                btnprintOnly.Visible = true;
-                btnprintOnly.Text = "طباعة";
-                SaveOnly.Visible = true;
+                
                 btnSavePrint.Text = "حفظ";
-                btnSavePrint.Visible = false;
             }
         }
 
@@ -1264,6 +1254,17 @@ namespace PersAhwal
                 مكان_الإصدار_1.Text = row["مكان_الإصدار"].ToString();
                 النوع_1.Text = row["النوع"].ToString();
             }
+        }
+
+        private void ListSearch_TextChanged_1(object sender, EventArgs e)
+        {
+            if (ListSearch.Text.Length != 0)
+            {
+                BindingSource bs = new BindingSource();
+                bs.DataSource = dataGridView1.DataSource;
+                bs.Filter = dataGridView1.Columns[2].HeaderText.ToString() + " LIKE '" + ListSearch.Text + "%'";
+                dataGridView1.DataSource = bs;
+            }else FillDataGridView();
         }
 
         private void OpenFile(int id, int fileNo)

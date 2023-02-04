@@ -30,8 +30,8 @@ namespace PersAhwal
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.IqrarType = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.btnAddDoc = new System.Windows.Forms.Button();
@@ -39,8 +39,6 @@ namespace PersAhwal
             this.deleteRow = new System.Windows.Forms.Button();
             this.label24 = new System.Windows.Forms.Label();
             this.Comment = new System.Windows.Forms.TextBox();
-            this.btnprintOnly = new System.Windows.Forms.Button();
-            this.SaveOnly = new System.Windows.Forms.Button();
             this.btnSavePrint = new System.Windows.Forms.Button();
             this.ResetAll = new System.Windows.Forms.Button();
             this.SearchFile = new System.Windows.Forms.TextBox();
@@ -180,32 +178,6 @@ namespace PersAhwal
             this.Comment.Size = new System.Drawing.Size(266, 119);
             this.Comment.TabIndex = 512;
             this.Comment.Text = "لا تعليق";
-            // 
-            // btnprintOnly
-            // 
-            this.btnprintOnly.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
-            this.btnprintOnly.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnprintOnly.Location = new System.Drawing.Point(59, 395);
-            this.btnprintOnly.Name = "btnprintOnly";
-            this.btnprintOnly.Size = new System.Drawing.Size(43, 71);
-            this.btnprintOnly.TabIndex = 511;
-            this.btnprintOnly.Text = "طباعة";
-            this.btnprintOnly.UseVisualStyleBackColor = false;
-            this.btnprintOnly.Visible = false;
-            this.btnprintOnly.Click += new System.EventHandler(this.btnprintOnly_Click);
-            // 
-            // SaveOnly
-            // 
-            this.SaveOnly.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
-            this.SaveOnly.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.SaveOnly.Location = new System.Drawing.Point(9, 395);
-            this.SaveOnly.Name = "SaveOnly";
-            this.SaveOnly.Size = new System.Drawing.Size(45, 71);
-            this.SaveOnly.TabIndex = 510;
-            this.SaveOnly.Text = "حفظ";
-            this.SaveOnly.UseVisualStyleBackColor = false;
-            this.SaveOnly.Visible = false;
-            this.SaveOnly.Click += new System.EventHandler(this.SaveOnly_Click_1);
             // 
             // btnSavePrint
             // 
@@ -709,8 +681,6 @@ namespace PersAhwal
             this.PanelMain.Controls.Add(this.AttendViceConsul);
             this.PanelMain.Controls.Add(this.deleteRow);
             this.PanelMain.Controls.Add(this.labelName);
-            this.PanelMain.Controls.Add(this.btnprintOnly);
-            this.PanelMain.Controls.Add(this.SaveOnly);
             this.PanelMain.Controls.Add(this.IqrarType);
             this.PanelMain.Controls.Add(this.AppTrueName);
             this.PanelMain.Controls.Add(this.ResetAll);
@@ -805,23 +775,23 @@ namespace PersAhwal
             this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridView1.Location = new System.Drawing.Point(27, 49);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -870,8 +840,6 @@ namespace PersAhwal
         private System.Windows.Forms.Button deleteRow;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.TextBox Comment;
-        private System.Windows.Forms.Button btnprintOnly;
-        private System.Windows.Forms.Button SaveOnly;
         private System.Windows.Forms.Button btnSavePrint;
         private System.Windows.Forms.Button ResetAll;
         private System.Windows.Forms.TextBox SearchFile;

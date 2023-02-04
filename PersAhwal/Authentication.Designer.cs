@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.جنسية_الدبلوماسي = new System.Windows.Forms.ComboBox();
             this.نوع_تاريخ_التوثيق = new System.Windows.Forms.ComboBox();
             this.تاريخ_توقيع_المكاتبة = new System.Windows.Forms.TextBox();
@@ -48,7 +48,7 @@
             this.رقم_الشهادة = new System.Windows.Forms.TextBox();
             this.button16 = new System.Windows.Forms.Button();
             this.عدد_المستندات_off = new System.Windows.Forms.ComboBox();
-            this.button35 = new System.Windows.Forms.Button();
+            this.chechDoc = new System.Windows.Forms.Button();
             this.panelpicTemp = new System.Windows.Forms.Panel();
             this.button1 = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -290,17 +290,17 @@
             this.عدد_المستندات_off.TabIndex = 746;
             this.عدد_المستندات_off.SelectedIndexChanged += new System.EventHandler(this.عدد_المستندات_SelectedIndexChanged);
             // 
-            // button35
+            // chechDoc
             // 
-            this.button35.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button35.Location = new System.Drawing.Point(20, 265);
-            this.button35.Name = "button35";
-            this.button35.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.button35.Size = new System.Drawing.Size(415, 35);
-            this.button35.TabIndex = 743;
-            this.button35.Text = "طباعة برقية تأكيد صحة";
-            this.button35.UseVisualStyleBackColor = true;
-            this.button35.Click += new System.EventHandler(this.button35_Click);
+            this.chechDoc.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chechDoc.Location = new System.Drawing.Point(20, 265);
+            this.chechDoc.Name = "chechDoc";
+            this.chechDoc.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.chechDoc.Size = new System.Drawing.Size(415, 35);
+            this.chechDoc.TabIndex = 743;
+            this.chechDoc.Text = "طباعة برقية تأكيد صحة";
+            this.chechDoc.UseVisualStyleBackColor = true;
+            this.chechDoc.Click += new System.EventHandler(this.button35_Click);
             // 
             // panelpicTemp
             // 
@@ -344,7 +344,7 @@
             this.panel1.Controls.Add(this.button17);
             this.panel1.Controls.Add(this.button3);
             this.panel1.Controls.Add(this.رقم_الشهادة);
-            this.panel1.Controls.Add(this.button35);
+            this.panel1.Controls.Add(this.chechDoc);
             this.panel1.Controls.Add(this.نوع_تاريخ_التوثيق);
             this.panel1.Controls.Add(this.تاريخ_توقيع_المكاتبة);
             this.panel1.Controls.Add(this.button19);
@@ -505,23 +505,23 @@
             this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle4;
             this.dataGridView1.Location = new System.Drawing.Point(12, 57);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -682,6 +682,7 @@
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 847;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // Authentication
             // 
@@ -737,7 +738,7 @@
         private System.Windows.Forms.TextBox رقم_الشهادة;
         private System.Windows.Forms.Button button16;
         private System.Windows.Forms.ComboBox عدد_المستندات_off;
-        private System.Windows.Forms.Button button35;
+        private System.Windows.Forms.Button chechDoc;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Panel panelpicTemp;
         private System.Windows.Forms.Button button1;

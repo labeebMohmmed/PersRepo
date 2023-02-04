@@ -57,6 +57,8 @@ namespace PersAhwal
         int ATVC = 0;
         static string[] colIDs = new string[100];
         bool gridFill = true;
+        string GregorianDate = "";
+        string HijriDate = "";
         public Form3(int Atvc ,int currentRow, int IqrarType, string EmpName, string dataSource, string filepathIn, string filepathOut, string jobposition, string gregorianDate, string hijriDate)
         {
             InitializeComponent();
@@ -68,8 +70,8 @@ namespace PersAhwal
                 panel1.Visible = true;
                 thirdPartyIndex = 0;
             }
-            التاريخ_الميلادي.Text = gregorianDate;
-            التاريخ_الهجري.Text = hijriDate;
+            التاريخ_الميلادي.Text = GregorianDate = gregorianDate;
+            التاريخ_الهجري.Text = HijriDate= hijriDate;
             DataSource = dataSource;
             //timer1.Enabled = true;
             //timer2.Enabled = true;
@@ -362,11 +364,7 @@ namespace PersAhwal
                 ArchivedSt.BackColor = Color.Red;
             }
 
-            ArchivedSt.Visible = true;            
-            printOnly.Visible = true;
-            SaveOnly.Visible = true;
-            btnSavePrint.Text = "حفظ";
-            btnSavePrint.Visible = false;
+            ArchivedSt.Visible = true; 
         }
 
 
@@ -763,7 +761,6 @@ namespace PersAhwal
                 else
                 {
                     MessageBox.Show("يرجى حذف الملف الموجودأولاً");
-                    printOnly.Enabled = true;
                     btnSavePrint.Enabled = true;
                     thirdPartyIndex = 0;
                     break;
@@ -1162,8 +1159,6 @@ namespace PersAhwal
                 return;
             }
             else addNewAppNameInfo(مقدم_الطلب);
-            printOnly.Text = "طباعة";
-            printOnly.Enabled = false;
             CreateWordFile();
             this.Close();
             Clear_Fields();
@@ -1171,6 +1166,8 @@ namespace PersAhwal
 
         private void btnSavePrint_Click_1(object sender, EventArgs e)
         {
+            التاريخ_الميلادي.Text = GregorianDate;
+            التاريخ_الهجري.Text = HijriDate; 
             Save2DataBase();
             if (btnSavePrint.Text != "حفظ وطباعة") return;
             btnSavePrint.Text = "جاري المعالجة";
@@ -1462,10 +1459,6 @@ namespace PersAhwal
                 idShow = 0;
                 ArchivedSt.Visible = true;
                 AllFamilyMembers.Enabled = true;
-                printOnly.Visible = true;
-                SaveOnly.Visible = true;
-                btnSavePrint.Text = "حفظ";
-                btnSavePrint.Visible = false;
                 gridFill = false;
             }
         }
@@ -1819,9 +1812,7 @@ namespace PersAhwal
             mandoubName.Text = Search.Text = "";
             AppType.CheckState = CheckState.Checked;
             mandoubVisibilty();
-            btnSavePrint.Visible = true;
             btnSavePrint.Text = "حفظ وطباعة";
-            btnSavePrint.Visible = true;
             Comment.Clear();
             panel1.Visible = false;
             FillDataGridView();
@@ -1831,9 +1822,6 @@ namespace PersAhwal
             ArchivedSt.Text = "غير مؤرشف";
             ArchivedSt.Visible = false;
             ArchivedSt.BackColor = Color.Red;
-            printOnly.Enabled = true;
-            printOnly.Visible = false;
-            SaveOnly.Visible = false;
             IqrarPurpose.SelectedIndex = 0;
             motherDaughter.SelectedIndex = 0;
             newData = true;

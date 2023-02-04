@@ -1204,7 +1204,7 @@ namespace PersAhwal
 
         private void وكيل_الزوجة_TextChanged(object sender, EventArgs e)
         {
-            getID(جواز_وكيل_الزوجة, وكيل_الزوجة.Text, "رقم_الهوية", "P0");
+            //getID(جواز_وكيل_الزوجة, وكيل_الزوجة.Text, "رقم_الهوية", "P0");
         }
 
         private void الشاهد_الاول_TextChanged(object sender, EventArgs e)

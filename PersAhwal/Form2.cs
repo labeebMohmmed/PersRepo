@@ -58,8 +58,8 @@ namespace PersAhwal
             //timer1.Enabled = true;
             //timer2.Enabled = true;
 
-            GregorianDate = التاريخ_الميلادي.Text = gregorianDate;
-            HijriDate = التاريخ_الهجري.Text = hijriDate;
+            التاريخ_الميلادي.Text =  GregorianDate =gregorianDate;
+            التاريخ_الهجري.Text = HijriDate = hijriDate;
             ATVC = atvc;
             DataSource = dataSource;
             FilesPathIn = filepathIn + @"\";
@@ -143,7 +143,7 @@ namespace PersAhwal
             AppType.CheckState = CheckState.Checked;
             mandoubVisibilty();            
             btnSavePrint.Text = "حفظ وطباعة";
-            btnSavePrint.Visible = btnSavePrint.Enabled = true;
+            btnSavePrint.Enabled = true;
             ConsulateEmployee.Text = ConsulateEmpName;
             FillDataGridView();
             ArchivedSt.Text = "غير مؤرشف";
@@ -232,9 +232,7 @@ namespace PersAhwal
                 ArchivedSt.BackColor = Color.Red;
             }
 
-            ArchivedSt.Visible = true;            
-            btnSavePrint.Text = "حفظ";
-            btnSavePrint.Visible = false;
+            ArchivedSt.Visible = true;  
         }
 
         void FillDataGridView()
@@ -1544,11 +1542,15 @@ namespace PersAhwal
 
         private void btnSavePrint_Click_1(object sender, EventArgs e)
         {
+
+            التاريخ_الميلادي.Text = GregorianDate ;
+            التاريخ_الهجري.Text = HijriDate ;
+
             if (!checkGender(PanelMain, "مقدم_الطلب", "النوع"))
             {
                 return;
             }
-            else addNewAppNameInfo(مقدم_الطلب); 
+            else addNewAppNameInfo(مقدم_الطلب);
             
             if (تاريخ_الميلاد.Text == "")
             {
@@ -1972,7 +1974,7 @@ namespace PersAhwal
                 المهنة.Text = dataGridView1.CurrentRow.Cells["المهنة"].Value.ToString();
                 تاريخ_الميلاد.Text = dataGridView1.CurrentRow.Cells["تاريخ_الميلاد"].Value.ToString();
                 ArchivedSt.Visible = true;
-                btnSavePrint.Text = "حفظ";
+                
                 SaveEdit = false;
 
             }
@@ -2344,10 +2346,7 @@ namespace PersAhwal
 
         private void تاريخ_الميلاد_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == (char)13)
-            {
-                button2.PerformClick();
-            }
+            
         }
 
         private void التاريخ_الميلادي_TextChanged(object sender, EventArgs e)

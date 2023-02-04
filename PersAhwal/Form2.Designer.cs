@@ -31,8 +31,8 @@ namespace PersAhwal
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form2));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.AddChildren = new System.Windows.Forms.Button();
             this.ChildrenName = new System.Windows.Forms.TextBox();
             this.labelchildren = new System.Windows.Forms.Label();
@@ -110,7 +110,6 @@ namespace PersAhwal
             this.PanelMain = new System.Windows.Forms.Panel();
             this.التاريخ_الميلادي_off = new System.Windows.Forms.TextBox();
             this.button3 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
             this.تاريخ_الميلاد = new System.Windows.Forms.TextBox();
             this.txtEditID2 = new System.Windows.Forms.TextBox();
             this.label36 = new System.Windows.Forms.Label();
@@ -964,23 +963,23 @@ namespace PersAhwal
             this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridView1.Location = new System.Drawing.Point(15, 66);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -1092,7 +1091,6 @@ namespace PersAhwal
             // 
             this.PanelMain.Controls.Add(this.التاريخ_الميلادي_off);
             this.PanelMain.Controls.Add(this.button3);
-            this.PanelMain.Controls.Add(this.button2);
             this.PanelMain.Controls.Add(this.تاريخ_الميلاد);
             this.PanelMain.Controls.Add(this.txtEditID2);
             this.PanelMain.Controls.Add(this.label36);
@@ -1110,7 +1108,6 @@ namespace PersAhwal
             this.PanelMain.Controls.Add(this.labelName);
             this.PanelMain.Controls.Add(this.label9);
             this.PanelMain.Controls.Add(this.مقدم_الطلب);
-            this.PanelMain.Controls.Add(this.btnSavePrint);
             this.PanelMain.Controls.Add(this.label3);
             this.PanelMain.Controls.Add(this.label4);
             this.PanelMain.Controls.Add(this.رقم_الهوية);
@@ -1148,6 +1145,7 @@ namespace PersAhwal
             this.PanelMain.Controls.Add(this.EmbassySource);
             this.PanelMain.Controls.Add(this.نوع_الهوية);
             this.PanelMain.Controls.Add(this.label15);
+            this.PanelMain.Controls.Add(this.btnSavePrint);
             this.PanelMain.Location = new System.Drawing.Point(12, 66);
             this.PanelMain.Name = "PanelMain";
             this.PanelMain.Size = new System.Drawing.Size(1322, 671);
@@ -1175,18 +1173,6 @@ namespace PersAhwal
             this.button3.Text = "حفظ";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click_1);
-            // 
-            // button2
-            // 
-            this.button2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
-            this.button2.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.button2.Location = new System.Drawing.Point(131, 407);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(45, 71);
-            this.button2.TabIndex = 850;
-            this.button2.Text = "حفظ";
-            this.button2.UseVisualStyleBackColor = false;
-            this.button2.Click += new System.EventHandler(this.button2_Click_2);
             // 
             // تاريخ_الميلاد
             // 
@@ -1412,7 +1398,6 @@ namespace PersAhwal
         private System.Windows.Forms.Label label36;
         private System.Windows.Forms.TextBox المهنة;
         private System.Windows.Forms.Label label37;
-        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.TextBox التاريخ_الميلادي_off;
     }

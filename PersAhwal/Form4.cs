@@ -52,13 +52,15 @@ namespace PersAhwal
         string Jobposition;
         int ATVC = 0;
         string[] colIDs = new string[100];
+        string GregorianDate = "";
+        string HijriDate = "";
         public Form4(int Atvc, int currentRow, string EmpName, string dataSource, string filepathIn, string filepathOut, string jobposition, string gregorianDate, string hijriDate)
         {
             InitializeComponent();
             //timer1.Enabled = true;
             //timer2.Enabled = true;
-            التاريخ_الميلادي.Text = gregorianDate;
-            التاريخ_الهجري.Text = hijriDate;
+            التاريخ_الميلادي.Text = GregorianDate= gregorianDate;
+            التاريخ_الهجري.Text = HijriDate = hijriDate;
             ATVC = Atvc;
             DataSource = dataSource;
             FilesPathIn = filepathIn + @"\";
@@ -233,10 +235,7 @@ namespace PersAhwal
             }
             ArchivedSt.Visible = true;
             labelArch.Visible = true;
-            btnprintOnly.Visible = true;
-            SaveOnly.Visible = true;
-            btnSavePrint.Text = "حفظ";
-            btnSavePrint.Visible = false;
+            
         }
 
         private void FillDataGridView()
@@ -353,9 +352,6 @@ namespace PersAhwal
                     sqlCmd.Parameters.AddWithValue("@Apptitle", str[1]);
                     sqlCmd.Parameters.AddWithValue("@FullTextData", VisaLine);
                     sqlCmd.ExecuteNonQuery();
-                    btnprintOnly.Visible = false;
-                    SaveOnly.Visible = false;
-                    btnSavePrint.Visible = true;
                 }
 
 
@@ -749,10 +745,6 @@ namespace PersAhwal
             mandoubName.Text = Search.Text = "";
             AppType.CheckState = CheckState.Checked;
             mandoubVisibilty();
-            btnprintOnly.Visible = false;
-            btnSavePrint.Text = "حفظ وطباعة";
-            btnSavePrint.Visible = true;
-            SaveOnly.Visible = false;
             Comment.Text = "لا تعليق";
             FillDataGridView();
             ArchivedSt.Text = "غير مؤرشف";
@@ -865,6 +857,9 @@ namespace PersAhwal
 
         private void btnSavePrint_Click_1(object sender, EventArgs e)
         {
+            التاريخ_الميلادي.Text = GregorianDate;
+            التاريخ_الهجري.Text = HijriDate; 
+            
             if (VisaAppId.Text == "")
             {
                 MessageBox.Show("رقم خطاب خاطئ");
@@ -876,7 +871,6 @@ namespace PersAhwal
             if (!EditSave)
                 CreateWordFile(false);
             else CreateWordFile(true);
-            btnSavePrint.Text = "حفظ وطباعة";
             btnSavePrint.Enabled = true;
             this.Close();
         }
@@ -896,12 +890,8 @@ namespace PersAhwal
                 return;
             }
             AddData(true);
-            btnprintOnly.Enabled = false;
-            btnprintOnly.Text = "طباعة";
             //if (ApplicantName.Text != "") AddData(false);
             CreateWordFile(true);
-            btnSavePrint.Text = "حفظ وطباعة";
-            btnprintOnly.Enabled = true;
             this.Close();
         }
 
@@ -1443,7 +1433,7 @@ namespace PersAhwal
                 مقدم_الطلب_1.Text = strList[0].Split('-')[2];
                 رقم_الهوية_1.Text = strList[0].Split('-')[3];
                 مكان_الإصدار_1.Text = strList[0].Split('-')[4];
-
+                title1.Text = strList[0].Split('-')[1];
                 yy1.Text = textBox3.Text.Split('/')[2];
                 //MessageBox.Show(strList[0].Split('-')[5].Split('/')[2]);
                 dd1.Text = textBox3.Text.Split('/')[1];
@@ -1456,14 +1446,17 @@ namespace PersAhwal
                     //الانجليزية - Miss - HUYAM SAIFELDIN IBRAHIM MOHAMEDALI - P08295472 - JEDDAH - 28 / 08 / 2021 - the Republic of Turkey - زيارة عائلية
                     if (VisaLine.Split('*').Length == 2)
                         {
-                            مقدم_الطلب_1.Text = strList[0].Split('-')[2];
+                        title1.Text = strList[0].Split('-')[1];
+                        مقدم_الطلب_1.Text = strList[0].Split('-')[2];
                             رقم_الهوية_1.Text = strList[0].Split('-')[3];
                             مكان_الإصدار_1.Text = strList[0].Split('-')[4];
+                        
                             yy1.Text = strList[0].Split('-')[5].Split('/')[2];
                             dd1.Text = strList[0].Split('-')[5].Split('/')[1];
                             mm1.Text = strList[0].Split('-')[5].Split('/')[0];
 
-                            مقدم_الطلب_2.Text = strList[1].Split('-')[2];
+                        title2.Text = strList[1].Split('-')[1];
+                        مقدم_الطلب_2.Text = strList[1].Split('-')[2];
                             رقم_الهوية_2.Text = strList[1].Split('-')[3];
                             مكان_الإصدار_2.Text = strList[1].Split('-')[4];
                             yy2.Text = strList[1].Split('-')[5].Split('/')[2];
@@ -1473,21 +1466,24 @@ namespace PersAhwal
 
                         if (VisaLine.Split('*').Length == 3)
                         {
-                            مقدم_الطلب_1.Text = strList[0].Split('-')[2];
+                        title1.Text = strList[0].Split('-')[1];
+                        مقدم_الطلب_1.Text = strList[0].Split('-')[2];
                             رقم_الهوية_1.Text = strList[0].Split('-')[3];
                             مكان_الإصدار_1.Text = strList[0].Split('-')[4];
                             yy1.Text = strList[0].Split('-')[5].Split('/')[2];
                             dd1.Text = strList[0].Split('-')[5].Split('/')[1];
                             mm1.Text = strList[0].Split('-')[5].Split('/')[0];
 
-                            مقدم_الطلب_2.Text = strList[1].Split('-')[2];
+                        title2.Text = strList[1].Split('-')[1];
+                        مقدم_الطلب_2.Text = strList[1].Split('-')[2];
                             رقم_الهوية_2.Text = strList[1].Split('-')[3];
                             مكان_الإصدار_2.Text = strList[1].Split('-')[4];
                             yy2.Text = strList[1].Split('-')[5].Split('/')[2];
                             dd2.Text = strList[1].Split('-')[5].Split('/')[1];
                             mm2.Text = strList[1].Split('-')[5].Split('/')[0];
 
-                            مقدم_الطلب_3.Text = strList[2].Split('-')[2];
+                        title3.Text = strList[2].Split('-')[1];
+                        مقدم_الطلب_3.Text = strList[2].Split('-')[2];
                             رقم_الهوية_3.Text = strList[2].Split('-')[3];
                             مكان_الإصدار_3.Text = strList[2].Split('-')[4];
                             yy3.Text = strList[2].Split('-')[5].Split('/')[2];
@@ -1497,28 +1493,32 @@ namespace PersAhwal
 
                         if (VisaLine.Split('*').Length == 4)
                         {
-                            مقدم_الطلب_1.Text = strList[0].Split('-')[2];
+                        title1.Text = strList[0].Split('-')[1];
+                        مقدم_الطلب_1.Text = strList[0].Split('-')[2];
                             رقم_الهوية_1.Text = strList[0].Split('-')[3];
                             مكان_الإصدار_1.Text = strList[0].Split('-')[4];
                             yy1.Text = strList[0].Split('-')[5].Split('/')[2];
                             dd1.Text = strList[0].Split('-')[5].Split('/')[1];
                             mm1.Text = strList[0].Split('-')[5].Split('/')[0];
 
-                            مقدم_الطلب_2.Text = strList[1].Split('-')[2];
+                        title2.Text = strList[1].Split('-')[1];
+                        مقدم_الطلب_2.Text = strList[1].Split('-')[2];
                             رقم_الهوية_2.Text = strList[1].Split('-')[3];
                             مكان_الإصدار_2.Text = strList[1].Split('-')[4];
                             yy2.Text = strList[1].Split('-')[5].Split('/')[2];
                             dd2.Text = strList[1].Split('-')[5].Split('/')[1];
                             mm2.Text = strList[1].Split('-')[5].Split('/')[0];
 
-                            مقدم_الطلب_3.Text = strList[2].Split('-')[2];
+                        title3.Text = strList[2].Split('-')[1];
+                        مقدم_الطلب_3.Text = strList[2].Split('-')[2];
                             رقم_الهوية_3.Text = strList[2].Split('-')[3];
                             مكان_الإصدار_3.Text = strList[2].Split('-')[4];
                             yy3.Text = strList[2].Split('-')[5].Split('/')[2];
                             dd3.Text = strList[2].Split('-')[5].Split('/')[1];
                             mm3.Text = strList[2].Split('-')[5].Split('/')[0];
 
-                            مقدم_الطلب_4.Text = strList[3].Split('-')[2];
+                        title4.Text = strList[3].Split('-')[1];
+                        مقدم_الطلب_4.Text = strList[3].Split('-')[2];
                             رقم_الهوية_4.Text = strList[3].Split('-')[3];
                             مكان_الإصدار_4.Text = strList[3].Split('-')[4];
                             yy4.Text = strList[3].Split('-')[5].Split('/')[2];
@@ -1528,35 +1528,40 @@ namespace PersAhwal
 
                         if (VisaLine.Split('*').Length == 5)
                         {
-                            مقدم_الطلب_1.Text = strList[0].Split('-')[2];
+                        title1.Text = strList[4].Split('-')[1];
+                        مقدم_الطلب_1.Text = strList[0].Split('-')[2];
                             رقم_الهوية_1.Text = strList[0].Split('-')[3];
                             مكان_الإصدار_1.Text = strList[0].Split('-')[4];
                             yy1.Text = strList[0].Split('-')[5].Split('/')[2];
                             dd1.Text = strList[0].Split('-')[5].Split('/')[1];
                             mm1.Text = strList[0].Split('-')[5].Split('/')[0];
 
-                            مقدم_الطلب_2.Text = strList[1].Split('-')[2];
+                        title2.Text = strList[1].Split('-')[1];
+                        مقدم_الطلب_2.Text = strList[1].Split('-')[2];
                             رقم_الهوية_2.Text = strList[1].Split('-')[3];
                             مكان_الإصدار_2.Text = strList[1].Split('-')[4];
                             yy2.Text = strList[1].Split('-')[5].Split('/')[2];
                             dd2.Text = strList[1].Split('-')[5].Split('/')[1];
                             mm2.Text = strList[1].Split('-')[5].Split('/')[0];
 
-                            مقدم_الطلب_3.Text = strList[2].Split('-')[2];
+                        title3.Text = strList[2].Split('-')[1];
+                        مقدم_الطلب_3.Text = strList[2].Split('-')[2];
                             رقم_الهوية_3.Text = strList[2].Split('-')[3];
                             مكان_الإصدار_3.Text = strList[2].Split('-')[4];
                             yy3.Text = strList[2].Split('-')[5].Split('/')[2];
                             dd3.Text = strList[2].Split('-')[5].Split('/')[1];
                             mm3.Text = strList[2].Split('-')[5].Split('/')[0];
 
-                            مقدم_الطلب_4.Text = strList[3].Split('-')[2];
+                        title4.Text = strList[3].Split('-')[1];
+                        مقدم_الطلب_4.Text = strList[3].Split('-')[2];
                             رقم_الهوية_4.Text = strList[3].Split('-')[3];
                             مكان_الإصدار_4.Text = strList[3].Split('-')[4];
                             yy4.Text = strList[3].Split('-')[5].Split('/')[2];
                             dd4.Text = strList[3].Split('-')[5].Split('/')[1];
                             mm4.Text = strList[3].Split('-')[5].Split('/')[0];
 
-                            مقدم_الطلب_5.Text = strList[4].Split('-')[2];
+                        title5.Text = strList[4].Split('-')[1];
+                        مقدم_الطلب_5.Text = strList[4].Split('-')[2];
                             رقم_الهوية_5.Text = strList[4].Split('-')[3];
                             مكان_الإصدار_5.Text = strList[4].Split('-')[4];
                             yy5.Text = strList[4].Split('-')[5].Split('/')[2];
@@ -1609,10 +1614,7 @@ namespace PersAhwal
                 //language.Enabled = TravPurpose.Enabled = false;
                 ArchivedSt.Visible = true;
                 labelArch.Visible = true;
-                btnprintOnly.Visible = true;
-                SaveOnly.Visible = true;
-                btnSavePrint.Text = "حفظ";
-                btnSavePrint.Visible = false;
+
                 gridFill = true;
             }
         }
@@ -2020,14 +2022,14 @@ namespace PersAhwal
                 oBDoc.Bookmarks.Add("MarkPass", ref rangePass);
                 oBDoc.Bookmarks.Add("MarkPassIssueDate", ref rangePassIssueDate);
                 oBDoc.Bookmarks.Add("MarkPassISource", ref rangePassISource);
-                Save2DataBase(!printOnly);
+                Save2DataBase(false);
             }
             else
             {
 
                 Microsoft.Office.Interop.Word.Table table = oBDoc.Tables[1];
                 string[] strLines = VisaLine.Split('*');
-                Save2DataBase(!printOnly);
+                Save2DataBase(false);
                 colIDs[3] = strLines[0].Split('-')[2];
                 if (strLines[0].Split('-')[0] == "العربية")
                 {
@@ -2184,6 +2186,7 @@ namespace PersAhwal
 
         private void التاريخ_الميلادي_TextChanged(object sender, EventArgs e)
         {
+            //MessageBox.Show(التاريخ_الميلادي.Text);
             التاريخ_الميلادي_off.Text = التاريخ_الميلادي.Text.Split('-')[1] + " - " + التاريخ_الميلادي.Text.Split('-')[0] + " - " + التاريخ_الميلادي.Text.Split('-')[2];
             //MessageBox.Show(التاريخ_الميلادي_off.Text);
         }

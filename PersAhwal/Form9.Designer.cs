@@ -42,8 +42,6 @@ namespace PersAhwal
             this.label9 = new System.Windows.Forms.Label();
             this.iqamaissue = new System.Windows.Forms.TextBox();
             this.deleteRow = new System.Windows.Forms.Button();
-            this.btnprintOnly = new System.Windows.Forms.Button();
-            this.SaveOnly = new System.Windows.Forms.Button();
             this.btnSavePrint = new System.Windows.Forms.Button();
             this.ResetAll = new System.Windows.Forms.Button();
             this.SearchFile = new System.Windows.Forms.TextBox();
@@ -214,38 +212,12 @@ namespace PersAhwal
             this.deleteRow.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.deleteRow.Location = new System.Drawing.Point(210, 400);
             this.deleteRow.Name = "deleteRow";
-            this.deleteRow.Size = new System.Drawing.Size(39, 71);
+            this.deleteRow.Size = new System.Drawing.Size(43, 71);
             this.deleteRow.TabIndex = 524;
             this.deleteRow.Text = "مسح";
             this.deleteRow.UseVisualStyleBackColor = false;
             this.deleteRow.Visible = false;
             this.deleteRow.Click += new System.EventHandler(this.deleteRow_Click_1);
-            // 
-            // btnprintOnly
-            // 
-            this.btnprintOnly.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
-            this.btnprintOnly.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnprintOnly.Location = new System.Drawing.Point(65, 401);
-            this.btnprintOnly.Name = "btnprintOnly";
-            this.btnprintOnly.Size = new System.Drawing.Size(43, 71);
-            this.btnprintOnly.TabIndex = 523;
-            this.btnprintOnly.Text = "طباعة";
-            this.btnprintOnly.UseVisualStyleBackColor = false;
-            this.btnprintOnly.Visible = false;
-            this.btnprintOnly.Click += new System.EventHandler(this.btnprintOnly_Click);
-            // 
-            // SaveOnly
-            // 
-            this.SaveOnly.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
-            this.SaveOnly.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.SaveOnly.Location = new System.Drawing.Point(16, 400);
-            this.SaveOnly.Name = "SaveOnly";
-            this.SaveOnly.Size = new System.Drawing.Size(45, 71);
-            this.SaveOnly.TabIndex = 522;
-            this.SaveOnly.Text = "حفظ";
-            this.SaveOnly.UseVisualStyleBackColor = false;
-            this.SaveOnly.Visible = false;
-            this.SaveOnly.Click += new System.EventHandler(this.SaveOnly_Click_1);
             // 
             // btnSavePrint
             // 
@@ -820,9 +792,7 @@ namespace PersAhwal
             this.PanelMain.Controls.Add(this.label12);
             this.PanelMain.Controls.Add(this.deleteRow);
             this.PanelMain.Controls.Add(this.التاريخ_الميلادي);
-            this.PanelMain.Controls.Add(this.btnprintOnly);
             this.PanelMain.Controls.Add(this.label11);
-            this.PanelMain.Controls.Add(this.SaveOnly);
             this.PanelMain.Controls.Add(this.النوع);
             this.PanelMain.Controls.Add(this.btnSavePrint);
             this.PanelMain.Controls.Add(this.AttendViceConsul);
@@ -1049,8 +1019,6 @@ namespace PersAhwal
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox iqamaissue;
         private System.Windows.Forms.Button deleteRow;
-        private System.Windows.Forms.Button btnprintOnly;
-        private System.Windows.Forms.Button SaveOnly;
         private System.Windows.Forms.Button btnSavePrint;
         private System.Windows.Forms.Button ResetAll;
         private System.Windows.Forms.TextBox SearchFile;

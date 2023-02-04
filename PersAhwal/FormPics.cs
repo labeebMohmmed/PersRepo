@@ -462,7 +462,7 @@ namespace PersAhwal
 
             }
 
-                drawPicPanel.Controls.Add(req1);
+            drawPicPanel.Controls.Add(req1);
             if (hide)
             {
                 drawPicPanel.Controls.Add(picAddReq1);
@@ -2459,6 +2459,7 @@ namespace PersAhwal
                 for (int index = 0; index < index1; index++)
                     drawBoxes(data1List[index], false, id1List[index]);
             }
+
             if (data2check)
             {
                 drawBoxesTitle("------------------------", 60);
@@ -2496,7 +2497,7 @@ namespace PersAhwal
             }
             else commentPanel.Visible = true;
 
-            //MessageBox.Show(documenNo);
+            //MessageBox.Show(name);
             //MessageBox.Show(checkArchCase(documenNo));
 
             getCom(documenNo);
@@ -2509,7 +2510,7 @@ namespace PersAhwal
             {
                 archCase = 2; return "تم إصدارالمكاتبة النهائية باسم /" + name + " ولكن لم تتم أرشفتها بعد";
             }
-            else if (data2check && checkArchCase(documenNo).Contains("غير"))
+            else if (data2check && checkArchCase(documenNo) != "مؤرشف نهائي")
             {
                 archCase = 3; return "تم إصدارالمكاتبة باسم /" + name + " وقد تمت أرشفتها بصورة نهائية وقد تمت إعادة طباعتها مجددا";
             }
@@ -2822,14 +2823,13 @@ namespace PersAhwal
             CreatePic(PathImage);
             if (!printOut)return;
             if (ArchiveState)
-            {
-                if (docId.Text == "") return;
+            {                
                 if (تاريخ_الميلاد.Text.Length != 10){
-                    btnSaveEnd.Enabled = true; 
                     MessageBox.Show("يرجى إدخال تاريخ ميلاد مقدم الطلب أولا"); 
                     return; 
                 }
-                
+                if (docId.Text == "") 
+                    return;
 
                 if (FormType != 6 )
                 {
@@ -3681,8 +3681,10 @@ namespace PersAhwal
             finalArch = false;
             btnAuth.Select();
             string AppName = "";
+            resetItems();
+            docId.Text = docId.Text.TrimStart().TrimEnd();
             
-            string year= SpecificDigit(docId.Text, 1, 2);
+            string year= SpecificDigit(docId.Text, 1, 2).Trim();
             
             if (ServerType == "56")
             {
@@ -3693,24 +3695,20 @@ namespace PersAhwal
             }
             else
             {
+                
                 FormType = Convert.ToInt32(SpecificDigit(docId.Text, 3, 4));
                 noForm = SpecificDigit(docId.Text, 3, 4);
                 rowCount = SpecificDigit(docId.Text, 5, docId.Text.Length);
             }
+            //MessageBox.Show(SpecificDigit(docId.Text, 1, 2) + " - " + noForm + " - " + rowCount);
             txtIDNo.Text = docIDNumber = "ق س ج/80/" + year + "/" + noForm + "/" + rowCount;
             smsDocIDNumber = "ق س ج/" + rowCount + "/" + noForm + "/" + year;
-            //MessageBox.Show(noForm + " - " + rowCount);
+            
             string index = "-1";
             if (ServerType == "56") 
                 index = SpecificDigit(noForm, 3, 3);
-            //MessageBox.Show("index " + index);
             
-
             getColList(noForm, ArchiveState, index);
-            //if (FormType == 12)
-            //{
-            //MessageBox.Show(comboCol[0] + "_"+ comboCol[1]);
-            
             if (FormType == 12)
              getComboText(docIDNumber, comboCol[0], comboCol[1]);
             else {
@@ -3721,17 +3719,14 @@ namespace PersAhwal
             string formName = Combo1.Text+"-"+ Combo2.Text;
             if (Combo2.Text == "")
                 formName = Combo1.Text;
-            //MessageBox.Show(Combo1.Text+"-"+ Combo2.Text);
-            //MessageBox.Show(Combo1.Text + "_"+ Combo2.Text);
+            
             getTableList(noForm);
-                
-                //string wordInFile = FilespathIn + Combo2.Text.Trim() + "-" + getComboIndex(comboCol[2], Combo1.Text) + ".docx";
-                string wordInFile = Combo1.Text.Trim() + "-" + Combo2.Text;
-                string date = DateTime.Now.Day.ToString() + "-" + DateTime.Now.Month.ToString() + "-" + DateTime.Now.Year.ToString();
-                string wordOutFile = FilespathOut + Combo1.Text.Trim() + DateTime.Now.ToString("ssmm") + ".docx";
-                string SubNo = "02";
-                if (FormType < 10) SubNo = "0" + FormType.ToString();
-                else SubNo = FormType.ToString();
+            string wordInFile = Combo1.Text.Trim() + "-" + Combo2.Text;
+            //string date = DateTime.Now.Day.ToString() + "-" + DateTime.Now.Month.ToString() + "-" + DateTime.Now.Year.ToString();
+            //string wordOutFile = FilespathOut + Combo1.Text.Trim() + DateTime.Now.ToString("ssmm") + ".docx";
+            //string SubNo = "02";
+            //if (FormType < 10) SubNo = "0" + FormType.ToString();
+            //else SubNo = FormType.ToString();
             if (Combo1.Text != "")
             {
                 drawBoxesTitle("استمارة الطلب", 40);
@@ -3743,8 +3738,27 @@ namespace PersAhwal
             requiredDocument.Text = CheckState;
            // panelFinalArch.Visible = true;  
             paraValues[2] = docIDNumber;
+            docId.Clear();
+            docId.Text = DateTime.Now.Year.ToString().Replace("20", "");
         }
 
+        private void resetItems()
+        {
+            foreach (Control control in drawPicPanel.Controls)
+            {
+                control.Visible = false;
+            }
+            
+            drawBoxesindex = 0;
+            btnSaveEnd.Visible = false;
+            PathImage = new string[100];
+            rowCount = "";
+            imagecount = 0;
+            picPath = "";
+            pictureBox1.Image = PersAhwal.Properties.Resources.noImage;
+            proID = "0";
+            reqFile = "";
+        } 
         private string getComboIndex(string col, string combo1)
         {
             string query = "SELECT " + col+ " FROM TableListCombo WHERE " + col + " is not null";
@@ -4340,6 +4354,11 @@ namespace PersAhwal
         private void التعليقات_السابقة_Off_Click(object sender, EventArgs e)
         {
             تعليق_جديد_Off.Height = 45;
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start(pictureBox1.ImageLocation);
         }
 
         private void button4_Click(object sender, EventArgs e)

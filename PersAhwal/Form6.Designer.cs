@@ -35,8 +35,6 @@ namespace PersAhwal
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.label24 = new System.Windows.Forms.Label();
             this.Comment = new System.Windows.Forms.TextBox();
-            this.btnprintOnly = new System.Windows.Forms.Button();
-            this.SaveOnly = new System.Windows.Forms.Button();
             this.btnSavePrint = new System.Windows.Forms.Button();
             this.ConsulateEmployee = new System.Windows.Forms.Label();
             this.checkedViewed = new System.Windows.Forms.CheckBox();
@@ -116,32 +114,6 @@ namespace PersAhwal
             this.Comment.Size = new System.Drawing.Size(268, 100);
             this.Comment.TabIndex = 503;
             this.Comment.Text = "لا تعليق";
-            // 
-            // btnprintOnly
-            // 
-            this.btnprintOnly.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
-            this.btnprintOnly.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.btnprintOnly.Location = new System.Drawing.Point(70, 372);
-            this.btnprintOnly.Name = "btnprintOnly";
-            this.btnprintOnly.Size = new System.Drawing.Size(43, 71);
-            this.btnprintOnly.TabIndex = 502;
-            this.btnprintOnly.Text = "طباعة";
-            this.btnprintOnly.UseVisualStyleBackColor = false;
-            this.btnprintOnly.Visible = false;
-            this.btnprintOnly.Click += new System.EventHandler(this.btnprintOnly_Click);
-            // 
-            // SaveOnly
-            // 
-            this.SaveOnly.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
-            this.SaveOnly.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.SaveOnly.Location = new System.Drawing.Point(20, 372);
-            this.SaveOnly.Name = "SaveOnly";
-            this.SaveOnly.Size = new System.Drawing.Size(45, 71);
-            this.SaveOnly.TabIndex = 501;
-            this.SaveOnly.Text = "حفظ";
-            this.SaveOnly.UseVisualStyleBackColor = false;
-            this.SaveOnly.Visible = false;
-            this.SaveOnly.Click += new System.EventHandler(this.SaveOnly_Click_1);
             // 
             // btnSavePrint
             // 
@@ -587,6 +559,7 @@ namespace PersAhwal
             this.ListSearch.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.ListSearch.Size = new System.Drawing.Size(360, 35);
             this.ListSearch.TabIndex = 522;
+            this.ListSearch.TextChanged += new System.EventHandler(this.ListSearch_TextChanged_1);
             // 
             // Search
             // 
@@ -751,10 +724,8 @@ namespace PersAhwal
             this.Controls.Add(this.PanelFiles);
             this.Controls.Add(this.ConsulateEmployee);
             this.Controls.Add(this.checkedViewed);
-            this.Controls.Add(this.btnSavePrint);
-            this.Controls.Add(this.btnprintOnly);
-            this.Controls.Add(this.SaveOnly);
             this.Controls.Add(this.dataGridView1);
+            this.Controls.Add(this.btnSavePrint);
             this.Name = "Form6";
             this.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.Text = "إفادة للإدلة الجنائية";
@@ -775,8 +746,6 @@ namespace PersAhwal
         private System.Windows.Forms.Timer timer2;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.TextBox Comment;
-        private System.Windows.Forms.Button btnprintOnly;
-        private System.Windows.Forms.Button SaveOnly;
         private System.Windows.Forms.Button btnSavePrint;
         private System.Windows.Forms.Label ConsulateEmployee;
         private System.Windows.Forms.CheckBox checkedViewed;

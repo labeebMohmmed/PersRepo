@@ -30,8 +30,8 @@ namespace PersAhwal
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.labelarch = new System.Windows.Forms.Label();
             this.button12 = new System.Windows.Forms.Button();
             this.txtMessNo = new System.Windows.Forms.TextBox();
@@ -93,6 +93,7 @@ namespace PersAhwal
             this.btnReportNo = new System.Windows.Forms.Button();
             this.ReportNo = new System.Windows.Forms.TextBox();
             this.PrintReport = new System.Windows.Forms.Button();
+            this.preInfo = new System.Windows.Forms.ComboBox();
             this.Apptype = new System.Windows.Forms.TextBox();
             this.Arch1 = new System.Windows.Forms.Button();
             this.Arch2 = new System.Windows.Forms.Button();
@@ -116,8 +117,8 @@ namespace PersAhwal
             this.label1 = new System.Windows.Forms.Label();
             this.attendedVC = new System.Windows.Forms.ComboBox();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.التقرير_اليومي_توثيق = new System.Windows.Forms.DataGridView();
+            this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.timer4 = new System.Windows.Forms.Timer(this.components);
             this.Affbtn0 = new System.Windows.Forms.ComboBox();
             this.Affairsbtn7 = new System.Windows.Forms.ComboBox();
@@ -692,15 +693,13 @@ namespace PersAhwal
             "تقرير اليوم",
             "تقرير يوم محدد",
             "تقرير محدد بفترة معينة",
-            "الربع الأول",
-            "تقرير الربع الثاني",
-            "تقرير الربع الثالث",
-            "تقرير الربع الرابع",
+            "التقرير الاسبوعي",
+            "تقرير ربع سنوي",
+            "تقرير شهري",
+            "تقرير جميع الأعوام",
             "التقرير السنوي",
             "تقرير مفصل",
-            "إضافة تقرير يومي",
-            "تقرير المأذونية الشهري",
-            "التقرير الاسبوعي"});
+            "إضافة تقرير يومي"});
             this.ReportType.Location = new System.Drawing.Point(6, 3);
             this.ReportType.Name = "ReportType";
             this.ReportType.Size = new System.Drawing.Size(352, 35);
@@ -725,6 +724,7 @@ namespace PersAhwal
             this.ReportPanel.Controls.Add(this.btnReportNo);
             this.ReportPanel.Controls.Add(this.ReportNo);
             this.ReportPanel.Controls.Add(this.PrintReport);
+            this.ReportPanel.Controls.Add(this.preInfo);
             this.ReportPanel.Location = new System.Drawing.Point(16, 131);
             this.ReportPanel.Name = "ReportPanel";
             this.ReportPanel.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -918,6 +918,23 @@ namespace PersAhwal
             this.PrintReport.UseVisualStyleBackColor = true;
             this.PrintReport.Visible = false;
             this.PrintReport.Click += new System.EventHandler(this.PrintReport_Click);
+            // 
+            // preInfo
+            // 
+            this.preInfo.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.preInfo.FormattingEnabled = true;
+            this.preInfo.Items.AddRange(new object[] {
+            "2021",
+            "2022",
+            "2023",
+            "2024",
+            "2025"});
+            this.preInfo.Location = new System.Drawing.Point(250, 330);
+            this.preInfo.Name = "preInfo";
+            this.preInfo.Size = new System.Drawing.Size(108, 35);
+            this.preInfo.TabIndex = 478;
+            this.preInfo.Text = "إختر الشهر";
+            this.preInfo.Visible = false;
             // 
             // Apptype
             // 
@@ -1267,6 +1284,33 @@ namespace PersAhwal
             this.panel4.TabIndex = 801;
             this.panel4.Visible = false;
             // 
+            // التقرير_اليومي_توثيق
+            // 
+            this.التقرير_اليومي_توثيق.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Arabic Typesetting", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.التقرير_اليومي_توثيق.DefaultCellStyle = dataGridViewCellStyle1;
+            this.التقرير_اليومي_توثيق.Location = new System.Drawing.Point(359, 18);
+            this.التقرير_اليومي_توثيق.Name = "التقرير_اليومي_توثيق";
+            this.التقرير_اليومي_توثيق.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Arabic Typesetting", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.التقرير_اليومي_توثيق.RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            this.التقرير_اليومي_توثيق.Size = new System.Drawing.Size(172, 103);
+            this.التقرير_اليومي_توثيق.TabIndex = 734;
+            this.التقرير_اليومي_توثيق.Visible = false;
+            this.التقرير_اليومي_توثيق.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView8_CellContentClick);
+            // 
             // comboBox3
             // 
             this.comboBox3.Font = new System.Drawing.Font("Arabic Typesetting", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1278,33 +1322,6 @@ namespace PersAhwal
             this.comboBox3.TabIndex = 815;
             this.comboBox3.Text = "قسم شؤون الرعايا";
             this.comboBox3.Visible = false;
-            // 
-            // التقرير_اليومي_توثيق
-            // 
-            this.التقرير_اليومي_توثيق.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle23.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle23.Font = new System.Drawing.Font("Arabic Typesetting", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle23.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle23.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle23.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle23.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.التقرير_اليومي_توثيق.DefaultCellStyle = dataGridViewCellStyle23;
-            this.التقرير_اليومي_توثيق.Location = new System.Drawing.Point(359, 18);
-            this.التقرير_اليومي_توثيق.Name = "التقرير_اليومي_توثيق";
-            this.التقرير_اليومي_توثيق.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            dataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle24.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle24.Font = new System.Drawing.Font("Arabic Typesetting", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle24.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle24.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle24.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle24.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.التقرير_اليومي_توثيق.RowHeadersDefaultCellStyle = dataGridViewCellStyle24;
-            this.التقرير_اليومي_توثيق.Size = new System.Drawing.Size(172, 103);
-            this.التقرير_اليومي_توثيق.TabIndex = 734;
-            this.التقرير_اليومي_توثيق.Visible = false;
-            this.التقرير_اليومي_توثيق.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView8_CellContentClick);
             // 
             // timer4
             // 
@@ -1933,7 +1950,6 @@ namespace PersAhwal
             // 
             // timer2
             // 
-            this.timer2.Enabled = true;
             this.timer2.Interval = 1000;
             this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
             // 
@@ -2168,5 +2184,6 @@ namespace PersAhwal
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.DataGridView التقرير_اليومي_توثيق;
         private System.Windows.Forms.Timer timer2;
+        private System.Windows.Forms.ComboBox preInfo;
     }
 }

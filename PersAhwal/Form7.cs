@@ -35,13 +35,15 @@ namespace PersAhwal
         bool SaveEdit = true;
         int ATVC = 0;
         string[] colIDs = new string[100];
+        string GregorianDate = "";
+        string HijriDate = "";
         public Form7(int Atvc, int currentRow, string EmpName, string dataSource, string filepathIn, string filepathOut, string jobposition, string gregorianDate, string hijriDate)
         {
             InitializeComponent();
             //timer1.Enabled = true;
             //timer2.Enabled = true;
-            التاريخ_الميلادي.Text = gregorianDate;
-            التاريخ_الهجري.Text = hijriDate;
+            التاريخ_الميلادي.Text = GregorianDate = gregorianDate;
+            التاريخ_الهجري.Text = HijriDate = hijriDate;
             ATVC = Atvc;
             DataSource = dataSource;
             FilesPathIn = filepathIn + @"\";
@@ -203,8 +205,6 @@ namespace PersAhwal
             }
             ArchivedSt.Visible = true;
             labelArch.Visible = true;
-            btnprintOnly.Visible = true;
-            SaveOnly.Visible = true;
             btnSavePrint.Text = "حفظ";
             btnSavePrint.Visible = false;
         }
@@ -758,7 +758,6 @@ namespace PersAhwal
             else
             {
                 MessageBox.Show("يرجى حذف الملف الموجودأولاً");
-                btnprintOnly.Enabled = true;
                 btnSavePrint.Enabled = true;
 
             }
@@ -856,6 +855,9 @@ namespace PersAhwal
 
         private void btnSavePrint_Click_1(object sender, EventArgs e)
         {
+            التاريخ_الميلادي.Text = GregorianDate;
+            التاريخ_الهجري.Text = HijriDate; 
+            
             Save2DataBase();
             btnSavePrint.Text = "جاري المعالجة";
             CreateWordFile();
@@ -899,10 +901,8 @@ namespace PersAhwal
             mandoubName.Text = ListSearch.Text = "";
             النوع.CheckState = CheckState.Checked;
             mandoubVisibilty();
-            btnprintOnly.Visible = false;
             btnSavePrint.Text = "طباعة وحفظ";
             btnSavePrint.Visible = true;
-            SaveOnly.Visible = false;
             Comment.Text = "لا تعليق";
             FillDataGridView();
             ArchivedSt.Text = "غير مؤرشف";
@@ -980,10 +980,7 @@ namespace PersAhwal
                 return;
             }
             else addNewAppNameInfo(مقدم_الطلب); 
-            btnprintOnly.Text = "طباعة";
             CreateWordFile();
-            btnprintOnly.Text = "حفظ وطباعة";
-            btnprintOnly.Enabled = true;
             Clear_Fields();
         }
         private void addNewAppNameInfo(TextBox textName)
@@ -1280,8 +1277,6 @@ namespace PersAhwal
 
                 ArchivedSt.Visible = true;
                 labelArch.Visible = true;
-                btnprintOnly.Visible = true;
-                SaveOnly.Visible = true;
                 btnSavePrint.Text = "حفظ";
                 btnSavePrint.Visible = false;
             }

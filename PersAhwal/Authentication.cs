@@ -74,6 +74,8 @@ namespace PersAhwal
         int unvalid = 0;
         bool نوع_المكاتبة_check = false;
         bool showGrid = false;
+        string docStatus = "شهادة صحيحة";
+        int picID = 0;
         public Authentication(string dataSource, string atvc, string filespathOut, string employee, string filespathIn, string hijriDate, string greDate)
         {
             InitializeComponent();
@@ -143,7 +145,7 @@ namespace PersAhwal
         {
             
             SqlConnection sqlCon = new SqlConnection(DataSource);
-            string query1 = "SELECT ID,اسم_موقع_المكاتبة ,نوع_المكاتبة,جنسية_الدبلوماسي,تاريخ_الأرشفة,Viewed,تاريخ_توقيع_المكاتبة,العدد,تعليق,مدير_القسم,موظف_الأرشقة,اسم_الجهة,اسم_صاحب_الشهادة,رقم_الشهادة,رقم_معاملة_القسم FROM TableHandAuth order by ID desc";
+            string query1 = "SELECT ID,اسم_موقع_المكاتبة ,نوع_المكاتبة,جنسية_الدبلوماسي,تاريخ_الأرشفة,Viewed,تاريخ_توقيع_المكاتبة,العدد,تعليق,مدير_القسم,موظف_الأرشقة,اسم_الجهة,اسم_صاحب_الشهادة,رقم_الشهادة,رقم_معاملة_القسم,الحالة FROM TableHandAuth order by ID desc";
             //try
             //{
                 if (sqlCon.State == ConnectionState.Closed)
@@ -271,8 +273,8 @@ namespace PersAhwal
                     sqlCon.Open();
                 }
                 catch (Exception ex) { return 0; }
-            SqlCommand sqlCmd = new SqlCommand("INSERT INTO TableHandAuth ( نوع_المكاتبة,اسم_موقع_المكاتبة,جنسية_الدبلوماسي,تاريخ_الأرشفة,تاريخ_توقيع_المكاتبة,العدد,تعليق,مدير_القسم) values (@نوع_المكاتبة,@اسم_موقع_المكاتبة,@جنسية_الدبلوماسي,@تاريخ_الأرشفة,@تاريخ_توقيع_المكاتبة,@العدد,@تعليق,@مدير_القسم);SELECT @@IDENTITY as lastid", sqlCon);
-            if (id != 1) sqlCmd = new SqlCommand("UPDATE TableHandAuth SET  نوع_المكاتبة=@نوع_المكاتبة,اسم_موقع_المكاتبة=@اسم_موقع_المكاتبة,جنسية_الدبلوماسي=@جنسية_الدبلوماسي,تاريخ_الأرشفة=@تاريخ_الأرشفة,تاريخ_توقيع_المكاتبة=@تاريخ_توقيع_المكاتبة,العدد=@العدد,تعليق=@تعليق,مدير_القسم=@مدير_القسم where ID=@ID", sqlCon);
+            SqlCommand sqlCmd = new SqlCommand("INSERT INTO TableHandAuth ( نوع_المكاتبة,اسم_موقع_المكاتبة,جنسية_الدبلوماسي,تاريخ_الأرشفة,تاريخ_توقيع_المكاتبة,العدد,تعليق,مدير_القسم,حالة_الارشفة,اسم_الجهة,رقم_الشهادة,اسم_صاحب_الشهادة,رقم_معاملة_القسم,الحالة) values (@نوع_المكاتبة,@اسم_موقع_المكاتبة,@جنسية_الدبلوماسي,@تاريخ_الأرشفة,@تاريخ_توقيع_المكاتبة,@العدد,@تعليق,@مدير_القسم,@حالة_الارشفة,@اسم_الجهة,@رقم_الشهادة,@اسم_صاحب_الشهادة,@رقم_معاملة_القسم,@الحالة);SELECT @@IDENTITY as lastid", sqlCon);
+            if (id != 1) sqlCmd = new SqlCommand("UPDATE TableHandAuth SET نوع_المكاتبة=@نوع_المكاتبة,اسم_موقع_المكاتبة=@اسم_موقع_المكاتبة,جنسية_الدبلوماسي=@جنسية_الدبلوماسي,تاريخ_الأرشفة=@تاريخ_الأرشفة,تاريخ_توقيع_المكاتبة=@تاريخ_توقيع_المكاتبة,العدد=@العدد,تعليق=@تعليق,مدير_القسم=@مدير_القسم,حالة_الارشفة=@حالة_الارشفة,اسم_الجهة=@اسم_الجهة,اسم_صاحب_الشهادة=@اسم_صاحب_الشهادة,رقم_الشهادة=@رقم_الشهادة,الحالة=@الحالة where ID=@ID", sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.Parameters.AddWithValue("@ID", id);
             sqlCmd.Parameters.AddWithValue("@نوع_المكاتبة", نوع_المكاتبة);
@@ -280,12 +282,15 @@ namespace PersAhwal
             sqlCmd.Parameters.AddWithValue("@جنسية_الدبلوماسي", جنسية_الدبلوماسي);
             sqlCmd.Parameters.AddWithValue("@تاريخ_توقيع_المكاتبة", تاريخ_توقيع_المكاتبة);
             sqlCmd.Parameters.AddWithValue("@العدد", العدد);
+            sqlCmd.Parameters.AddWithValue("@الحالة", docStatus);
+            sqlCmd.Parameters.AddWithValue("@رقم_معاملة_القسم", رقم_معاملة_القسم);
+            sqlCmd.Parameters.AddWithValue("@اسم_الجهة", اسم_الجهة.Text);
+            sqlCmd.Parameters.AddWithValue("@اسم_صاحب_الشهادة", اسم_صاحب_الشهادة.Text);
+            sqlCmd.Parameters.AddWithValue("@رقم_الشهادة", رقم_الشهادة.Text);
             sqlCmd.Parameters.AddWithValue("@تاريخ_الأرشفة", تاريخ_الأرشفة);
+            sqlCmd.Parameters.AddWithValue("@حالة_الارشفة", "مؤرشف نهائي");
 
-            if(تعليق.Text != "")
-                sqlCmd.Parameters.AddWithValue("@تعليق", التعليق);
-            else 
-                sqlCmd.Parameters.AddWithValue("@تعليق", التعليق + Environment.NewLine + " --------------"+ تاريخ_الأرشفة + "--------------- "+ Environment.NewLine+ تعليق.Text);
+            sqlCmd.Parameters.AddWithValue("@تعليق", تعليق.Text + Environment.NewLine + " --------------"+ تاريخ_الأرشفة + "--------------- "+ Environment.NewLine+ التعليقات_السابقة_Off.Text);
 
             sqlCmd.Parameters.AddWithValue("@مدير_القسم", مدير_القسم);
             
@@ -339,7 +344,7 @@ namespace PersAhwal
         private void CreatePic(string[] location, string id, string رقم_معاملة_القسم)
         {
 
-            for (int x = 0; x < imagecount; x++)
+            for (int x = picID; x < imagecount; x++)
             {
                 //MessageBox.Show(location[x]);
                 if (location[x] != "")
@@ -388,17 +393,19 @@ namespace PersAhwal
 
         private void حفظ_وإنهاء_الارشفة_Click(object sender, EventArgs e)
         {
-            string comment = "شهادة صحيحة";
-            var selectedOption = MessageBox.Show("", "هل الشهادة صحيحة؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (selectedOption == DialogResult.Yes)
+            string comment = "";
+            if (!اسم_الجهة.Enabled)
             {
-                comment = "شهادة صحيحة";
+                var selectedOption = MessageBox.Show("", "هل الشهادة صحيحة؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (selectedOption == DialogResult.Yes)
+                {
+                    docStatus = "شهادة صحيحة";
+                }
+                else if (selectedOption == DialogResult.No)
+                    docStatus = "مستند غير صحيح"; 
             }
-            else if (selectedOption == DialogResult.No)
-                comment = "مستند غير صحيح";
             if (اسم_الجهة.Text != "" && اسم_صاحب_الشهادة.Text != "" && رقم_الشهادة.Text != "")
             {
-                comment = "في انتظار تأكيد صحتها";
                 CreateMessageAuthentication(تاريخ_الأرشفة.Text, HijriDate, مدير_القسم.Text);
             }
             if (imagecount == 0)
@@ -604,12 +611,47 @@ namespace PersAhwal
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            Messid = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value.ToString());
+            
             
             if (dataGridView1.CurrentRow.Index != -1)
             {
+                Messid = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value.ToString());
                 gridFill = true;
                 fillInfo();
+                رقم_معاملة_القسم = dataGridView1.CurrentRow.Cells["رقم_معاملة_القسم"].Value.ToString();
+                FillDatafromGenArch("data2", Messid.ToString(), "TableHandAuth");
+                التعليقات_السابقة_Off.Text = تعليق.Text;
+                تعليق.Text = "";
+                حفظ_وإنهاء_الارشفة.Text = "تعديل وإنهاء الارشفة";
+            }
+            gridFill = false;
+            return;
+        }
+        
+        private void singleInfo()
+        {
+            
+            
+            if (dataGridView1.Rows.Count>1)
+            {
+                Messid = Convert.ToInt32(dataGridView1.Rows[0].Cells[0].Value.ToString());
+                gridFill = true;
+                if (allList is null) return;
+                foreach (Control control in panel1.Controls)
+                {
+                    for (int col = 0; col < allList.Length; col++)
+                    {
+                        if (control.Name == allList[col])
+                        {
+                            if (dataGridView1.Rows[0].Cells[allList[col]].Value.ToString() != "")
+                            {
+                                control.Text = dataGridView1.Rows[0].Cells[allList[col]].Value.ToString();
+                            }
+
+                        }
+                    }
+                }
+                رقم_معاملة_القسم = dataGridView1.Rows[0].Cells["رقم_معاملة_القسم"].Value.ToString();
                 FillDatafromGenArch("data2", Messid.ToString(), "TableHandAuth");
                 التعليقات_السابقة_Off.Text = تعليق.Text;
                 تعليق.Text = "";
@@ -629,6 +671,7 @@ namespace PersAhwal
             DataTable dtbl = new DataTable();
             sqlDa.Fill(dtbl);
             sqlCon.Close();
+            picID = 0;
             foreach (DataRow reader in dtbl.Rows)
             {
                 var name = reader["المستند"].ToString();
@@ -645,6 +688,7 @@ namespace PersAhwal
                     drawTempPics(NewFileName);
                 PathImages[imagecount] = NewFileName;
                 imagecount++;
+                picID++;
                 //System.Diagnostics.Process.Start(NewFileName);
             }
 
@@ -1046,6 +1090,7 @@ namespace PersAhwal
         private void button35_Click(object sender, EventArgs e)
         {
             اسم_الجهة.Enabled = اسم_صاحب_الشهادة.Enabled = رقم_الشهادة.Enabled = true;
+            docStatus = "في انتظار تأكيد صحتها";
         }
 
         private void txtSearch_TextChanged(object sender, EventArgs e)
@@ -1061,9 +1106,11 @@ namespace PersAhwal
                 bs.Filter = dataGridView1.Columns["رقم_معاملة_القسم"].HeaderText.ToString() + " LIKE '" + id + "'";
                 dataGridView1.DataSource = bs;
                 Console.WriteLine(id);
+                if (dataGridView1.Rows.Count == 2)
+                    singleInfo();
                 //ColorFulGrid9();
 
-                //MessageBox.Show(docID);
+                    //MessageBox.Show(docID);
             }
         }
 
@@ -1114,7 +1161,19 @@ namespace PersAhwal
                     //dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightPink;
                     countSaudi++;
                 }
-                
+                if (dataGridView1.Rows[i].Cells["الحالة"].Value.ToString() == "في انتظار تأكيد صحتها")
+                {
+                    // timerColor = false;
+                    dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightPink;
+                    
+                }
+                else if (dataGridView1.Rows[i].Cells["الحالة"].Value.ToString() == "مستند غير صحيح")
+                {
+                    // timerColor = false;
+                    dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.Red;
+                    
+                }
+
             }
             labDescribed.Text = "عدد (" + i.ToString() + ") مستند (" + countSudan.ToString() + "/"+ countSaudi.ToString()+")";
 
@@ -1137,5 +1196,13 @@ namespace PersAhwal
             نوع_المكاتبة_check = true;
         }
 
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start(pictureBox1.ImageLocation);
+            }
+            catch (Exception ex) { }
+        }
     }
 }

@@ -29,6 +29,10 @@ using System.Runtime.InteropServices.ComTypes;
 using DocumentFormat.OpenXml.Office2016.Drawing.Charts;
 using DocumentFormat.OpenXml.Bibliography;
 using SixLabors.ImageSharp.Drawing;
+using static Azure.Core.HttpHeader;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml;
+using OfficeOpenXml.Table.PivotTable;
 
 namespace PersAhwal
 {
@@ -184,6 +188,15 @@ namespace PersAhwal
         bool Realwork = false;
         string رقم_معاملة_القسم = "";
         string status = "Not Allowed";
+        string TableName = "";
+        string DateName = "";
+        string ArchName = "";
+        string ProTypeName = "";
+        string titleReport = "";
+        string totalCount = "";
+        string CountName = "";
+        string[] subInfoName;
+        int tablesCount = 1;
         public MainForm(string career, int id, string server, string Employee, string jobposition, string dataSource56, string dataSource57, string filepathIn, string filepathOut, string archFile, string formDataFile, bool pers_Peope, string gregorianDate, string hijriDate, string modelFiles, string modelForms, bool realwork)
         {
             InitializeComponent();
@@ -207,6 +220,7 @@ namespace PersAhwal
 
                 label2.Text = "نافذة قسم الأحوال الشخصية";
                 panel2.BackColor = System.Drawing.SystemColors.ButtonShadow;
+                ReportType.Items.Add("تقرير المأذونية الشهري");
 
             }
             else if (Server == "56")
@@ -280,7 +294,7 @@ namespace PersAhwal
                         control.BringToFront();
                     }
                 }
-                persbtn6.Visible = docCollectCombo.Visible = false;
+                persbtn6.Visible = persbtn9.Visible = docCollectCombo.Visible = false;
                 Combtn0.Location = new System.Drawing.Point(427, 402);
                 Combtn1.Location = new System.Drawing.Point(427, 402 + 39);
                 Combtn2.Location = new System.Drawing.Point(427, 402 + (39 * 2));
@@ -537,6 +551,19 @@ namespace PersAhwal
         //    return allList;
 
         //}
+
+        private void deleteRowsData()
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource57);
+            if (sqlCon.State == ConnectionState.Closed)
+
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter("deleteRowsData", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.StoredProcedure;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+        }
         private bool doubleCheckArch(string v1)
         {
             int index = Convert.ToInt32(v1.Split('/')[3]) - 1;
@@ -1245,7 +1272,7 @@ namespace PersAhwal
             queryDateList[8] = "select AppName,DocID,ArchivedState,DataInterType,GriDate from TableMarriage where GriDate=@GriDate and ArchivedState=N'مؤرشف نهائي'";
             queryDateList[9] = "select AppName,DocID,ArchivedState,DataInterType,GriDate from TableStudent where GriDate=@GriDate and ArchivedState=N'مؤرشف نهائي'";
             queryDateList[10] = "select AppName,DocID,ArchivedState,DataInterType,GriDate from TableVisaApp where GriDate=@GriDate and ArchivedState=N'مؤرشف نهائي'";
-            queryDateList[11] = "select DocNo,GriDate from TableHandAuth where GriDate=@GriDate";
+            queryDateList[11] = "select رقم_معاملة_القسم,تاريخ_الأرشفة,العدد from TableHandAuth where تاريخ_الأرشفة=@تاريخ_الأرشفة";
             queryDateList[12] = "select رقم_اذن_الدفن,التاريخ_الميلادي from TablePassAway where التاريخ_الميلادي=@التاريخ_الميلادي and حالة_الارشفة=N'مؤرشف نهائي'";
             queryDateList[13] = "select رقم_المعاملة,التاريخ_الميلادي from TableMerrageDoc where التاريخ_الميلادي=@التاريخ_الميلادي and حالة_الارشفة=N'مؤرشف نهائي'";
             queryDateList[14] = "select رقم_المعاملة,التاريخ_الميلادي from TableDivorce  where التاريخ_الميلادي=@التاريخ_الميلادي and حالة_الارشفة=N'مؤرشف نهائي'";
@@ -1787,7 +1814,7 @@ namespace PersAhwal
             monthS = Convert.ToInt16(YearMonthDayS[1]);
             dateS = Convert.ToInt16(YearMonthDayS[2]);
             DateTime dateValue = new DateTime(yearS, monthS, dateS);
-            string week = " and DATEPART(WEEK,GriDate) = ";
+            string week = "";
             //MessageBox.Show("dateFrom=" + dateFrom + " dateTo=" + dateTo.ToString() );
             int dayeofWeek = ((int)dateValue.DayOfWeek);
 
@@ -1841,7 +1868,21 @@ namespace PersAhwal
                 {
                     for (TableIndex = 1; TableIndex < 15; TableIndex++)
                     {
-                        SqlDataAdapter sqlDa1 = new SqlDataAdapter(queryDateList[TableIndex], sqlCon);
+                        
+                        
+                        //if (TableIndex == 4 || TableIndex == 6 || TableIndex > 11)
+                        //{
+                        //    week = " and DATEPART(WEEK,التاريخ_الميلادي) = " + monthReport.Text;
+                        //}
+                        //else 
+                        //    week = " and DATEPART(WEEK,GriDate) = " + monthReport.Text;
+
+                        //if (ReportType.SelectedIndex != 12) 
+                        //    week = "";
+                        
+                        SqlDataAdapter sqlDa1 = new SqlDataAdapter(queryDateList[TableIndex]+ week, sqlCon);
+
+
                         //Console.WriteLine(TableIndex);
                         if (TableIndex == 4 || TableIndex == 6 || TableIndex > 11)
                         {
@@ -1854,15 +1895,15 @@ namespace PersAhwal
                         else if (TableIndex == 11)
                         {
                             sqlDa1.SelectCommand.CommandType = CommandType.Text;
-                            sqlDa1.SelectCommand.Parameters.AddWithValue("@GriDate", CurrentDate);
+                            sqlDa1.SelectCommand.Parameters.AddWithValue("@تاريخ_الأرشفة", CurrentDate);
                             sqlDa1.Fill(dtbl2);
                             int AuthCount = 0;
                             foreach (DataRow row in dtbl2.Rows)
                             {
 
-                                if (row["DocNo"].ToString().All(char.IsDigit))
+                                if (row["العدد"].ToString().All(char.IsDigit))
                                 {
-                                    AuthCount = AuthCount + Convert.ToInt32(row["DocNo"].ToString());
+                                    AuthCount = AuthCount + Convert.ToInt32(row["العدد"].ToString());
                                 }
                             }
                             report1[TableIndex, d] = AuthCount;
@@ -2700,11 +2741,16 @@ namespace PersAhwal
                 }
                 catch (Exception ex) { return; }
             SqlDataAdapter sqlDa = new SqlDataAdapter(queryInfo, sqlCon);
-            sqlDa.SelectCommand.CommandType = CommandType.Text;
-            sqlDa.SelectCommand.Parameters.AddWithValue(column, "");
-            sqlDa.Fill(dataRowTable);
-            sqlCon.Close();
-            
+            try
+            {
+                sqlDa.SelectCommand.CommandType = CommandType.Text;
+                sqlDa.SelectCommand.Parameters.AddWithValue(column, "");
+                sqlDa.Fill(dataRowTable);
+                sqlCon.Close();
+            }
+            catch (Exception ex) {
+                MessageBox.Show(queryInfo);
+            }
             
             foreach (DataRow dataRow in dataRowTable.Rows)
             {
@@ -2738,38 +2784,42 @@ namespace PersAhwal
         }
 
 
-        private void CreateDurationReport(int[,] Report, string reportName)
+        private void CreateDurationReport(int[,] Report, string reportName, string title)
         {
-            int lengthRow = 3;
-            string title = "تقرير المعاملات لكل من شهر " + Monthorder(rep1[0, 0]) + " و" + Monthorder(rep1[1, 0]) + " و" + Monthorder(rep1[2, 0]) + " للعام " + yearReport.Text + "م" ;
-            if (ReportType.SelectedIndex == 8)
-            {
-                lengthRow = 16;
-                title = "تقرير المعاملات للعام " + yearReport.Text + "م";
-            }
+
+            //if (ReportType.SelectedIndex == 8)
+            //{
+            //    lengthRow = 16;
+            //    //title = "تقرير المعاملات للعام " + yearReport.Text + "م";
+            //}
             route = FilespathIn + @"\DailyReportCopy.docx";
             string ActiveCopy = FilespathOut + reportName;
+            
+
             System.IO.File.Copy(route, ActiveCopy);
             using (DocX document = DocX.Load(ActiveCopy))
             {
                 System.Globalization.CultureInfo TypeOfLanguage = new System.Globalization.CultureInfo("ar-SA");
                 InputLanguage.CurrentInputLanguage = InputLanguage.FromCulture(TypeOfLanguage);
-                string strHeader = "الرقم: " + ReportNo.Text + "     " + "التاريخ:" + GregorianDate + " م" + "     " + "الموافق: " + HijriDate + "هـ" +
+                string strHeader = "الرقم: " + ReportNo.Text + "     " + "           التاريخ:" + GregorianDate + " م" + "     " + "           الموافق: " + HijriDate + "هـ" +
                     Environment.NewLine + title;
                 document.InsertParagraph(strHeader)
                 .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
-                .FontSize(18d)
+                .FontSize(18d).Bold(true)   
                 .Alignment = Alignment.center;
-                int col = 8;
-                if (Server == "57") col = 16;
-                    var t = document.AddTable(2 + lengthRow, col);
-
+                int col = tablesCount + 1; 
+                
+                //MessageBox.Show(tablesCount.ToString() );
+                var t = document.AddTable(2 + preInfo.Items.Count, col);
+                if (Server == "56")
+                {
+                    t = document.AddTable(2+ preInfo.Items.Count, col);
+                }
                 if (Server == "57") {
                     
                     t.Design = TableDesign.TableGrid;
                     t.Alignment = Alignment.center;
-                    t.SetColumnWidth(15, 50);
-                    t.SetColumnWidth(14, 50);
+                    t.SetColumnWidth(14, 90);
                     t.SetColumnWidth(13, 50);
                     t.SetColumnWidth(12, 50);
                     t.SetColumnWidth(11, 50);
@@ -2792,37 +2842,35 @@ namespace PersAhwal
                     reportItems[4] = "إقرار كفالة أفراد أسرة";
                     reportItems[5] = "توكيل";
                     reportItems[6] = "إفادة للادلة الجنائية";
-                    reportItems[7] = "إفادة عدم ممانعة زواج";
-                    reportItems[8] = "إفادة تسجيل ببرنامج دراسي";
-                    reportItems[9] = "مذكرة لمنح تأشيرة";
-                    reportItems[10] = "التوثيق";
-                    reportItems[11] = "إذن دفن";
-                    reportItems[12] = "وثيقة زواج";
-                    reportItems[13] = "وثيقة طلاق";
-                    reportItems[14] = "مجموع المعاملات";
-
-                    t.Rows[0].Cells[0].Paragraphs[0].Append(reportItems[14]).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[0].Cells[1].Paragraphs[0].Append(reportItems[13]).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[0].Cells[2].Paragraphs[0].Append(reportItems[12]).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[0].Cells[3].Paragraphs[0].Append(reportItems[11]).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[0].Cells[4].Paragraphs[0].Append(reportItems[10]).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[0].Cells[5].Paragraphs[0].Append(reportItems[9]).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[0].Cells[6].Paragraphs[0].Append(reportItems[8]).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[0].Cells[7].Paragraphs[0].Append(reportItems[7]).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[0].Cells[8].Paragraphs[0].Append(reportItems[6]).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[0].Cells[9].Paragraphs[0].Append(reportItems[5]).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[0].Cells[10].Paragraphs[0].Append(reportItems[4]).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[0].Cells[11].Paragraphs[0].Append(reportItems[3]).FontSize(12d).Bold().Alignment = Alignment.center; //7 8
-                    t.Rows[0].Cells[12].Paragraphs[0].Append(reportItems[2]).FontSize(12d).Bold().Alignment = Alignment.center;//5
-                    t.Rows[0].Cells[13].Paragraphs[0].Append(reportItems[1]).FontSize(12d).Bold().Alignment = Alignment.center; //3
-                    t.Rows[0].Cells[14].Paragraphs[0].Append(reportItems[0]).FontSize(12d).Bold().Alignment = Alignment.center;//0 1 2 4 6 9
-                    t.Rows[0].Cells[15].Paragraphs[0].Append("الشهر").FontSize(12d).Bold().Alignment = Alignment.center;
+                    reportItems[7] = "إفادة عدم ممانعة زواج";                    
+                    reportItems[8] = "مذكرة لمنح تأشيرة";
+                    reportItems[9] = "التوثيق";
+                    reportItems[10] = "إذن دفن";
+                    reportItems[11] = "وثيقة زواج";
+                    reportItems[12] = "وثيقة طلاق";
+                    reportItems[13] = "مجموع المعاملات";
+                    
+                    t.Rows[0].Cells[0].Paragraphs[0].Append(reportItems[13]).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[0].Cells[1].Paragraphs[0].Append(reportItems[12]).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[0].Cells[2].Paragraphs[0].Append(reportItems[11]).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[0].Cells[3].Paragraphs[0].Append(reportItems[10]).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[0].Cells[4].Paragraphs[0].Append(reportItems[9]).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[0].Cells[5].Paragraphs[0].Append(reportItems[8]).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[0].Cells[6].Paragraphs[0].Append(reportItems[7]).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[0].Cells[7].Paragraphs[0].Append(reportItems[6]).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[0].Cells[8].Paragraphs[0].Append(reportItems[5]).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[0].Cells[9].Paragraphs[0].Append(reportItems[4]).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[0].Cells[10].Paragraphs[0].Append(reportItems[3]).FontSize(12d).Bold().Alignment = Alignment.center; //7 8
+                    t.Rows[0].Cells[11].Paragraphs[0].Append(reportItems[2]).FontSize(12d).Bold().Alignment = Alignment.center;//5
+                    t.Rows[0].Cells[12].Paragraphs[0].Append(reportItems[1]).FontSize(12d).Bold().Alignment = Alignment.center; //3
+                    t.Rows[0].Cells[13].Paragraphs[0].Append(reportItems[0]).FontSize(12d).Bold().Alignment = Alignment.center;//0 1 2 4 6 9
+                    t.Rows[0].Cells[14].Paragraphs[0].Append(CountName).FontSize(12d).Bold().Alignment = Alignment.center;
 
                     int AllSum = 0;
                     for (int c = 1; c < 15; c++)
                     {
                         AllSum = 0;
-                        for (int r = 0; r < lengthRow; r++)
+                        for (int r = 0; r < preInfo.Items.Count; r++)
                         {
                             AllSum = AllSum + rep1[r, c];
                         }
@@ -2831,7 +2879,7 @@ namespace PersAhwal
                     }
 
 
-                    for (int r = 0; r < lengthRow; r++)
+                    for (int r = 0; r < preInfo.Items.Count; r++)
                     {
                         AllSum = 0;
                         for (int c = 1; c < 15; c++)
@@ -2843,52 +2891,52 @@ namespace PersAhwal
 
                     }
 
-                    AllSum = 0;
-                    for (int c = 1; c < 15; c++)
+                    
+                    for (int c = 0; c < preInfo.Items.Count; c++)
                     {
-                        AllSum = AllSum + monthSumH[c];
+                        AllSum = AllSum + monthSumV[c];
                     }
 
 
                     int x = 0;
                     //for (int x = 0; x < 7; x++)
-                    for (int w = 0; w < lengthRow; w++)
+                    subInfoName[preInfo.Items.Count] = totalCount;
+                    monthSumV[preInfo.Items.Count] = AllSum;
+                    for (int w = 0; w <= preInfo.Items.Count; w++)
                     {
                         //Console.WriteLine(w.ToString() + "---- monthSumV " + monthSumV[w].ToString());
-                        t.Rows[w + 1].Cells[0].Paragraphs[0].Append(monthSumV[w].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                        t.Rows[w + 1].Cells[1].Paragraphs[0].Append(rep1[w, 14].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                        t.Rows[w + 1].Cells[2].Paragraphs[0].Append(rep1[w, 13].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                        t.Rows[w + 1].Cells[3].Paragraphs[0].Append(rep1[w, 12].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                        t.Rows[w + 1].Cells[4].Paragraphs[0].Append(rep1[w, 11].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                        t.Rows[w + 1].Cells[5].Paragraphs[0].Append(rep1[w, 10].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                        t.Rows[w + 1].Cells[6].Paragraphs[0].Append(rep1[w, 9].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                        t.Rows[w + 1].Cells[7].Paragraphs[0].Append(rep1[w, 8].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                        t.Rows[w + 1].Cells[8].Paragraphs[0].Append(rep1[w, 7].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                        t.Rows[w + 1].Cells[9].Paragraphs[0].Append(rep1[w, 6].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                        t.Rows[w + 1].Cells[10].Paragraphs[0].Append(rep1[w, 5].ToString()).FontSize(12d).Bold().Alignment = Alignment.center; //7 8
-                        t.Rows[w + 1].Cells[11].Paragraphs[0].Append(rep1[w, 4].ToString()).FontSize(12d).Bold().Alignment = Alignment.center; //7 8
-                        t.Rows[w + 1].Cells[12].Paragraphs[0].Append(rep1[w, 3].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;//5
-                        t.Rows[w + 1].Cells[13].Paragraphs[0].Append(rep1[w, 2].ToString()).FontSize(12d).Bold().Alignment = Alignment.center; //3
-                        t.Rows[w + 1].Cells[14].Paragraphs[0].Append(rep1[w, 1].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;//0 1 2 4 6 9
-                        t.Rows[w + 1].Cells[15].Paragraphs[0].Append(Monthorder(rep1[w, 0]).ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                        t.Rows[w + 1].Cells[0].Paragraphs[0].Append(monthSumV[w].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;                        
+                        t.Rows[w + 1].Cells[1].Paragraphs[0].Append(rep1[w, 13].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                        t.Rows[w + 1].Cells[2].Paragraphs[0].Append(rep1[w, 12].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                        t.Rows[w + 1].Cells[3].Paragraphs[0].Append(rep1[w, 11].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                        t.Rows[w + 1].Cells[4].Paragraphs[0].Append(rep1[w, 10].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                        t.Rows[w + 1].Cells[5].Paragraphs[0].Append(rep1[w, 9].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                        t.Rows[w + 1].Cells[6].Paragraphs[0].Append(rep1[w, 8].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                        t.Rows[w + 1].Cells[7].Paragraphs[0].Append(rep1[w, 7].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                        t.Rows[w + 1].Cells[8].Paragraphs[0].Append(rep1[w, 6].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                        t.Rows[w + 1].Cells[9].Paragraphs[0].Append(rep1[w, 5].ToString()).FontSize(12d).Bold().Alignment = Alignment.center; //7 8
+                        t.Rows[w + 1].Cells[10].Paragraphs[0].Append(rep1[w, 4].ToString()).FontSize(12d).Bold().Alignment = Alignment.center; //7 8
+                        t.Rows[w + 1].Cells[11].Paragraphs[0].Append(rep1[w, 3].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;//5
+                        t.Rows[w + 1].Cells[12].Paragraphs[0].Append(rep1[w, 2].ToString()).FontSize(12d).Bold().Alignment = Alignment.center; //3
+                        t.Rows[w + 1].Cells[13].Paragraphs[0].Append(rep1[w, 1].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;//0 1 2 4 6 9
+                        t.Rows[w + 1].Cells[14].Paragraphs[0].Append(subInfoName[w].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
                     }
-                    //int w = 4;
-                    t.Rows[lengthRow + 1].Cells[0].Paragraphs[0].Append(AllSum.ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[lengthRow + 1].Cells[1].Paragraphs[0].Append(monthSumH[14].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[lengthRow + 1].Cells[2].Paragraphs[0].Append(monthSumH[13].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[lengthRow + 1].Cells[3].Paragraphs[0].Append(monthSumH[12].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[lengthRow + 1].Cells[4].Paragraphs[0].Append(monthSumH[11].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[lengthRow + 1].Cells[5].Paragraphs[0].Append(monthSumH[10].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[lengthRow + 1].Cells[6].Paragraphs[0].Append(monthSumH[9].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[lengthRow + 1].Cells[7].Paragraphs[0].Append(monthSumH[8].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[lengthRow + 1].Cells[8].Paragraphs[0].Append(monthSumH[7].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[lengthRow + 1].Cells[9].Paragraphs[0].Append(monthSumH[6].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[lengthRow + 1].Cells[10].Paragraphs[0].Append(monthSumH[5].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[lengthRow + 1].Cells[11].Paragraphs[0].Append(monthSumH[4].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[lengthRow + 1].Cells[12].Paragraphs[0].Append(monthSumH[3].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[lengthRow + 1].Cells[13].Paragraphs[0].Append(monthSumH[2].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[lengthRow + 1].Cells[14].Paragraphs[0].Append(monthSumH[1].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[lengthRow + 1].Cells[15].Paragraphs[0].Append("إجمالي الشهور").FontSize(12d).Bold().Alignment = Alignment.center;
+                    //                    int w = 4;
+                    //t.Rows[preInfo.Items.Count + 1].Cells[0].Paragraphs[0].Append(AllSum.ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[preInfo.Items.Count + 1].Cells[1].Paragraphs[0].Append(monthSumH[13].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[preInfo.Items.Count + 1].Cells[2].Paragraphs[0].Append(monthSumH[12].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[preInfo.Items.Count + 1].Cells[3].Paragraphs[0].Append(monthSumH[11].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[preInfo.Items.Count + 1].Cells[4].Paragraphs[0].Append(monthSumH[10].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[preInfo.Items.Count + 1].Cells[5].Paragraphs[0].Append(monthSumH[9].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[preInfo.Items.Count + 1].Cells[6].Paragraphs[0].Append(monthSumH[8].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[preInfo.Items.Count + 1].Cells[7].Paragraphs[0].Append(monthSumH[7].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[preInfo.Items.Count + 1].Cells[8].Paragraphs[0].Append(monthSumH[6].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[preInfo.Items.Count + 1].Cells[9].Paragraphs[0].Append(monthSumH[5].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[preInfo.Items.Count + 1].Cells[10].Paragraphs[0].Append(monthSumH[4].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[preInfo.Items.Count + 1].Cells[11].Paragraphs[0].Append(monthSumH[3].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[preInfo.Items.Count + 1].Cells[12].Paragraphs[0].Append(monthSumH[2].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[preInfo.Items.Count + 1].Cells[13].Paragraphs[0].Append(monthSumH[1].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[preInfo.Items.Count + 1].Cells[14].Paragraphs[0].Append(totalCount).FontSize(12d).Bold().Alignment = Alignment.center;
                 }
                 else if (Server == "56")
                 {
@@ -2919,13 +2967,13 @@ namespace PersAhwal
                     t.Rows[0].Cells[4].Paragraphs[0].Append(reportItems[2]).FontSize(12d).Bold().Alignment = Alignment.center;
                     t.Rows[0].Cells[5].Paragraphs[0].Append(reportItems[1]).FontSize(12d).Bold().Alignment = Alignment.center;
                     t.Rows[0].Cells[6].Paragraphs[0].Append(reportItems[0]).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[0].Cells[7].Paragraphs[0].Append("الشهر").FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[0].Cells[7].Paragraphs[0].Append(CountName).FontSize(12d).Bold().Alignment = Alignment.center;
 
                     int AllSum = 0;
                     for (int c = 1; c < 7; c++)
                     {
                         AllSum = 0;
-                        for (int r = 0; r < lengthRow; r++)
+                        for (int r = 0; r < preInfo.Items.Count; r++)
                         {
                             AllSum = AllSum + rep1[r, c];
                         }
@@ -2934,7 +2982,7 @@ namespace PersAhwal
                     }
 
 
-                    for (int r = 0; r < lengthRow; r++)
+                    for (int r = 0; r < preInfo.Items.Count; r++)
                     {
                         AllSum = 0;
                         for (int c = 1; c < 7; c++)
@@ -2943,47 +2991,53 @@ namespace PersAhwal
                         }
 
                         monthSumV[r] = AllSum;
-
                     }
 
                     AllSum = 0;
-                    for (int c = 1; c < 7; c++)
+                    for (int c = 0; c < preInfo.Items.Count; c++)
                     {
-                        AllSum = AllSum + monthSumH[c];
+                        AllSum = AllSum + monthSumV[c];
                     }
+
+
                     int x = 0;
-                    for (int w = 0; w < lengthRow; w++)
+                    //for (int x = 0; x < 7; x++)
+                    subInfoName[preInfo.Items.Count] = totalCount;
+                    monthSumV[preInfo.Items.Count] = AllSum;
+
+                    
+                    for (int w = 0; w < preInfo.Items.Count; w++)
                     {
                         t.Rows[w + 1].Cells[0].Paragraphs[0].Append(monthSumV[w].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
                         t.Rows[w + 1].Cells[1].Paragraphs[0].Append(rep1[w, 6].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
                         t.Rows[w + 1].Cells[2].Paragraphs[0].Append(rep1[w, 5].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                        t.Rows[w + 1].Cells[3].Paragraphs[0].Append(rep1[w,4].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                        t.Rows[w + 1].Cells[3].Paragraphs[0].Append(rep1[w, 4].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
                         t.Rows[w + 1].Cells[4].Paragraphs[0].Append(rep1[w, 3].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
                         t.Rows[w + 1].Cells[5].Paragraphs[0].Append(rep1[w, 2].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
                         t.Rows[w + 1].Cells[6].Paragraphs[0].Append(rep1[w, 1].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                        t.Rows[w + 1].Cells[7].Paragraphs[0].Append(Monthorder(rep1[w, 0]).ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                        t.Rows[w + 1].Cells[7].Paragraphs[0].Append(subInfoName[w].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
                     }
 
-                    t.Rows[lengthRow + 1].Cells[0].Paragraphs[0].Append(AllSum.ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[lengthRow + 1].Cells[1].Paragraphs[0].Append(monthSumH[6].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[lengthRow + 1].Cells[2].Paragraphs[0].Append(monthSumH[5].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[lengthRow + 1].Cells[3].Paragraphs[0].Append(monthSumH[4].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[lengthRow + 1].Cells[4].Paragraphs[0].Append(monthSumH[3].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[lengthRow + 1].Cells[5].Paragraphs[0].Append(monthSumH[2].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[lengthRow + 1].Cells[6].Paragraphs[0].Append(monthSumH[1].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[lengthRow + 1].Cells[7].Paragraphs[0].Append("إجمالي الشهور").FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[preInfo.Items.Count + 1].Cells[0].Paragraphs[0].Append(AllSum.ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[preInfo.Items.Count + 1].Cells[1].Paragraphs[0].Append(monthSumH[6].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[preInfo.Items.Count + 1].Cells[2].Paragraphs[0].Append(monthSumH[5].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[preInfo.Items.Count + 1].Cells[3].Paragraphs[0].Append(monthSumH[4].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[preInfo.Items.Count + 1].Cells[4].Paragraphs[0].Append(monthSumH[3].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[preInfo.Items.Count + 1].Cells[5].Paragraphs[0].Append(monthSumH[2].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[preInfo.Items.Count + 1].Cells[6].Paragraphs[0].Append(monthSumH[1].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[preInfo.Items.Count + 1].Cells[7].Paragraphs[0].Append(totalCount).FontSize(12d).Bold().Alignment = Alignment.center;
                 }
 
 
 
                 var p = document.InsertParagraph(Environment.NewLine);
                 p.InsertTableAfterSelf(t);
-                string strAttvCo = Environment.NewLine + Environment.NewLine + attendedVC.Text + Environment.NewLine + "ع/ القنصل العام بالإنابة";
+                string strAttvCo = Environment.NewLine + Environment.NewLine + "      "+ attendedVC.Text+ "           " + Environment.NewLine + "      " + "ع/ القنصل العام بالإنابة           ";
                 var AttvCo = document.InsertParagraph(strAttvCo)
                     .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
                     .FontSize(20d)
                     .Bold()
-                    .Alignment = Alignment.center;
+                    .Alignment = Alignment.right;
 
                 document.Save();
                 Process.Start("WINWORD.EXE", ActiveCopy);
@@ -3119,10 +3173,12 @@ namespace PersAhwal
                 case 12:
                     return "ديسمبر";
                 default:
-                    return "يناير";
+                    return "";
 
             }
         }
+        
+        
 
         void SearchByName(string search)
         {
@@ -4142,16 +4198,17 @@ namespace PersAhwal
             yearReport.Width = 290;
             yearReport.Visible = button24.Visible = false;
             monthReport.Visible = button5.Visible = false;
-            switch (ReportType.SelectedIndex)
+            
+            switch (ReportType.Text)
             {
-                case 0:
+                case "إختر نوع التقرير":
                     ReportNo.Enabled = true;
                     attendedVC.Visible = true;
                     btnattendedVC.Enabled = true;
                     btnReportNo.Enabled = true;
                     ReportPanel.Height = 205;
                     break;
-                case 1:
+                case "تقرير اليوم":
                     yearReport.Visible = false;
                     button24.Visible = false;
                     button24.Enabled = false;
@@ -4161,12 +4218,9 @@ namespace PersAhwal
                     DailyList(GregorianDate);
                     if (totalrowsAffadivit > 0 || totalrowsAuth > 0)
                     {
-
                         PrintReport.Enabled = true;
                         PrintReport.Visible = true;
                         ReportPanel.Height = 205;
-
-
                     }
                     else
                     {
@@ -4187,12 +4241,11 @@ namespace PersAhwal
                         if (selectedOption == DialogResult.Yes)
                         {
                             parrtialAll = true;
+                            deleteRowsData();
                         }
-                        else if (selectedOption == DialogResult.No)
-                            parrtialAll = false;
                     }
                     break;
-                case 2:
+                case "تقرير يوم محدد":
                     yearReport.Visible = false;
                     button24.Text = "يوم:";
                     button24.Visible = true;
@@ -4205,7 +4258,7 @@ namespace PersAhwal
                     btnReportNo.Enabled = true;
                     ReportPanel.Height = 205;
                     break;
-                case 3:
+                case "تقرير محدد بفترة معينة":
                     yearReport.Visible = false;
                     button24.Text = "من:";
                     dateTimeFrom.Width = 113;
@@ -4215,116 +4268,13 @@ namespace PersAhwal
                     dateTimeTo.Visible = true;
                     ReportPanel.Height = 205;
                     break;
-                case 4:
-                    button24.Text = "السنة:";
-                    quorterS[0] = "-01-01-";
-                    quorterE[0] = "-01-31-";
-                    quorterS[1] = "-02-01-";
-                    quorterE[1] = "-02-29-";
-                    quorterS[2] = "-03-01-";
-                    quorterE[2] = "-03-31-";
-                    button24.Enabled = true;
-                    yearReport.Visible = false;
-                    ReportPanel.Height = 205;
-                    button24.Visible = true;
-                    yearReport.Visible = true;
-                    button28.Visible = false;
-                    dateTimeTo.Visible = false;
-                    break;
-                case 5:
-                    button24.Text = "السنة:";
-                    quorterS[0] = "-04-01-";
-                    quorterE[0] = "-04-30-";
-                    quorterS[1] = "-05-01-";
-                    quorterE[1] = "-05-31-";
-                    quorterS[2] = "-06-01-";
-                    quorterE[2] = "-06-30-";
-                    yearReport.Visible = false;
-                    button24.Enabled = true;
-                    button24.Visible = true;
-                    yearReport.Visible = true;
-                    button28.Visible = false;
-                    dateTimeTo.Visible = false;
-                    ReportPanel.Height = 205;
-                    break;
-                case 6:
-                    button24.Text = "السنة:";
-                    quorterS[0] = "-07-01-";
-                    quorterE[0] = "-07-31-";
-                    quorterS[1] = "-08-01-";
-                    quorterE[1] = "-08-31-";
-                    quorterS[2] = "-09-01-";
-                    quorterE[2] = "-09-30-";
-                    yearReport.Visible = false;
-                    button24.Enabled = true;
-                    button24.Visible = true;
-                    yearReport.Visible = true;
-                    button28.Visible = false;
-                    dateTimeTo.Visible = false;
-                    ReportPanel.Height = 205;
-                    break;
-                case 7:
-                    button24.Text = "السنة:";
-                    quorterS[0] = "-10-01-";
-                    quorterE[0] = "-10-30-";
-                    quorterS[1] = "-11-01-";
-                    quorterE[1] = "-11-30-";
-                    quorterS[2] = "-12-01-";
-                    quorterE[2] = "-12-31-";
-                    yearReport.Visible = false;
-                    button24.Enabled = true;
-                    button24.Visible = true;
-                    yearReport.Visible = true;
-                    button28.Visible = false;
-                    dateTimeTo.Visible = false;
-                    ReportPanel.Height = 205;
-                    break;
-                case 8:
-                    button24.Text = "السنة:";
-                    quorterS[0] = "-01-01-";
-                    quorterE[0] = "-01-31-";
-                    quorterS[1] = "-02-01-";
-                    quorterE[1] = "-02-29-";
-                    quorterS[2] = "-03-01-";
-                    quorterE[2] = "-03-31-";
-                    quorterS[3] = "-04-01-";
-                    quorterE[3] = "-04-30-";
-                    quorterS[4] = "-05-01-";
-                    quorterE[4] = "-05-31-";
-                    quorterS[5] = "-06-01-";
-                    quorterE[5] = "-06-30-";
-                    quorterS[6] = "-07-01-";
-                    quorterE[6] = "-07-31-";
-                    quorterS[7] = "-08-01-";
-                    quorterE[7] = "-08-31-";
-                    quorterS[8] = "-09-01-";
-                    quorterE[8] = "-09-30-";
-                    quorterS[9] = "-10-01-";
-                    quorterE[9] = "-10-30-";
-                    quorterS[10] = "-11-01-";
-                    quorterE[10] = "-11-30-";
-                    quorterS[11] = "-12-01-";
-                    quorterE[11] = "-12-31-";
-                    yearReport.Visible = false;
-                    button24.Enabled = true;
-                    button24.Visible = true;
-                    yearReport.Visible = true;
-                    button28.Visible = false;
-                    dateTimeTo.Visible = false;
-                    ReportPanel.Height = 205;
-                    break;
-                case 9:
+                //case 10:
+                //    fillDataGridReports();
+                //    btnReportSub.Visible = PrintReport.Visible = txtReportSub.Visible = true;
+                //    PrintReport.Text = "إضافة";
 
-                    reportpass.Visible = true;
-
-                    break;
-                case 10:
-                    //fillDataGridReports();
-                    //btnReportSub.Visible = PrintReport.Visible = txtReportSub.Visible = true;
-                    //PrintReport.Text = "إضافة";
-
-                    break;
-                case 11:
+                //    break;
+                case "تقرير المأذونية الشهري":
                     //تقرير المأذونية
                     yearReport.Width = 113;
                     monthReport.Items.Clear();
@@ -4336,19 +4286,44 @@ namespace PersAhwal
                     button24.Text = "الشهر";
                     
                     break;
-                case 12:
+                case "التقرير الاسبوعي":
                     //تقرير الاسبوع
-                    
+                    monthReport.Text = "إختر الاسبوع";
+                    yearReport.Width = 113;
+                    yearReport.Visible = button24.Visible = true;
+                    monthReport.Visible = button5.Visible = true;
+                    monthReport.Enabled = false;
+                    break;
+                case "تقرير ربع سنوي":
+                    //تقرير الاسبوع
+                    monthReport.Text = "إختر الربع";
+                    yearReport.Width = 113;
+                    yearReport.Visible = button24.Visible = true;
+                    monthReport.Visible = button5.Visible = true;
+                    monthReport.Enabled = false;
+                    break;
+                case "التقرير السنوي":
+                    //تقرير الاسبوع                    
+                    yearReport.Width = 290;
+                    yearReport.Visible = button24.Visible = true;
+                    monthReport.Visible = button5.Visible = false;
+                    monthReport.Enabled = false;
+                    break;
+                case "تقرير شهري":
+                    //تقرير الاسبوع
+                    monthReport.Text = "إختر الشهر";
+                    yearReport.Width = 113;
+                    yearReport.Visible = button24.Visible = true;
+                    monthReport.Visible = button5.Visible = true;
+                    monthReport.Enabled = false;
+                    break;
+                case "تقرير جميع الأعوام":
+                    if (Server == "57") 
+                        getReportsCalcs57(DataSource);
+                    else getReportsCalcs56(DataSource);
                     break;
             }
-            if (ReportType.SelectedIndex != 11)
-            {
-                fillYears(yearReport);
-                if (ReportType.SelectedIndex >= 4 && ReportType.SelectedIndex != 10)
-                {
-                    getDate();
-                }
-            }
+
         }
 
         private void insertDoc(string dataSource, string extn1, string DocName1, string messNo, string docType, byte[] buffer1)
@@ -4412,6 +4387,10 @@ namespace PersAhwal
                     {
                         fillDate(queryDateList[TableIndex], "التاريخ_الميلادي");                         
                     }
+                    else if (TableIndex == 11)
+                    {
+                        fillDate(queryDateList[TableIndex], "تاريخ_الأرشفة");                        
+                    }   
                     else 
                     {
                         fillDate(queryDateList[TableIndex], "GriDate");                        
@@ -4542,9 +4521,10 @@ namespace PersAhwal
 
                 if (rowFound)
                 {
+                    ReportName2 = "Report2" + DateTime.Now.ToString("mmss") + ".docx";
                     while (File.Exists(ReportName2))
                         ReportName2 = "Report2" + DateTime.Now.ToString("mmss") + ".docx";
-                    CreateDurationReport(rep1, ReportName2);
+                    CreateDurationReport(rep1, ReportName2, titleReport);
 
                 }
                 totalRowDuration = 0;
@@ -4570,7 +4550,8 @@ namespace PersAhwal
                     }
                 }
             }
-            ReportPanel.Height = 36;
+            ReportType.SelectedIndex = 0;
+            ReportPanel.Visible = false;
         }
         
         private void IqrarBox_SelectedIndexChanged_1(object sender, EventArgs e)
@@ -4926,6 +4907,28 @@ namespace PersAhwal
                 }
                 catch (Exception ex) { }            
         }
+        
+        private void fillDuration(ComboBox combo, string year, string duration)
+        {
+            combo.Items.Clear();
+            string query = "select distinct DATEpart("+ duration+", التاريخ) ,DATEpart(" + duration+", التاريخ) as duration from TableGeneralArch where DATEpart(year, التاريخ) = " + year+" order by DATEpart("+ duration+", التاريخ) desc";
+            SqlConnection Con = new SqlConnection(DataSource);
+            if (Con.State == ConnectionState.Closed)
+                try
+                {
+                    Con.Open();
+                    SqlDataAdapter sqlDa = new SqlDataAdapter(query, Con);
+                    sqlDa.SelectCommand.CommandType = CommandType.Text;
+                    DataTable dtbl2 = new DataTable();
+                    sqlDa.Fill(dtbl2);
+                    sqlCon.Close();
+                    foreach (DataRow dataRow in dtbl2.Rows)
+                    {
+                        combo.Items.Add(dataRow["duration"].ToString());                            
+                    }
+                }
+                catch (Exception ex) { }            
+        }
 
 
         private void flowLayoutPanel1_Paint(object sender, PaintEventArgs e)
@@ -4953,7 +4956,7 @@ namespace PersAhwal
             else ReportPanel.Visible = false;
         }
 
-        private void ViewArchShow(int Buttons, string Doc, string date, string AppName, string oldNew, int size)
+        private void ViewArchShow(int Buttons, string Doc, string ID, string date, string AppName, string oldNew, int size)
         {
             
             Button btnArchieve = new Button();
@@ -4961,7 +4964,8 @@ namespace PersAhwal
             btnArchieve.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             btnArchieve.Location = new System.Drawing.Point(4, 125);
             btnArchieve.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            btnArchieve.Name = DocA[Buttons].ToString()+"_"+ IDA[Buttons].ToString();
+            btnArchieve.Name = Doc+"_"+ IDA[Buttons].ToString();//DocM[x], GriDateM[x], AppNameM[x] + " عن طريق " + MandoubM[x],
+                                                                                     //btnArchieve.Name = DocA[Buttons].ToString()+"_"+ IDA[Buttons].ToString();//DocM[x], GriDateM[x], AppNameM[x] + " عن طريق " + MandoubM[x],
             btnArchieve.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             btnArchieve.Size = new System.Drawing.Size(568, 34 * size);
             btnArchieve.TabIndex = 512;
@@ -5005,9 +5009,20 @@ namespace PersAhwal
 
         private void pictureBox1_Click_1(object sender, EventArgs e)
         {
+            removeDupArch();
             fillNonArchInfo();
-
             
+        }
+        private void removeDupArch()
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter("removeDupArch", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.StoredProcedure;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
         }
 
         private void fillNonArchInfo()
@@ -5024,7 +5039,7 @@ namespace PersAhwal
                 for (int x = 0; x < A; x++)
                 {
 
-                    ViewArchShow(x, DocA[x], GriDateA[x], AppNameA[x], oldNewA[x], 1);
+                    ViewArchShow(x, DocA[x], IDA[A].ToString(), GriDateA[x], AppNameA[x], oldNewA[x], 1);
                 }
             }
             else if (A > 100)
@@ -6302,6 +6317,7 @@ namespace PersAhwal
 
         private void pictureBox3_Click(object sender, EventArgs e)
         {
+            removeDupArch(); 
             labelM.Text = "";
             foreach (Control control in flowLayoutPanel1.Controls)
             {
@@ -6312,7 +6328,7 @@ namespace PersAhwal
                 string strOldNew = "";
                 if (oldNewM[x] == "old") strOldNew = "-نسخة معدلة-";
 
-                ViewArchShow(x, DocM[x], GriDateM[x], AppNameM[x] + " عن طريق " + MandoubM[x], strOldNew, 2);
+                ViewArchShow(x, DocM[x], IDM[M].ToString(), GriDateM[x], AppNameM[x] + " عن طريق " + MandoubM[x], strOldNew, 2);
 
             }
             if (M <= 0) 
@@ -6596,13 +6612,45 @@ namespace PersAhwal
 
         private void yearReport_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (ReportType.SelectedIndex == 11)
+            if (ReportType.Text == "التقرير الاسبوعي")
             {
 
                 monthReport.Visible = button5.Visible = true;
-                
+                fillDuration(monthReport, yearReport.Text,"WEEK");
+                monthReport.Enabled = true;
+                return;
             }
-            else
+            else if (ReportType.Text == "تقرير شهري")
+            {
+                //MessageBox.Show(ReportType.Text);
+                monthReport.Visible = button5.Visible = true;
+                fillDuration(monthReport, yearReport.Text,"MONTH");
+                monthReport.Enabled = true;
+                return;
+            }
+            else if (ReportType.Text == "تقرير المأذونية الشهري")
+            {
+                monthReport.Enabled = true;
+                return;
+            }
+            else if (ReportType.Text == "تقرير ربع سنوي")
+            {
+                //MessageBox.Show(ReportType.Text);
+                monthReport.Visible = button5.Visible = true;
+                fillDuration(monthReport, yearReport.Text,"QUARTER");
+                monthReport.Enabled = true;
+                return;
+            }
+            else if (ReportType.Text == "التقرير السنوي")
+            {
+                //MessageBox.Show(ReportType.Text);
+                fillDuration(monthReport, yearReport.Text, "MONTH");
+                if (Server == "57")
+                    getReportsCalcs57(DataSource);
+                else getReportsCalcs56(DataSource);
+                return;
+            }
+            else if (ReportType.Text == "تقرير محدد بفترة معينة")
             {
 
                 bool rows = false;
@@ -7410,11 +7458,566 @@ namespace PersAhwal
 
         private void monthReport_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string ReportName1 = "Report1" + DateTime.Now.ToString("mmss") + ".docx";
-            CreateMarDivReport1(ReportName1, monthReport.SelectedIndex.ToString(),yearReport.Text);
-            string ReportName2 = "Report2" + DateTime.Now.ToString("mmss") + ".docx";
-            CreateMarDivReport2(ReportName2, monthReport.SelectedIndex.ToString(),yearReport.Text);
+            
+            if (ReportType.Text != "تقرير المأذونية الشهري") {
+                if (Server == "57")
+                    getReportsCalcs57(DataSource);
+                else getReportsCalcs56(DataSource);                
+            } else {
+                string ReportName1 = "Report1" + DateTime.Now.ToString("mmss") + ".docx";
+                CreateMarDivReport1(ReportName1, monthReport.SelectedIndex.ToString(), yearReport.Text);
+                string ReportName2 = "Report2" + DateTime.Now.ToString("mmss") + ".docx";
+                CreateMarDivReport2(ReportName2, monthReport.SelectedIndex.ToString(), yearReport.Text);
+            }
         }
+        private void getReportsCalcs57(string dataSource)
+        {
+            string query = "select TableName,DateName,ArchName from ReportsCalcs";
+            SqlConnection sqlCon = new SqlConnection(dataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable table = new DataTable();
+            sqlDa.Fill(table);
+            sqlCon.Close();
+            //MessageBox.Show(dataSource);
+            string subInfo = "";
+            foreach (DataRow dataRow in table.Rows)
+            {
+                TableName = dataRow["TableName"].ToString();
+                DateName = dataRow["DateName"].ToString();
+                ArchName = dataRow["ArchName"].ToString();                
+                if (TableName != "")
+                {
+                    rowFound = true;
+                    string dateInfo = "";
+                    if (ReportType.Text == "تقرير جميع الأعوام")
+                    {
+                        totalCount = "إجمالي السنوات";
+                        CountName = "السنة";
+                        //تحديد عدد الايام بالاسبوع
+                        if (tablesCount == 1)
+                        {
+                            subInfo = "select distinct DATEPART(year,التاريخ) as subInfo,التاريخ from TableGeneralArch order by DATEPART(year,التاريخ) ";
+                            getsubReportsAllYears(dataSource, subInfo);
+                            titleReport = "تقرير المعاملات خلال الفترة من العام " + preInfo.Items[0].ToString() + " وحتى العام " + preInfo.Items[preInfo.Items.Count-1].ToString();
+                            
+                        }
+                        for (int index = 0; index < preInfo.Items.Count; index++)
+                        {
+                            dateInfo = " and DATEPART(year," + DateName + ") = " + preInfo.Items[index].ToString();
+                            query = "select count(ID) as count from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
+                            rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
+                            Console.WriteLine(tablesCount.ToString() + "/" + index.ToString() + "-" + preInfo.Items[index].ToString() + "----------------perday-----------------" + rep1[index, tablesCount].ToString());
+                        }
+                        dateInfo = "";
+                        query = "select count(ID) as count from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
+
+                        dateInfo = " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                    }
+                    if (ReportType.Text == "التقرير السنوي")
+                    {
+                        totalCount = "إجمالي الشهور";
+                        CountName = "الشهر";
+                        //تحديد عدد الايام بالاسبوع
+                        if (tablesCount == 1)
+                        {
+                            subInfo = "select distinct DATEPART(month,التاريخ) as subInfo,التاريخ from TableGeneralArch where DATEPART(year,التاريخ) = " + yearReport.Text + " order by DATEPART(month,التاريخ) ";
+                            getsubReportsYear(dataSource, subInfo);
+                            titleReport = "تقرير المعاملات للعام ) " + yearReport.Text + "( خلال الفترة من شهر " + Monthorder(Convert.ToInt32(preInfo.Items[0].ToString())) + " وحتى " + Monthorder(Convert.ToInt32(preInfo.Items[preInfo.Items.Count-1].ToString()));
+                            
+                        }
+                        for (int index = 0; index < preInfo.Items.Count; index++)
+                        {
+                            dateInfo = " and DATEPART(month," + DateName + ") = " + preInfo.Items[index].ToString() + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                            query = "select count(ID) as count from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
+                            rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
+                            try
+                            {
+                                Console.WriteLine(tablesCount.ToString() + "/" + index.ToString() + "-" + preInfo.Items[index].ToString() + "----------------perday-----------------" + rep1[index, tablesCount].ToString());
+                            }
+                            catch (Exception ex) { }
+                        }
+                        dateInfo = " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                        query = "select count(ID) as count from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
+
+                        dateInfo = " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                    }
+                    else if (ReportType.Text == "تقرير ربع سنوي")
+                    {
+                        totalCount = "إجمالي الشهور";
+                        CountName = "الشهر";
+                        //تحديد عدد الايام بالاسبوع
+                        if (tablesCount == 1)
+                        {
+                            subInfo = "select distinct DATEPART(month,التاريخ) as subInfo,التاريخ from TableGeneralArch where DATEPART(QUARTER,التاريخ) = " + monthReport.Text + " and DATEPART(year,التاريخ) = " + yearReport.Text + " order by DATEPART(month,التاريخ) ";
+                            getsubReportsYear(dataSource, subInfo);
+
+                        }
+                        for (int index = 0; index < preInfo.Items.Count; index++)
+                        {
+                            dateInfo = " and DATEPART(month," + DateName + ") = " + preInfo.Items[index].ToString() + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                            query = "select count(ID) as count from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
+                            rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
+                            Console.WriteLine(tablesCount.ToString() + "/" + index.ToString() + "-" + preInfo.Items[index].ToString() + "----------------perday-----------------" + rep1[index, tablesCount].ToString());
+                        }
+                        dateInfo = " and DATEPART(QUARTER," + DateName + ") = " + (monthReport.SelectedIndex + 1).ToString() + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                        query = "select count(ID) as count from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
+
+                    }
+                    else if (ReportType.Text == "تقرير شهري")
+                    {
+                        totalCount = "إجمالي الاسايبع";
+                        CountName = "الاسبوع";
+                        //تحديد عدد الايام بالاسبوع
+                        if (tablesCount == 1)
+                        {
+                            subInfo = "select distinct DATEPART(week,التاريخ) as subInfo,التاريخ from TableGeneralArch where DATEPART(month,التاريخ) = " + monthReport.Text + " and DATEPART(year,التاريخ) = " + yearReport.Text + " order by DATEPART(week,التاريخ) ";
+                            getsubReportsMonth(dataSource, subInfo);
+
+                        }
+                        for (int index = 0; index < preInfo.Items.Count; index++)
+                        {
+                            dateInfo = " and DATEPART(week," + DateName + ") = " + preInfo.Items[index].ToString() + " and DATEPART(month," + DateName + ") = " + monthReport.Text + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                            query = "select count(ID) as count from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
+                            rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
+                            Console.WriteLine(tablesCount.ToString() + "/"+ index.ToString()+"-" + preInfo.Items[index].ToString() + "----------------perday-----------------" + rep1[index, tablesCount].ToString());
+                        }                        
+                        dateInfo = " and DATEPART(MONTH," + DateName + ") = " + (monthReport.SelectedIndex + 1).ToString() + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                        query = "select count(ID) as count from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
+                    }
+                    else if (ReportType.Text == "التقرير الاسبوعي")
+                    {
+                        totalCount = "إجمالي الايام";
+                        CountName = "اليوم";
+                        //تحديد عدد الايام بالاسبوع
+                        if (tablesCount == 1)
+                        {
+                            subInfo = "select distinct DATEPART(day,التاريخ) as subInfo,التاريخ from TableGeneralArch where DATEPART(WEEK,التاريخ) = " + monthReport.Text + " and DATEPART(year,التاريخ) = " + yearReport.Text + " order by DATEPART(day,التاريخ) ";
+                            getsubReportWeek(dataSource, subInfo);
+                            
+                        }
+                        for (int index = 0; index < preInfo.Items.Count; index++)
+                        {
+                            dateInfo = " and DATEPART(day," + DateName + ") = " + preInfo.Items[index].ToString() + " and DATEPART(WEEK," + DateName + ") = " + monthReport.Text + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                            query = "select count(ID) as count from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
+                            rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
+                            Console.WriteLine(preInfo.Items[index].ToString() + "----------------perday-----------------" + rep1[index, tablesCount].ToString());
+                        }
+                        dateInfo = " and DATEPART(WEEK," + DateName + ") = " + monthReport.Text + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                    }
+                    query = "select count(ID) as count from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
+                    
+                    try
+                    {
+                        rep1[preInfo.Items.Count, tablesCount] = getcountReportsCalcs(dataSource, query);
+                        Console.WriteLine(preInfo.Items[preInfo.Items.Count].ToString() + "----------------total-----------------" + rep1[preInfo.Items.Count - 1, tablesCount].ToString());
+
+                    }
+                    catch (Exception ex) { }
+                    tablesCount++;
+                    //MessageBox.Show(tablesCount.ToString());
+                }
+                //if(tablesCount == 3) return;
+            }
+            if (tablesCount>1)
+            {
+
+                PrintReport.Enabled = true;
+                PrintReport.Visible = true;
+                ReportPanel.Height = 205;
+
+            }
+            else
+            {
+                PrintReport.Enabled = false;
+                PrintReport.Visible = false;
+                ReportPanel.Height = 42;
+                MessageBox.Show("لا يوجد قائمة بالتاريخ المحدد");
+            }
+        }
+        
+        private void getReportsCalcs56(string dataSource)
+        {
+            string query = "select TableName,DateName,ProTypeName from ReportsCalcs";
+            SqlConnection sqlCon = new SqlConnection(dataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable table = new DataTable();
+            sqlDa.Fill(table);
+            sqlCon.Close();
+            //MessageBox.Show(dataSource);
+            string subInfo = "";
+            foreach (DataRow dataRow in table.Rows)
+            {
+                TableName = dataRow["TableName"].ToString();
+                DateName = dataRow["DateName"].ToString();
+                ProTypeName = dataRow["ProTypeName"].ToString();                
+                if (TableName != "")
+                {
+                    rowFound = true;
+                    string dateInfo = "";
+                    if (ReportType.Text == "تقرير جميع الأعوام")
+                    {
+                        totalCount = "إجمالي السنوات";
+                        CountName = "السنة";
+                        //تحديد عدد الايام بالاسبوع
+                        if (tablesCount == 1)
+                        {
+                            subInfo = "select distinct DATEPART(year,التاريخ) as subInfo,التاريخ from TableGeneralArch order by DATEPART(year,التاريخ) ";
+                            getsubReportsAllYears(dataSource, subInfo);
+                            titleReport = "تقرير المعاملات خلال الفترة من العام " + preInfo.Items[0].ToString() + " وحتى العام " + preInfo.Items[preInfo.Items.Count-1].ToString();
+                            
+                        }
+                        for (int index = 0; index < preInfo.Items.Count; index++)
+                        {
+                            dateInfo = " and DATEPART(year," + DateName + ") = " + preInfo.Items[index].ToString();
+                            query = "select count(ID) as count from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
+                            rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
+                            Console.WriteLine(tablesCount.ToString() + "/" + index.ToString() + "-" + preInfo.Items[index].ToString() + "----------------perday-----------------" + rep1[index, tablesCount].ToString());
+                        }
+                        dateInfo = "";
+                        query = "select count(ID) as count from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
+
+                        dateInfo = " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                    }
+                    if (ReportType.Text == "التقرير السنوي")
+                    {
+                        totalCount = "إجمالي الشهور";
+                        CountName = "الشهر";
+                        //تحديد عدد الايام بالاسبوع
+                        if (tablesCount == 1)
+                        {
+                            subInfo = "select distinct DATEPART(month,التاريخ) as subInfo,التاريخ from TableGeneralArch where DATEPART(year,التاريخ) = " + yearReport.Text + " order by DATEPART(month,التاريخ) ";
+                            getsubReportsYear(dataSource, subInfo);
+                            titleReport = "تقرير المعاملات للعام ) " + yearReport.Text + "( خلال الفترة من شهر " + Monthorder(Convert.ToInt32(preInfo.Items[0].ToString())) + " وحتى " + Monthorder(Convert.ToInt32(preInfo.Items[preInfo.Items.Count-1].ToString()));
+                            
+                        }
+                        for (int index = 0; index < preInfo.Items.Count; index++)
+                        {
+                            dateInfo = " and DATEPART(month," + DateName + ") = " + preInfo.Items[index].ToString() + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                            query = "select count(ID) as count from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
+                            rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
+                            try
+                            {
+                                Console.WriteLine(tablesCount.ToString() + "/" + index.ToString() + "-" + preInfo.Items[index].ToString() + "----------------perday-----------------" + rep1[index, tablesCount].ToString());
+                            }
+                            catch (Exception ex) { }
+                        }
+                        dateInfo = " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                        query = "select count(ID) as count from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
+
+                        dateInfo = " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                    }
+                    else if (ReportType.Text == "تقرير ربع سنوي")
+                    {
+                        totalCount = "إجمالي الشهور";
+                        CountName = "الشهر";
+                        //تحديد عدد الايام بالاسبوع
+                        if (tablesCount == 1)
+                        {
+                            subInfo = "select distinct DATEPART(month,التاريخ) as subInfo,التاريخ from TableGeneralArch where DATEPART(QUARTER,التاريخ) = " + monthReport.Text + " and DATEPART(year,التاريخ) = " + yearReport.Text + " order by DATEPART(month,التاريخ) ";
+                            getsubReportsYear(dataSource, subInfo);
+
+                        }
+                        for (int index = 0; index < preInfo.Items.Count; index++)
+                        {
+                            dateInfo = " and DATEPART(month," + DateName + ") = " + preInfo.Items[index].ToString() + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                            query = "select count(ID) as count from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
+                            rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
+                            Console.WriteLine(tablesCount.ToString() + "/" + index.ToString() + "-" + preInfo.Items[index].ToString() + "----------------perday-----------------" + rep1[index, tablesCount].ToString());
+                        }
+                        dateInfo = " and DATEPART(QUARTER," + DateName + ") = " + (monthReport.SelectedIndex + 1).ToString() + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                        query = "select count(ID) as count from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
+
+                    }
+                    else if (ReportType.Text == "تقرير شهري")
+                    {
+                        totalCount = "إجمالي الاسايبع";
+                        CountName = "الاسبوع";
+                        //تحديد عدد الايام بالاسبوع
+                        if (tablesCount == 1)
+                        {
+                            subInfo = "select distinct DATEPART(week,التاريخ) as subInfo,التاريخ from TableGeneralArch where DATEPART(month,التاريخ) = " + monthReport.Text + " and DATEPART(year,التاريخ) = " + yearReport.Text + " order by DATEPART(week,التاريخ) ";
+                            getsubReportsMonth(dataSource, subInfo);
+
+                        }
+                        for (int index = 0; index < preInfo.Items.Count; index++)
+                        {
+                            dateInfo = " and DATEPART(week," + DateName + ") = " + preInfo.Items[index].ToString() + " and DATEPART(month," + DateName + ") = " + monthReport.Text + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                            query = "select count(ID) as count from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
+                            rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
+                            Console.WriteLine(tablesCount.ToString() + "/"+ index.ToString()+"-" + preInfo.Items[index].ToString() + "----------------perday-----------------" + rep1[index, tablesCount].ToString());
+                        }                        
+                        dateInfo = " and DATEPART(MONTH," + DateName + ") = " + (monthReport.SelectedIndex + 1).ToString() + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                        query = "select count(ID) as count from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
+                    }
+                    else if (ReportType.Text == "التقرير الاسبوعي")
+                    {
+                        totalCount = "إجمالي الايام";
+                        CountName = "اليوم";
+                        //تحديد عدد الايام بالاسبوع
+                        if (tablesCount == 1)
+                        {
+                            subInfo = "select distinct DATEPART(day,التاريخ) as subInfo,التاريخ from TableGeneralArch where DATEPART(WEEK,التاريخ) = " + monthReport.Text + " and DATEPART(year,التاريخ) = " + yearReport.Text + " order by DATEPART(day,التاريخ) ";
+                            getsubReportWeek(dataSource, subInfo);
+                            
+                        }
+                        for (int index = 0; index < preInfo.Items.Count; index++)
+                        {
+                            dateInfo = " and DATEPART(day," + DateName + ") = " + preInfo.Items[index].ToString() + " and DATEPART(WEEK," + DateName + ") = " + monthReport.Text + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                            query = "select count(ID) as count from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
+                            rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
+                            Console.WriteLine(preInfo.Items[index].ToString() + "----------------perday-----------------" + rep1[index, tablesCount].ToString());
+                        }
+                        dateInfo = " and DATEPART(WEEK," + DateName + ") = " + monthReport.Text + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                    }
+                    query = "select count(ID) as count from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
+                    
+                    try
+                    {
+                        rep1[preInfo.Items.Count, tablesCount] = getcountReportsCalcs(dataSource, query);
+                        Console.WriteLine(preInfo.Items[preInfo.Items.Count].ToString() + "----------------total-----------------" + rep1[preInfo.Items.Count - 1, tablesCount].ToString());
+
+                    }
+                    catch (Exception ex) { }
+                    tablesCount++;
+                    //MessageBox.Show(tablesCount.ToString());
+                }
+                //if(tablesCount == 3) return;
+            }
+            if (tablesCount>1)
+            {
+
+                PrintReport.Enabled = true;
+                PrintReport.Visible = true;
+                ReportPanel.Height = 205;
+
+            }
+            else
+            {
+                PrintReport.Enabled = false;
+                PrintReport.Visible = false;
+                ReportPanel.Height = 42;
+                MessageBox.Show("لا يوجد قائمة بالتاريخ المحدد");
+            }
+        }
+        
+        private void getsubReportWeek(string dataSource,string query)
+        {
+            Console.WriteLine(query);
+            SqlConnection sqlCon = new SqlConnection(dataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable table = new DataTable();
+            sqlDa.Fill(table);
+            sqlCon.Close();
+            int index = 0;
+            preInfo.Items.Clear();
+            string start = "";
+            string end = "";
+            subInfoName = new string[table.Rows.Count+1];
+            foreach (DataRow dataRow in table.Rows)
+            {
+                bool found = false;
+                for (int x = 0; x < preInfo.Items.Count; x++) {
+                    if (preInfo.Items[x].ToString() == dataRow["subInfo"].ToString())
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                {
+                    preInfo.Items.Add(dataRow["subInfo"].ToString());
+
+                    //rep1[index, 0] = Convert.ToInt32(dataRow["subInfo"].ToString());
+                    if (index == 0) start = alterDate(dataRow["التاريخ"].ToString());
+                    if (dataRow["التاريخ"].ToString() != "") end = alterDate(dataRow["التاريخ"].ToString());
+                    subInfoName[index] = alterDate(dataRow["التاريخ"].ToString());
+                    index++;
+                }
+            }
+            titleReport = "تقرير المعاملات للاسبوع رقم )" + monthReport.Text + " (  خلال الفترة من " + start + " وحتى "+ end;            
+        }
+        private void getsubReportsMonth(string dataSource,string query)
+        {
+            Console.WriteLine(query);
+            SqlConnection sqlCon = new SqlConnection(dataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable table = new DataTable();
+            sqlDa.Fill(table);
+            sqlCon.Close();
+            int index = 0;
+            preInfo.Items.Clear();
+            string start = "";
+            string end = "";
+            subInfoName = new string[table.Rows.Count];
+            foreach (DataRow dataRow in table.Rows)
+            {
+                bool found = false;
+                for (int x = 0; x < preInfo.Items.Count; x++) {
+                    if (preInfo.Items[x].ToString() == dataRow["subInfo"].ToString())
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                {
+                    preInfo.Items.Add(dataRow["subInfo"].ToString());
+                    if (index == 0) start = alterDate(dataRow["التاريخ"].ToString());
+                    if (dataRow["التاريخ"].ToString() != "") end = alterDate(dataRow["التاريخ"].ToString());
+
+                    subInfoName[index] = weekOrder(index);
+                    index++;
+                }
+            }
+            titleReport = "تقرير المعاملات لشهر ) " + Monthorder(Convert.ToInt32(monthReport.Text)) + "( خلال الفترة من " + start + " وحتى " + end;
+        }
+        private void getsubReportsAllYears(string dataSource,string query)
+        {
+            Console.WriteLine(query);
+            SqlConnection sqlCon = new SqlConnection(dataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable table = new DataTable();
+            sqlDa.Fill(table);
+            sqlCon.Close();
+            int index = 0;
+            preInfo.Items.Clear();
+            string start = "";
+            string end = "";
+            subInfoName = new string[table.Rows.Count];
+            foreach (DataRow dataRow in table.Rows)
+            {
+                bool found = false;
+                for (int x = 0; x < preInfo.Items.Count; x++) {
+                    if (preInfo.Items[x].ToString() == dataRow["subInfo"].ToString())
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                {
+                    //MessageBox.Show(dataRow["subInfo"].ToString());
+                    preInfo.Items.Add(dataRow["subInfo"].ToString());
+                    if (index == 0) 
+                        start = alterDate(dataRow["التاريخ"].ToString());
+                    if (dataRow["التاريخ"].ToString() != "") 
+                        end = alterDate(dataRow["التاريخ"].ToString());
+
+                    subInfoName[index] = dataRow["subInfo"].ToString();
+                    index++;
+                }
+            }
+            
+        }
+        private void getsubReportsYear(string dataSource,string query)
+        {
+            Console.WriteLine(query);
+            SqlConnection sqlCon = new SqlConnection(dataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable table = new DataTable();
+            sqlDa.Fill(table);
+            sqlCon.Close();
+            int index = 0;
+            preInfo.Items.Clear();
+            string start = "";
+            string end = "";
+            subInfoName = new string[table.Rows.Count];
+            foreach (DataRow dataRow in table.Rows)
+            {
+                bool found = false;
+                for (int x = 0; x < preInfo.Items.Count; x++) {
+                    if (preInfo.Items[x].ToString() == dataRow["subInfo"].ToString())
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                {
+                    //MessageBox.Show(dataRow["subInfo"].ToString());
+                    preInfo.Items.Add(dataRow["subInfo"].ToString());
+                    if (index == 0) 
+                        start = alterDate(dataRow["التاريخ"].ToString());
+                    if (dataRow["التاريخ"].ToString() != "") 
+                        end = alterDate(dataRow["التاريخ"].ToString());
+
+                    subInfoName[index] = Monthorder(Convert.ToInt32(dataRow["subInfo"].ToString()));
+                    index++;
+                }
+            }
+            try
+            {
+                titleReport = "تقرير المعاملات للربع ) " + weekorder(Convert.ToInt32(monthReport.Text) - 1) + "( خلال الفترة من " + start + " وحتى " + end;
+            }
+            catch (Exception ex) { }
+        }
+
+        private string alterDate(string text) {
+            try
+            {
+                return text.Split('-')[2] + "-" + text.Split('-')[0] + "-" + text.Split('-')[1];
+            }
+            catch (Exception ex)
+            {
+
+                return "";
+            }
+
+        }
+        
+        private string weekOrder(int count) {
+            switch (count) {
+                case 0:
+                    return "الأول";
+                case 1:
+                    return "الثاني";
+                case 2:
+                    return "الثالث";
+                case 3:
+                    return "الرابع";
+                case 4:
+                    return "الخامس";                  
+            }
+            return "";
+        }
+        
+        private int getcountReportsCalcs(string dataSource,string query)
+        {
+            Console.WriteLine(query);
+            SqlConnection sqlCon = new SqlConnection(dataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable table = new DataTable();
+            sqlDa.Fill(table);
+            sqlCon.Close();
+            foreach (DataRow dataRow in table.Rows)
+            {
+                return Convert.ToInt32( dataRow["count"].ToString());
+            }
+            return 0;
+        }
+        
+        
 
         private void HandProcess_TextChanged(object sender, EventArgs e)
         {
@@ -7569,7 +8172,7 @@ namespace PersAhwal
                     }
                     catch (Exception ex) { return ; }
 
-                SqlDataAdapter sqlDa = new SqlDataAdapter("select * from  archives", sqlCon);
+                SqlDataAdapter sqlDa = new SqlDataAdapter("select * from  archives  order by DATEPART(year,docDate) desc,DATEPART(day,docDate) desc,DATEPART(month,docDate)  desc", sqlCon);
                 sqlDa.SelectCommand.CommandType = CommandType.Text;
                 DataTable dtbl = new DataTable();
                 sqlDa.Fill(dtbl);
@@ -7589,7 +8192,7 @@ namespace PersAhwal
                 //doubleCheckArch(dataRow["docID"].ToString());
                 if (Career == "موظف ارشفة" || dataRow["employName"].ToString().Contains(ConsulateEmployee.Text))
                 {
-                    if (dataRow["mandoubName"].ToString() == "")
+                    if (dataRow["mandoubName"].ToString() == "" && dataRow["appType"].ToString() == "حضور مباشرة إلى القنصلية")
                     {
                         oldNewA[A] = dataRow["appOldNew"].ToString();
                         
@@ -7603,7 +8206,7 @@ namespace PersAhwal
                             cuerrentRange++;
                         A++;
                     }
-                    else if (dataRow["mandoubName"].ToString() != "" && dataRow["appName"].ToString() != "" )
+                    else if (dataRow["mandoubName"].ToString() != "" && dataRow["appName"].ToString() != "" && dataRow["appType"].ToString() == "عن طريق أحد مندوبي القنصلية")
                     {
                         oldNewM[M] = dataRow["appOldNew"].ToString();
                         DocIDM[M] = dataRow["docID"].ToString();

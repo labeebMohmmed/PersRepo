@@ -1985,7 +1985,7 @@ namespace PersAhwal
                     وجهة_المعاملة.SelectedIndex = 0;
                 newFillComboBox1(نوع_الإجراء, DataSource, نوع_المعاملة.Text.Replace(" ","_"));
                 عنوان_المكاتبة.Items.Clear();
-
+                عنوان_المكاتبة.Items.Add(نوع_الإجراء.Text);
                 عنوان_المكاتبة.Items.Add(نوع_المعاملة.Text);
                 if (نوع_المعاملة.SelectedIndex == 2)
                 {
@@ -1999,7 +1999,7 @@ namespace PersAhwal
                 }
                 else تفيد_تشهد_off.Text = "";
                 عنوان_المكاتبة.SelectedIndex = 0;
-
+                
             }
         }
         private void newFillComboBox1(ComboBox combbox, string source, string colName)
@@ -2356,8 +2356,9 @@ namespace PersAhwal
             try
             {
                 Microsoft.Office.Interop.Word.Table table = oBDoc.Tables[index];
-                if (نوع_المعاملة.SelectedIndex > 1 && !libtnAdd1Vis)
-                { table.Delete(); return; }
+                if (!libtnAdd1Vis) return;
+                    //if (نوع_المعاملة.SelectedIndex > 1 && !libtnAdd1Vis)
+                //{ table.Delete(); return; }
 
                 table.Rows[1].Cells[1].Range.Text = "الرقم";
                 table.Rows[1].Cells[2].Range.Text = labl1.Text;
