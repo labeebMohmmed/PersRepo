@@ -37,6 +37,7 @@ namespace PersAhwal
         string[] colIDs = new string[100];
         string GregorianDate = "";
         string HijriDate = "";
+        string AuthTitle = "نائب قنصل";
         public Form7(int Atvc, int currentRow, string EmpName, string dataSource, string filepathIn, string filepathOut, string jobposition, string gregorianDate, string hijriDate)
         {
             InitializeComponent();
@@ -58,6 +59,23 @@ namespace PersAhwal
             if (jobposition.Contains("قنصل"))
                 btnEditID.Visible = deleteRow.Visible = true;
             else btnEditID.Visible = deleteRow.Visible = false;
+            
+        }
+        private void getTitle(string source, string empName)
+        {
+            string query = "select AuthenticType from TableUser where EmployeeName = N'" + empName + "'";
+            SqlConnection sqlCon = new SqlConnection(source);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                AuthTitle = dataRow["AuthenticType"].ToString();
+            }
         }
         private string loadRerNo(int id)
         {
@@ -697,26 +715,18 @@ namespace PersAhwal
                 BookAppPassSource.Text = مكان_الإصدار.Text;
                 if (AppType.CheckState == CheckState.Checked)
                 {
-                    if (النوع.CheckState == CheckState.Unchecked) BookAuthorization.Text = "أشهد أنا/" + AttendViceConsul.Text + " نائب قنصل بالقنصلية العامة لجمهورية السودان بجدة، بأن المذكور أعلاه قد حضر للقنصلية ووقع بتوقيعه على هذا الإقرار بعد تلاوته عليه وبعد أن فهم مضمونه ومحتواه. ";
-                    if (النوع.CheckState == CheckState.Checked) BookAuthorization.Text = "أشهد أنا/" + AttendViceConsul.Text + " نائب قنصل بالقنصلية العامة لجمهورية السودان بجدة، بأن المذكورة أعلاه قد حضرت للقنصلية ووقعت بتوقيعها على هذا الإقرار بعد تلاوته عليها وبعد أن فهمت مضمونه ومحتواه. ";
+                    if (النوع.CheckState == CheckState.Unchecked) BookAuthorization.Text = "أشهد أنا/" + AttendViceConsul.Text+ " "+AuthTitle + "  بالقنصلية العامة لجمهورية السودان بجدة، بأن المذكور أعلاه قد حضر للقنصلية ووقع بتوقيعه على هذا الإقرار بعد تلاوته عليه وبعد أن فهم مضمونه ومحتواه. ";
+                    if (النوع.CheckState == CheckState.Checked) BookAuthorization.Text = "أشهد أنا/" + AttendViceConsul.Text+" "+ AuthTitle + "  بالقنصلية العامة لجمهورية السودان بجدة، بأن المذكورة أعلاه قد حضرت للقنصلية ووقعت بتوقيعها على هذا الإقرار بعد تلاوته عليها وبعد أن فهمت مضمونه ومحتواه. ";
                 }
                 else
                 {
-                    string[] strmandoub = new string[2];
-                    strmandoub = mandoubName.Text.Split('-');
-                    if (strmandoub[1].Trim() != "القنصلية العامة لجمهورية السودان بجدة")
-                    {
-                        if (النوع.CheckState == CheckState.Unchecked) BookAuthorization.Text = "المواطن المذكور أعلاه حضر ووقع بتوقيعه على هذا الإقرار أمام مندوب جالية منطقة" + strmandoub[1] + " السيد/ " + strmandoub[0] + "، وذلك بموجب التفويض الممنوح له من القنصلية العامة، ";
-                        if (النوع.CheckState == CheckState.Checked) BookAuthorization.Text = "المواطنة المذكورة أعلاه حضرت ووقعت بتوقيعها على هذا الإقرار أمام مندوب جالية منطقة" + strmandoub[1] + " السيد/ " + strmandoub[0] + "، وذلك بموجب التفويض الممنوح له من القنصلية العامة، ";
-                    }
-                    else
-                    {
-                        if (النوع.CheckState == CheckState.Unchecked) BookAuthorization.Text = "المواطن المذكور أعلاه حضر ووقع بتوقيعه على هذا الإقرار أمام مندوب " + strmandoub[1] + " السيد/ " + strmandoub[0] + "، وذلك بموجب التفويض الممنوح له من القنصلية العامة، ";
-                        if (النوع.CheckState == CheckState.Checked) BookAuthorization.Text = "المواطنة المذكورة أعلاه حضرت ووقعت بتوقيعها على هذا الإقرار أمام مندوب " + strmandoub[1] + " السيد/ " + strmandoub[0] + "، وذلك بموجب التفويض الممنوح له من القنصلية العامة، ";
-                    }
-                    
+                    if (النوع.CheckState == CheckState.Unchecked)
+                        BookAuthorization.Text = "أشهد أنا/" + AttendViceConsul.Text + " " + AuthTitle + "  بالقنصلية العامة لجمهورية السودان بجدة، بأن المذكور أعلاه قد وقع بتوقيعه على هذا الإقرار بعد تلاوته عليه وبعد أن فهم مضمونه ومحتواه. ";
+                    if (النوع.CheckState == CheckState.Checked)
+                        BookAuthorization.Text = "أشهد أنا/" + AttendViceConsul.Text + " " + AuthTitle + "  بالقنصلية العامة لجمهورية السودان بجدة، بأن المذكورة أعلاه قد وقعت بتوقيعها على هذا الإقرار بعد تلاوته عليها وبعد أن فهمت مضمونه ومحتواه. ";
+
                 }
-                BookvConsul.Text = AttendViceConsul.Text;
+                BookvConsul.Text = AttendViceConsul.Text + Environment.NewLine + AuthTitle;
 
                 object rangeIqrarNo = BookIqrarNo;
                 object rangeGreData = BookGreData;
@@ -855,6 +865,7 @@ namespace PersAhwal
 
         private void btnSavePrint_Click_1(object sender, EventArgs e)
         {
+            getTitle(DataSource, AttendViceConsul.Text); 
             التاريخ_الميلادي.Text = GregorianDate;
             التاريخ_الهجري.Text = HijriDate; 
             
@@ -1370,6 +1381,11 @@ namespace PersAhwal
                 مكان_الإصدار_1.Text = row["مكان_الإصدار"].ToString();
                 النوع_1.Text = row["النوع"].ToString();
             }
+        }
+
+        private void AttendViceConsul_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            
         }
 
         private void button2_Click_1(object sender, EventArgs e)

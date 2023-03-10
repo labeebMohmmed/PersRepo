@@ -16,7 +16,10 @@ using static Azure.Core.HttpHeader;
 using System.Runtime.InteropServices;
 using Excel = Microsoft.Office.Interop.Excel;
 using OfficeOpenXml;
-
+using SixLabors.ImageSharp.Drawing;
+using System.Globalization;
+using System.Threading;
+using Word = Microsoft.Office.Interop.Word;
 namespace PersAhwal
 {
     public partial class Settings : Form
@@ -89,9 +92,11 @@ namespace PersAhwal
             else if (Server == "56")
                 DataSource = DataSource56;
             allList = getColList("TableAddContext");
-
+            detectCharacter1(DataSource);
+            detectCharacter2(DataSource);
+            fillSamplesCodes(DataSource);
+            //testFiles();
             NewSettings = newSettings;
-
             FilepathIn = filepathIn + @"\";
             FilepathOut = filepathOut;
             ArchFile = archFile;
@@ -106,28 +111,241 @@ namespace PersAhwal
                 }
             }
             fillSubComboBox(mainTypeAuth, DataSource, "AuthTypes", "TableListCombo", false);
-            //autoCompleteTextBox(newCombAuthType, DataSource, "AuthTypes", "TableListCombo");
             fillSubComboBox(mainTypeIqrar, DataSource, "ArabicGenIgrar", "TableListCombo", false);
             newFillComboBox2(subTypeIqrar, DataSource, mainTypeIqrar.SelectedIndex.ToString(), langIqrar.Text);
             AddRightColumn();
             if (colName != "")
             {
-                //MessageBox.Show(colName);
                 mainTypeAuth.SelectedIndex = Convert.ToInt32(colName.Split('-')[1]);
                 subTypeAuth.SelectedIndex = Convert.ToInt32(colName.Split('-')[0]);
-                //FillDataGridView("");
-                //flllPanelItemsboxes("ColName", colName);
             }
             Suffex_preffixList();
-            //for (int x = 0; x < mainTypeAuth.Items.Count; x++)
-            //{
-            //    sunInfo(mainTypeAuth.Items[x].ToString().Replace(" ", "_"), x);
-            //}
             System.Globalization.CultureInfo TypeOfLanguage = new System.Globalization.CultureInfo("ar-SA");
             InputLanguage.CurrentInputLanguage = InputLanguage.FromCulture(TypeOfLanguage);
             txtSearch.Select();
         }
 
+        private void testFiles()
+        {            
+            CultureInfo arSA = new CultureInfo("ar-SA");
+            arSA.DateTimeFormat.Calendar = new GregorianCalendar();
+            Thread.CurrentThread.CurrentCulture = arSA;
+            new System.Globalization.GregorianCalendar();
+
+
+
+            string[] serverfiles = Directory.GetFiles(@"\\192.168.100.100\Users\Public\Documents\ModelFiles - Copy (3)");
+            for (int i = 0; i < serverfiles.Length; i++)
+            {
+                MessageBox.Show(serverfiles[i]);
+                CreateAuth(serverfiles[i], @"D:\ArchiveFiles\" + i.ToString() + ".docx");
+                //var serverfileinfo = new FileInfo(serverfiles[i]);
+                //string serverfilename = serverfileinfo.Name;
+                //string serverLastWrite = serverfileinfo.LastWriteTime.ToShortTimeString();
+                //string localFile = FilespathIn + serverfilename;
+
+                //if (!File.Exists(localFile))
+                //{
+                //    System.IO.File.Copy(serverfiles[i], localFile);
+
+                //}
+                //else //if (File.Exists(localFile))
+                //{
+                //    //MessageBox.Show(serverfiles[i]);
+                //    //MessageBox.Show(localFile);
+
+                //    var localfileinfo = new FileInfo(localFile);
+                //    string localLastWrite = localfileinfo.LastWriteTime.ToShortTimeString();
+
+                //    //MessageBox.Show(serverLastWrite.Split(' ')[0] +"-" +localLastWrite.Split(' ')[0]);
+                //    if (serverLastWrite.Split(' ')[0] != localLastWrite.Split(' ')[0])
+                //    {
+
+                //        try
+                //        {
+                //            File.Delete(localFile);
+                //        }
+                //        catch (Exception ex) { Console.WriteLine("الملف يحتاج إلى معالجة " + localFile); }
+                //        System.IO.File.Copy(serverfiles[i], localFile);
+                //    }
+                //}
+            }
+
+
+        }
+        private void CreateAuth(string DocxInFile, string DocxOutFile)
+        {
+            object oBMiss = System.Reflection.Missing.Value;
+            Word.Application oBMicroWord = new Word.Application();
+            object objCurrentCopy = DocxInFile;
+            Word.Document oBDoc = oBMicroWord.Documents.Open(objCurrentCopy, oBMiss);
+            oBMicroWord.Selection.Find.ClearFormatting();
+            oBMicroWord.Selection.Find.Replacement.ClearFormatting();
+            object ParaAuthIDNo = "MarkOtherTitle";
+            try
+            {
+                Word.Range BookAuthIDNo = oBDoc.Bookmarks.get_Item(ref ParaAuthIDNo).Range;
+            
+            BookAuthIDNo.Text = "نائب قنصل";
+            object rangeAuthIDNo = BookAuthIDNo;
+            oBDoc.Bookmarks.Add("MarkOtherTitle", ref rangeAuthIDNo);
+            }
+            catch (Exception ex) {
+                MessageBox.Show(DocxInFile);
+                return;
+            }
+            oBDoc.SaveAs2(DocxOutFile);
+            oBDoc.Close(false, oBMiss);
+            oBMicroWord.Quit(false, false);
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(oBMicroWord);
+            System.Diagnostics.Process.Start(DocxOutFile);
+        }
+        private void detectCharacter1(string source)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource57);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return ; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT name FROM sys.columns WHERE object_id = OBJECT_ID('TableAuthRights')", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            foreach (DataRow row in dtbl.Rows)
+            {
+                string col = row["name"].ToString();
+                //MessageBox.Show(col);
+                if (col != "ID")
+                {
+                    sqlCon = new SqlConnection(DataSource57);
+                    try
+                    {
+                        if (sqlCon.State == ConnectionState.Closed)
+                            sqlCon.Open();
+                    }
+                    catch (Exception ex) { return; }
+                    sqlDa = new SqlDataAdapter("SELECT * FROM TableAuthRights", sqlCon);
+                    sqlDa.SelectCommand.CommandType = CommandType.Text;
+                    DataTable dtblcol = new DataTable();
+                    sqlDa.Fill(dtblcol);
+                    sqlCon.Close();
+                    foreach (DataRow rows in dtblcol.Rows)
+                    {
+                        //MessageBox.Show(rows[col].ToString());
+                        string[] words = rows[col].ToString().Split('،')[0].Split(' ');                        
+                        foreach (string str in words)
+                        {
+                            //MessageBox.Show(str);
+                            if (str.Contains("_")) continue;
+                            char[] strChar = str.ToCharArray();
+                            foreach (char charItem in strChar)
+                            {
+                                if (!char.IsLetter(charItem) && charItem != '_' && charItem != '('&& charItem != ')' && !str.Contains("Col"))
+                                {
+                                    //if (!str.Split('،')[0].Contains("_"))
+                                    //{
+                                    if (!checkchar(str)) 
+                                        insertChar(str);
+                                        //MessageBox.Show(str);
+                                        //break;
+                                    //}
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        private void detectCharacter2(string source)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource57);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT TextModel FROM TableAddContext", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtblcol = new DataTable();
+            sqlDa.Fill(dtblcol);
+            sqlCon.Close();
+            foreach (DataRow rows in dtblcol.Rows)
+            {
+                //MessageBox.Show(rows[col].ToString());
+                string[] words = rows["TextModel"].ToString().Split('،')[0].Split(' ');
+                foreach (string str in words)
+                {
+                    //MessageBox.Show(str);
+                    if (str.Contains("_")) continue;
+                    char[] strChar = str.ToCharArray();
+                    foreach (char charItem in strChar)
+                    {
+                        if (!char.IsLetter(charItem) && charItem != '_' && charItem != '(' && charItem != ')' && !str.Contains("Col"))
+                        {
+                            //if (!str.Split('،')[0].Contains("_"))
+                            //{
+                            if (!checkchar(str))
+                                insertChar(str);
+                            //MessageBox.Show(str);
+                            //break;
+                            //}
+                        }
+                    }
+                }
+            }
+        }
+
+        private bool checkchar(string charStr)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource57);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return false; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT الرموز FROM Tablechar", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+
+            foreach (DataRow row in dtbl.Rows)
+            {
+
+                if (row["الرموز"].ToString() == charStr)
+                {
+                    return true;
+                }
+            }
+            //MessageBox.Show(table+" - "+ colName);
+            return false;
+
+        }
+        private void insertChar(string charStr)
+        {
+            //MessageBox.Show(data[1]);
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+
+
+            string query = "INSERT INTO Tablechar (الرموز) values (@الرموز)";
+
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { }
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.Parameters.AddWithValue("@الرموز", charStr);
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
+        }
         private void insertRow(string ColName)
         {
             //MessageBox.Show(data[1]);
@@ -600,7 +818,7 @@ namespace PersAhwal
         
         private void Settings_Load(object sender, EventArgs e)
         {
-
+            fileComboBox(rightcols, DataSource, "ColRight", "TableAddContext", true);
         }
 
         private void autoCompleteTextBox(TextBox textbox, string source, string comlumnName, string tableName)
@@ -736,7 +954,31 @@ namespace PersAhwal
             }
             if (select && combbox.Items.Count > 0) combbox.SelectedIndex = 0;
         }
-        
+
+        private void fillSamplesCodes(string source)
+        {
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                saConn.Open();
+
+                string query = "select * from Tablechar";
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.CommandType = CommandType.Text;
+
+                try
+                {
+                    cmd.ExecuteNonQuery();
+
+                    DataTable table = new DataTable();
+                    SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                    dataAdapter.Fill(table);
+                    dataGridView2.DataSource = table;
+                }
+                catch (Exception ex) { }
+                saConn.Close();
+            }
+        }
+
         private bool checkRequInfo(string proID)
         {
             
@@ -4491,6 +4733,150 @@ namespace PersAhwal
             }
             return colName;
         }
+
+        private void button39_Click_1(object sender, EventArgs e)
+        {
+            if (button39.Text == "النص الأصلي")
+            {
+                button39.Text = "النص المعدل";
+                button39.Width = 1190;
+                rightcols.Visible = false;
+            }
+            else
+            {
+                button39.Text = "النص الأصلي";
+                button39.Width = 856;
+                rightcols.Visible = true;
+            }
+        }
+
+        private void rightcols_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            PopulateTexts(rightcols.Text.Trim(), "TableAuthRights", DataSource);
+        }
+        public void PopulateTexts(string col, string table, string dataSource)
+        {
+            string query = "SELECT ID," + col.Replace("-", "_") + " FROM " + table;
+            SqlConnection sqlCon = new SqlConnection(DataSource57);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return ; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            textBox2.Text = "";
+            foreach (DataRow row in dtbl.Rows)
+            {
+                if (row["ID"].ToString() != "1")
+                {
+                    Text_statis = row[col.Replace("-", "_")].ToString().Split('_');
+                    if (row[col.Replace("-", "_")].ToString() == "") continue;
+                    string text = SuffReplacements(Text_statis[0], 0, 0);
+                    textBox2.Text = textBox2.Text +" "+ text;
+                }
+            }
+        }
+
+        private string SuffReplacements(string text, int appCaseIndex, int intAuthcases)
+        {
+            for (int gridIndex = 0; gridIndex < dataGridView2.Rows.Count - 1; gridIndex++) 
+            {
+                string code = dataGridView2.Rows[gridIndex].Cells["الرموز"].Value.ToString();
+                string person = dataGridView2.Rows[gridIndex].Cells["الضمير"].Value.ToString();
+                string[] replacemest = new string[6];                
+                replacemest[0] = dataGridView2.Rows[gridIndex].Cells["المقابل1"].Value.ToString();
+                replacemest[1] = dataGridView2.Rows[gridIndex].Cells["المقابل2"].Value.ToString();
+                replacemest[2] = dataGridView2.Rows[gridIndex].Cells["المقابل3"].Value.ToString();
+                replacemest[3] = dataGridView2.Rows[gridIndex].Cells["المقابل4"].Value.ToString();
+                replacemest[4] = dataGridView2.Rows[gridIndex].Cells["المقابل5"].Value.ToString();
+                replacemest[5] = dataGridView2.Rows[gridIndex].Cells["المقابل6"].Value.ToString();
+                if (text.Contains(code))
+                {
+                    if (person == "1")
+                        text = text.Replace(code, replacemest[appCaseIndex]);                    
+                    else if (person == "2")
+                        text = text.Replace(code, replacemest[intAuthcases]);
+                    //return text;
+                }                
+            }
+            return text;
+        }
+        
+        private string SuffConvertments(string text)
+        {
+            string[] words = text.Split(' ');
+            //MessageBox.Show(text);
+            foreach (string word in words)
+            {
+                if (word == "" || word == " ") continue;
+                for (int gridIndex = 0; gridIndex < dataGridView2.Rows.Count - 1; gridIndex++)
+                {
+                    string code = dataGridView2.Rows[gridIndex].Cells["الرموز"].Value.ToString();
+                    string person = dataGridView2.Rows[gridIndex].Cells["الضمير"].Value.ToString();
+                    string[] replacemest = new string[6];
+                    replacemest[0] = dataGridView2.Rows[gridIndex].Cells["المقابل1"].Value.ToString();
+                    replacemest[1] = dataGridView2.Rows[gridIndex].Cells["المقابل2"].Value.ToString();
+                    replacemest[2] = dataGridView2.Rows[gridIndex].Cells["المقابل3"].Value.ToString();
+                    replacemest[3] = dataGridView2.Rows[gridIndex].Cells["المقابل4"].Value.ToString();
+                    replacemest[4] = dataGridView2.Rows[gridIndex].Cells["المقابل5"].Value.ToString();
+                    replacemest[5] = dataGridView2.Rows[gridIndex].Cells["المقابل6"].Value.ToString();
+                    for (int cellIndex = 0; cellIndex < 6 ; cellIndex++)
+                    {
+                        if (word == replacemest[cellIndex]||word == replacemest[cellIndex]+"،")
+                        {
+                            //MessageBox.Show(word); 
+                            //MessageBox.Show(code);
+                            //MessageBox.Show(replacemest[cellIndex]);
+                            
+                            text = text.Replace(replacemest[cellIndex],code);
+                            
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return text;
+        }
+        private void fileComboBoxload(ComboBox combbox, string source, string comlumnName, string tableName, bool order)
+        {
+            //MessageBox.Show("source += "+source);
+            combbox.Visible = true;
+            //MessageBox.Show(source);
+            //MessageBox.Show(Server);
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                saConn.Open();
+
+                string query = "select " + comlumnName + " from " + tableName;
+                if (order) query = "select " + comlumnName + " from " + tableName + " order by " + comlumnName;
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.CommandType = CommandType.Text;
+                cmd.ExecuteNonQuery();
+                DataTable table = new DataTable();
+                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                dataAdapter.Fill(table);
+
+                foreach (DataRow dataRow in table.Rows)
+                {
+                    if (!String.IsNullOrEmpty(dataRow[comlumnName].ToString()))
+                        combbox.Items.Add(dataRow[comlumnName].ToString().Replace("-", "_"));
+                }
+                saConn.Close();
+            }
+            //if (combbox.Items.Count > 0) combbox.SelectedIndex = 0;
+        }
+
+        private void button102_Click(object sender, EventArgs e)
+        {
+            textBox2.Text = SuffConvertments(textBox2.Text);
+        }
+
         private void button116_Click(object sender, EventArgs e)
         {
             ColumnJobs();

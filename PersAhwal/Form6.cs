@@ -46,6 +46,7 @@ namespace PersAhwal
         string[] colIDs = new string[100];
         string GregorianDate = "";
         string HijriDate = "";
+        string AuthTitle = "نائب قنصل";
         public Form6(int Atvc, int currentRow, string EmpName, string dataSource, string filepathIn, string filepathOut, string jobposition, string gregorianDate, string hijriDate)
         {
             InitializeComponent();
@@ -68,6 +69,23 @@ namespace PersAhwal
             if (jobposition.Contains("قنصل"))
                 btnEditID.Visible = button5.Visible = true;
             else btnEditID.Visible = button5.Visible = false;
+            getTitle(DataSource, EmpName);
+        }
+        private void getTitle(string source, string empName)
+        {
+            string query = "select AuthenticType from TableUser where EmployeeName = N'" + empName + "'";
+            SqlConnection sqlCon = new SqlConnection(source);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                AuthTitle = dataRow["AuthenticType"].ToString();
+            }
         }
 
         private string loadRerNo(int id)
@@ -352,7 +370,7 @@ namespace PersAhwal
                 BookAppPassSource.Text = مكان_الإصدار.Text;
                 BookAppIqama.Text = ApplicantIqamaNo.Text;
                 BookAppIqamaSource.Text = IqamaIssuedSource.Text;
-                BookvConsul.Text = AttendViceConsul.Text;
+                BookvConsul.Text = AttendViceConsul.Text + Environment.NewLine + AuthTitle;
                 colIDs[5] = AppType.Text;
                 colIDs[6] = mandoubName.Text;
                 object rangeIfadaNo = BookIfadaNo;
@@ -741,6 +759,7 @@ namespace PersAhwal
 
         private void btnSavePrint_Click_1(object sender, EventArgs e)
         {
+            getTitle(DataSource, AttendViceConsul.Text); 
             التاريخ_الميلادي.Text = GregorianDate;
             التاريخ_الهجري.Text = HijriDate;
             if (!checkGender(PanelMain, "مقدم_الطلب", "النوع"))

@@ -4681,6 +4681,8 @@ namespace PersAhwal
             }
             else if (persbtn4.SelectedIndex == 1)
             {
+                MessageBox.Show("النافذة غير مفعلة");
+                return;
                 if (mangerArch.CheckState == CheckState.Checked)
                 {
                     dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
@@ -4692,9 +4694,10 @@ namespace PersAhwal
                 }
                 else
                 {
-                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
-                    Form8 form8 = new Form8(attendedVC.SelectedIndex, -1, EmployeeName, DataSource, FilespathIn, FilespathOut, UserJobposition, GregorianDate, HijriDate);
-                    form8.ShowDialog();
+                    MessageBox.Show("النافذة غير مفعلة");
+                    //dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
+                    //Form8 form8 = new Form8(attendedVC.SelectedIndex, -1, EmployeeName, DataSource, FilespathIn, FilespathOut, UserJobposition, GregorianDate, HijriDate);
+                    //form8.ShowDialog();
                 }
             }
             else if (persbtn4.SelectedIndex == 2)
@@ -8152,7 +8155,6 @@ namespace PersAhwal
                 i++;
             }
             return allList;
-
         }
 
         private void updataArchData1()
@@ -9088,8 +9090,9 @@ namespace PersAhwal
                     form7.ShowDialog();
                     break;
                 case 7:
-                    Form8 form8 = new Form8(attendedVC.SelectedIndex, locaIDNo, EmployeeName, DataSource, FilespathIn, FilespathOut, UserJobposition, GregorianDate, HijriDate);
-                    form8.ShowDialog();
+                    MessageBox.Show("النافذة غير مفعلة");
+                    //Form8 form8 = new Form8(attendedVC.SelectedIndex, locaIDNo, EmployeeName, DataSource, FilespathIn, FilespathOut, UserJobposition, GregorianDate, HijriDate);
+                    //form8.ShowDialog();
                     break;
                 case 8:
                     Form9 form9 = new Form9(attendedVC.SelectedIndex, locaIDNo, 0, EmployeeName, DataSource, FilespathIn, FilespathOut, UserJobposition, GregorianDate, HijriDate);

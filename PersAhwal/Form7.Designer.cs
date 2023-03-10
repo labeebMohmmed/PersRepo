@@ -539,6 +539,7 @@ namespace PersAhwal
             this.AttendViceConsul.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.AttendViceConsul.Size = new System.Drawing.Size(248, 35);
             this.AttendViceConsul.TabIndex = 480;
+            this.AttendViceConsul.SelectedIndexChanged += new System.EventHandler(this.AttendViceConsul_SelectedIndexChanged);
             // 
             // النوع
             // 

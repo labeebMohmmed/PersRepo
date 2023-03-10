@@ -51,6 +51,7 @@ namespace PersAhwal
         string Jobposition;
         int ATVC = 0;
         string[] colIDs = new string[100];
+        string AuthTitle = "نائب قنصل";
         public Form5(int Atvc, int currentRow, string EmpName, string dataSource, string filepathIn, string filepathOut, string jobposition, string gregorianDate, string hijriDate)
         {
             InitializeComponent();
@@ -70,6 +71,23 @@ namespace PersAhwal
             if (jobposition.Contains("قنصل"))
                 btnEditID.Visible = deleteRow.Visible = true;
             else btnEditID.Visible = deleteRow.Visible = false;
+            getTitle(DataSource, EmpName);
+        }
+        private void getTitle(string source, string empName)
+        {
+            string query = "select AuthenticType from TableUser where EmployeeName = N'" + empName + "'";
+            SqlConnection sqlCon = new SqlConnection(source);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                AuthTitle = dataRow["AuthenticType"].ToString();
+            }
         }
         //private void OpenFileDoc(int id, int fileNo)
         //{
@@ -180,10 +198,7 @@ namespace PersAhwal
             }
             ArchivedSt.Visible = true;
             labelArch.Visible = true;
-            btnprintOnly.Visible = true;
-            SaveOnly.Visible = true;
-            btnSavePrint.Text = "حفظ";
-            btnSavePrint.Visible = false;
+            
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -308,13 +323,13 @@ namespace PersAhwal
             {
                 AppType.Text = "حضور مباشرة إلى القنصلية";
                 mandoubName.Visible = false;
-                mandoubLabel.Visible = false;
+                mandoubLabel.Visible = panel3.Visible = false;
             }
             else
             {
                 AppType.Text = "عن طريق أحد مندوبي القنصلية";
                 mandoubName.Visible = true;
-                mandoubLabel.Visible = true;
+                mandoubLabel.Visible = panel3.Visible = true;
             }
         }
 
@@ -459,28 +474,21 @@ namespace PersAhwal
                         else BookSponcerDoc.Text = "";
                         Thirdpartymember = AllFamilyMemberList[x];
                     }
-                    BookvConsul.Text = AttendViceConsul.Text;
+                    BookvConsul.Text = AttendViceConsul.Text + Environment.NewLine + AuthTitle;
 
 
                     if (AppType.CheckState == CheckState.Checked)
                     {
-                        if (النوع.CheckState == CheckState.Unchecked) BookAuthorization.Text = "أشهد أنا/" + AttendViceConsul.Text + " نائب قنصل بالقنصلية العامة لجمهورية السودان بجدة، بأن المذكور أعلاه قد حضر للقنصلية ووقع بتوقيعه على هذا الإقرار بعد تلاوته عليه وبعد أن فهم مضمونه ومحتواه. ";
-                        if (النوع.CheckState == CheckState.Checked) BookAuthorization.Text = "أشهد أنا/" + AttendViceConsul.Text + " نائب قنصل بالقنصلية العامة لجمهورية السودان بجدة، بأن المذكورة أعلاه قد حضرت للقنصلية ووقعت بتوقيعها على هذا الإقرار بعد تلاوته عليها وبعد أن فهمت مضمونه ومحتواه. ";
+                        if (النوع.CheckState == CheckState.Unchecked) BookAuthorization.Text = "أشهد أنا/" + AttendViceConsul.Text +" "+ AuthTitle + "  بالقنصلية العامة لجمهورية السودان بجدة، بأن المذكور أعلاه قد حضر للقنصلية ووقع بتوقيعه على هذا الإقرار بعد تلاوته عليه وبعد أن فهم مضمونه ومحتواه. ";
+                        if (النوع.CheckState == CheckState.Checked) BookAuthorization.Text = "أشهد أنا/" + AttendViceConsul.Text + AuthTitle+"  بالقنصلية العامة لجمهورية السودان بجدة، بأن المذكورة أعلاه قد حضرت للقنصلية ووقعت بتوقيعها على هذا الإقرار بعد تلاوته عليها وبعد أن فهمت مضمونه ومحتواه. ";
                     }
                     else
                     {
-                        string[] strmandoub = new string[2];
-                        strmandoub = mandoubName.Text.Split('-');
-                        if (strmandoub[1].Trim() != "القنصلية العامة لجمهورية السودان بجدة")
-                        {
-                            if (النوع.CheckState == CheckState.Unchecked) BookAuthorization.Text = "المواطن المذكور أعلاه حضر ووقع بتوقيعه على هذا الإقرار أمام مندوب جالية منطقة" + strmandoub[1] + " السيد/ " + strmandoub[0] + "، وذلك بموجب التفويض الممنوح له من القنصلية العامة، ";
-                            if (النوع.CheckState == CheckState.Checked) BookAuthorization.Text = "المواطنة المذكورة أعلاه حضرت ووقعت بتوقيعها على هذا الإقرار أمام مندوب جالية منطقة" + strmandoub[1] + " السيد/ " + strmandoub[0] + "، وذلك بموجب التفويض الممنوح له من القنصلية العامة، ";
-                        }
-                        else
-                        {
-                            if (النوع.CheckState == CheckState.Unchecked) BookAuthorization.Text = "المواطن المذكور أعلاه حضر ووقع بتوقيعه على هذا الإقرار أمام مندوب " + strmandoub[1] + " السيد/ " + strmandoub[0] + "، وذلك بموجب التفويض الممنوح له من القنصلية العامة، ";
-                            if (النوع.CheckState == CheckState.Checked) BookAuthorization.Text = "المواطنة المذكورة أعلاه حضرت ووقعت بتوقيعها على هذا الإقرار أمام مندوب " + strmandoub[1] + " السيد/ " + strmandoub[0] + "، وذلك بموجب التفويض الممنوح له من القنصلية العامة، ";
-                        }
+                        if (النوع.CheckState == CheckState.Unchecked)
+                            BookAuthorization.Text = "أشهد أنا/" + AttendViceConsul.Text + " " + AuthTitle + "  بالقنصلية العامة لجمهورية السودان بجدة، بأن المذكور أعلاه قد وقع بتوقيعه على هذا الإقرار بعد تلاوته عليه وبعد أن فهم مضمونه ومحتواه. ";
+                        if (النوع.CheckState == CheckState.Checked)
+                            BookAuthorization.Text = "أشهد أنا/" + AttendViceConsul.Text + " " + AuthTitle + "  بالقنصلية العامة لجمهورية السودان بجدة، بأن المذكورة أعلاه قد وقعت بتوقيعها على هذا الإقرار بعد تلاوته عليها وبعد أن فهمت مضمونه ومحتواه. ";
+
                     }
 
                     object rangeIqrarNo = BookIqrarNo;
@@ -511,6 +519,35 @@ namespace PersAhwal
                     oBDoc.Bookmarks.Add("MarkViseConsul", ref rangevConsul);
                     oBDoc.Bookmarks.Add("MarkAuthorization", ref rangeAuthorization);
 
+                    if (AppType.Checked)
+                    {
+                        Microsoft.Office.Interop.Word.Table table = oBDoc.Tables[1];
+                        table.Delete();
+                    }
+                    else
+                    {
+                        object Paraالشاهد_الأول = "الشاهد_الأول";
+                        object Paraالشاهد_الثاني = "الشاهد_الثاني";
+                        object Paraهوية_الأول = "هوية_الأول";
+                        object Paraهوية_الثاني = "هوية_الثاني";
+                        Word.Range Bookالشاهد_الأول = oBDoc.Bookmarks.get_Item(ref Paraالشاهد_الأول).Range;
+                        Word.Range Bookالشاهد_الثاني = oBDoc.Bookmarks.get_Item(ref Paraالشاهد_الثاني).Range;
+                        Word.Range Bookهوية_الأول = oBDoc.Bookmarks.get_Item(ref Paraهوية_الأول).Range;
+                        Word.Range Bookهوية_الثاني = oBDoc.Bookmarks.get_Item(ref Paraهوية_الثاني).Range;
+                        Bookالشاهد_الأول.Text = الشاهد_الأول.Text;
+                        Bookالشاهد_الثاني.Text = الشاهد_الثاني.Text;
+                        Bookهوية_الأول.Text = هوية_الأول.Text;
+                        Bookهوية_الثاني.Text = هوية_الثاني.Text;
+                        object rangeالشاهد_الأول = Bookالشاهد_الأول;
+                        object rangeالشاهد_الثاني = Bookالشاهد_الثاني;
+                        object rangeهوية_الأول = Bookهوية_الأول;
+                        object rangeهوية_الثاني = Bookهوية_الثاني;
+                        oBDoc.Bookmarks.Add("الشاهد_الأول", ref rangeالشاهد_الأول);
+                        oBDoc.Bookmarks.Add("الشاهد_الثاني", ref rangeالشاهد_الثاني);
+                        oBDoc.Bookmarks.Add("هوية_الأول", ref rangeهوية_الأول);
+                        oBDoc.Bookmarks.Add("هوية_الثاني", ref rangeهوية_الثاني);
+
+                    }
 
                     string docxouput = FilesPathOut + مقدم_الطلب.Text + DateTime.Now.ToString("ssmm") + ".docx";
                     //string pdfouput = FilesPathOut + ApplicantName.Text + DateTime.Now.ToString("ssmm") + ".pdf";
@@ -527,7 +564,7 @@ namespace PersAhwal
                 else
                 {
                     MessageBox.Show("يرجى حذف الملف الموجودأولاً");
-                    btnprintOnly.Enabled = true;
+                    
                     btnSavePrint.Enabled = true;
                     thirdPartyIndex = 0;
                 }
@@ -640,6 +677,7 @@ namespace PersAhwal
 
         private void btnSavePrint_Click(object sender, EventArgs e)
         {
+            getTitle(DataSource, AttendViceConsul.Text); 
             btnSavePrint.Enabled = false;
             CreateWordFile(false);
             btnSavePrint.Text = "طباعة وحفظ";
@@ -684,11 +722,7 @@ namespace PersAhwal
             else addNewAppNameInfo(مقدم_الطلب);
             if(SponcerName.Text != "") addNewAppNameInfo1(SponcerName);
             if (ThirdPartyName.Text != "") addNewAppNameInfo2(ThirdPartyName);
-            btnprintOnly.Enabled = false;
-            btnprintOnly.Text = "طباعة";
             CreateWordFile(true);
-            btnprintOnly.Text = "حفظ وطباعة";
-            btnprintOnly.Enabled = true;
             this.Close();
             Clear_Fields();
         }
@@ -988,6 +1022,17 @@ namespace PersAhwal
                 Iqrarid.Text = NextRelId = dataGridView1.CurrentRow.Cells[1].Value.ToString();
                 colIDs[1] =  dataGridView1.CurrentRow.Cells[0].Value.ToString();
                 colIDs[0] = dataGridView1.CurrentRow.Cells[1].Value.ToString();
+                AppType.Text = dataGridView1.CurrentRow.Cells[17].Value.ToString();
+                if (AppType.Text == "حضور مباشرة إلى القنصلية") 
+                    AppType.CheckState = CheckState.Checked; 
+                else AppType.CheckState = CheckState.Unchecked;
+                //MessageBox.Show(AppType.Text);
+                if (AppType.CheckState == CheckState.Unchecked)
+                {
+                    mandoubVisibilty();
+                    mandoubName.Text = dataGridView1.CurrentRow.Cells[19].Value.ToString();
+                }
+
                 try
                 {
                     txtEditID2.Text = colIDs[0].Split('/')[4];
@@ -1048,15 +1093,9 @@ namespace PersAhwal
                     
                 }
                 else checkedViewed.CheckState = CheckState.Checked;
-                AppType.Text = dataGridView1.CurrentRow.Cells[17].Value.ToString();
+                
                 Employee.Text = dataGridView1.CurrentRow.Cells[18].Value.ToString();
-                if (AppType.Text == "حضور مباشرة إلى القنصلية") AppType.CheckState = CheckState.Checked; else AppType.CheckState = CheckState.Unchecked;
-                if (AppType.CheckState == CheckState.Unchecked)
-                {
-                    mandoubVisibilty();
-                    mandoubName.Text = dataGridView1.CurrentRow.Cells[19].Value.ToString();
-                }
-
+                
                 PreRelatedID = dataGridView1.CurrentRow.Cells[20].Value.ToString();
                 SponserCase.SelectedIndex = Convert.ToInt32(dataGridView1.CurrentRow.Cells[21].Value.ToString()) - 1;
                 Comment.Text = dataGridView1.CurrentRow.Cells[26].Value.ToString();
@@ -1074,10 +1113,6 @@ namespace PersAhwal
                 }
                 ArchivedSt.Visible = true;
                 labelArch.Visible = true;
-                btnprintOnly.Visible = true;
-                SaveOnly.Visible = true;
-                btnSavePrint.Text = "حفظ";
-                btnSavePrint.Visible = false;
             }
         }
 
@@ -1406,6 +1441,29 @@ namespace PersAhwal
             getID(ThirdPartyDocNo, ThirdPartyDocType, ThirdPartyDocIssueSource, ThirdPartyName.Text);
         }
 
+        private void mandoubName_TextChanged(object sender, EventArgs e)
+        {
+            الشاهد_الأول.Text = mandoubName.Text.Split('-')[0].Trim();
+            هوية_الأول.Text = getMandoubPass(DataSource, mandoubName.Text.Split('-')[0].Trim());
+        }
+        private string getMandoubPass(string source, string empName)
+        {
+            string pass = "";
+            string query = "select رقم_الجواز from TableMandoudList where MandoubNames = N'" + empName + "'";
+            SqlConnection sqlCon = new SqlConnection(source);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                pass = dataRow["رقم_الجواز"].ToString();
+            }
+            return pass;
+        }
         private void btnEditID_Click(object sender, EventArgs e)
         {
             if (btnEditID.Text == "إجراء")
@@ -1635,10 +1693,7 @@ namespace PersAhwal
             mandoubName.Text = ListSearch.Text = "";
             AppType.CheckState = CheckState.Checked;
             mandoubVisibilty();
-            btnprintOnly.Visible = false;
-            btnSavePrint.Text = "طباعة وحفظ";
-            btnSavePrint.Visible = true;
-            SaveOnly.Visible = false;
+            
             Comment.Text = "لا تعليق";
             newData = true;
             ArchivedSt.Text = "غير مؤرشف";

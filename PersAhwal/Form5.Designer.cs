@@ -43,8 +43,6 @@ namespace PersAhwal
             this.Employee = new System.Windows.Forms.Label();
             this.label24 = new System.Windows.Forms.Label();
             this.Comment = new System.Windows.Forms.TextBox();
-            this.btnprintOnly = new System.Windows.Forms.Button();
-            this.SaveOnly = new System.Windows.Forms.Button();
             this.btnSavePrint = new System.Windows.Forms.Button();
             this.ResetAll = new System.Windows.Forms.Button();
             this.SearchFile = new System.Windows.Forms.TextBox();
@@ -115,11 +113,21 @@ namespace PersAhwal
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.PanelFiles = new System.Windows.Forms.Panel();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.الشاهد_الأول = new System.Windows.Forms.TextBox();
+            this.label28 = new System.Windows.Forms.Label();
+            this.هوية_الثاني = new System.Windows.Forms.TextBox();
+            this.label30 = new System.Windows.Forms.Label();
+            this.label31 = new System.Windows.Forms.Label();
+            this.الشاهد_الثاني = new System.Windows.Forms.TextBox();
+            this.هوية_الأول = new System.Windows.Forms.TextBox();
+            this.label32 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.mainpanel.SuspendLayout();
             this.PanelFiles.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.panel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // timer1
@@ -174,22 +182,6 @@ namespace PersAhwal
             // 
             resources.ApplyResources(this.Comment, "Comment");
             this.Comment.Name = "Comment";
-            // 
-            // btnprintOnly
-            // 
-            this.btnprintOnly.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
-            resources.ApplyResources(this.btnprintOnly, "btnprintOnly");
-            this.btnprintOnly.Name = "btnprintOnly";
-            this.btnprintOnly.UseVisualStyleBackColor = false;
-            this.btnprintOnly.Click += new System.EventHandler(this.btnprintOnly_Click);
-            // 
-            // SaveOnly
-            // 
-            this.SaveOnly.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
-            resources.ApplyResources(this.SaveOnly, "SaveOnly");
-            this.SaveOnly.Name = "SaveOnly";
-            this.SaveOnly.UseVisualStyleBackColor = false;
-            this.SaveOnly.Click += new System.EventHandler(this.SaveOnly_Click_1);
             // 
             // btnSavePrint
             // 
@@ -288,6 +280,7 @@ namespace PersAhwal
             resources.GetString("mandoubName.Items"),
             resources.GetString("mandoubName.Items1")});
             this.mandoubName.Name = "mandoubName";
+            this.mandoubName.TextChanged += new System.EventHandler(this.mandoubName_TextChanged);
             // 
             // AppType
             // 
@@ -602,6 +595,7 @@ namespace PersAhwal
             // 
             // mainpanel
             // 
+            this.mainpanel.Controls.Add(this.panel3);
             this.mainpanel.Controls.Add(this.التاريخ_الميلادي_off);
             this.mainpanel.Controls.Add(this.txtEditID2);
             this.mainpanel.Controls.Add(this.btnEditID);
@@ -617,9 +611,7 @@ namespace PersAhwal
             this.mainpanel.Controls.Add(this.label3);
             this.mainpanel.Controls.Add(this.Comment);
             this.mainpanel.Controls.Add(this.label7);
-            this.mainpanel.Controls.Add(this.btnprintOnly);
             this.mainpanel.Controls.Add(this.مكان_الإصدار);
-            this.mainpanel.Controls.Add(this.SaveOnly);
             this.mainpanel.Controls.Add(this.AttendViceConsul);
             this.mainpanel.Controls.Add(this.btnSavePrint);
             this.mainpanel.Controls.Add(this.رقم_الهوية);
@@ -720,6 +712,59 @@ namespace PersAhwal
             this.dataGridView1.RowTemplate.Height = 30;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.الشاهد_الأول);
+            this.panel3.Controls.Add(this.label28);
+            this.panel3.Controls.Add(this.هوية_الثاني);
+            this.panel3.Controls.Add(this.label30);
+            this.panel3.Controls.Add(this.label31);
+            this.panel3.Controls.Add(this.الشاهد_الثاني);
+            this.panel3.Controls.Add(this.هوية_الأول);
+            this.panel3.Controls.Add(this.label32);
+            resources.ApplyResources(this.panel3, "panel3");
+            this.panel3.Name = "panel3";
+            // 
+            // الشاهد_الأول
+            // 
+            resources.ApplyResources(this.الشاهد_الأول, "الشاهد_الأول");
+            this.الشاهد_الأول.Name = "الشاهد_الأول";
+            // 
+            // label28
+            // 
+            resources.ApplyResources(this.label28, "label28");
+            this.label28.Name = "label28";
+            // 
+            // هوية_الثاني
+            // 
+            resources.ApplyResources(this.هوية_الثاني, "هوية_الثاني");
+            this.هوية_الثاني.Name = "هوية_الثاني";
+            // 
+            // label30
+            // 
+            resources.ApplyResources(this.label30, "label30");
+            this.label30.Name = "label30";
+            // 
+            // label31
+            // 
+            resources.ApplyResources(this.label31, "label31");
+            this.label31.Name = "label31";
+            // 
+            // الشاهد_الثاني
+            // 
+            resources.ApplyResources(this.الشاهد_الثاني, "الشاهد_الثاني");
+            this.الشاهد_الثاني.Name = "الشاهد_الثاني";
+            // 
+            // هوية_الأول
+            // 
+            resources.ApplyResources(this.هوية_الأول, "هوية_الأول");
+            this.هوية_الأول.Name = "هوية_الأول";
+            // 
+            // label32
+            // 
+            resources.ApplyResources(this.label32, "label32");
+            this.label32.Name = "label32";
+            // 
             // Form5
             // 
             resources.ApplyResources(this, "$this");
@@ -742,6 +787,8 @@ namespace PersAhwal
             this.PanelFiles.ResumeLayout(false);
             this.PanelFiles.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -758,8 +805,6 @@ namespace PersAhwal
         private System.Windows.Forms.Label Employee;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.TextBox Comment;
-        private System.Windows.Forms.Button btnprintOnly;
-        private System.Windows.Forms.Button SaveOnly;
         private System.Windows.Forms.Button btnSavePrint;
         private System.Windows.Forms.Button ResetAll;
         private System.Windows.Forms.TextBox SearchFile;
@@ -830,5 +875,14 @@ namespace PersAhwal
         private System.Windows.Forms.Button btnEditID;
         private System.Windows.Forms.TextBox txtEditID1;
         private System.Windows.Forms.TextBox التاريخ_الميلادي_off;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.TextBox الشاهد_الأول;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.TextBox هوية_الثاني;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.TextBox الشاهد_الثاني;
+        private System.Windows.Forms.TextBox هوية_الأول;
+        private System.Windows.Forms.Label label32;
     }
 }

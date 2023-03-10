@@ -40,6 +40,7 @@ namespace PersAhwal
         bool GridColored = false;
         string GregorianDate = "";
         string HijriDate = "";
+        string AuthTitle = "نائب قنصل";
         public Form9(int Atvc, int currentRow, int certificaetype, string EmpName, string dataSource, string filepathIn, string filepathOut, string jobposition, string gregorianDate, string hijriDate)
         {
             InitializeComponent();
@@ -217,7 +218,7 @@ namespace PersAhwal
             }
             ArchivedSt.Visible = true;
             labelArch.Visible = true;
-            btnSavePrint.Visible = false;
+            
         }
 
         private void Review_Click(object sender, EventArgs e)
@@ -393,7 +394,7 @@ namespace PersAhwal
                 BookOtherDocSource.Text = OtherIssuedSource.Text;
                 if (النوع.CheckState == CheckState.Unchecked) BookOtherNatio.Text = " (" + AppDocNatio.Text + " الجنسية)/";
                 else BookOtherNatio.Text = " (" + AppDocNatio.Text + "الجنسية)/";
-                BookvConsul.Text = AttendViceConsul.Text;
+                BookvConsul.Text = AttendViceConsul.Text + Environment.NewLine + AuthTitle;
 
                 object rangeGreData = BookGreData;
                 object rangeHijriData = BookHijriData;
@@ -548,7 +549,7 @@ namespace PersAhwal
                     BookOtherDocSource.Text = OtherIssuedSource.Text;
                 if (النوع.CheckState == CheckState.Unchecked) BookOtherNatio.Text = "(" + AppDocNatio.Text + " الجنسية)";
                 else BookOtherNatio.Text = " (" + AppDocNatio.Text + "الجنسية)/";
-                BookvConsul.Text = AttendViceConsul.Text;
+                BookvConsul.Text = AttendViceConsul.Text + Environment.NewLine + AuthTitle;
 
                 object rangeGreData = BookGreData;
                 object rangeHijriData = BookHijriData;
@@ -828,7 +829,7 @@ namespace PersAhwal
 
         private void btnSavePrint_Click_1(object sender, EventArgs e)
         {
-
+            getTitle(DataSource, AttendViceConsul.Text);
             التاريخ_الميلادي.Text = GregorianDate;
             التاريخ_الهجري.Text = HijriDate;
             if (تاريخ_الميلاد.Text == "")
@@ -858,6 +859,22 @@ namespace PersAhwal
             this.Close();
         }
 
+        private void getTitle(string source, string empName)
+        {
+            string query = "select AuthenticType from TableUser where EmployeeName = N'" + empName + "'";
+            SqlConnection sqlCon = new SqlConnection(source);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                AuthTitle = dataRow["AuthenticType"].ToString();
+            }
+        }
         private void SaveOnly_Click_1(object sender, EventArgs e)
         {
             if (تاريخ_الميلاد.Text == "")
@@ -1305,7 +1322,6 @@ namespace PersAhwal
                 }
                 ArchivedSt.Visible = true;
                 labelArch.Visible = true;
-                btnSavePrint.Visible = false;
             }
         }
 
@@ -1522,7 +1538,6 @@ namespace PersAhwal
             mandoubVisibilty();
             btnSavePrint.Enabled = true;
             btnSavePrint.Text = "طباعة وحفظ";
-            btnSavePrint.Visible = true;
             Comment.Text = "لا تعليق";
             FillDataGridView();
             ArchivedSt.Text = "غير مؤرشف";

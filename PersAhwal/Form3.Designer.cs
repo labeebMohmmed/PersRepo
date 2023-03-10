@@ -88,6 +88,15 @@ namespace PersAhwal
             this.مقدم_الطلب = new System.Windows.Forms.TextBox();
             this.labelName = new System.Windows.Forms.Label();
             this.PanelMain = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.الشاهد_الأول = new System.Windows.Forms.TextBox();
+            this.label28 = new System.Windows.Forms.Label();
+            this.هوية_الثاني = new System.Windows.Forms.TextBox();
+            this.label30 = new System.Windows.Forms.Label();
+            this.label31 = new System.Windows.Forms.Label();
+            this.الشاهد_الثاني = new System.Windows.Forms.TextBox();
+            this.هوية_الأول = new System.Windows.Forms.TextBox();
+            this.label32 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.تاريخ_الميلاد = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
@@ -114,6 +123,7 @@ namespace PersAhwal
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.PanelMain.SuspendLayout();
+            this.panel3.SuspendLayout();
             this.PanelFiles.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
@@ -265,6 +275,7 @@ namespace PersAhwal
             // 
             // mandoubName
             // 
+            this.mandoubName.Enabled = false;
             this.mandoubName.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.mandoubName.FormattingEnabled = true;
             this.mandoubName.Items.AddRange(new object[] {
@@ -276,12 +287,15 @@ namespace PersAhwal
             this.mandoubName.Size = new System.Drawing.Size(324, 35);
             this.mandoubName.TabIndex = 494;
             this.mandoubName.Visible = false;
+            this.mandoubName.SelectedIndexChanged += new System.EventHandler(this.mandoubName_SelectedIndexChanged);
+            this.mandoubName.TextChanged += new System.EventHandler(this.mandoubName_TextChanged);
             // 
             // AppType
             // 
             this.AppType.AutoSize = true;
             this.AppType.Checked = true;
             this.AppType.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.AppType.Enabled = false;
             this.AppType.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AppType.Location = new System.Drawing.Point(1024, 374);
             this.AppType.Name = "AppType";
@@ -522,7 +536,7 @@ namespace PersAhwal
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(765, 432);
+            this.label1.Location = new System.Drawing.Point(768, 381);
             this.label1.Name = "label1";
             this.label1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.label1.Size = new System.Drawing.Size(102, 27);
@@ -601,7 +615,7 @@ namespace PersAhwal
             "محمد عثمان عكاشة الحسين",
             "يوسف صديق أبوعاقلة",
             "لبيب محمد أحمد"});
-            this.AttendViceConsul.Location = new System.Drawing.Point(401, 429);
+            this.AttendViceConsul.Location = new System.Drawing.Point(404, 378);
             this.AttendViceConsul.Name = "AttendViceConsul";
             this.AttendViceConsul.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.AttendViceConsul.Size = new System.Drawing.Size(358, 35);
@@ -769,6 +783,7 @@ namespace PersAhwal
             // 
             // PanelMain
             // 
+            this.PanelMain.Controls.Add(this.panel3);
             this.PanelMain.Controls.Add(this.label17);
             this.PanelMain.Controls.Add(this.تاريخ_الميلاد);
             this.PanelMain.Controls.Add(this.label16);
@@ -818,6 +833,106 @@ namespace PersAhwal
             this.PanelMain.Size = new System.Drawing.Size(1382, 623);
             this.PanelMain.TabIndex = 630;
             this.PanelMain.Visible = false;
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.الشاهد_الأول);
+            this.panel3.Controls.Add(this.label28);
+            this.panel3.Controls.Add(this.هوية_الثاني);
+            this.panel3.Controls.Add(this.label30);
+            this.panel3.Controls.Add(this.label31);
+            this.panel3.Controls.Add(this.الشاهد_الثاني);
+            this.panel3.Controls.Add(this.هوية_الأول);
+            this.panel3.Controls.Add(this.label32);
+            this.panel3.Location = new System.Drawing.Point(373, 419);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(427, 180);
+            this.panel3.TabIndex = 862;
+            this.panel3.Visible = false;
+            // 
+            // الشاهد_الأول
+            // 
+            this.الشاهد_الأول.Enabled = false;
+            this.الشاهد_الأول.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.الشاهد_الأول.Location = new System.Drawing.Point(32, 7);
+            this.الشاهد_الأول.Name = "الشاهد_الأول";
+            this.الشاهد_الأول.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.الشاهد_الأول.Size = new System.Drawing.Size(262, 35);
+            this.الشاهد_الأول.TabIndex = 854;
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label28.Location = new System.Drawing.Point(305, 7);
+            this.label28.Name = "label28";
+            this.label28.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.label28.Size = new System.Drawing.Size(106, 27);
+            this.label28.TabIndex = 853;
+            this.label28.Text = "اسم الشاهد الأول:";
+            // 
+            // هوية_الثاني
+            // 
+            this.هوية_الثاني.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.هوية_الثاني.Location = new System.Drawing.Point(98, 130);
+            this.هوية_الثاني.Name = "هوية_الثاني";
+            this.هوية_الثاني.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.هوية_الثاني.Size = new System.Drawing.Size(196, 35);
+            this.هوية_الثاني.TabIndex = 860;
+            this.هوية_الثاني.Text = "P0";
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label30.Location = new System.Drawing.Point(300, 127);
+            this.label30.Name = "label30";
+            this.label30.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.label30.Size = new System.Drawing.Size(124, 27);
+            this.label30.TabIndex = 855;
+            this.label30.Text = "رقم جواز سفر ساري:";
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label31.Location = new System.Drawing.Point(300, 45);
+            this.label31.Name = "label31";
+            this.label31.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.label31.Size = new System.Drawing.Size(124, 27);
+            this.label31.TabIndex = 858;
+            this.label31.Text = "رقم جواز سفر ساري:";
+            // 
+            // الشاهد_الثاني
+            // 
+            this.الشاهد_الثاني.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.الشاهد_الثاني.Location = new System.Drawing.Point(31, 89);
+            this.الشاهد_الثاني.Name = "الشاهد_الثاني";
+            this.الشاهد_الثاني.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.الشاهد_الثاني.Size = new System.Drawing.Size(263, 35);
+            this.الشاهد_الثاني.TabIndex = 857;
+            // 
+            // هوية_الأول
+            // 
+            this.هوية_الأول.Enabled = false;
+            this.هوية_الأول.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.هوية_الأول.Location = new System.Drawing.Point(98, 48);
+            this.هوية_الأول.Name = "هوية_الأول";
+            this.هوية_الأول.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.هوية_الأول.Size = new System.Drawing.Size(196, 35);
+            this.هوية_الأول.TabIndex = 859;
+            this.هوية_الأول.Text = "P0";
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label32.Location = new System.Drawing.Point(300, 86);
+            this.label32.Name = "label32";
+            this.label32.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.label32.Size = new System.Drawing.Size(106, 27);
+            this.label32.TabIndex = 856;
+            this.label32.Text = "اسم الشاهد الثاني:";
             // 
             // label17
             // 
@@ -1103,6 +1218,8 @@ namespace PersAhwal
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.PanelMain.ResumeLayout(false);
             this.PanelMain.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             this.PanelFiles.ResumeLayout(false);
             this.PanelFiles.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
@@ -1188,5 +1305,14 @@ namespace PersAhwal
         private System.Windows.Forms.TextBox تاريخ_الميلاد;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.TextBox المهنة;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.TextBox الشاهد_الأول;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.TextBox هوية_الثاني;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.TextBox الشاهد_الثاني;
+        private System.Windows.Forms.TextBox هوية_الأول;
+        private System.Windows.Forms.Label label32;
     }
 }
