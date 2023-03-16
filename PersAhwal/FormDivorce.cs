@@ -236,11 +236,14 @@ namespace PersAhwal
             SqlConnection sqlCon = new SqlConnection(dataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
-            SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableDivorce", sqlCon);
+            SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableDivorce order by ID desc", sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtblMain = new DataTable();
             sqlDa.Fill(dtblMain);
             dataGridView1.DataSource = dtblMain;
+            dataGridView1.Columns[0].Visible = false;
+            dataGridView1.Columns[1].Width = 170;
+            dataGridView1.Columns[2].Width = dataGridView1.Columns[3].Width = 200;
             sqlCon.Close();
 
 
@@ -310,7 +313,7 @@ namespace PersAhwal
         }
         void FillDatafromGenArch(string doc, string id, string table)
         {
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableGeneralArch where  رقم_المرجع='" + id + "' and نوع_المستند='" + doc + "' and docTable = '" + table + "'", sqlCon);
@@ -542,7 +545,7 @@ namespace PersAhwal
         }
         private void updateGenName(string name, string idDoc)
         {
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             string query = "update TableGeneralArch set رقم_معاملة_القسم=N'" + name + "' where رقم_المرجع = '" + idDoc + "' and docTable=N'TableDivorce'";

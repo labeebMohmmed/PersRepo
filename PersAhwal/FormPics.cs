@@ -293,6 +293,9 @@ namespace PersAhwal
 
         private void insertReqRow(string source, string strName, string form)
         {
+            if (strName == "" || checkProReq(strName))
+                return;
+
             string[] data =  new string[11];
             data[1] = strName;
             data[0] = form;
@@ -353,6 +356,27 @@ namespace PersAhwal
             sqlCon.Close();
         }
 
+        private bool checkProReq(string proName)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            string query = "SELECT * FROM TableProcReq where المعاملة=N'" + proName + "'";
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            try
+            {
+                sqlDa.Fill(dtbl);
+            }
+            catch (Exception ex) { }
+            sqlCon.Close();
+            if (dtbl.Rows.Count > 0)
+            {
+                return true;
+            }
+            return false;
+        }
         private void CreateColumn(string Columnname)
         {
 
@@ -501,7 +525,11 @@ namespace PersAhwal
             SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
-            sqlDa.Fill(dtbl);
+            try
+            {
+                sqlDa.Fill(dtbl);
+            }
+            catch (Exception ex) { }
             sqlCon.Close();
             panelFinalArch.Visible = true;
             //MessageBox.Show("query = " + query + " - Count " + dtbl.Rows.Count.ToString()); 
@@ -853,7 +881,11 @@ namespace PersAhwal
             SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT * FROM TableFileArch WHERE "+ colName + "='" + text + "'", sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
-            sqlDa.Fill(dtbl);
+            try
+            {
+                sqlDa.Fill(dtbl);
+            }
+            catch (Exception ex) { }
             sqlCon.Close();
             foreach (DataRow row in dtbl.Rows)
             {
@@ -1345,15 +1377,22 @@ namespace PersAhwal
                 string query = "select MandoubNames,MandoubAreas,وضع_المندوب from " + tableName;
                 SqlCommand cmd = new SqlCommand(query, saConn);
                 cmd.CommandType = CommandType.Text;
-                cmd.ExecuteNonQuery();
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex) { }
                 DataTable table = new DataTable();
                 SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
-                dataAdapter.Fill(table);
-                foreach (DataRow dataRow in table.Rows)
+                try
                 {
-                    if (dataRow["MandoubNames"].ToString() != ""&&dataRow["وضع_المندوب"].ToString() == "الحساب مفعل") 
-                        combbox.Items.Add(dataRow["MandoubNames"].ToString() + " - "+ dataRow["MandoubAreas"].ToString());
-                }
+                    dataAdapter.Fill(table);
+                    foreach (DataRow dataRow in table.Rows)
+                    {
+                        if (dataRow["MandoubNames"].ToString() != "" && dataRow["وضع_المندوب"].ToString() == "الحساب مفعل")
+                            combbox.Items.Add(dataRow["MandoubNames"].ToString() + " - " + dataRow["MandoubAreas"].ToString());
+                    }
+                }catch (Exception ex) { }
                 saConn.Close();
             }
             if (combbox.Items.Count > 0)
@@ -1850,6 +1889,21 @@ namespace PersAhwal
         {
             string query;
             SqlConnection Con = new SqlConnection(DataSource);
+            query = "DELETE FROM " + v2 + " where "+ colName+" = N'"+ v1+"'";
+            Console.WriteLine(query); 
+            //MessageBox.Show(query);
+            
+            if (Con.State == ConnectionState.Closed)
+                Con.Open();
+            SqlCommand sqlCmd = new SqlCommand(query, Con);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();
+            Con.Close();
+        }
+         private void deleteArchRowsData(string v1, string v2, string colName)
+        {
+            string query;
+            SqlConnection Con = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             query = "DELETE FROM " + v2 + " where "+ colName+" = N'"+ v1+"'";
             Console.WriteLine(query); 
             //MessageBox.Show(query);
@@ -2407,7 +2461,7 @@ namespace PersAhwal
         private string checkArch(string documenNo)
         {
 
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
 
                 sqlCon.Open();
@@ -2709,7 +2763,7 @@ namespace PersAhwal
         private void insertDoc(string name, string id, string date, string employee, string dataSource, string extn1, string DocName1, string messNo, string docType, byte[] buffer1)
         {
             string query = "INSERT INTO TableGeneralArch (Data1,Extension1,نوع_المستند,رقم_معاملة_القسم,المستند,الموظف,التاريخ,رقم_المرجع,docTable,الاسم) values (@Data1,@Extension1,@نوع_المستند,@رقم_معاملة_القسم,@المستند,@الموظف,@التاريخ,@رقم_المرجع,@docTable,@الاسم)";
-            SqlConnection sqlCon = new SqlConnection(dataSource);
+            SqlConnection sqlCon = new SqlConnection(dataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
@@ -2730,7 +2784,7 @@ namespace PersAhwal
         private void insertDoc(string id, string date, string employee, string dataSource, string extn1, string DocName1, string messNo, string docType, byte[] buffer1)
         {
             string query = "INSERT INTO TableGeneralArch (Data1,Extension1,نوع_المستند,رقم_معاملة_القسم,المستند,الموظف,التاريخ,رقم_المرجع,docTable) values (@Data1,@Extension1,@نوع_المستند,@رقم_معاملة_القسم,@المستند,@الموظف,@التاريخ,@رقم_المرجع,@docTable)";
-            SqlConnection sqlCon = new SqlConnection(dataSource);
+            SqlConnection sqlCon = new SqlConnection(dataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
@@ -2751,7 +2805,7 @@ namespace PersAhwal
         private void insertDocMand(string id, string date, string employee, string dataSource, string extn1, string DocName1, string docType, byte[] buffer1)
         {
             string query = "INSERT INTO TableGeneralArch (Data1,Extension1,نوع_المستند,رقم_معاملة_القسم,المستند,الموظف,التاريخ,رقم_المرجع,docTable,الاسم) values (@Data1,@Extension1,@نوع_المستند,@رقم_معاملة_القسم,@المستند,@الموظف,@التاريخ,@رقم_المرجع,@docTable,@الاسم)";
-            SqlConnection sqlCon = new SqlConnection(dataSource);
+            SqlConnection sqlCon = new SqlConnection(dataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
@@ -2773,7 +2827,7 @@ namespace PersAhwal
         private void updateName(string name,  string messNo,  string table)
         {
             string query = "update TableGeneralArch set الاسم=@الاسم where رقم_المرجع=@رقم_المرجع and docTable=@docTable";
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
@@ -3161,7 +3215,11 @@ namespace PersAhwal
             SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
-            sqlDa.Fill(dtbl);
+            try
+            {
+                sqlDa.Fill(dtbl);
+            }
+            catch (Exception ex) { }
             sqlCon.Close();
             if(dtbl.Rows.Count > 0)
                 return true;            
@@ -3316,6 +3374,7 @@ namespace PersAhwal
                     btnSaveEnd.Visible = view;    
                 else btnSaveEnd.Visible = false;
             }
+            if (تاريخ_الميلاد.Text.Length != 10 && ArchiveState) btnSaveEnd.Visible = false;
         }
 
         private void CreateAuth(string AuthID, string DocxInFile, string DocxOutFile)
@@ -3456,7 +3515,7 @@ namespace PersAhwal
             //MessageBox.Show(id);
 
             string NewFileName = "";
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableGeneralArch where  ID='" + id + "'", sqlCon);
@@ -3519,7 +3578,7 @@ namespace PersAhwal
 
         private void updateNames()
         {
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             //string query = "select رقم_المرجع,docTable from TableGeneralArch WHERE الاسم=@الاسم";
             string query = "select رقم_المرجع,docTable from TableGeneralArch where الاسم is null and رقم_المرجع <> 0";
             if (sqlCon.State == ConnectionState.Closed)
@@ -3547,7 +3606,7 @@ namespace PersAhwal
 
         private void updateGenName(string name, string idDoc, string table)
         {
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             string query = "update TableGeneralArch set الاسم=N'" + name + "' where رقم_المرجع = '" + idDoc + "' and docTable=N'" + table + "'";
@@ -3561,7 +3620,7 @@ namespace PersAhwal
         
         private void updateGenNameError(string name, string idDoc)
         {
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             string query = "update TableGeneralArch set الاسم=N'" + name + "' where رقم_معاملة_القسم = N'" + idDoc + "'";
@@ -3574,7 +3633,7 @@ namespace PersAhwal
         }
         private void correctNo()
         {
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             //string query = "select رقم_المرجع,docTable from TableGeneralArch WHERE الاسم=@الاسم";
             string query = "select ID,رقم_معاملة_القسم from TableGeneralArch where ID >= 18213 and نوع_المستند = 'data1'";
             if (sqlCon.State == ConnectionState.Closed)
@@ -3598,7 +3657,7 @@ namespace PersAhwal
                     //MessageBox.Show(newInfo);
                     if (info[1] != "80")
                     {
-                        sqlCon = new SqlConnection(DataSource);
+                        sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
                         if (sqlCon.State == ConnectionState.Closed)
                             sqlCon.Open();
                         SqlCommand sqlCmd = new SqlCommand("update TableGeneralArch set رقم_معاملة_القسم=@رقم_معاملة_القسم where ID=@id", sqlCon);
@@ -3629,7 +3688,7 @@ namespace PersAhwal
                                    "where docTable = '" + tableList[table] + "' and نوع_المستند = 'data" + data.ToString() + "' and " + tableList[table] + ".ID = TableGeneralArch.رقم_المرجع) )";
                     queryList = queryList + Environment.NewLine + query;
                     //MessageBox.Show(query);
-                    //SqlConnection sqlCon = new SqlConnection(DataSource);
+                    //SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
                     //SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
                     //if (sqlCon.State == ConnectionState.Closed)
                     //    sqlCon.Open();
@@ -3945,7 +4004,7 @@ namespace PersAhwal
         private void btnDelete_Click(object sender, EventArgs e)
         {
             deleteRowsData(FileIDNo,TableList,"ID");
-            deleteRowsData(docIDNumber, "TableGeneralArch", "رقم_معاملة_القسم");
+            deleteArchRowsData(docIDNumber, "TableGeneralArch", "رقم_معاملة_القسم");
             deleteRowsData(docIDNumber, "archives", "docID");
             btnDelete.Visible = btnArchived.Visible = btnExten.Visible = false;
             
@@ -4191,7 +4250,7 @@ namespace PersAhwal
         
         private string getUniqueID(string query)
         {
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
@@ -4215,7 +4274,7 @@ namespace PersAhwal
         }
         private bool checkISUnique(string docid)
         {
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             //SqlDataAdapter sqlDa = new SqlDataAdapter("select " + docName + " from " + table + " where " + docName + "=@" + docName, sqlCon);

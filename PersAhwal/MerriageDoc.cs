@@ -370,7 +370,7 @@ namespace PersAhwal
         }
         void FillDatafromGenArch(string doc, string id, string table)
         {
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableGeneralArch where  رقم_المرجع='" + id + "' and نوع_المستند='" + doc + "' and docTable = '" + table+"'", sqlCon);
@@ -606,7 +606,7 @@ namespace PersAhwal
 
         private void updateGenName(string name, string idDoc)
         {
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 try
                 {
@@ -1043,7 +1043,7 @@ namespace PersAhwal
             {
                 ضمير_الزوج1_off.Text = "ك";
                 ضمير_الزوج2_off.Text = "";
-                اسم_الزوج1_off.Text = "";
+                اسم_الزوج3_off.Text = اسم_الزوج1_off.Text = "";
                 وكيل_الزوج1_off.Text = اسم_الزوج.Text;
             }
             else {
@@ -1209,17 +1209,17 @@ namespace PersAhwal
 
         private void الشاهد_الاول_TextChanged(object sender, EventArgs e)
         {
-            getID(وثيقة_الشاهد_الاول, الشاهد_الاول.Text, "رقم_الهوية", "P0");
+            //getID(وثيقة_الشاهد_الاول, الشاهد_الاول.Text, "رقم_الهوية", "P0");
         }
 
         private void الشاهد_الثاني_TextChanged(object sender, EventArgs e)
         {
-            getID(وثيقة_الشاهد_الثاني, الشاهد_الثاني.Text, "رقم_الهوية", "P0");
+            //getID(وثيقة_الشاهد_الثاني, الشاهد_الثاني.Text, "رقم_الهوية", "P0");
         }
 
         private void وكيل_الزوج_TextChanged(object sender, EventArgs e)
         {
-            getID(جواز_وكيل_الزوج, وكيل_الزوج.Text, "رقم_الهوية", "P0");             
+            //getID(جواز_وكيل_الزوج, وكيل_الزوج.Text, "رقم_الهوية", "P0");             
         }
         public void getID(TextBox textTo, string name, string controlType, string def)
         {

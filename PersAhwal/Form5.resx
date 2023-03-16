@@ -238,10 +238,10 @@
     <value>NoControl</value>
   </data>
   <data name="deleteRow.Location" type="System.Drawing.Point, System.Drawing">
-    <value>212, 557</value>
+    <value>206, 605</value>
   </data>
   <data name="deleteRow.Size" type="System.Drawing.Size, System.Drawing">
-    <value>45, 71</value>
+    <value>45, 39</value>
   </data>
   <data name="deleteRow.TabIndex" type="System.Int32, mscorlib">
     <value>509</value>
@@ -262,7 +262,7 @@
     <value>mainpanel</value>
   </data>
   <data name="&gt;&gt;deleteRow.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="label26.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -298,7 +298,7 @@
     <value>mainpanel</value>
   </data>
   <data name="&gt;&gt;label26.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>9</value>
   </data>
   <data name="Employee.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -337,7 +337,7 @@
     <value>mainpanel</value>
   </data>
   <data name="&gt;&gt;Employee.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>11</value>
   </data>
   <data name="label24.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -373,7 +373,7 @@
     <value>mainpanel</value>
   </data>
   <data name="&gt;&gt;label24.ZOrder" xml:space="preserve">
-    <value>12</value>
+    <value>13</value>
   </data>
   <data name="Comment.Font" type="System.Drawing.Font, System.Drawing">
     <value>Arabic Typesetting, 18pt</value>
@@ -406,25 +406,22 @@
     <value>mainpanel</value>
   </data>
   <data name="&gt;&gt;Comment.ZOrder" xml:space="preserve">
-    <value>14</value>
+    <value>15</value>
   </data>
   <data name="btnSavePrint.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="btnSavePrint.Location" type="System.Drawing.Point, System.Drawing">
-    <value>17, 557</value>
+    <value>11, 605</value>
   </data>
   <data name="btnSavePrint.Size" type="System.Drawing.Size, System.Drawing">
-    <value>94, 71</value>
+    <value>94, 39</value>
   </data>
   <data name="btnSavePrint.TabIndex" type="System.Int32, mscorlib">
     <value>502</value>
   </data>
   <data name="btnSavePrint.Text" xml:space="preserve">
     <value>طباعة وحفظ</value>
-  </data>
-  <data name="btnSavePrint.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
   </data>
   <data name="&gt;&gt;btnSavePrint.Name" xml:space="preserve">
     <value>btnSavePrint</value>
@@ -436,16 +433,16 @@
     <value>mainpanel</value>
   </data>
   <data name="&gt;&gt;btnSavePrint.ZOrder" xml:space="preserve">
-    <value>18</value>
+    <value>0</value>
   </data>
   <data name="ResetAll.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="ResetAll.Location" type="System.Drawing.Point, System.Drawing">
-    <value>117, 557</value>
+    <value>111, 605</value>
   </data>
   <data name="ResetAll.Size" type="System.Drawing.Size, System.Drawing">
-    <value>92, 71</value>
+    <value>92, 39</value>
   </data>
   <data name="ResetAll.TabIndex" type="System.Int32, mscorlib">
     <value>501</value>
@@ -760,7 +757,7 @@
     <value>NoControl</value>
   </data>
   <data name="checkedViewed.Location" type="System.Drawing.Point, System.Drawing">
-    <value>251, 426</value>
+    <value>1187, 387</value>
   </data>
   <data name="checkedViewed.Size" type="System.Drawing.Size, System.Drawing">
     <value>151, 33</value>
@@ -1429,7 +1426,7 @@
     <value>mainpanel</value>
   </data>
   <data name="&gt;&gt;panel1.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>8</value>
   </data>
   <data name="ThirdPartyDesc.Font" type="System.Drawing.Font, System.Drawing">
     <value>Arabic Typesetting, 18pt</value>
@@ -2374,7 +2371,7 @@
     <value>mainpanel</value>
   </data>
   <data name="&gt;&gt;AttendViceConsul.ZOrder" xml:space="preserve">
-    <value>17</value>
+    <value>18</value>
   </data>
   <data name="مكان_الإصدار.Font" type="System.Drawing.Font, System.Drawing">
     <value>Arabic Typesetting, 18pt</value>
@@ -2401,7 +2398,7 @@
     <value>mainpanel</value>
   </data>
   <data name="&gt;&gt;مكان_الإصدار.ZOrder" xml:space="preserve">
-    <value>16</value>
+    <value>17</value>
   </data>
   <data name="label7.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -2437,7 +2434,7 @@
     <value>mainpanel</value>
   </data>
   <data name="&gt;&gt;label7.ZOrder" xml:space="preserve">
-    <value>15</value>
+    <value>16</value>
   </data>
   <data name="label3.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -2473,7 +2470,7 @@
     <value>mainpanel</value>
   </data>
   <data name="&gt;&gt;label3.ZOrder" xml:space="preserve">
-    <value>13</value>
+    <value>14</value>
   </data>
   <data name="مقدم_الطلب.Font" type="System.Drawing.Font, System.Drawing">
     <value>Arabic Typesetting, 18pt</value>
@@ -2500,7 +2497,7 @@
     <value>mainpanel</value>
   </data>
   <data name="&gt;&gt;مقدم_الطلب.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>12</value>
   </data>
   <data name="labelName.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -2536,7 +2533,7 @@
     <value>mainpanel</value>
   </data>
   <data name="&gt;&gt;labelName.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>10</value>
   </data>
   <metadata name="timer3.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>556, 25</value>
@@ -2662,7 +2659,7 @@
     <value>mainpanel</value>
   </data>
   <data name="&gt;&gt;panel3.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="التاريخ_الميلادي_off.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -2695,7 +2692,7 @@
     <value>mainpanel</value>
   </data>
   <data name="&gt;&gt;التاريخ_الميلادي_off.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="txtEditID2.Font" type="System.Drawing.Font, System.Drawing">
     <value>Arabic Typesetting, 18pt</value>
@@ -2725,7 +2722,7 @@
     <value>mainpanel</value>
   </data>
   <data name="&gt;&gt;txtEditID2.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="btnEditID.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>
@@ -2761,7 +2758,7 @@
     <value>mainpanel</value>
   </data>
   <data name="&gt;&gt;btnEditID.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="txtEditID1.Font" type="System.Drawing.Font, System.Drawing">
     <value>Arabic Typesetting, 18pt</value>
@@ -2791,7 +2788,7 @@
     <value>mainpanel</value>
   </data>
   <data name="&gt;&gt;txtEditID1.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="textBox3.Font" type="System.Drawing.Font, System.Drawing">
     <value>Arabic Typesetting, 18pt</value>
@@ -2815,7 +2812,7 @@
     <value>mainpanel</value>
   </data>
   <data name="&gt;&gt;textBox3.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="mainpanel.Location" type="System.Drawing.Point, System.Drawing">
     <value>17, 52</value>
@@ -2840,54 +2837,6 @@
   </data>
   <data name="&gt;&gt;mainpanel.ZOrder" xml:space="preserve">
     <value>1</value>
-  </data>
-  <data name="PanelFiles.Location" type="System.Drawing.Point, System.Drawing">
-    <value>82, 3</value>
-  </data>
-  <data name="PanelFiles.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1282, 40</value>
-  </data>
-  <data name="PanelFiles.TabIndex" type="System.Int32, mscorlib">
-    <value>634</value>
-  </data>
-  <data name="&gt;&gt;PanelFiles.Name" xml:space="preserve">
-    <value>PanelFiles</value>
-  </data>
-  <data name="&gt;&gt;PanelFiles.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;PanelFiles.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;PanelFiles.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="dataGridView1.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Top, Bottom, Left, Right</value>
-  </data>
-  <data name="dataGridView1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>15, 45</value>
-  </data>
-  <data name="dataGridView1.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
-    <value>Yes</value>
-  </data>
-  <data name="dataGridView1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1343, 663</value>
-  </data>
-  <data name="dataGridView1.TabIndex" type="System.Int32, mscorlib">
-    <value>635</value>
-  </data>
-  <data name="&gt;&gt;dataGridView1.Name" xml:space="preserve">
-    <value>dataGridView1</value>
-  </data>
-  <data name="&gt;&gt;dataGridView1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;dataGridView1.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;dataGridView1.ZOrder" xml:space="preserve">
-    <value>3</value>
   </data>
   <data name="الشاهد_الأول.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -3140,6 +3089,54 @@
   </data>
   <data name="&gt;&gt;label32.ZOrder" xml:space="preserve">
     <value>7</value>
+  </data>
+  <data name="PanelFiles.Location" type="System.Drawing.Point, System.Drawing">
+    <value>82, 3</value>
+  </data>
+  <data name="PanelFiles.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1282, 40</value>
+  </data>
+  <data name="PanelFiles.TabIndex" type="System.Int32, mscorlib">
+    <value>634</value>
+  </data>
+  <data name="&gt;&gt;PanelFiles.Name" xml:space="preserve">
+    <value>PanelFiles</value>
+  </data>
+  <data name="&gt;&gt;PanelFiles.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;PanelFiles.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;PanelFiles.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="dataGridView1.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Bottom, Left, Right</value>
+  </data>
+  <data name="dataGridView1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>15, 45</value>
+  </data>
+  <data name="dataGridView1.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
+    <value>Yes</value>
+  </data>
+  <data name="dataGridView1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1343, 663</value>
+  </data>
+  <data name="dataGridView1.TabIndex" type="System.Int32, mscorlib">
+    <value>635</value>
+  </data>
+  <data name="&gt;&gt;dataGridView1.Name" xml:space="preserve">
+    <value>dataGridView1</value>
+  </data>
+  <data name="&gt;&gt;dataGridView1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;dataGridView1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;dataGridView1.ZOrder" xml:space="preserve">
+    <value>3</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>

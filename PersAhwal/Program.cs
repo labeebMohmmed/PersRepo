@@ -29,8 +29,8 @@ namespace PersAhwal
         //static string dataSource56 = "Data Source=192.168.100.56,49170;Network Library=DBMSSOCN;Initial Catalog=AhwalDataBase;User ID=ConsJeddahAdmin;Password=DataBC0nsJ49170";
         //static string dataSource56 = "Data Source=192.168.100.58,49170;Network Library=DBMSSOCN;Initial Catalog=SudaneseAffairs;User ID=SADDB;Password=SADDB96325";
         //static string dataSource57 = "Data Source=192.168.100.57,49170;Network Library=DBMSSOCN;Initial Catalog=AhwalDataBase;User ID=sa;Password=1234";
-        static string dataSource100A = "Data Source=192.168.100.100,49170;Network Library=DBMSSOCN;Initial Catalog=AhwalDataBase;User ID=GeneralUSer;Password=GeneralUSer_9632";
-        static string dataSource100S = "Data Source=192.168.100.100,49170;Network Library=DBMSSOCN;Initial Catalog=SudaneseAffairs;User ID=GeneralUSer;Password=GeneralUSer_9632";
+        static string dataSource100A = "Data Source=192.168.100.100,49170;Network Library=DBMSSOCN;Initial Catalog=AhwalDataBase;User ID=GeneralUSerDB;Password=GeneralUSer_9632";
+        static string dataSource100S = "Data Source=192.168.100.100,49170;Network Library=DBMSSOCN;Initial Catalog=SudaneseAffairs;User ID=GeneralUSerDB;Password=GeneralUSer_9632";
         //static string dataSource = "Data Source=192.168.100.100,49170;Initial Catalog=AhwalDataBase;User ID=Admin;Password=admin123";
         //static string dataSource = "Data Source=DESKTOP-KUPSRH8\\SQLEXPRESS;Initial Catalog=AhwalDataBase;Integrated Security=True";
         // Office computer 
@@ -167,9 +167,9 @@ namespace PersAhwal
             //Application.Run(new NoteVerbal("29-06-2022","28-11-1443",JobPossition, dataSource56,  @"\\192.168.100.56\Users\Public\Documents\ModelFiles", archFile, EmployeeName, 1, false));
             //Application.Run(new MerriageDoc(dataSource100A,false, EmployeeName,2, "29-06-2022", "28-11-1443", @"D:\PrimariFiles\ModelFiles\", archFile));
             //Application.Run(new PassAway(2,dataSource100A,  @"D:\PrimariFiles\ModelFiles\", archFile, JobPossition,EmployeeName, "29-06-2022", "28-11-1443"));
-            Application.Run(new FormAuth(2, -1, "", dataSource100A, @"D:\PrimariFiles\ModelFiles\", archFile, EmployeeName, JobPossition, "03-01-2023", "09-08-1444", true));
+            //Application.Run(new FormAuth(2, -1, "", dataSource100A, @"D:\PrimariFiles\ModelFiles\", archFile, EmployeeName, JobPossition, "03-01-2023", "09-08-1444", true));
             //Application.Run(new FormCollection(2, -1, 0, EmployeeName,dataSource100A, @"D:\PrimariFiles\ModelFiles\", archFile, JobPossition, "10-26-2022", "28-11-1443"));
-            //Application.Run(new MainForm("موظف ارشفة", 3, "57", "لبيب محمد أحمد", "تعيين محلي", dataSource100S, dataSource100A, @"D:\PrimariFiles\ModelFiles\", archFile, @"D:\PrimariFiles\FormData\", FormDataFile + @"\", true, "02-01-2023", "09-07-1444", Modelfilespath, FormDataFile, false));
+            Application.Run(new MainForm("موظف ارشفة", 3, "57", "لبيب محمد أحمد", "تعيين محلي", dataSource100S, dataSource100A, @"D:\PrimariFiles\ModelFiles\", archFile, @"D:\PrimariFiles\FormData\", FormDataFile + @"\", true, "06-16-2023", "24-08-1444", Modelfilespath, FormDataFile, false));
             //string[] str = new string[1] { "" };
             //Application.Run(new FormPics("57", EmployeeName, "لبيب محمد أحمد", "نائب قنصل", dataSource100A, 0, FormDataFile, archFile, 3, str, str, false, str, str));
             //Application.Run(new Settings("57", false, dataSource100S, dataSource100A, false, Modelfilespath + @"\", archFile, archFile, FormDataFile + @"\", ""));

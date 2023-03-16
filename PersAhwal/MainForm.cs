@@ -249,7 +249,7 @@ namespace PersAhwal
 
             LocalModelFiles = primeryLink + @"ModelFiles\";
             LocalModelForms = primeryLink + @"FormData\";
-
+            
             Console.WriteLine(2);
             sqlCon = new SqlConnection(DataSource);
             Console.WriteLine(3);
@@ -329,7 +329,7 @@ namespace PersAhwal
             //MessageBox.Show(DataSource);
             loadSettings(DataSource, false, false, false, false);
             ReportNo.Text = "ق س ج/" + DateTime.Now.ToString("dd") + "/11" + "/160";
-
+            
             Console.WriteLine(6);
             perbtn1.Visible = false;
             persbtn2.Visible = false;
@@ -372,6 +372,7 @@ namespace PersAhwal
             Console.WriteLine(7);
             //backgroundWorker1.RunWorkerAsync();
             backgroundWorker2.RunWorkerAsync();
+            backgroundWorker3.RunWorkerAsync();
 
 
             //MessageBox.Show("FilespathIn " + FilespathIn);
@@ -2470,7 +2471,7 @@ namespace PersAhwal
 
                     string column = "@" + items;
                     DataTable dataRowTable = new DataTable();
-                    SqlConnection sqlCon = new SqlConnection(DataSource);
+                    SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
                     if (sqlCon.State == ConnectionState.Closed)
                         try
                         {
@@ -2578,7 +2579,7 @@ namespace PersAhwal
 
                     string column = "@" + items;
                     DataTable dataRowTable = new DataTable();
-                    SqlConnection sqlCon = new SqlConnection(DataSource);
+                    SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
                     if (sqlCon.State == ConnectionState.Closed)
                         try
                         {
@@ -3710,7 +3711,7 @@ namespace PersAhwal
         void FillDatafromGenArch(string search, string column)
         {
 
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
 
             if (sqlCon.State == ConnectionState.Closed)
 
@@ -3788,7 +3789,7 @@ namespace PersAhwal
         private bool FillDatafromGenArch(string search, string doc, Button button)
         {            
             string query = "select * from TableGeneralArch where  رقم_معاملة_القسم=N'" + search + "' and نوع_المستند='" + doc + "'";
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 try
                 {
@@ -3829,7 +3830,7 @@ namespace PersAhwal
         {
 
            
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 try
                 {
@@ -4330,7 +4331,7 @@ namespace PersAhwal
         {
 
             string query = "INSERT INTO TableGeneralArch (Data1,Extension1,نوع_المستند,رقم_معاملة_القسم,المستند,الموظف,التاريخ) values (@Data1,@Extension1,@نوع_المستند,@رقم_معاملة_القسم,@المستند,@الموظف,@التاريخ)";
-            SqlConnection sqlCon = new SqlConnection(dataSource);
+            SqlConnection sqlCon = new SqlConnection(dataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 try
                 {
@@ -4475,7 +4476,7 @@ namespace PersAhwal
         }
         private string getUniqueID(string query)
         {
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
@@ -4558,7 +4559,7 @@ namespace PersAhwal
         {
 
 
-            if (persbtn3.SelectedIndex >= 0 && persbtn3.SelectedIndex <= 7)
+            if (persbtn3.SelectedIndex >= 1 && persbtn3.SelectedIndex <= 7)
             {
                 if (mangerArch.CheckState == CheckState.Checked)
                 {
@@ -4893,7 +4894,7 @@ namespace PersAhwal
         {
             combo.Items.Clear();
             string query = "select distinct DATENAME(YEAR, التاريخ) as years from TableGeneralArch order by DATENAME(YEAR, التاريخ) desc";
-            SqlConnection Con = new SqlConnection(DataSource);
+            SqlConnection Con = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (Con.State == ConnectionState.Closed)
                 try
                 {
@@ -4915,7 +4916,7 @@ namespace PersAhwal
         {
             combo.Items.Clear();
             string query = "select distinct DATEpart("+ duration+", التاريخ) ,DATEpart(" + duration+", التاريخ) as duration from TableGeneralArch where DATEpart(year, التاريخ) = " + year+" order by DATEpart("+ duration+", التاريخ) desc";
-            SqlConnection Con = new SqlConnection(DataSource);
+            SqlConnection Con = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (Con.State == ConnectionState.Closed)
                 try
                 {
@@ -5036,7 +5037,8 @@ namespace PersAhwal
             }
 
             string ReportName = "Report" + DateTime.Now.ToString("mmss") + ".docx";
-            if (A <= 0) MessageBox.Show("لا توجد معاملات غير مؤرشفة");
+            if (A <= 0)
+                Console.WriteLine ("لا توجد معاملات غير مؤرشفة");
             else if (A <= 100)
             {
                 for (int x = 0; x < A; x++)
@@ -5356,7 +5358,7 @@ namespace PersAhwal
         private void insertMessDoc(string id, string date, string employee, string dataSource, string extn1, string DocName1, string messNo, string docType, byte[] buffer1)
         {
             string query = "INSERT INTO TableGeneralArch (Data1,Extension1,نوع_المستند,رقم_معاملة_القسم,المستند,الموظف,التاريخ,رقم_المرجع,docTable) values (@Data1,@Extension1,@نوع_المستند,@رقم_معاملة_القسم,@المستند,@الموظف,@التاريخ,@رقم_المرجع,@docTable)";
-            SqlConnection sqlCon = new SqlConnection(dataSource);
+            SqlConnection sqlCon = new SqlConnection(dataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
@@ -5377,7 +5379,7 @@ namespace PersAhwal
         {
             //checkYear(DataSource);
 
-            autoCompleteTextBox(applicant, DataSource, "الاسم", "TableGeneralArch");
+            autoCompleteTextBox(applicant, DataSource.Replace("AhwalDataBase", "ArchFilesDB"), "الاسم", "TableGeneralArch");
             fileComboBox(AttendViceConsul, DataSource, "ArabicAttendVC", "TableListCombo", true);
             fileComboBox(perbtn1, DataSource, "AuthTypes", "TableListCombo", true);
             fileComboBox(attendedVC, DataSource, "ArabicAttendVC", "TableListCombo", true);
@@ -5558,7 +5560,9 @@ namespace PersAhwal
                 mangerArch.Text = "ادخال البيانات";
                 persbtn2.Visible = persbtn10.Visible = true;
                 perbtn1.Visible = docCollectCombo.Visible = false;
+                
             }
+            if (Server == "56") docCollectCombo.Visible = false;
         }
 
         
@@ -6056,7 +6060,7 @@ namespace PersAhwal
 
         private string FillDatafromGenArch(string doc, string id, string table)
         {
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableGeneralArch where  رقم_المرجع='" + id + "' and نوع_المستند='" + doc + "' and docTable='" + table + "'", sqlCon);
@@ -6090,7 +6094,7 @@ namespace PersAhwal
         
         private string GenArch(string id, string table)
         {
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableGeneralArch where  رقم_المرجع='" + id + "' and نوع_المستند='data2' and docTable='" + table + "' and المستند like N'الإيصال المالي%'", sqlCon);
@@ -6123,7 +6127,7 @@ namespace PersAhwal
         }
         private string FillGenArch(string id, string table)
         {
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableGeneralArch where  رقم_المرجع='" + id + "' and نوع_المستند='data2' and docTable='" + table + "' and المستند like N'الإيصال المالي%'", sqlCon);
@@ -6222,7 +6226,7 @@ namespace PersAhwal
         private void deleteGenArch(string v1, string v2)
         {
             string query;
-            SqlConnection Con = new SqlConnection(DataSource);
+            SqlConnection Con = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             query = "DELETE FROM TableGeneralArch where رقم_المرجع = @رقم_المرجع and docTable=@docTable";
             if (Con.State == ConnectionState.Closed)
                 Con.Open();
@@ -6917,7 +6921,7 @@ namespace PersAhwal
         private void insertDocx(string id, string name, string date, string employee, string dataSource, string extn1, string DocName1, string messNo, string docType, byte[] buffer1)
         {
             string query = "INSERT INTO TableGeneralArch (Data1,Extension1,نوع_المستند,رقم_معاملة_القسم,المستند,الموظف,التاريخ,رقم_المرجع,docTable,الاسم) values (@Data1,@Extension1,@نوع_المستند,@رقم_معاملة_القسم,@المستند,@الموظف,@التاريخ,@رقم_المرجع,@docTable,@الاسم)";
-            SqlConnection sqlCon = new SqlConnection(dataSource);
+            SqlConnection sqlCon = new SqlConnection(dataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
@@ -7485,6 +7489,7 @@ namespace PersAhwal
             sqlDa.Fill(table);
             sqlCon.Close();
             //MessageBox.Show(dataSource);
+            dataSource = dataSource.Replace("AhwalDataBase", "ArchFilesDB");
             string subInfo = "";
             foreach (DataRow dataRow in table.Rows)
             {
@@ -7653,6 +7658,7 @@ namespace PersAhwal
             sqlDa.Fill(table);
             sqlCon.Close();
             //MessageBox.Show(dataSource);
+            dataSource = dataSource.Replace("AhwalDataBase", "ArchFilesDB");
             string subInfo = "";
             foreach (DataRow dataRow in table.Rows)
             {
@@ -8297,7 +8303,7 @@ namespace PersAhwal
         private void updataArchData2()
         {
             bool ready = true;
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             string[] DocumentID;
             string year = DateTime.Now.Year.ToString().Replace("20", "");
 
@@ -8370,7 +8376,7 @@ namespace PersAhwal
         private void fileUpload(string id, string text)
         {
             //MessageBox.Show(id);
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 try
                 {
@@ -8407,11 +8413,13 @@ namespace PersAhwal
             return table;
         }
 
+        
+
         private void insertDoc(string id, string date, string employee, string dataSource, string extn1, string DocName1, string messNo, string docType, byte[] buffer1,string table)
         {
             string query = "INSERT INTO TableGeneralArch (Data1,Extension1,نوع_المستند,رقم_معاملة_القسم,المستند,الموظف,التاريخ,رقم_المرجع,docTable) values (@Data1,@Extension1,@نوع_المستند,@رقم_معاملة_القسم,@المستند,@الموظف,@التاريخ,@رقم_المرجع,@docTable)";
             //MessageBox.Show(query);
-            SqlConnection sqlCon = new SqlConnection(dataSource);
+            SqlConnection sqlCon = new SqlConnection(dataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
@@ -8876,7 +8884,7 @@ namespace PersAhwal
 
         private void FinalDataArch(string dataSource, string filePath,int id)
         {
-            SqlConnection sqlCon = new SqlConnection(dataSource);
+            SqlConnection sqlCon = new SqlConnection(dataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             
             try
             {
@@ -9164,6 +9172,398 @@ namespace PersAhwal
             }
             Con.Close();
 
+
+        }
+        private void backgroundWorker3_DoWork(object sender, DoWorkEventArgs e)
+        {
+            fillSamplesCodes(Database); 
+            
+            calcStarTextCollection(DataSource, "نوع_الإجراء", "TableCollection", "TableCollectStarText");
+            calcStarTextAuth(DataSource, "إجراء_التوكيل", "TableAuth", "TableAuthStarText");
+        }
+
+        private void calcStarTextCollection(string dataSource, string col, string table, string genTable)
+        {
+            string query = "select distinct "+col+" from "+table;
+            SqlConnection sqlCon = new SqlConnection(dataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            foreach (DataRow row in dtbl.Rows)
+            {
+                string column = row[col].ToString().Replace(" ","_");
+                if (!checkColExist(genTable, column)) 
+                {
+                    CreateColumn(column, genTable);
+                }
+            }
+            foreach (DataRow row in dtbl.Rows)
+            {
+                string column = row[col].ToString();
+                reversTextReviewCol(DataSource, column);
+            }
+            sqlCon.Close();
+        }
+        
+        
+        private void calcStarTextAuth(string dataSource, string col, string table, string genTable)
+        {
+            string query = "select distinct "+col+" from "+table;
+            SqlConnection sqlCon = new SqlConnection(dataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            foreach (DataRow row in dtbl.Rows)
+            {
+                string column = row[col].ToString().Replace(" ","_");
+                if (!checkColExist(genTable, column)) 
+                {
+                    CreateColumn(column, genTable);
+                }
+            }
+            foreach (DataRow row in dtbl.Rows)
+            {
+                string column = row[col].ToString();
+                reversTextReviewAuth(DataSource, column);
+            }
+            sqlCon.Close();
+        }
+        
+        private bool checkStarTextExist(string dataSource, string col, string text, string genTable)
+        {
+            string query = "select * from "+ genTable + " where "+col+"=N'"+text+"'";
+            SqlConnection sqlCon = new SqlConnection(dataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            if (dtbl.Rows.Count > 0) return true;
+            else return false;
+            sqlCon.Close();
+        }
+        
+        private int checkTotalRows(string dataSource, string genTable)
+        {
+            string query = "select * from "+ genTable;
+            SqlConnection sqlCon = new SqlConnection(dataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            
+            return dtbl.Rows.Count;
+            sqlCon.Close();
+        }
+        
+        private int checkTotalcolRows(string dataSource, string genTable, string col)
+        {
+            string query = "select * from "+ genTable +" where "+col + " is not null";
+            SqlConnection sqlCon = new SqlConnection(dataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            
+            return dtbl.Rows.Count;
+            sqlCon.Close();
+        }
+        
+        private void insertNewText(string dataSource, string col, string text, string genTable)
+        {
+            SqlConnection sqlCon = new SqlConnection(dataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+            SqlCommand sqlCmd = new SqlCommand("INSERT INTO "+ genTable+" ("+ col+")  values (N'"+text+"') ", sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
+        }
+
+        private void updateNewText(string dataSource, string col, string text, string genTable, string ID)
+        {
+            string query = "update " + genTable + " set " + col + "=N'" + text + "' where ID=" + ID;
+            SqlConnection sqlCon = new SqlConnection(dataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
+        }
+
+        private void reversTextReviewAuth(string dataSource, string إجراء_التوكيل)
+        {
+            string query = "select * from TableAuth where إجراء_التوكيل = N'" + إجراء_التوكيل + "' order by ID desc";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            int index = 0;
+            
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                if (dataRow["txtReview"].ToString() == "") continue;
+
+                string txtReviewList = dataRow["txtReview"].ToString();
+
+                Console.WriteLine(txtReviewList);
+                if (dataRow["itext1"].ToString() != "" && txtReviewList.Contains(dataRow["itext1"].ToString()))
+                    txtReviewList = txtReviewList.Replace(dataRow["itext1"].ToString(), "t1");
+                if (dataRow["itext2"].ToString() != "" && txtReviewList.Contains(dataRow["itext2"].ToString()))
+                    txtReviewList = txtReviewList.Replace(dataRow["itext2"].ToString(), "t2");
+                if (dataRow["itext3"].ToString() != "" && txtReviewList.Contains(dataRow["itext3"].ToString()))
+                    txtReviewList = txtReviewList.Replace(dataRow["itext3"].ToString(), "t3");
+                if (dataRow["itext4"].ToString() != "" && txtReviewList.Contains(dataRow["itext4"].ToString()))
+                    txtReviewList = txtReviewList.Replace(dataRow["itext4"].ToString(), "t4");
+                if (dataRow["itext5"].ToString() != "" && txtReviewList.Contains(dataRow["itext5"].ToString()))
+                    txtReviewList = txtReviewList.Replace(dataRow["itext5"].ToString(), "t5");
+
+                if (dataRow["icheck1"].ToString() != "" && txtReviewList.Contains(dataRow["icheck1"].ToString()))
+                    txtReviewList = txtReviewList.Replace(dataRow["icheck1"].ToString(), "c1");
+
+                if (dataRow["icombo1"].ToString() != "" && txtReviewList.Contains(dataRow["icombo1"].ToString()))
+                    txtReviewList = txtReviewList.Replace(dataRow["icombo1"].ToString(), "m1");
+                if (dataRow["icombo2"].ToString() != "" && txtReviewList.Contains(dataRow["icombo2"].ToString()))
+                    txtReviewList = txtReviewList.Replace(dataRow["icombo2"].ToString(), "m2");
+
+                if (dataRow["ibtnAdd1"].ToString() != "" && txtReviewList.Contains(dataRow["ibtnAdd1"].ToString()))
+                    txtReviewList = txtReviewList.Replace(dataRow["ibtnAdd1"].ToString(), "a1");
+                if (dataRow["itxtDate1"].ToString() != "" && txtReviewList.Contains(dataRow["itxtDate1"].ToString()))
+                    txtReviewList = txtReviewList.Replace(dataRow["itxtDate1"].ToString(), "n1");
+
+                txtReviewList = SuffOrigConvertments(txtReviewList);
+
+                int TotalRows = checkTotalRows(dataSource, "TableAuthStarText");
+                int TotalcolRows = checkTotalcolRows(dataSource, "TableAuthStarText", إجراء_التوكيل.Replace(" ", "_"));
+
+
+                Console.WriteLine("checkTotalRows = " + TotalRows);
+                Console.WriteLine("checkTotalcolRows = " + TotalcolRows);
+
+
+                if (TotalRows == TotalcolRows && !checkStarTextExist(dataSource, إجراء_التوكيل.Replace(" ", "_"), txtReviewList, "TableAuthStarText"))
+                    insertNewText(dataSource, إجراء_التوكيل.Replace(" ", "_"), txtReviewList, "TableAuthStarText");
+                else if (TotalRows != TotalcolRows && !checkStarTextExist(dataSource, إجراء_التوكيل.Replace(" ", "_"), txtReviewList, "TableAuthStarText"))
+                    updateNewText(dataSource, إجراء_التوكيل.Replace(" ", "_"), txtReviewList, "TableAuthStarText", (TotalcolRows + 1).ToString());
+
+                Console.WriteLine(txtReviewList);
+                index++;
+            }
+        }
+
+        private void reversTextReviewCol(string dataSource, string نوع_الإجراء)
+        {
+            string query = "select * from TableCollection where نوع_الإجراء = N'" + نوع_الإجراء + "' order by ID desc";
+            SqlConnection sqlCon = new SqlConnection(dataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            int index = 0;
+            
+            
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                if (dataRow["txtReview"].ToString() == "") 
+                    continue;
+                string txtReviewList = dataRow["txtReview"].ToString();                
+                if (dataRow["Vitext1"].ToString() != "" && txtReviewList.Contains(dataRow["Vitext1"].ToString()))
+                    txtReviewList = txtReviewList.Replace(dataRow["Vitext1"].ToString(), "t1");
+                if (dataRow["Vitext2"].ToString() != "" && txtReviewList.Contains(dataRow["Vitext2"].ToString()))
+                    txtReviewList = txtReviewList.Replace(dataRow["Vitext2"].ToString(), "t2");
+                if (dataRow["Vitext3"].ToString() != "" && txtReviewList.Contains(dataRow["Vitext3"].ToString()))
+                    txtReviewList = txtReviewList.Replace(dataRow["Vitext3"].ToString(), "t3");
+                if (dataRow["Vitext4"].ToString() != "" && txtReviewList.Contains(dataRow["Vitext4"].ToString()))
+                    txtReviewList = txtReviewList.Replace(dataRow["Vitext4"].ToString(), "t4");
+                if (dataRow["Vitext5"].ToString() != "" && txtReviewList.Contains(dataRow["Vitext5"].ToString()))
+                    txtReviewList = txtReviewList.Replace(dataRow["Vitext5"].ToString(), "t5");
+                if (dataRow["Vicheck1"].ToString() != "" && txtReviewList.Contains(dataRow["Vicheck1"].ToString()))
+                    txtReviewList = txtReviewList.Replace(dataRow["Vicheck1"].ToString(), "c1");
+                if (dataRow["Vicombo1"].ToString() != "" && txtReviewList.Contains(dataRow["Vicombo1"].ToString()))
+                    txtReviewList = txtReviewList.Replace(dataRow["Vicombo1"].ToString(), "m1");
+                if (dataRow["Vicombo1"].ToString() != "" && txtReviewList.Contains(dataRow["Vicombo1"].ToString()))
+                    txtReviewList = txtReviewList.Replace(dataRow["Vicombo1"].ToString(), "m2");
+                if (dataRow["LibtnAdd1"].ToString() != "" && txtReviewList.Contains(dataRow["LibtnAdd1"].ToString()))
+                    txtReviewList = txtReviewList.Replace(dataRow["LibtnAdd1"].ToString(), "a1");
+                if (dataRow["VitxtDate1"].ToString() != "" && txtReviewList.Contains(dataRow["VitxtDate1"].ToString()))
+                    txtReviewList = txtReviewList.Replace(dataRow["VitxtDate1"].ToString(), "n1");
+                if (txtReviewList.Contains("مقدم_الطلب"))
+                    txtReviewList = txtReviewList.Replace("مقدم_الطلب", "tN");
+                if (txtReviewList.Contains("رقم_الهوية"))
+                    txtReviewList = txtReviewList.Replace("رقم_الهوية", "tP");
+                if (txtReviewList.Contains("مكان_الإصدار"))
+                    txtReviewList = txtReviewList.Replace("مكان_الإصدار", "tS");
+                if (txtReviewList.Contains("تاريخ_الميلاد"))
+                    txtReviewList = txtReviewList.Replace("تاريخ_الميلاد", "tB");
+                if (txtReviewList.Contains("نوع_الهوية"))
+                    txtReviewList = txtReviewList.Replace("نوع_الهوية", "tD");
+                try
+                {
+                    if (txtReviewList.Contains("title"))
+                        txtReviewList = txtReviewList.Replace("title", "tT");
+                }
+                catch (Exception ex) { }
+                txtReviewList = SuffOrigConvertments(txtReviewList);
+
+                int TotalRows = checkTotalRows(dataSource, "TableCollectStarText");
+                int TotalcolRows = checkTotalcolRows(dataSource, "TableCollectStarText", نوع_الإجراء.Replace(" ", "_"));
+
+
+                Console.WriteLine("checkTotalRows = " + TotalRows);
+                Console.WriteLine("checkTotalcolRows = " + TotalcolRows);
+
+
+                if (TotalRows == TotalcolRows && !checkStarTextExist(dataSource, نوع_الإجراء.Replace(" ", "_"), txtReviewList, "TableCollectStarText")) 
+                    insertNewText(dataSource, نوع_الإجراء.Replace(" ", "_"), txtReviewList, "TableCollectStarText");
+                else if (TotalRows != TotalcolRows && !checkStarTextExist(dataSource, نوع_الإجراء.Replace(" ", "_"), txtReviewList, "TableCollectStarText")) 
+                    updateNewText(dataSource, نوع_الإجراء.Replace(" ", "_"), txtReviewList, "TableCollectStarText",(TotalcolRows+1).ToString());
+                Console.WriteLine(txtReviewList);
+                index++;
+            }
+
+
+
+        }
+
+        private void textCoding(string txtReviewList)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void fillSamplesCodes(string source)
+        {
+            string query = "select * from Tablechar";
+
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return ; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            dataGridView3.DataSource = dtbl;
+        }
+
+        private string SuffOrigConvertments(string text)
+        {
+            try
+            {
+                string[] words = text.Split(' ');
+
+                foreach (string word in words)
+                {
+                    if (word == "" || word == " ") continue;
+                    for (int gridIndex = 0; gridIndex < dataGridView3.Rows.Count - 1; gridIndex++)
+                    {
+                        string code = dataGridView3.Rows[gridIndex].Cells["الرموز"].Value.ToString();
+                        string[] replacemests = new string[6];
+                        replacemests[0] = dataGridView3.Rows[gridIndex].Cells["المقابل1"].Value.ToString();
+                        replacemests[1] = dataGridView3.Rows[gridIndex].Cells["المقابل2"].Value.ToString();
+                        replacemests[2] = dataGridView3.Rows[gridIndex].Cells["المقابل3"].Value.ToString();
+                        replacemests[3] = dataGridView3.Rows[gridIndex].Cells["المقابل4"].Value.ToString();
+                        replacemests[4] = dataGridView3.Rows[gridIndex].Cells["المقابل5"].Value.ToString();
+                        replacemests[5] = dataGridView3.Rows[gridIndex].Cells["المقابل6"].Value.ToString();
+
+                        for (int cellIndex = 0; cellIndex < 6; cellIndex++)
+                        {
+                            if (word == replacemests[cellIndex])
+                            {
+                                text = text.Replace(word, code);
+                                //MessageBox.Show(text);
+                                break;
+                            }
+                            else if (word == replacemests[cellIndex] + "،")
+                            {
+                                text = text.Replace(word, code + "،");
+                                //MessageBox.Show(text);
+                                break;
+                            }
+                        }
+
+                    }
+                }
+            }
+            catch (Exception ex) { }
+            return text;
+        }
+
+        private void CreateColumn(string Columnname, string tableName)
+        {
+
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return; }
+            SqlCommand sqlCmd = new SqlCommand("alter table " + tableName + " add " + Columnname + " nvarchar(max)", sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            try
+            {
+                sqlCmd.ExecuteNonQuery();
+            }
+            catch (Exception ex) { return; }
+            sqlCon.Close();
+        }
+
+        private bool checkColExist(string table, string colName)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource57);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return false; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT name FROM sys.columns WHERE object_id = OBJECT_ID('" + table + "')", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+
+            foreach (DataRow row in dtbl.Rows)
+            {
+
+                if (row["name"].ToString() == colName)
+                {
+                    return true;
+                }
+            }
+            //MessageBox.Show(table+" - "+ colName);
+            return false;
 
         }
 

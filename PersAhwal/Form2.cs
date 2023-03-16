@@ -1824,7 +1824,7 @@ namespace PersAhwal
         }
         void FillDatafromGenArch(string doc, string id, string table)
         {
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableGeneralArch where  رقم_المرجع='" + id + "' and نوع_المستند='" + doc + "' and docTable='" + table + "'", sqlCon);

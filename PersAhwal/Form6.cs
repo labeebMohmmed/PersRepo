@@ -190,7 +190,7 @@ namespace PersAhwal
 
         void FillDatafromGenArch(string doc, string id, string table)
         {
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableGeneralArch where  رقم_المرجع='" + id + "' and نوع_المستند='" + doc + "' and docTable='" + table + "'", sqlCon);
@@ -657,20 +657,7 @@ namespace PersAhwal
                     sqlCmd.Parameters.AddWithValue("@DataMandoubName", mandoubName.Text.Trim());
                     sqlCmd.Parameters.AddWithValue("@RelatedApp", PreAppId.Trim());
                     sqlCmd.Parameters.AddWithValue("@purpose", txtPurpose.Text.Trim());
-                    string filePath1 = FilesPathIn + "text1.txt";
-                    string filePath2 = FilesPathIn + "text2.txt";
                     
-                    using (Stream stream = File.OpenRead(filePath2))
-                    {
-                        byte[] buffer2 = new byte[stream.Length];
-                        stream.Read(buffer2, 0, buffer2.Length);
-                        var fileinfo2 = new FileInfo(filePath2);
-                        string extn2 = fileinfo2.Extension;
-                        string DocName2 = fileinfo2.Name;
-                        sqlCmd.Parameters.Add("@Data2", SqlDbType.VarBinary).Value = buffer2;
-                        sqlCmd.Parameters.Add("@Extension2", SqlDbType.Char).Value = extn2;
-                        sqlCmd.Parameters.Add("@FileName2", SqlDbType.NVarChar).Value = DocName2;
-                    }
                     sqlCmd.Parameters.AddWithValue("@Comment", Comment.Text.Trim());
                     sqlCmd.Parameters.AddWithValue("@ArchivedState", "غير مؤرشف");
                     sqlCmd.ExecuteNonQuery();
@@ -695,26 +682,7 @@ namespace PersAhwal
                     sqlCmd.Parameters.AddWithValue("@DataMandoubName", mandoubName.Text.Trim());
                     sqlCmd.Parameters.AddWithValue("@RelatedApp", PreAppId.Trim());
                     sqlCmd.Parameters.AddWithValue("@purpose", txtPurpose.Text.Trim());
-                    string filePath1 = FilesPathIn + "text1.txt";
-                    string filePath2 = FilesPathIn + "text2.txt";
                     
-                    fileloaded = true; 
-                    using (Stream stream = File.OpenRead(filePath2))
-                    {
-                        byte[] buffer2 = new byte[stream.Length];
-                        stream.Read(buffer2, 0, buffer2.Length);
-                        var fileinfo2 = new FileInfo(filePath2);
-                        string extn2 = fileinfo2.Extension;
-                        string DocName2 = fileinfo2.Name;
-                        sqlCmd.Parameters.Add("@Data2", SqlDbType.VarBinary).Value = buffer2;
-                        sqlCmd.Parameters.Add("@Extension2", SqlDbType.Char).Value = extn2;
-                        sqlCmd.Parameters.Add("@FileName2", SqlDbType.NVarChar).Value = DocName2;
-                        if (fileloaded)
-                        {
-                            ArchivedSt.CheckState = CheckState.Checked;
-                            //Clear_Fields();
-                        }
-                    }
                     sqlCmd.Parameters.AddWithValue("@Comment", Comment.Text.Trim());
                     if (fileloaded)
                         sqlCmd.Parameters.AddWithValue("@ArchivedState", ConsulateEmpName.Trim() + " " + DateTime.Now.ToString("hh:mm"));

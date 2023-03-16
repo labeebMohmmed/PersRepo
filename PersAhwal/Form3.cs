@@ -870,8 +870,8 @@ namespace PersAhwal
 
             string AppGender;
             if (النوع.CheckState == CheckState.Unchecked) AppGender = "ذكر"; else AppGender = "أنثى";
-            try
-            {
+            //try
+            //{
                 if (sqlCon.State == ConnectionState.Closed)
                     sqlCon.Open();
                 if (btnSavePrint.Text == "حفظ وطباعة" && newData)
@@ -901,22 +901,7 @@ namespace PersAhwal
                     sqlCmd.Parameters.AddWithValue("@DataInterName", ConsulateEmpName.Trim() + " " + DateTime.Now.ToString("hh:mm"));
                     sqlCmd.Parameters.AddWithValue("@DataMandoubName", mandoubName.Text);
                     sqlCmd.Parameters.AddWithValue("@RelatedApp", "");
-                    string filePath1 = FilesPathIn + "text1.txt";
-                    string filePath2 = FilesPathIn + "text2.txt";
                     
-                    if (Search.Text != "") filePath2 = Search.Text;
-                    using (Stream stream = File.OpenRead(filePath2))
-                    {
-                        byte[] buffer2 = new byte[stream.Length];
-                        stream.Read(buffer2, 0, buffer2.Length);
-                        var fileinfo2 = new FileInfo(filePath2);
-                        string extn2 = fileinfo2.Extension;
-                        string DocName2 = fileinfo2.Name;
-                        sqlCmd.Parameters.Add("@Data2", SqlDbType.VarBinary).Value = buffer2;
-                        sqlCmd.Parameters.Add("@Extension2", SqlDbType.Char).Value = extn2;
-                        sqlCmd.Parameters.Add("@FileName2", SqlDbType.NVarChar).Value = DocName2;
-                        Search.Clear();
-                    }
                     sqlCmd.Parameters.AddWithValue("@Comment", Comment.Text.Trim());
                     sqlCmd.Parameters.AddWithValue("@ArchivedState", "غير مؤرشف");
                     sqlCmd.ExecuteNonQuery();
@@ -949,27 +934,7 @@ namespace PersAhwal
                     sqlCmd.Parameters.AddWithValue("@DataInterType", AppType.Text.Trim());
                     sqlCmd.Parameters.AddWithValue("@DataInterName", ConsulateEmpName.Trim() + " " + DateTime.Now.ToString("hh:mm"));
                     sqlCmd.Parameters.AddWithValue("@DataMandoubName", mandoubName.Text);
-                    sqlCmd.Parameters.AddWithValue("@RelatedApp", PreAppId.Trim());
-                    string filePath1 = FilesPathIn + "text1.txt";
-                    string filePath2 = FilesPathIn + "text2.txt";
-                    
-                    if (Search.Text != "") { filePath2 = Search.Text; fileloaded = true; }
-                    using (Stream stream = File.OpenRead(filePath2))
-                    {
-                        byte[] buffer2 = new byte[stream.Length];
-                        stream.Read(buffer2, 0, buffer2.Length);
-                        var fileinfo2 = new FileInfo(filePath2);
-                        string extn2 = fileinfo2.Extension;
-                        string DocName2 = fileinfo2.Name;
-                        sqlCmd.Parameters.Add("@Data2", SqlDbType.VarBinary).Value = buffer2;
-                        sqlCmd.Parameters.Add("@Extension2", SqlDbType.Char).Value = extn2;
-                        sqlCmd.Parameters.Add("@FileName2", SqlDbType.NVarChar).Value = DocName2;
-                        if (fileloaded)
-                        {
-                            ArchivedSt.CheckState = CheckState.Checked;
-                            Clear_Fields();
-                        }
-                    }
+                    sqlCmd.Parameters.AddWithValue("@RelatedApp", PreAppId.Trim());                    
                     sqlCmd.Parameters.AddWithValue("@Comment", Comment.Text.Trim());
                     if (fileloaded)
                         sqlCmd.Parameters.AddWithValue("@ArchivedState", ConsulateEmpName.Trim() + " " + DateTime.Now.ToString("hh:mm"));
@@ -977,15 +942,15 @@ namespace PersAhwal
 
                     sqlCmd.ExecuteNonQuery();
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error Message");
-            }
-            finally
-            {
-                sqlCon.Close();
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show(ex.Message, "Error Message");
+            //}
+            //finally
+            //{
+            //    sqlCon.Close();
+            //}
             FillDataGridView();
 
         }
@@ -1481,8 +1446,8 @@ namespace PersAhwal
                 
                 ConsulateEmployee.Text = dataGridView1.CurrentRow.Cells[14].Value.ToString();
                 PreRelatedID = dataGridView1.CurrentRow.Cells[16].Value.ToString();
-                Comment.Text = dataGridView1.CurrentRow.Cells[21].Value.ToString();
-                husbandtxt.Text = dataGridView1.CurrentRow.Cells[22].Value.ToString();
+                Comment.Text = dataGridView1.CurrentRow.Cells[17].Value.ToString();
+                husbandtxt.Text = dataGridView1.CurrentRow.Cells[18].Value.ToString();
                 if (husbandtxt.Text != "")
                 {
                     husbandtxt.Visible = true;
@@ -1493,7 +1458,7 @@ namespace PersAhwal
                     husbandtxt.Visible = false;
                     husbendlabel.Visible = false;
                 }
-                if (dataGridView1.CurrentRow.Cells[22].Value.ToString() != "غير مؤرشف")
+                if (dataGridView1.CurrentRow.Cells[18].Value.ToString() != "غير مؤرشف")
                 {
                     ArchivedSt.CheckState = CheckState.Checked;
                     ArchivedSt.Text = "مؤرشف";
@@ -1925,7 +1890,7 @@ namespace PersAhwal
 
         void FillDatafromGenArch(string doc, string id, string table)
         {
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableGeneralArch where  رقم_المرجع='" + id + "' and نوع_المستند='" + doc + "' and docTable='" + table + "'", sqlCon);

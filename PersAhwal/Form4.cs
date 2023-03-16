@@ -251,7 +251,7 @@ namespace PersAhwal
             dataGridView1.DataSource = dtbl;
             dataGridView1.Sort(dataGridView1.Columns["ID"], System.ComponentModel.ListSortDirection.Descending);
             IqrarNumberPart = (dtbl.Rows.Count + 1).ToString();
-            dataGridView1.Columns[27].Visible = false;
+            //dataGridView1.Columns[27].Visible = false;
             sqlCon.Close();
             NewFileName = IqrarNumberPart + "_04";
             dataGridView1.Columns[0].Visible = false;
@@ -303,8 +303,7 @@ namespace PersAhwal
                     sqlCmd.Parameters.AddWithValue("@DataMandoubName", mandoubName.Text.Trim());
                     sqlCmd.Parameters.AddWithValue("@TravelPurpose", str[7]);
                     sqlCmd.Parameters.AddWithValue("@RelatedVisaApp", PreRelatedID);
-                    string filePath1 = FilesPathIn + "text1.txt";
-                    string filePath2 = FilesPathIn + "text2.txt";
+                   
                     sqlCmd.Parameters.AddWithValue("@Comment", Comment.Text.Trim());
                     sqlCmd.Parameters.AddWithValue("@ArchivedState", "غير مؤرشف");
                     sqlCmd.Parameters.AddWithValue("@Apptitle", str[1]);
@@ -340,11 +339,6 @@ namespace PersAhwal
                     sqlCmd.Parameters.AddWithValue("@DataMandoubName", mandoubName.Text.Trim());
                     sqlCmd.Parameters.AddWithValue("@TravelPurpose", str[7].Trim());
                     sqlCmd.Parameters.AddWithValue("@RelatedVisaApp", PreVisaAppId);
-                    string filePath1 = FilesPathIn + "text1.txt";
-                    string filePath2 = FilesPathIn + "text2.txt";
-
-                    if (Search.Text != "") { filePath2 = Search.Text; fileloaded = true; }
-                    
                     sqlCmd.Parameters.AddWithValue("@Comment", Comment.Text.Trim());
                     if (fileloaded)
                         sqlCmd.Parameters.AddWithValue("@ArchivedState", ConsulateEmpName.Trim() + " " + DateTime.Now.ToString("hh:mm"));
@@ -764,7 +758,7 @@ namespace PersAhwal
         }
         void FillDatafromGenArch(string doc, string id, string table)
         {
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableGeneralArch where  رقم_المرجع='" + id + "' and نوع_المستند='" + doc + "' and docTable='" + table + "'", sqlCon);
@@ -866,6 +860,7 @@ namespace PersAhwal
                 return;
             }
             AddData(true);
+
             btnSavePrint.Enabled = false;
             btnSavePrint.Text = "جاري المعالجة";
             if (!EditSave)
@@ -1133,12 +1128,7 @@ namespace PersAhwal
                 return;
             }
             AddData(true);
-            if (VisaIndex > 1)
-            {
-                string[] strLines = VisaLine.Split('*');
-                Save2DataBase(false);
-            }
-            else Save2DataBase(false);
+            
             
         }
 
@@ -1296,9 +1286,9 @@ namespace PersAhwal
             {
                 dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.White;
 
-                if (dataGridView1.Rows[i].Cells[25].Value.ToString() == "مؤرشف نهائي")
+                if (dataGridView1.Rows[i].Cells[21].Value.ToString() == "مؤرشف نهائي")
                     dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
-                if (dataGridView1.Rows[i].Cells[27].Value.ToString().Contains("*") && dataGridView1.Rows[i].Cells[25].Value.ToString() == "مؤرشف نهائي")
+                if (dataGridView1.Rows[i].Cells[23].Value.ToString().Contains("*") && dataGridView1.Rows[i].Cells[21].Value.ToString() == "مؤرشف نهائي")
                     dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.Green;
 
                 //else dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.;
@@ -1401,7 +1391,7 @@ namespace PersAhwal
                 }
                 TravPurpose.Text = dataGridView1.CurrentRow.Cells[17].Value.ToString();
                 PreRelatedID = dataGridView1.CurrentRow.Cells[19].Value.ToString();
-                Comment.Text = dataGridView1.CurrentRow.Cells[24].Value.ToString();
+                Comment.Text = dataGridView1.CurrentRow.Cells[20].Value.ToString();
 
 
                 if (dataGridView1.CurrentRow.Cells[25].Value.ToString() != "غير مؤرشف")
@@ -1416,7 +1406,7 @@ namespace PersAhwal
                     ArchivedSt.Text = "غير مؤرشف";
                     ArchivedSt.BackColor = Color.Red;
                 }
-                VisaLine = dataGridView1.CurrentRow.Cells[27].Value.ToString();
+                VisaLine = dataGridView1.CurrentRow.Cells[23].Value.ToString();
                 string[] strList = VisaLine.Split('*');
                 if (strList[0].Split('-')[0] == "العربية")
                 {

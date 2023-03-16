@@ -563,9 +563,7 @@ namespace PersAhwal
                 }
                 else
                 {
-                    MessageBox.Show("يرجى حذف الملف الموجودأولاً");
-                    
-                    btnSavePrint.Enabled = true;
+                    MessageBox.Show("يرجى حذف الملف الموجودأولاً");                    
                     thirdPartyIndex = 0;
                 }
 
@@ -665,10 +663,8 @@ namespace PersAhwal
 
         private void SaveOnly_Click_1(object sender, EventArgs e)
         {
-            btnSavePrint.Enabled = false;
             btnSavePrint.Text = "جاري المعالجة";
             CreateWordFile(true);
-            btnSavePrint.Text = "حفظ وطباعة";
             btnSavePrint.Enabled = true;
             this.Close();
         }
@@ -678,10 +674,9 @@ namespace PersAhwal
         private void btnSavePrint_Click(object sender, EventArgs e)
         {
             getTitle(DataSource, AttendViceConsul.Text); 
-            btnSavePrint.Enabled = false;
+            
             CreateWordFile(false);
-            btnSavePrint.Text = "طباعة وحفظ";
-            btnSavePrint.Enabled = true;
+            
             var selectedOption = MessageBox.Show("", "حفظ وإنهاء المعاملة؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (selectedOption == DialogResult.Yes)
             {
@@ -1098,8 +1093,8 @@ namespace PersAhwal
                 
                 PreRelatedID = dataGridView1.CurrentRow.Cells[20].Value.ToString();
                 SponserCase.SelectedIndex = Convert.ToInt32(dataGridView1.CurrentRow.Cells[21].Value.ToString()) - 1;
-                Comment.Text = dataGridView1.CurrentRow.Cells[26].Value.ToString();
-                if (dataGridView1.CurrentRow.Cells[27].Value.ToString() != "غير مؤرشف")
+                Comment.Text = dataGridView1.CurrentRow.Cells[22].Value.ToString();
+                if (dataGridView1.CurrentRow.Cells[23].Value.ToString() != "غير مؤرشف")
                 {
                     ArchivedSt.CheckState = CheckState.Checked;
                     ArchivedSt.Text = "مؤرشف";
@@ -1330,7 +1325,7 @@ namespace PersAhwal
 
         void FillDatafromGenArch(string doc, string id, string table)
         {
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableGeneralArch where  رقم_المرجع='" + id + "' and نوع_المستند='" + doc + "' and docTable='" + table + "'", sqlCon);
@@ -1376,7 +1371,11 @@ namespace PersAhwal
 
         private void التاريخ_الميلادي_TextChanged(object sender, EventArgs e)
         {
-            التاريخ_الميلادي_off.Text = التاريخ_الميلادي.Text.Split('-')[1] + " - " + التاريخ_الميلادي.Text.Split('-')[0] + " - " + التاريخ_الميلادي.Text.Split('-')[2];
+            try
+            {
+                التاريخ_الميلادي_off.Text = التاريخ_الميلادي.Text.Split('-')[1] + " - " + التاريخ_الميلادي.Text.Split('-')[0] + " - " + التاريخ_الميلادي.Text.Split('-')[2];
+            }
+            catch (Exception ex) { }
         }
 
         private void مقدم_الطلب_TextChanged(object sender, EventArgs e)

@@ -156,6 +156,7 @@ namespace PersAhwal
         string[] txtRightList;
         int txtRevIndex = 0;
         int txtRigIndex = 0;
+        int txtReviewListIndex = 0;
         public FormAuth(int atvc, int rowid, string AuthNo, string datasource, string filespathIn, string filespathOut, string empName, string jobposition, string greDate, string hijriDate,bool testItems )
         {
             InitializeComponent();
@@ -1521,7 +1522,7 @@ namespace PersAhwal
         private void fileUpload( string id, string text)
         {
             //MessageBox.Show(id);
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 try
                 {
@@ -3134,6 +3135,7 @@ namespace PersAhwal
             fileComboBox(وجهة_التوكيل, DataSource, "ArabCountries", "TableListCombo", false);            
             fileComboBox(الحقوق_off, DataSource, "ColRight", "TableAddContext", true);
             fileComboBoxMandoub(اسم_المندوب, DataSource, "TableMandoudList");
+            autoCompleteTextBox(إجراء_التوكيل, DataSource, "إجراء_التوكيل", "TableAuth");
         }
         private void fileComboBoxMandoub(ComboBox combbox, string source, string tableName)
         {
@@ -3735,18 +3737,17 @@ namespace PersAhwal
             this.Close();
         }
         private void authJob() {
-            string auth = " المواطن" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 15] + " المذكور" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 15] + " أعلاه قد حضر" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 3] + " ووقع" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 3] + " بتوقيع" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 4] + " على هذا التوكيل في حضور الشاهدين المشار لهما أعلاه وذلك بعد تلاوته علي" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 4] + " وبعد أن فهم" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 3] + " مضمونه ومحتواه";
+            string auth = " المواطن" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 15] + " المذكور" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 15] + " أعلاه قد حضر" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 3] + " ووقع" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 3] + " بتوقيع" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 4] + " على هذا التوكيل في حضور الشاهدين المشار إليهما أعلاه وذلك بعد تلاوته علي" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 4] + " وبعد أن فهم" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 3] + " مضمونه ومحتواه";
             if (!طريقة_الطلب.Checked)
-                auth = " المواطن" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 15] + " المذكور" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 15] + " أعلاه قد وقع" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 3] + " بتوقيع" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 4] + " على هذا التوكيل في حضور الشاهدين المشار لهما أعلاه وذلك بعد تلاوته علي" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 4] + " وبعد أن فهم" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 3] + " مضمونه ومحتواه";
+                auth = " المواطن" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 15] + " المذكور" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 15] + " أعلاه قد وقع" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 3] + " بتوقيع" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 4] + " على هذا التوكيل في حضور الشاهدين المشار إليهما أعلاه وذلك بعد تلاوته علي" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 4] + " وبعد أن فهم" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 3] + " مضمونه ومحتواه";
             if (طريقة_الطلب.Checked)
             {
-                //MessageBox.Show(طريقة_الطلب.Text);
                 التوثيق.Text = "قنصل بالقنصلية العامة لجمهورية السودان بجدة، بأن" + auth + "، صدر تحت توقيعي وختم القنصلية العامة";
                 if (طريقة_الإجراء.Checked)
                     التوثيق.Text = AuthTitle + " بالقنصلية العامة لجمهورية السودان بجدة، بأن" + auth + "، صدر تحت توقيعي وختم القنصلية العامة";
                 else
                 {
-                    auth = " بأن المواطن" + preffix[onBehalfIndex, 5] + " /" + اسم_الموكل_بالتوقيع.Text + " قد حضر" + preffix[onBehalfIndex, 3] + " ووقع" + preffix[onBehalfIndex, 3] + " بتوقيع" + preffix[onBehalfIndex, 4] + " على هذا التوكيل في حضور الشهود المشار لهما أعلاه بعد تلاوته علي" + preffix[onBehalfIndex, 4] + " وبعد أن فهم" + preffix[onBehalfIndex, 3] + " مضمونه ومحتواه، وذلك بناءً على الحق الممنوح لها بموجب التوكيل الصادر عن " + جهة_إصدار_الوكالة.Text +" بالرقم "+ رقم_الوكالة.Text+ " بتاريخ " + تاريخ_إصدار_الوكالة.Text;
+                    auth = " بأن المواطن" + preffix[onBehalfIndex, 5] + " /" + اسم_الموكل_بالتوقيع.Text + " قد حضر" + preffix[onBehalfIndex, 3] + " ووقع" + preffix[onBehalfIndex, 3] + " بتوقيع" + preffix[onBehalfIndex, 4] + " على هذا التوكيل في حضور الشهود المشار إليهما أعلاه بعد تلاوته علي" + preffix[onBehalfIndex, 4] + " وبعد أن فهم" + preffix[onBehalfIndex, 3] + " مضمونه ومحتواه، وذلك بناءً على الحق الممنوح لها بموجب التوكيل الصادر عن " + جهة_إصدار_الوكالة.Text +" بالرقم "+ رقم_الوكالة.Text+ " بتاريخ " + تاريخ_إصدار_الوكالة.Text;
                     توقيع_مقدم_الطلب.Text = اسم_الموكل_بالتوقيع.Text; 
                     التوثيق.Text = auth + "، صدر تحت توقيعي وختم القنصلية العامة";
                 }
@@ -4145,7 +4146,7 @@ namespace PersAhwal
         }
         void FillDatafromGenArch(string doc, string id, string table)
         {
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableGeneralArch where  رقم_المرجع='" + id + "' and نوع_المستند='" + doc + "' and docTable='" + table + "'", sqlCon);
@@ -4233,7 +4234,7 @@ namespace PersAhwal
             int ApplicantID = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value.ToString());
             deleteRowsData(رقم_التوكيل.Text, "رقم_التوكيل", "TableAuth", DataSource);
             deleteRowsData(رقم_التوكيل.Text, "docID", "archives", DataSource);
-            deleteRowsData(رقم_التوكيل.Text, "رقم_معاملة_القسم", "TableGeneralArch", DataSource);
+            deleteRowsData(رقم_التوكيل.Text, "رقم_معاملة_القسم", "TableGeneralArch", DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             
             FillDataGridView(dataSource);
         }
@@ -4251,6 +4252,7 @@ namespace PersAhwal
             Con.Close();
             
         }
+       
 
         private void timer3_Tick(object sender, EventArgs e)
         {
@@ -4785,6 +4787,41 @@ namespace PersAhwal
         private void autoCompleteTextBox(TextBox textbox, string source, string comlumnName, string tableName)
         {
             textbox.Multiline = false;
+            //MessageBox.Show(textbox.Name);
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                if (saConn.State == ConnectionState.Closed)
+                    try
+                    {
+                        saConn.Open();
+                    }
+                    catch (Exception ex) { }
+                
+                string query = "select " + comlumnName + " from " + tableName;
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.ExecuteNonQuery();
+                DataTable Textboxtable = new DataTable();
+                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                dataAdapter.Fill(Textboxtable);
+                AutoCompleteStringCollection autoComplete = new AutoCompleteStringCollection();
+                bool newSrt = true;
+                foreach (DataRow dataRow in Textboxtable.Rows)
+                {
+                    string text = dataRow[comlumnName].ToString().Trim();
+                    text = SuffReplacements(text, صفة_مقدم_الطلب_off.SelectedIndex, صفة_الموكل_off.SelectedIndex);
+                    Console.WriteLine("autoCompleteTextBox " + text);
+                    autoComplete.Add(text);
+                }
+                textbox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+                textbox.AutoCompleteSource = AutoCompleteSource.CustomSource;
+                textbox.AutoCompleteCustomSource = autoComplete;
+                saConn.Close();
+            }
+        }
+        
+        private void autoCompleteTextBox(ComboBox textbox, string source, string comlumnName, string tableName)
+        {
+            
             //MessageBox.Show(textbox.Name);
             using (SqlConnection saConn = new SqlConnection(source))
             {
@@ -5392,6 +5429,30 @@ namespace PersAhwal
         
         private void reversTextReview()
         {
+            string query = "select " + إجراء_التوكيل.Text.Replace(" ", "_") + " from TableAuthStarText order by ID desc";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            txtReviewListIndex = 0;
+            txtReviewList = new string[dtbl.Rows.Count];
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                if (dataRow[إجراء_التوكيل.Text.Replace(" ", "_")].ToString() == "") continue;
+                txtReviewList[txtReviewListIndex] = dataRow[إجراء_التوكيل.Text.Replace(" ", "_")].ToString();
+                Console.WriteLine(txtReviewList[txtReviewListIndex]);
+                txtReviewListIndex++;
+            }
+
+
+        }
+
+        private void reversTextReviewold()
+        {
             string query = "select * from TableAuth where إجراء_التوكيل = N'" + إجراء_التوكيل.Text + "' order by ID desc";
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
@@ -5557,7 +5618,8 @@ namespace PersAhwal
         }
         private void fileUpdate_Click(object sender, EventArgs e)
         {
-            if (txtRevIndex == txtReviewList.Length) txtRevIndex = 0;
+            checkAutoUpdate.Checked = false;
+            if(txtRevIndex == txtReviewList.Length) txtRevIndex = 0;
             StrSpecPur = SuffOrigConvertments(txtReviewList[txtRevIndex]);
             //MessageBox.Show(txtReview.Text);
             txtReview.Text = SuffReplacements(StrSpecPur, صفة_مقدم_الطلب_off.SelectedIndex, صفة_الموكل_off.SelectedIndex);
@@ -5578,7 +5640,8 @@ namespace PersAhwal
 
 
         private void removeSpace(TextBox text)
-        {            
+        {
+            text.Text = text.Text.Replace("،", "، ");
             for (; text.Text.Contains("  ");)
             {
                 text.Text = text.Text.Replace("  ", " ");

@@ -319,7 +319,7 @@ namespace PersAhwal
         }
         private string getUniqueID(string query)
         {
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
@@ -367,7 +367,7 @@ namespace PersAhwal
         private void insertDocx(string id, string name, string date, string employee, string dataSource, string extn1, string DocName1, string messNo, string docType, byte[] buffer1)
         {
             string query = "INSERT INTO TableGeneralArch (Data1,Extension1,نوع_المستند,رقم_معاملة_القسم,المستند,الموظف,التاريخ,رقم_المرجع,docTable,الاسم) values (@Data1,@Extension1,@نوع_المستند,@رقم_معاملة_القسم,@المستند,@الموظف,@التاريخ,@رقم_المرجع,@docTable,@الاسم)";
-            SqlConnection sqlCon = new SqlConnection(dataSource);
+            SqlConnection sqlCon = new SqlConnection(dataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
@@ -663,7 +663,7 @@ namespace PersAhwal
         void FillDatafromGenArch(string doc, string id, string table)
         {
             reSetPanel();
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableGeneralArch where  رقم_المرجع='" + id + "' and نوع_المستند='" + doc + "' and docTable='" + table + "'", sqlCon);

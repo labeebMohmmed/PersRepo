@@ -31,8 +31,8 @@ namespace PersAhwal
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form5));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.label2 = new System.Windows.Forms.Label();
@@ -106,13 +106,6 @@ namespace PersAhwal
             this.timer3 = new System.Windows.Forms.Timer(this.components);
             this.timer4 = new System.Windows.Forms.Timer(this.components);
             this.mainpanel = new System.Windows.Forms.Panel();
-            this.التاريخ_الميلادي_off = new System.Windows.Forms.TextBox();
-            this.txtEditID2 = new System.Windows.Forms.TextBox();
-            this.btnEditID = new System.Windows.Forms.Button();
-            this.txtEditID1 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.PanelFiles = new System.Windows.Forms.Panel();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.panel3 = new System.Windows.Forms.Panel();
             this.الشاهد_الأول = new System.Windows.Forms.TextBox();
             this.label28 = new System.Windows.Forms.Label();
@@ -122,12 +115,19 @@ namespace PersAhwal
             this.الشاهد_الثاني = new System.Windows.Forms.TextBox();
             this.هوية_الأول = new System.Windows.Forms.TextBox();
             this.label32 = new System.Windows.Forms.Label();
+            this.التاريخ_الميلادي_off = new System.Windows.Forms.TextBox();
+            this.txtEditID2 = new System.Windows.Forms.TextBox();
+            this.btnEditID = new System.Windows.Forms.Button();
+            this.txtEditID1 = new System.Windows.Forms.TextBox();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.PanelFiles = new System.Windows.Forms.Panel();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.mainpanel.SuspendLayout();
+            this.panel3.SuspendLayout();
             this.PanelFiles.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            this.panel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // timer1
@@ -595,6 +595,7 @@ namespace PersAhwal
             // 
             // mainpanel
             // 
+            this.mainpanel.Controls.Add(this.btnSavePrint);
             this.mainpanel.Controls.Add(this.panel3);
             this.mainpanel.Controls.Add(this.التاريخ_الميلادي_off);
             this.mainpanel.Controls.Add(this.txtEditID2);
@@ -613,7 +614,6 @@ namespace PersAhwal
             this.mainpanel.Controls.Add(this.label7);
             this.mainpanel.Controls.Add(this.مكان_الإصدار);
             this.mainpanel.Controls.Add(this.AttendViceConsul);
-            this.mainpanel.Controls.Add(this.btnSavePrint);
             this.mainpanel.Controls.Add(this.رقم_الهوية);
             this.mainpanel.Controls.Add(this.ResetAll);
             this.mainpanel.Controls.Add(this.نوع_الهوية);
@@ -639,78 +639,6 @@ namespace PersAhwal
             this.mainpanel.Controls.Add(this.label21);
             resources.ApplyResources(this.mainpanel, "mainpanel");
             this.mainpanel.Name = "mainpanel";
-            // 
-            // التاريخ_الميلادي_off
-            // 
-            resources.ApplyResources(this.التاريخ_الميلادي_off, "التاريخ_الميلادي_off");
-            this.التاريخ_الميلادي_off.Name = "التاريخ_الميلادي_off";
-            // 
-            // txtEditID2
-            // 
-            resources.ApplyResources(this.txtEditID2, "txtEditID2");
-            this.txtEditID2.Name = "txtEditID2";
-            // 
-            // btnEditID
-            // 
-            this.btnEditID.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
-            resources.ApplyResources(this.btnEditID, "btnEditID");
-            this.btnEditID.Name = "btnEditID";
-            this.btnEditID.UseVisualStyleBackColor = false;
-            this.btnEditID.Click += new System.EventHandler(this.btnEditID_Click);
-            // 
-            // txtEditID1
-            // 
-            resources.ApplyResources(this.txtEditID1, "txtEditID1");
-            this.txtEditID1.Name = "txtEditID1";
-            // 
-            // textBox3
-            // 
-            resources.ApplyResources(this.textBox3, "textBox3");
-            this.textBox3.Name = "textBox3";
-            // 
-            // PanelFiles
-            // 
-            this.PanelFiles.Controls.Add(this.ArchivedSt);
-            this.PanelFiles.Controls.Add(this.SearchDoc);
-            this.PanelFiles.Controls.Add(this.labelArch);
-            this.PanelFiles.Controls.Add(this.ListSearch);
-            this.PanelFiles.Controls.Add(this.button2);
-            this.PanelFiles.Controls.Add(this.button4);
-            this.PanelFiles.Controls.Add(this.button3);
-            resources.ApplyResources(this.PanelFiles, "PanelFiles");
-            this.PanelFiles.Name = "PanelFiles";
-            // 
-            // dataGridView1
-            // 
-            this.dataGridView1.AllowUserToDeleteRows = false;
-            resources.ApplyResources(this.dataGridView1, "dataGridView1");
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle8;
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.dataGridView1.RowTemplate.DefaultCellStyle.BackColor = System.Drawing.Color.White;
-            this.dataGridView1.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Arabic Typesetting", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dataGridView1.RowTemplate.DefaultCellStyle.ForeColor = System.Drawing.Color.Black;
-            this.dataGridView1.RowTemplate.DefaultCellStyle.Padding = new System.Windows.Forms.Padding(4);
-            this.dataGridView1.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.LightGreen;
-            this.dataGridView1.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.RowTemplate.Height = 30;
-            this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             // 
             // panel3
             // 
@@ -765,6 +693,78 @@ namespace PersAhwal
             resources.ApplyResources(this.label32, "label32");
             this.label32.Name = "label32";
             // 
+            // التاريخ_الميلادي_off
+            // 
+            resources.ApplyResources(this.التاريخ_الميلادي_off, "التاريخ_الميلادي_off");
+            this.التاريخ_الميلادي_off.Name = "التاريخ_الميلادي_off";
+            // 
+            // txtEditID2
+            // 
+            resources.ApplyResources(this.txtEditID2, "txtEditID2");
+            this.txtEditID2.Name = "txtEditID2";
+            // 
+            // btnEditID
+            // 
+            this.btnEditID.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            resources.ApplyResources(this.btnEditID, "btnEditID");
+            this.btnEditID.Name = "btnEditID";
+            this.btnEditID.UseVisualStyleBackColor = false;
+            this.btnEditID.Click += new System.EventHandler(this.btnEditID_Click);
+            // 
+            // txtEditID1
+            // 
+            resources.ApplyResources(this.txtEditID1, "txtEditID1");
+            this.txtEditID1.Name = "txtEditID1";
+            // 
+            // textBox3
+            // 
+            resources.ApplyResources(this.textBox3, "textBox3");
+            this.textBox3.Name = "textBox3";
+            // 
+            // PanelFiles
+            // 
+            this.PanelFiles.Controls.Add(this.ArchivedSt);
+            this.PanelFiles.Controls.Add(this.SearchDoc);
+            this.PanelFiles.Controls.Add(this.labelArch);
+            this.PanelFiles.Controls.Add(this.ListSearch);
+            this.PanelFiles.Controls.Add(this.button2);
+            this.PanelFiles.Controls.Add(this.button4);
+            this.PanelFiles.Controls.Add(this.button3);
+            resources.ApplyResources(this.PanelFiles, "PanelFiles");
+            this.PanelFiles.Name = "PanelFiles";
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.AllowUserToDeleteRows = false;
+            resources.ApplyResources(this.dataGridView1, "dataGridView1");
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle4;
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.dataGridView1.RowTemplate.DefaultCellStyle.BackColor = System.Drawing.Color.White;
+            this.dataGridView1.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Arabic Typesetting", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dataGridView1.RowTemplate.DefaultCellStyle.ForeColor = System.Drawing.Color.Black;
+            this.dataGridView1.RowTemplate.DefaultCellStyle.Padding = new System.Windows.Forms.Padding(4);
+            this.dataGridView1.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.LightGreen;
+            this.dataGridView1.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.RowTemplate.Height = 30;
+            this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
+            // 
             // Form5
             // 
             resources.ApplyResources(this, "$this");
@@ -784,11 +784,11 @@ namespace PersAhwal
             this.panel2.PerformLayout();
             this.mainpanel.ResumeLayout(false);
             this.mainpanel.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             this.PanelFiles.ResumeLayout(false);
             this.PanelFiles.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            this.panel3.ResumeLayout(false);
-            this.panel3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
