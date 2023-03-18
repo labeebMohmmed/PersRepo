@@ -8922,6 +8922,12 @@ namespace PersAhwal
 
         }
 
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Form8 form8 = new Form8(DataSource);
+            form8.ShowDialog();
+        }
+
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e) 
         {
             

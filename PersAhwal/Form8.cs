@@ -13,1323 +13,578 @@ using System.Threading;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.IO;
+using System.Security.AccessControl;
+using DocumentFormat.OpenXml.Office2010.Excel;
+
 namespace PersAhwal
 {
     public partial class Form8 : Form
     {
-        public static string route = "";
-        string Viewed;
-        string ConsulateEmpName;
-        public static string ModelFileroute = "";
-        String IqrarNumberPart;
-        static string DataSource;
-        int ApplicantID = 0;
-        string FilesPathIn, FilesPathOut;
-        string NewFileName;
-        private bool fileloaded = false;
-        string PreAppId = "", PreRelatedID = "", NextRelId = "";
-        static public string FamilySupport;
-        private string[] FamelyMember = new string[10];
-        string Jobposition;
-        bool newData = true;
-        bool SaveEdit = true;
-        int ATVC = 0;
-        string[] colIDs = new string[100];
-        public Form8(int Atvc, int currentRow, string EmpName, string dataSource, string filepathIn, string filepathOut, string jobposition, string gregorianDate, string hijriDate)
+        string DataSource = "";
+        int panelIndex = 0;
+        string starIndex = "0";
+        string starButton = "";
+        string startingText = "";
+        public Form8(string dataSource)
         {
             InitializeComponent();
-            //timer1.Enabled = true;
-            //timer2.Enabled = true;
-            التاريخ_الميلادي.Text = gregorianDate;
-            التاريخ_الهجري.Text = hijriDate;
-            ATVC = Atvc;
-            FilesPathIn = filepathIn + @"\";
-            FilesPathOut = filepathOut;
-            colIDs [4] = ConsulateEmpName = EmpName;
             DataSource = dataSource;
-            Jobposition = jobposition;
-            FillDataGridView();
-            if (currentRow == -1) Clear_Fields();
-            else SetFieldswithData(currentRow);
-            if (jobposition.Contains("قنصل"))
-                btnEditID.Visible = deleteRow.Visible = true;
-            else btnEditID.Visible = deleteRow.Visible = false;
-
-
-        }
-        private string loadRerNo(int id)
-        {
-            SqlConnection sqlCon = new SqlConnection(DataSource);
-            if (sqlCon.State == ConnectionState.Closed)
-
-                sqlCon.Open();
-            SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT DocID from TableStudent where ID=@ID", sqlCon);
-            sqlDa.SelectCommand.CommandType = CommandType.Text;
-            sqlDa.SelectCommand.Parameters.AddWithValue("@ID", id);
-            DataTable dtbl = new DataTable();
-            sqlDa.Fill(dtbl);
-            sqlCon.Close();
-            string rowCnt = "";
-            foreach (DataRow row in dtbl.Rows)
-            {
-                rowCnt = (Convert.ToInt32(row["DocID"].ToString().Split('/')[3]) + 1).ToString();
-            }
-            return rowCnt;
-
+            fillSamplesCodes(dataSource);
         }
 
-
-        private int loadIDNo()
+        private bool checkColExist(string dataSource, string table)
         {
-
-
-            SqlConnection sqlCon = new SqlConnection(DataSource);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
-            SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT top(1) ID from TableStudent order by ID desc", sqlCon);
-            sqlDa.SelectCommand.CommandType = CommandType.Text;
-            DataTable dtbl = new DataTable();
-            sqlDa.Fill(dtbl);
-            sqlCon.Close();
-            string rowCnt = "0";
-            foreach (DataRow row in dtbl.Rows)
+            SqlConnection sqlCon = new SqlConnection(dataSource);
+            try
             {
-                rowCnt = row["ID"].ToString();
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
             }
-            return Convert.ToInt32(rowCnt);
-
-        }
-
-        private void OpenFileDoc(int id, int fileNo)
-        {
-            string query;
-
-            SqlConnection Con = new SqlConnection(DataSource);
-            if (fileNo == 1)
-            {
-                query = "select Data1, Extension1,FileName1 from TableStudent  where ID=@id";
-            }
-            else if (fileNo == 2)
-            {
-                query = "select Data2, Extension2,FileName2 from TableStudent  where ID=@id";
-            }
-            else query = "select Data3, Extension3,FileName3 from TableStudent  where ID=@id";
-            SqlCommand sqlCmd1 = new SqlCommand(query, Con);
-            sqlCmd1.Parameters.Add("@Id", SqlDbType.Int).Value = id;
-            if (Con.State == ConnectionState.Closed)
-                Con.Open();
-
-            var reader = sqlCmd1.ExecuteReader();
-            if (reader.Read())
-            {
-                if (fileNo == 1)
-                {
-                    var name = reader["FileName1"].ToString();
-                    var Data = (byte[])reader["Data1"];
-                    var ext = reader["Extension1"].ToString();
-                    var NewFileName = name.Replace(ext, DateTime.Now.ToString("mmss")) + ext;
-                    File.WriteAllBytes(NewFileName, Data);
-                    System.Diagnostics.Process.Start(NewFileName);
-                }
-                else if (fileNo == 2)
-                {
-                    var name = reader["FileName2"].ToString();
-                    var Data = (byte[])reader["Data2"];
-                    var ext = reader["Extension2"].ToString();
-                    var NewFileName = name.Replace(ext, DateTime.Now.ToString("mmss")) + ext;
-                    File.WriteAllBytes(NewFileName, Data);
-                    System.Diagnostics.Process.Start(NewFileName);
-                }
-                else
-                {
-                    var name = reader["FileName3"].ToString();
-                    var Data = (byte[])reader["Data3"];
-                    var ext = reader["Extension3"].ToString();
-                    var NewFileName = name.Replace(ext, DateTime.Now.ToString("mmss")) + ext;
-                    File.WriteAllBytes(NewFileName, Data);
-                    System.Diagnostics.Process.Start(NewFileName);
-                }
-
-            }
-            Con.Close();
-
-
-        }
-        private void SetFieldswithData(int Rowindex)
-        {
-            Rowindex--;
-            ApplicantID = Convert.ToInt32(dataGridView1.Rows[Rowindex].Cells[0].Value.ToString());
-            PreAppId = dataGridView1.Rows[Rowindex].Cells[1].Value.ToString();
-            مقدم_الطلب.Text = dataGridView1.Rows[Rowindex].Cells[2].Value.ToString();
-            if (dataGridView1.Rows[Rowindex].Cells[3].Value.ToString().ToString() == "ذكر") النوع.CheckState = CheckState.Unchecked;
-            else if (dataGridView1.Rows[Rowindex].Cells[3].Value.ToString().ToString() == "أنثى") النوع.CheckState = CheckState.Checked;
-            نوع_الهوية.Text = dataGridView1.Rows[Rowindex].Cells[4].Value.ToString();
-            رقم_الهوية.Text = dataGridView1.Rows[Rowindex].Cells[5].Value.ToString();
-            مكان_الإصدار.Text = dataGridView1.Rows[Rowindex].Cells[6].Value.ToString();
-            UniName.Text = dataGridView1.Rows[Rowindex].Cells[7].Value.ToString();
-            FacultyName.Text = dataGridView1.Rows[Rowindex].Cells[8].Value.ToString();
-            StudyLevel.Text = dataGridView1.Rows[Rowindex].Cells[9].Value.ToString();
-            StudyYear.Text = dataGridView1.Rows[Rowindex].Cells[10].Value.ToString();
-            MatricNom.Text = dataGridView1.Rows[Rowindex].Cells[11].Value.ToString();
-            التاريخ_الميلادي.Text = dataGridView1.Rows[Rowindex].Cells[12].Value.ToString();
-            التاريخ_الهجري.Text = dataGridView1.Rows[Rowindex].Cells[13].Value.ToString();
-            AttendViceConsul.Text = dataGridView1.Rows[Rowindex].Cells[14].Value.ToString();
-            if (dataGridView1.Rows[Rowindex].Cells[16].Value.ToString() == "غير معالج")
-            {
-                checkedViewed.CheckState = CheckState.Unchecked;
-                
-            }
-            else checkedViewed.CheckState = CheckState.Checked;
-            AppType.Text = dataGridView1.Rows[Rowindex].Cells[16].Value.ToString();
-            ConsulateEmployee.Text = dataGridView1.Rows[Rowindex].Cells[17].Value.ToString();
-            if (AppType.Text == "حضور مباشرة إلى القنصلية") AppType.CheckState = CheckState.Checked;
-            else AppType.CheckState = CheckState.Unchecked;
-
-            if (AppType.CheckState == CheckState.Unchecked)
-            {
-                mandoubVisibilty(); mandoubName.Text = dataGridView1.Rows[Rowindex].Cells[18].Value.ToString();
-            }
-            PreRelatedID = dataGridView1.Rows[Rowindex].Cells[19].Value.ToString();
-            Comment.Text = dataGridView1.Rows[Rowindex].Cells[24].Value.ToString();
-            if (dataGridView1.Rows[Rowindex].Cells[25].Value.ToString() != "غير مؤرشف")
-            {
-                ArchivedSt.CheckState = CheckState.Checked;
-                ArchivedSt.Text = "مؤرشف";
-                ArchivedSt.BackColor = Color.Green;
-            }
-            else
-            {
-                ArchivedSt.CheckState = CheckState.Unchecked;
-                ArchivedSt.Text = "غير مؤرشف";
-                ArchivedSt.BackColor = Color.Red;
-            }
-            ArchivedSt.Visible = true;
-            labelArch.Visible = true;
-            btnSavePrint.Text = "حفظ";
-            btnSavePrint.Visible = false;
-        }
-
-        private void FillDataGridView()
-        {
-            SqlConnection sqlCon = new SqlConnection(DataSource);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
-            SqlDataAdapter sqlDa = new SqlDataAdapter("StudentViewOrSearch", sqlCon);
-            sqlDa.SelectCommand.CommandType = CommandType.StoredProcedure;
-            sqlDa.SelectCommand.Parameters.AddWithValue("@ApplicantName", ListSearch.Text.Trim());
-            DataTable dtbl = new DataTable();
-            sqlDa.Fill(dtbl);
-            dataGridView1.DataSource = dtbl;
-            dataGridView1.Sort(dataGridView1.Columns["ID"], System.ComponentModel.ListSortDirection.Descending);
-            IqrarNumberPart = loadRerNo(loadIDNo());
-            dataGridView1.Columns[0].Visible = false;
-            sqlCon.Close();
-            NewFileName = IqrarNumberPart + "_08";
-        }
-        private void timer1_Tick_1(object sender, EventArgs e)
-        {
-            CultureInfo arSA = new CultureInfo("ar-SA");
-            arSA.DateTimeFormat.Calendar = new HijriCalendar();
-            Thread.CurrentThread.CurrentCulture = arSA;
-            int Ddiffer = HijriDateDifferment(DataSource, true);
-            int Mdiffer = HijriDateDifferment(DataSource, false);
-            string Stringdate, Stringmonth, StrHijriDate;
-            StrHijriDate = DateTime.Now.ToString("dd-MM-yyyy");
-            string[] YearMonthDay = StrHijriDate.Split('-');
-            int year, month, date;
-            year = Convert.ToInt16(YearMonthDay[2]);
-            month = Convert.ToInt16(YearMonthDay[1]) + Mdiffer;
-            date = Convert.ToInt16(YearMonthDay[0]) + Ddiffer;
-            if (month < 10) Stringmonth = "0" + month.ToString();
-            else Stringmonth = month.ToString();
-            if (date < 10) Stringdate = "0" + date.ToString();
-            else Stringdate = date.ToString();
-            التاريخ_الهجري.Text = Stringdate + "-" + Stringmonth + "-" + year.ToString();
-            timer1.Enabled = false;
-        }
-
-        private int HijriDateDifferment(string source, bool daymonth)
-        {
-            int differment = 0;
-            string query;
-            using (SqlConnection saConn = new SqlConnection(source))
-            {
-                saConn.Open();
-
-                if (daymonth) query = "select hijriday from TableSettings";
-                else query = "select hijrimonth from TableSettings";
-                SqlCommand cmd = new SqlCommand(query, saConn);
-                cmd.ExecuteNonQuery();
-                var reader = cmd.ExecuteReader();
-                if (reader.Read())
-                {
-                    if (daymonth) differment = Convert.ToInt32(reader["hijriday"].ToString());
-                    else differment = Convert.ToInt32(reader["hijrimonth"].ToString());
-
-                }
-
-                saConn.Close();
-            }
-            return differment;
-        }
-
-        private void timer2_Tick_1(object sender, EventArgs e)
-        {
-            CultureInfo arSA = new CultureInfo("ar-SA");
-            arSA.DateTimeFormat.Calendar = new GregorianCalendar();
-
-
-            Thread.CurrentThread.CurrentCulture = arSA;
-            new System.Globalization.GregorianCalendar();
-            التاريخ_الميلادي.Text = DateTime.Now.ToString("MM-dd-yyyy");
-            timer2.Enabled = false;
-        }
-
-        private void Review_Click(object sender, EventArgs e)
-        {
-
-
-        }
-
-        private void ApplicantSex_CheckedChanged_1(object sender, EventArgs e)
-        {
-            if (النوع.CheckState == CheckState.Unchecked)
-            {
-
-                النوع.Text = "ذكر";
-                labelName.Text = "اسم  مقدم الطلب:";
-            }
-            else if (النوع.CheckState == CheckState.Checked)
-            {
-                النوع.Text = "إنثى";
-                labelName.Text = "اسم مقدمة الطلب:";
-            }
-        }
-
-        private void Form8_Load(object sender, EventArgs e)
-        {
-            fileComboBox(نوع_الهوية, DataSource, "DocType", "TableListCombo");
-            autoCompleteTextBox(مكان_الإصدار, DataSource, "SDNIssueSource", "TableListCombo");
-            fileComboBox(AttendViceConsul, DataSource, "ArabicAttendVC", "TableListCombo");
-            AttendViceConsul.SelectedIndex = ATVC;
-            fileComboBoxMandoub(mandoubName, DataSource, "TableMandoudList");
-        }
-        private void fileComboBoxMandoub(ComboBox combbox, string source, string tableName)
-        {
-            combbox.Visible = true;
-            combbox.Items.Clear();
-            combbox.Items.Add("حضور مباشرة إلى القنصلية");
-            using (SqlConnection saConn = new SqlConnection(source))
-            {
-                saConn.Open();
-                string query = "select MandoubNames,MandoubAreas,وضع_المندوب from " + tableName;
-                SqlCommand cmd = new SqlCommand(query, saConn);
-                cmd.CommandType = CommandType.Text;
-                cmd.ExecuteNonQuery();
-                DataTable table = new DataTable();
-                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
-                dataAdapter.Fill(table);
-                foreach (DataRow dataRow in table.Rows)
-                {
-                    if (dataRow["MandoubNames"].ToString() != "" && dataRow["وضع_المندوب"].ToString() == "الحساب مفعل")
-                        combbox.Items.Add(dataRow["MandoubNames"].ToString() + " - " + dataRow["MandoubAreas"].ToString());
-                }
-                saConn.Close();
-            }
-            if (combbox.Items.Count > 0)
-                combbox.SelectedIndex = 0;
-        }
-        private void autoCompleteTextBox(TextBox textbox, string source, string comlumnName, string tableName)
-        {
-
-            using (SqlConnection saConn = new SqlConnection(source))
-            {
-                saConn.Open();
-
-                string query = "select " + comlumnName + " from " + tableName;
-                SqlCommand cmd = new SqlCommand(query, saConn);
-                cmd.ExecuteNonQuery();
-                DataTable Textboxtable = new DataTable();
-                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
-                dataAdapter.Fill(Textboxtable);
-                AutoCompleteStringCollection autoComplete = new AutoCompleteStringCollection();
-                bool newSrt = true;
-                foreach (DataRow dataRow in Textboxtable.Rows)
-                {
-                    if (!string.IsNullOrEmpty(dataRow[comlumnName].ToString()))
-                    {
-                        for (int x = 0; x < Textboxtable.Rows.Count; x++)
-                            if (dataRow[comlumnName].ToString().Equals(Textboxtable.Rows[x]))
-                                newSrt = false;
-
-                        if (newSrt) autoComplete.Add(dataRow[comlumnName].ToString());
-                    }
-                }
-                textbox.AutoCompleteMode = AutoCompleteMode.Suggest;
-                textbox.AutoCompleteSource = AutoCompleteSource.CustomSource;
-                textbox.AutoCompleteCustomSource = autoComplete;
-                saConn.Close();
-            }
-        }
-
-
-        private void fileComboBox(ComboBox combbox, string source, string comlumnName, string tableName)
-        {
-            combbox.Items.Clear();
-            using (SqlConnection saConn = new SqlConnection(source))
-            {
-                saConn.Open();
-
-                string query = "select " + comlumnName + " from " + tableName;
-                SqlCommand cmd = new SqlCommand(query, saConn);
-                cmd.CommandType = CommandType.Text;
-
-
-                cmd.ExecuteNonQuery();
-                DataTable table = new DataTable();
-                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
-                dataAdapter.Fill(table);
-
-                foreach (DataRow dataRow in table.Rows)
-                {
-                    if (!string.IsNullOrEmpty(dataRow[comlumnName].ToString()))
-                    {
-                        combbox.Items.Add(dataRow[comlumnName].ToString());
-                    }
-                }
-                saConn.Close();
-            }
-        }
-
-        private void AppDocName_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void DocType_SelectedIndexChanged_1(object sender, EventArgs e)
-        {
-            if (نوع_الهوية.SelectedIndex == 0)
-            {
-                labeldoctype.Text = "رقم جواز السفر: ";
-                رقم_الهوية.Text = "P0";
-            }
-            else
-            {
-                رقم_الهوية.Text = ""; labeldoctype.Text = "رقم الإقامة:";
-            }
-        }
-
-
-        private void CreateWordFile()
-        {
-            string ReportName = DateTime.Now.ToString("mmss");
-            if (النوع.CheckState == CheckState.Unchecked)
-            {
-
-                labelUNI.ForeColor = Color.Black;
-                labelUNI.Text = "مقدم الطلب:";
-                route = FilesPathIn + "AffadStudToWhomM.docx";
-            }
-            else if (النوع.CheckState == CheckState.Checked)
-            {
-                labelUNI.Text = "مقدمة الطلب:";
-                labelUNI.ForeColor = Color.Black;
-                route = FilesPathIn + "AffadStudToWhomF.docx";
-            }
-
-            string ActiveCopy;
-            ActiveCopy = FilesPathOut + مقدم_الطلب.Text + ReportName + ".docx";
-            if (!File.Exists(ActiveCopy))
-            {
-                System.IO.File.Copy(route, ActiveCopy);
-                object oBMiss = System.Reflection.Missing.Value;
-                Word.Application oBMicroWord = new Word.Application();
-                object Routseparameter = ActiveCopy;
-                Word.Document oBDoc = oBMicroWord.Documents.Open(Routseparameter, oBMiss);
-
-                object ParaIqrarNo = "MarkIqrarNo";
-                object ParaGreData = "MarkGreData";
-                object ParaHijriData = "MarkHijriData";
-                object ParaAppName = "MarkAppName";
-                object ParaDocType = "MarkDocType";
-                object ParaDocNo = "MarkDocNo";
-                object ParaAppDocSource = "MarkAppDocSource";
-                object ParaAppAppUniName = "MarkAppUniName";
-                object ParaAppFacName = "MarkAppFacName";
-                object ParaStudyLevel = "MarkStudyLevel";
-                object ParavConsul = "MarkViseConsul";
-
-                Word.Range BookIqrarNo = oBDoc.Bookmarks.get_Item(ref ParaIqrarNo).Range;
-                Word.Range BookGreData = oBDoc.Bookmarks.get_Item(ref ParaGreData).Range;
-                Word.Range BookHijriData = oBDoc.Bookmarks.get_Item(ref ParaHijriData).Range;
-                Word.Range BookDocName = oBDoc.Bookmarks.get_Item(ref ParaAppName).Range;
-                Word.Range BookDocType = oBDoc.Bookmarks.get_Item(ref ParaDocType).Range;
-                Word.Range BookDocNo = oBDoc.Bookmarks.get_Item(ref ParaDocNo).Range;
-                Word.Range BookAppDocSource = oBDoc.Bookmarks.get_Item(ref ParaAppDocSource).Range;
-                Word.Range BookAppAppUniName = oBDoc.Bookmarks.get_Item(ref ParaAppAppUniName).Range;
-                Word.Range BookAppFacName = oBDoc.Bookmarks.get_Item(ref ParaAppFacName).Range;
-                Word.Range BookStudyLevel = oBDoc.Bookmarks.get_Item(ref ParaStudyLevel).Range;
-                Word.Range BookvConsul = oBDoc.Bookmarks.get_Item(ref ParavConsul).Range;
-
-                BookIqrarNo.Text = colIDs[0] = Iqrarid.Text;
-                colIDs[2] = التاريخ_الميلادي.Text;
-                BookGreData.Text = التاريخ_الميلادي_off.Text;
-                BookHijriData.Text = التاريخ_الهجري.Text;
-                BookDocName.Text = colIDs[3] = مقدم_الطلب.Text;
-                colIDs[5] =AppType.Text;
-                colIDs[6] =mandoubName.Text;
-                BookDocType.Text = نوع_الهوية.Text;
-                BookDocNo.Text = رقم_الهوية.Text;
-                BookAppDocSource.Text = مكان_الإصدار.Text;
-                BookAppAppUniName.Text = UniName.Text;
-                BookAppFacName.Text = FacultyName.Text;
-                if (StudyYear.Text == "") BookStudyLevel.Text = "بالرقم الجامعي " + MatricNom.Text;
-                else BookStudyLevel.Text = "بالرقم الجامعي " + MatricNom.Text + " للعام الدراسي " + StudyYear.Text;
-                BookvConsul.Text = AttendViceConsul.Text;
-
-                object rangeGreData = BookGreData;
-                object rangeHijriData = BookHijriData;
-                object rangeDocName = BookDocName;
-                object rangeDocType = BookDocType;
-                object rangeDocNo = BookDocNo;
-                object rangeAppDocSource = BookAppDocSource;
-                object rangeAppPass = BookAppAppUniName;
-                object rangeAppFacName = BookAppFacName;
-                object rangeStudyLevel = BookStudyLevel;
-                object rangevConsul = BookvConsul;
-
-                oBDoc.Bookmarks.Add("MarkGreData", ref rangeGreData);
-                oBDoc.Bookmarks.Add("MarkHijiData", ref rangeHijriData);
-                oBDoc.Bookmarks.Add("MarkAppName", ref rangeDocName);
-                oBDoc.Bookmarks.Add("MarkDocType", ref rangeDocType);
-                oBDoc.Bookmarks.Add("MarkDocNo", ref rangeDocNo);
-                oBDoc.Bookmarks.Add("MarkAppDocSource", ref rangeAppDocSource);
-                oBDoc.Bookmarks.Add("MarkAppPass", ref rangeAppPass);
-                oBDoc.Bookmarks.Add("MarkAppPassSource", ref rangeAppFacName);
-                oBDoc.Bookmarks.Add("MarkStudyLevel", ref rangeStudyLevel);
-                oBDoc.Bookmarks.Add("MarkViseConsul", ref rangevConsul);
-
-                string docxouput = FilesPathOut + مقدم_الطلب.Text + DateTime.Now.ToString("ssmm") + ".docx";
-                string pdfouput = FilesPathOut + مقدم_الطلب.Text + DateTime.Now.ToString("ssmm") + ".pdf";
-                oBDoc.SaveAs2(docxouput);
-                oBDoc.ExportAsFixedFormat(pdfouput, Word.WdExportFormat.wdExportFormatPDF);
-                oBDoc.Close(false, oBMiss);
-                oBMicroWord.Quit(false, false);
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(oBMicroWord);
-                System.Diagnostics.Process.Start(pdfouput);
-                object doNotSaveChanges = Word.WdSaveOptions.wdSaveChanges;
-
-            }
-            else
-            {
-                MessageBox.Show("يرجى حذف الملف الموجودأولاً");
-                
-                btnSavePrint.Enabled = true;
-
-            }
-            addarchives(colIDs);
-
-        }
-        private void CreateWordFileCertificate()
-        {
-            string ReportName = DateTime.Now.ToString("mmss");
-            if (النوع.CheckState == CheckState.Unchecked)
-            {
-
-                labelUNI.ForeColor = Color.Black;
-                labelUNI.Text = "مقدم الطلب:";
-                route = FilesPathIn + "MarriageCertificateM.docx";
-            }
-            else if (النوع.CheckState == CheckState.Checked)
-            {
-                labelUNI.Text = "مقدمة الطلب:";
-                labelUNI.ForeColor = Color.Black;
-                route = FilesPathIn + "MarriageCertificateF.docx";
-            }
-
-            string ActiveCopy;
-            ActiveCopy = FilesPathOut + مقدم_الطلب.Text + ReportName + ".docx";
-            if (!File.Exists(ActiveCopy))
-            {
-                System.IO.File.Copy(route, ActiveCopy);
-                object oBMiss = System.Reflection.Missing.Value;
-                Word.Application oBMicroWord = new Word.Application();
-                object Routseparameter = ActiveCopy;
-                Word.Document oBDoc = oBMicroWord.Documents.Open(Routseparameter, oBMiss);
-
-                object ParaIqrarNo = "MarkIqrarNo";
-                object ParaGreData = "MarkGreData";
-                object ParaHijriData = "MarkHijriData";
-                object ParaAppName = "MarkAppName";
-                object ParaDocType = "MarkDocType";
-                object ParaDocNo = "MarkDocNo";
-                object ParaAppDocSource = "MarkAppDocSource";
-                object ParaAppAppUniName = "MarkAppUniName";
-                object ParaAppFacName = "MarkAppFacName";
-                object ParaStudyLevel = "MarkStudyLevel";
-                object ParavConsul = "MarkViseConsul";
-
-                Word.Range BookIqrarNo = oBDoc.Bookmarks.get_Item(ref ParaIqrarNo).Range;
-                Word.Range BookGreData = oBDoc.Bookmarks.get_Item(ref ParaGreData).Range;
-                Word.Range BookHijriData = oBDoc.Bookmarks.get_Item(ref ParaHijriData).Range;
-                Word.Range BookDocName = oBDoc.Bookmarks.get_Item(ref ParaAppName).Range;
-                Word.Range BookDocType = oBDoc.Bookmarks.get_Item(ref ParaDocType).Range;
-                Word.Range BookDocNo = oBDoc.Bookmarks.get_Item(ref ParaDocNo).Range;
-                Word.Range BookAppDocSource = oBDoc.Bookmarks.get_Item(ref ParaAppDocSource).Range;
-                Word.Range BookAppAppUniName = oBDoc.Bookmarks.get_Item(ref ParaAppAppUniName).Range;
-                Word.Range BookAppFacName = oBDoc.Bookmarks.get_Item(ref ParaAppFacName).Range;
-                Word.Range BookStudyLevel = oBDoc.Bookmarks.get_Item(ref ParaStudyLevel).Range;
-                Word.Range BookvConsul = oBDoc.Bookmarks.get_Item(ref ParavConsul).Range;
-
-                BookIqrarNo.Text = colIDs[0] = Iqrarid.Text;
-                colIDs[2] = التاريخ_الميلادي.Text;
-                BookGreData.Text = التاريخ_الميلادي_off.Text;
-                BookHijriData.Text = التاريخ_الهجري.Text;
-                BookDocName.Text = colIDs[3] = مقدم_الطلب.Text;
-                colIDs[5] =AppType.Text;
-                colIDs[6] =mandoubName.Text;
-                BookDocType.Text = نوع_الهوية.Text;
-                BookDocNo.Text = رقم_الهوية.Text;
-                BookAppDocSource.Text = مكان_الإصدار.Text;
-                BookAppAppUniName.Text = UniName.Text;
-                BookAppFacName.Text = FacultyName.Text;
-                if (StudyYear.Text == "") BookStudyLevel.Text = "بالرقم الجامعي " + MatricNom.Text;
-                else BookStudyLevel.Text = "بالرقم الجامعي " + MatricNom.Text + " للعام الدراسي " + StudyYear.Text;
-                BookvConsul.Text = AttendViceConsul.Text;
-
-                object rangeGreData = BookGreData;
-                object rangeHijriData = BookHijriData;
-                object rangeDocName = BookDocName;
-                object rangeDocType = BookDocType;
-                object rangeDocNo = BookDocNo;
-                object rangeAppDocSource = BookAppDocSource;
-                object rangeAppPass = BookAppAppUniName;
-                object rangeAppFacName = BookAppFacName;
-                object rangeStudyLevel = BookStudyLevel;
-                object rangevConsul = BookvConsul;
-
-                oBDoc.Bookmarks.Add("MarkGreData", ref rangeGreData);
-                oBDoc.Bookmarks.Add("MarkHijiData", ref rangeHijriData);
-                oBDoc.Bookmarks.Add("MarkAppName", ref rangeDocName);
-                oBDoc.Bookmarks.Add("MarkDocType", ref rangeDocType);
-                oBDoc.Bookmarks.Add("MarkDocNo", ref rangeDocNo);
-                oBDoc.Bookmarks.Add("MarkAppDocSource", ref rangeAppDocSource);
-                oBDoc.Bookmarks.Add("MarkAppPass", ref rangeAppPass);
-                oBDoc.Bookmarks.Add("MarkAppPassSource", ref rangeAppFacName);
-                oBDoc.Bookmarks.Add("MarkStudyLevel", ref rangeStudyLevel);
-                oBDoc.Bookmarks.Add("MarkViseConsul", ref rangevConsul);
-
-                string docxouput = FilesPathOut + مقدم_الطلب.Text + DateTime.Now.ToString("ssmm") + ".docx";
-                string pdfouput = FilesPathOut + مقدم_الطلب.Text + DateTime.Now.ToString("ssmm") + ".pdf";
-                oBDoc.SaveAs2(docxouput);
-                oBDoc.ExportAsFixedFormat(pdfouput, Word.WdExportFormat.wdExportFormatPDF);
-                oBDoc.Close(false, oBMiss);
-                oBMicroWord.Quit(false, false);
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(oBMicroWord);
-                System.Diagnostics.Process.Start(pdfouput);
-                object doNotSaveChanges = Word.WdSaveOptions.wdSaveChanges;
-
-            }
-            else
-            {
-                MessageBox.Show("يرجى حذف الملف الموجودأولاً");
-                
-                btnSavePrint.Enabled = true;
-
-            }
-            addarchives(colIDs);
-
-        }
-        private void addarchives(string[] text)
-        {
-            string[] allList = getColList("archives");
-            string strList = "";
-            for (int i = 1; i < allList.Length; i++)
-            {
-                if (i == 1) strList = "@" + allList[1];
-                else strList = strList + ",@" + allList[i];
-            }
-            SqlConnection sqlConnection = new SqlConnection(DataSource);
-            if (sqlConnection.State == ConnectionState.Closed)
-                sqlConnection.Open();
-            Console.WriteLine(strList);
-            SqlCommand sqlCommand = new SqlCommand("insert into archives values (" + strList + ")", sqlConnection);
-            //SqlCommand sqlCommand = new SqlCommand("insert into archives (docID, employName,archiveStat,databaseID,appType,appOldNew) " +
-            //    "values (@docID, @employName,@archiveStat,@databaseID,@appType,@appOldNew)", sqlConnection);
-            sqlCommand.CommandType = CommandType.Text;
-            for (int i = 1; i < allList.Length; i++)
-            {
-                sqlCommand.Parameters.AddWithValue("@" + allList[i], text[i - 1]);
-                //MessageBox.Show(text[i - 1]);
-            }
-            sqlCommand.ExecuteNonQuery();
-        }
-        private string[] getColList(string table)
-        {
-            SqlConnection sqlCon = new SqlConnection(DataSource);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+            catch (Exception ex) { return false; }
             SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT name FROM sys.columns WHERE object_id = OBJECT_ID('" + table + "')", sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
             sqlDa.Fill(dtbl);
             sqlCon.Close();
-            string[] allList = new string[dtbl.Rows.Count];
-            int i = 0;
+            قائمة_النصوص_العامة.Items.Clear();
             foreach (DataRow row in dtbl.Rows)
             {
-                allList[i] = row["name"].ToString();
-                i++;
+                قائمة_النصوص_العامة.Items.Add(row["name"].ToString().Replace("_", " "));
             }
-            return allList;
+            return false;
 
         }
 
-
-        private void dataGridView1_DoubleClick(object sender, EventArgs e)
+        private void fileComboBox(ComboBox combbox, string source, string comlumnName, string tableName, bool clear)
         {
 
-        }
-        private void mandoubVisibilty()
-        {
-            if (AppType.CheckState == CheckState.Checked)
+            if (clear) combbox.Items.Clear();
+            using (SqlConnection saConn = new SqlConnection(source))
             {
-                AppType.Text = "حضور مباشرة إلى القنصلية";
-                mandoubName.Visible = false;
-                mandoubLabel.Visible = false;
+                saConn.Open();
+
+                string query = "select " + comlumnName + " from " + tableName;
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.CommandType = CommandType.Text;
+
+
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    DataTable table = new DataTable();
+                    SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                    dataAdapter.Fill(table);
+
+                    foreach (DataRow dataRow in table.Rows)
+                    {
+                        if (dataRow[comlumnName].ToString() != "")
+                        {
+                            bool found = false;
+                            for (int x = 0; x < combbox.Items.Count; x++)
+                            {
+                                if (combbox.Items[x].ToString() == dataRow[comlumnName].ToString()) found = true;
+                            }
+                            if (!found) combbox.Items.Add(dataRow[comlumnName].ToString());
+                        }
+                    }
+                }
+                catch (Exception ex) { }
+                saConn.Close();
+            }
+        }
+
+        private void Form8_Load(object sender, EventArgs e)
+        {
+            //checkColExist(DataSource, "TableCollectStarText");
+            fileComboBox(قائمة_النصوص_العامة, DataSource, "ArabicGenIgrar", "TableListCombo", true);
+            fileComboBox(قائمة_النصوص_العامة, DataSource, "EnglishGenIgrar", "TableListCombo", false);
+        }
+
+        private void AppType_CheckedChanged(object sender, EventArgs e)
+        {
+            if (AppType.Checked)
+            {
+                AppType.Text = "مجموع المعاملات";
+                قائمة_النصوص_العامة.Items.Clear();
+                fileComboBox(قائمة_النصوص_العامة, DataSource, "ArabicGenIgrar", "TableListCombo", true);
+                fileComboBox(قائمة_النصوص_العامة, DataSource, "EnglishGenIgrar", "TableListCombo", false);
+                checkColExist(DataSource, "TableCollectStarText");
             }
             else
             {
-                AppType.Text = "عن طريق أحد مندوبي القنصلية";
-                mandoubName.Visible = true;
-                mandoubLabel.Visible = true;
+                قائمة_النصوص_العامة.Items.Clear();
+                fileComboBox(قائمة_النصوص_العامة, DataSource, "AuthTypes", "TableListCombo", true);
+                AppType.Text = "التوكيلات";
+                checkColExist(DataSource, "TableAuthStarText");
             }
         }
-        private void Save2DataBase()
+        private void ViewArchShow(string text, string ID)
         {
-            if (!checkGender("مقدم_الطلب", "النوع"))
+            //MessageBox.Show(ID);
+            Button btnArchieve = new Button();
+            btnArchieve.Location = new System.Drawing.Point(12, 1);
+            btnArchieve.Name = قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + ID;
+            btnArchieve.Size = new System.Drawing.Size(667, 146);
+            btnArchieve.TabIndex = panelIndex;
+            btnArchieve.Text = text;
+            btnArchieve.Click += new System.EventHandler(this.button_Click);
+            btnArchieve.RightToLeft = RightToLeft.Yes;
+            btnArchieve.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            flowLayoutPanel1.Controls.Add(btnArchieve);
+            panelIndex++;
+        }
+        private void button_Click(object sender, EventArgs e)
+        {
+            Button button = (Button)sender;
+            startingText = النص.Text = button.Text;
+            starButton = button.Name.Split('_')[1];
+            //MessageBox.Show(starButton);
+            if (starButton != starIndex)
             {
-                return;
+                picStar.Visible = false;
             }
-            else addNewAppNameInfo(مقدم_الطلب);
-
-            SqlConnection sqlCon = new SqlConnection(DataSource);
-
-            string AppGender;
-            if (النوع.CheckState == CheckState.Unchecked) AppGender = "ذكر"; else AppGender = "أنثى";
-            try
+            else
             {
-                if (sqlCon.State == ConnectionState.Closed)
-                    sqlCon.Open();
-                if (checkedViewed.CheckState == CheckState.Checked) Viewed = "تمت المعالجة بواسطة " + ConsulateEmpName;
-                else Viewed = "غير معالج";
-                SqlCommand sqlCmd = new SqlCommand("StudentAddorEdit", sqlCon);
-                sqlCmd.CommandType = CommandType.StoredProcedure;
-                if (btnSavePrint.Text == "طباعة وحفظ" && newData)
+                picStar.Visible = true;
+            }
+            النص.Visible = true;
+        }
+
+        private string SuffReplacements(string text, int appCaseIndex, int intAuthcases)
+        {
+
+            if (text.Contains("  "))
+                text = text.Replace("  ", " ");
+            if (text.Contains("t1"))
+                text = text.Replace("t1", "الحقل1");
+            if (text.Contains("t2"))
+                text = text.Replace("t2", "الحقل2");
+            if (text.Contains("t3"))
+                text = text.Replace("t3", "الحقل3");
+            if (text.Contains("t4"))
+                text = text.Replace("t4", "الحقل4");
+            if (text.Contains("t5"))
+                text = text.Replace("t5", "الحقل5");
+            if (text.Contains("c1"))
+                text = text.Replace("c1", "خيار_ثنائي1");
+            if (text.Contains("m1"))
+                text = text.Replace("m1", "خيار_متعدد1");
+            if (text.Contains("m2"))
+                text = text.Replace("m2", "خيار_متعدد2");
+            if (text.Contains("n1"))
+                text = text.Replace("n1", "تاريخ1");
+            if (text.Contains("@*@"))
+            {
+                text = text.Replace("@*@", "لدى  برقم الايبان (الحقل3)");
+            }
+            if (text.Contains("#8"))
+                text = text.Replace("#8", "حقل_الحذف1");
+            if (text.Contains("#6"))
+                text = text.Replace("#6", "حقل_الحذف2");
+            if (text.Contains("#7"))
+                text = text.Replace("#7", "حقل_الحذف3");
+
+            for (int gridIndex = 0; gridIndex < dataGridView1.Rows.Count - 1; gridIndex++)
+            {
+                string code = dataGridView1.Rows[gridIndex].Cells["الرموز"].Value.ToString();
+                string person = dataGridView1.Rows[gridIndex].Cells["الضمير"].Value.ToString();
+                string[] replacemest = new string[6];
+                try
                 {
-                    sqlCmd.Parameters.AddWithValue("@ID", 0);
-                    sqlCmd.Parameters.AddWithValue("@mode", "Add");
-                    sqlCmd.Parameters.AddWithValue("@DocID", Iqrarid.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@AppName", مقدم_الطلب.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@Gender", AppGender.Trim());
-                    sqlCmd.Parameters.AddWithValue("@DocType", نوع_الهوية.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@DocNo", رقم_الهوية.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@DocIssueSource", مكان_الإصدار.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@UniName", UniName.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@FacultyName", FacultyName.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@StudyLevel", StudyLevel.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@StudyYear", StudyYear.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@MatricNom", MatricNom.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@GriDate", التاريخ_الميلادي.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@Hijri", التاريخ_الهجري.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@AtteVicCo", AttendViceConsul.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@Viewed", Viewed);
-                    sqlCmd.Parameters.AddWithValue("@DataInterType", AppType.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@DataInterName", ConsulateEmpName.Trim() + " " + DateTime.Now.ToString("hh:mm"));
-                    sqlCmd.Parameters.AddWithValue("@DataMandoubName", mandoubName.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@RelatedApp", PreAppId.Trim());
-                    string filePath1 = FilesPathIn + "text1.txt";
-                    string filePath2 = FilesPathIn + "text2.txt";
-                    
-                    using (Stream stream = File.OpenRead(filePath2))
-                    {
-                        byte[] buffer2 = new byte[stream.Length];
-                        stream.Read(buffer2, 0, buffer2.Length);
-                        var fileinfo2 = new FileInfo(filePath2);
-                        string extn2 = fileinfo2.Extension;
-                        string DocName2 = fileinfo2.Name;
-                        sqlCmd.Parameters.Add("@Data2", SqlDbType.VarBinary).Value = buffer2;
-                        sqlCmd.Parameters.Add("@Extension2", SqlDbType.Char).Value = extn2;
-                        sqlCmd.Parameters.Add("@FileName2", SqlDbType.NVarChar).Value = DocName2;
-                    }
-                    sqlCmd.Parameters.AddWithValue("@Comment", Comment.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@ArchivedState", "غير مؤرشف");
-                    sqlCmd.ExecuteNonQuery();
+                    replacemest[0] = dataGridView1.Rows[gridIndex].Cells["المقابل1"].Value.ToString();
+                    replacemest[1] = dataGridView1.Rows[gridIndex].Cells["المقابل2"].Value.ToString();
+                    replacemest[2] = dataGridView1.Rows[gridIndex].Cells["المقابل3"].Value.ToString();
+                    replacemest[3] = dataGridView1.Rows[gridIndex].Cells["المقابل4"].Value.ToString();
+                    replacemest[4] = dataGridView1.Rows[gridIndex].Cells["المقابل5"].Value.ToString();
+                    replacemest[5] = dataGridView1.Rows[gridIndex].Cells["المقابل6"].Value.ToString();
                 }
-                else
+                catch (Exception ex) { return text; }
+                if (text.Contains(code))
                 {
-
-                    sqlCmd.Parameters.AddWithValue("@ID", ApplicantID);
-                    sqlCmd.Parameters.AddWithValue("@mode", "Edit");
-                    sqlCmd.Parameters.AddWithValue("@DocID", Iqrarid.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@AppName", مقدم_الطلب.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@Gender", AppGender.Trim());
-                    sqlCmd.Parameters.AddWithValue("@DocType", نوع_الهوية.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@DocNo", رقم_الهوية.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@DocIssueSource", مكان_الإصدار.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@UniName", UniName.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@FacultyName", FacultyName.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@StudyLevel", StudyLevel.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@StudyYear", StudyYear.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@MatricNom", MatricNom.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@GriDate", التاريخ_الميلادي.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@Hijri", التاريخ_الهجري.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@AtteVicCo", AttendViceConsul.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@Viewed", Viewed);
-                    sqlCmd.Parameters.AddWithValue("@DataInterType", AppType.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@DataInterName", ConsulateEmpName.Trim() + " " + DateTime.Now.ToString("hh:mm"));
-                    sqlCmd.Parameters.AddWithValue("@DataMandoubName", mandoubName.Text.Trim());
-                    sqlCmd.Parameters.AddWithValue("@RelatedApp", PreAppId.Trim());
-                    string filePath1 = FilesPathIn + "text1.txt";
-                    string filePath2 = FilesPathIn + "text2.txt";
-                    
-                    if (SearchFile.Text != "") { filePath2 = SearchFile.Text; fileloaded = true; }
-                    using (Stream stream = File.OpenRead(filePath2))
-                    {
-                        byte[] buffer2 = new byte[stream.Length];
-                        stream.Read(buffer2, 0, buffer2.Length);
-                        var fileinfo2 = new FileInfo(filePath2);
-                        string extn2 = fileinfo2.Extension;
-                        string DocName2 = fileinfo2.Name;
-                        sqlCmd.Parameters.Add("@Data2", SqlDbType.VarBinary).Value = buffer2;
-                        sqlCmd.Parameters.Add("@Extension2", SqlDbType.Char).Value = extn2;
-                        sqlCmd.Parameters.Add("@FileName2", SqlDbType.NVarChar).Value = DocName2;
-                        if (fileloaded)
-                        {
-                            ArchivedSt.CheckState = CheckState.Checked;
-                            Clear_Fields();
-                        }
-                    }
-                    sqlCmd.Parameters.AddWithValue("@Comment", Comment.Text.Trim());
-                    if (fileloaded)
-                        sqlCmd.Parameters.AddWithValue("@ArchivedState", ConsulateEmpName.Trim() + " " + DateTime.Now.ToString("hh:mm"));
-                    else sqlCmd.Parameters.AddWithValue("@ArchivedState", "غير مؤرشف"); sqlCmd.ExecuteNonQuery();
-                    sqlCmd.ExecuteNonQuery();
+                    if (person == "1")
+                        text = text.Replace(code, replacemest[appCaseIndex]);
+                    else if (person == "2")
+                        text = text.Replace(code, replacemest[intAuthcases]);
                 }
-
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error Message");
-            }
-            finally
-            {
-                sqlCon.Close();
-            }
+            return text;
         }
-
-        private void AppType_CheckedChanged_1(object sender, EventArgs e)
-        {
-            mandoubVisibilty();
-        }
-
-        private void btnSavePrint_Click_1(object sender, EventArgs e)
-        {
-            
-            Save2DataBase();
-            btnSavePrint.Text = "جاري المعالجة";
-            btnSavePrint.Enabled = false;
-            CreateWordFile();
-            this.Close();
-            //Clear_Fields();
-        }
-
-        private void btnprintOnly_Click(object sender, EventArgs e)
-        {
-            if (!checkGender( "مقدم_الطلب", "النوع"))
-            {
-                return;
-            }
-            else addNewAppNameInfo(مقدم_الطلب); 
-            CreateWordFile();
-            this.Close(); 
-            //Clear_Fields();
-        }
-        private void addNewAppNameInfo(TextBox textName)
+        
+        private string SuffReversReplacements(string text, int appCaseIndex, int intAuthcases)
         {
 
-            string query = "insert into TableGenNames ([الاسم], رقم_الهوية,النوع,نوع_الهوية,مكان_الإصدار) values (@col1,@col2,@col5,@col6,@col7) ;SELECT @@IDENTITY as lastid";
-            string id = checkExist(textName.Text);
-            if (id != "0")
+            if (text.Contains("  "))
+                text = text.Replace("  ", " ");
+            if (text.Contains("الحقل1"))
+                text = text.Replace("الحقل1", "t1");
+            if (text.Contains("الحقل2"))
+                text = text.Replace("الحقل2", "t2");
+            if (text.Contains("الحقل3"))
+                text = text.Replace("الحقل3", "t3");
+            if (text.Contains("الحقل4"))
+                text = text.Replace("الحقل4", "t4");
+            if (text.Contains("الحقل5"))
+                text = text.Replace("الحقل5", "t5");
+            if (text.Contains("خيار_ثنائي1"))
+                text = text.Replace("خيار_ثنائي1","c1");
+            if (text.Contains("خيار_متعدد1"))
+                text = text.Replace("خيار_متعدد1", "m1");
+            if (text.Contains("خيار_متعدد2"))
+                text = text.Replace("خيار_متعدد2", "m2");
+            if (text.Contains("تاريخ1"))
+                text = text.Replace("تاريخ1", "n1");
+            if (text.Contains("لدى  برقم الايبان (الحقل3)"))
             {
-                query = "update TableGenNames set [الاسم] =  @col1,[رقم_الهوية] = @col2,النوع = @col5,نوع_الهوية = @col6,مكان_الإصدار = @col7 where ID = " + id;
-                //MessageBox.Show(query);
+                text = text.Replace("لدى  برقم الايبان (الحقل3", "لدى  برقم الايبان (@*@)");
             }
-            SqlConnection sqlConnection = new SqlConnection(DataSource);
-            if (sqlConnection.State == ConnectionState.Closed)
-                sqlConnection.Open();
-
-            SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
-            sqlCommand.CommandType = CommandType.Text;
-            sqlCommand.Parameters.AddWithValue("@col1", مقدم_الطلب.Text);
-            sqlCommand.Parameters.AddWithValue("@col2", رقم_الهوية.Text);
-            sqlCommand.Parameters.AddWithValue("@col5", النوع.Text);
-            sqlCommand.Parameters.AddWithValue("@col6", نوع_الهوية.Text);
-            sqlCommand.Parameters.AddWithValue("@col7", مكان_الإصدار.Text);
-
-            var reader = sqlCommand.ExecuteReader();
-            if (reader.Read())
-            {
-                //MessageBox.Show(reader["lastid"].ToString());
-            }
-            try
-            {
-
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("addNewAppNameInfo");
-            }
+            if (text.Contains("#حقل_الحذف1"))
+                text = text.Replace("حقل_الحذف1", "#8");
+            if (text.Contains("#حقل_الحذف2"))
+                text = text.Replace("حقل_الحذف2", "#6");
+            if (text.Contains("#حقل_الحذف3"))
+                text = text.Replace("حقل_الحذف3", "#7");
+            text = SuffConvertments(text, 0, 0);
+            return text;
         }
-        private bool checkGender(string controlType, string control2type)
+
+        private string SuffConvertments(string text, int person1, int person2)
         {
-            int index = 0;
-            foreach (Control control in this.Controls)
+            string[] words = text.Split(' ');
+
+            foreach (string word in words)
             {
-                if (control.Name == controlType + index + ".")
+                if (word == "" || word == " ") continue;
+                for (int gridIndex = 0; gridIndex < dataGridView1.Rows.Count - 1; gridIndex++)
                 {
-                    string gender = getGender(control.Text.Split(' ')[0]);
-                    foreach (Control control2 in this.Controls)
+                    string code = dataGridView1.Rows[gridIndex].Cells["الرموز"].Value.ToString();
+                    string person = dataGridView1.Rows[gridIndex].Cells["الضمير"].Value.ToString();
+
+                    string replacemest1 = dataGridView1.Rows[gridIndex].Cells["المقابل" + (person1 + 1).ToString()].Value.ToString();
+                    string replacemest2 = dataGridView1.Rows[gridIndex].Cells["المقابل" + (person2 + 1).ToString()].Value.ToString();
+
+                    string[] replacemests = new string[6];
+                    replacemests[0] = dataGridView1.Rows[gridIndex].Cells["المقابل1"].Value.ToString();
+                    replacemests[1] = dataGridView1.Rows[gridIndex].Cells["المقابل2"].Value.ToString();
+                    replacemests[2] = dataGridView1.Rows[gridIndex].Cells["المقابل3"].Value.ToString();
+                    replacemests[3] = dataGridView1.Rows[gridIndex].Cells["المقابل4"].Value.ToString();
+                    replacemests[4] = dataGridView1.Rows[gridIndex].Cells["المقابل5"].Value.ToString();
+                    replacemests[5] = dataGridView1.Rows[gridIndex].Cells["المقابل6"].Value.ToString();
+
+                    for (int cellIndex = 0; cellIndex < 6; cellIndex++)
                     {
-                        if (control2.Name == control2type + index + ".")
+                        if (word == replacemests[cellIndex] || word == replacemests[cellIndex] + "،")
                         {
-                            if (gender != control2.Text)
+                            Console.WriteLine(word);
+                            if (person == "1")
                             {
-                                var selectedOption = MessageBox.Show("هل تود تغيير إعدادات البرنامج الداخلية والمتابعة للصفحة التالية؟", "يرجى مراحعة جنس   " + control.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                                if (word != replacemests[person1])
+                                {
+                                    var selectedOption = MessageBox.Show("هل تود إجراء التصحيح التلقائي (" + replacemests[person2] + ")", "تم رصد خطاء في الصياغة (" + word + ")", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
-                                if (selectedOption == DialogResult.No)
-                                {
-                                    return false;
-                                }
-                                else if (selectedOption == DialogResult.Yes)
-                                {
-                                    updateGender(control2.Text, getSexIndex);
-                                    return true;
+                                    if (selectedOption == DialogResult.Yes)
+                                    {
+                                        text = text.Replace(word, replacemests[person1]);
+                                        break;
+                                    }
+                                    //    MessageBox.Show(word); 
                                 }
                             }
+                            if (person == "2")
+                            {
+                                if (word != replacemests[person2])
+                                {
+                                    var selectedOption = MessageBox.Show("هل تود إجراء التصحيح التلقائي (" + replacemests[person2] + ")", "تم رصد خطاء في الصياغة (" + word + ")", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                                    if (selectedOption == DialogResult.Yes)
+                                    {
+                                        text = text.Replace(word, replacemests[person2]);
+                                        break;
+                                    }
+                                    //    MessageBox.Show(word); 
+                                }
+                            }
+                            if (person == "3")
+                            {
+                                if (word != replacemests[person1])
+                                {
+                                    var selectedOption = MessageBox.Show("هل تود إجراء التصحيح التلقائي (" + replacemests[person1] + ")", "تم رصد خطاء في الصياغة (" + word + ")", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                                    if (selectedOption == DialogResult.Yes)
+                                    {
+                                        text = text.Replace(word, replacemests[person1]);
+                                        break;
+                                    }
+                                    //    MessageBox.Show(word); 
+                                }
+                            }
+                            //text = text.Replace(replacemest[cellIndex], code);
+                            //break;
                         }
                     }
-                    index++;
+
                 }
             }
-            return true;
+            return text;
         }
-        string getSexIndex = "0";
-        public string getGender(string name)
+        private void fillSamplesCodes(string source)
         {
-            string sex = "ذكر";
-            string query = "SELECT ID,النوع FROM TableGenGender where الاسم = N'" + name + "'";
-            SqlConnection sqlCon = new SqlConnection(DataSource);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
-            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
-            sqlDa.SelectCommand.CommandType = CommandType.Text;
-            DataTable dtbl = new DataTable();
-            sqlDa.Fill(dtbl);
-            foreach (DataRow row in dtbl.Rows)
+            using (SqlConnection saConn = new SqlConnection(source))
             {
-                getSexIndex = row["ID"].ToString();
-                sex = row["النوع"].ToString();
-            }
-            return sex;
-        }
+                saConn.Open();
 
-        private void updateGender(string newGender, string id)
-        {
-            SqlConnection sqlCon = new SqlConnection(DataSource);
-            if (sqlCon.State == ConnectionState.Closed)
+                string query = "select * from Tablechar";
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.CommandType = CommandType.Text;
+
                 try
                 {
-                    sqlCon.Open();
-                    SqlCommand sqlCmd = new SqlCommand("UPDATE TableGenGender SET النوع=N'" + newGender + "' WHERE ID=" + id, sqlCon);
-                    MessageBox.Show("UPDATE TableGenGender SET النوع=N'" + newGender + "' WHERE ID=" + id);
-                    sqlCmd.CommandType = CommandType.Text;
-                    sqlCmd.ExecuteNonQuery();
-                    sqlCon.Close();
+                    cmd.ExecuteNonQuery();
 
+                    DataTable table = new DataTable();
+                    SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                    dataAdapter.Fill(table);
+                    dataGridView1.DataSource = table;
                 }
-
-                catch (Exception ex)
-                {
-                    return;
-                }
-                finally
-                {
-                }
-        }
-        public string checkExist(string name)
-        {
-            string id = "0";
-            string query = "SELECT ID FROM TableGenNames where الاسم like N'" + name + "%'";
-            SqlConnection sqlCon = new SqlConnection(DataSource);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
-            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
-            sqlDa.SelectCommand.CommandType = CommandType.Text;
-            DataTable dtbl = new DataTable();
-            sqlDa.Fill(dtbl);
-            foreach (DataRow row in dtbl.Rows)
-            {
-                id = row["ID"].ToString();
+                catch (Exception ex) { }
+                saConn.Close();
             }
-            return id;
-        }
-        private void SaveOnly_Click_1(object sender, EventArgs e)
-        {
-            Save2DataBase();
-            this.Close(); 
-            //Clear_Fields();
         }
 
-        private void SearchDoc_Click_1(object sender, EventArgs e)
-        {
-            OpenFileDialog dlg = new OpenFileDialog();
-            dlg.ShowDialog();
-            SearchFile.Visible = true;
-            SearchFile.Text = dlg.FileName;
-            if (SearchFile.Text != "") fileloaded = true;
-        }
-
-        private void button2_Click_1(object sender, EventArgs e)
-        {
-            var selectRows = dataGridView1.SelectedRows;
-            foreach (var row in selectRows)
-            {
-                int id = (int)((DataGridViewRow)row).Cells[0].Value;
-                //OpenFile(id, 1);
-                FillDatafromGenArch("data1", colIDs[1], "TableStudent");
-            }
-            if (ApplicantID != 0) FillDatafromGenArch("data1", colIDs[1], "TableStudent"); //OpenFile(ApplicantID, 1);
-            //ApplicantID = 0;
-        }
-
-        private void button4_Click(object sender, EventArgs e)
+        private void قائمة_النصوص_SelectedIndexChanged(object sender, EventArgs e)
         {
             
+            newFillComboBox1(قائمة_النصوص_الفرعية, DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_"));
         }
 
-        private void deleteRow_Click(object sender, EventArgs e)
-        {
-            deleteRowsData(ApplicantID, "TableStudent", DataSource);
-            deleteRow.Visible = false;
-        }
+        //if (AppType.Checked)
+        //    checkStarTextExist(DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_"), "TableCollectStarText");
+        //else checkStarTextExist(DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_"), "TableAuthStarText");
 
-        private void deleteRowsData(int v1, string v2, string source)
-        {
-            string query;
-            SqlConnection Con = new SqlConnection(DataSource);
-            query = "DELETE FROM " + v2 + " where ID = @ID";
-            if (Con.State == ConnectionState.Closed)
-                Con.Open();
-            SqlCommand sqlCmd = new SqlCommand(query, Con);
-            sqlCmd.CommandType = CommandType.Text;
-            sqlCmd.Parameters.AddWithValue("@ID", v1);
-            sqlCmd.ExecuteNonQuery();
-            Con.Close();
-            FillDataGridView();
-        }
 
-        private void dataGridView1_CellClick_1(object sender, DataGridViewCellEventArgs e)
+
+        private void newFillComboBox1(ComboBox combbox, string source, string colName)
         {
-            if (dataGridView1.CurrentRow.Index != -1)
+            combbox.Visible = true;
+            combbox.Items.Clear();
+            using (SqlConnection saConn = new SqlConnection(source))
             {
-                colIDs[1] = dataGridView1.CurrentRow.Cells[0].Value.ToString();
-                colIDs[0] = dataGridView1.CurrentRow.Cells[1].Value.ToString();
-                try
+                saConn.Open();
+                string query = "select " + colName + " from TableListCombo where " + colName + " is not null";
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.CommandType = CommandType.Text;
+                cmd.ExecuteNonQuery();
+                DataTable table = new DataTable();
+                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                dataAdapter.Fill(table);
+                foreach (DataRow dataRow in table.Rows)
                 {
-                    txtEditID2.Text = colIDs[0].Split('/')[4];
-                    txtEditID1.Text = colIDs[0].Replace(txtEditID2.Text, "");
+                    combbox.Items.Add(dataRow[colName].ToString());
                 }
-                catch (Exception ex)
-                {
-                }
-                if (dataGridView1.CurrentRow.Cells[2].Value.ToString() == "")
-                {
-                    newData = false;
-                    colIDs[7] = "new";
-                    SaveEdit = true;
-                    Iqrarid.Text = dataGridView1.CurrentRow.Cells[1].Value.ToString();
-                    ApplicantID = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value.ToString());
-                    //OpenFileDoc(Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value.ToString()), 1);
-                    FillDatafromGenArch("data1", colIDs[1], "TableStudent");
-                    if (Jobposition.Contains("قنصل")) deleteRow.Visible = true;
-                    return;
-                }
-                colIDs[7] = "old";
-                SaveEdit = false;
-                ApplicantID = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value.ToString());
-                Iqrarid.Text = PreAppId = dataGridView1.CurrentRow.Cells[1].Value.ToString();
-                مقدم_الطلب.Text = dataGridView1.CurrentRow.Cells[2].Value.ToString();
-                if (Jobposition.Contains("قنصل")) deleteRow.Visible = true;
-                if (dataGridView1.CurrentRow.Cells[3].Value.ToString().ToString() == "ذكر") النوع.CheckState = CheckState.Unchecked;
-                else if (dataGridView1.CurrentRow.Cells[3].Value.ToString().ToString() == "أنثى") النوع.CheckState = CheckState.Checked;
-                نوع_الهوية.Text = dataGridView1.CurrentRow.Cells[4].Value.ToString();
-                رقم_الهوية.Text = dataGridView1.CurrentRow.Cells[5].Value.ToString();
-                مكان_الإصدار.Text = dataGridView1.CurrentRow.Cells[6].Value.ToString();
-                UniName.Text = dataGridView1.CurrentRow.Cells[7].Value.ToString();
-                FacultyName.Text = dataGridView1.CurrentRow.Cells[8].Value.ToString();
-                StudyLevel.Text = dataGridView1.CurrentRow.Cells[9].Value.ToString();
-                StudyYear.Text = dataGridView1.CurrentRow.Cells[10].Value.ToString();
-                MatricNom.Text = dataGridView1.CurrentRow.Cells[11].Value.ToString();
-                التاريخ_الميلادي.Text = dataGridView1.CurrentRow.Cells[12].Value.ToString();
-                التاريخ_الهجري.Text = dataGridView1.CurrentRow.Cells[13].Value.ToString();
-                AttendViceConsul.Text = dataGridView1.CurrentRow.Cells[14].Value.ToString();
-                if (dataGridView1.CurrentRow.Cells[16].Value.ToString() == "غير معالج")
-                {
-                    checkedViewed.CheckState = CheckState.Unchecked;
-                    
-                }
-                else checkedViewed.CheckState = CheckState.Checked;
-                AppType.Text = dataGridView1.CurrentRow.Cells[16].Value.ToString();
-                ConsulateEmployee.Text = dataGridView1.CurrentRow.Cells[17].Value.ToString();
-                if (AppType.Text == "حضور مباشرة إلى القنصلية") AppType.CheckState = CheckState.Checked;
-                else AppType.CheckState = CheckState.Unchecked;
-
-                if (AppType.CheckState == CheckState.Unchecked)
-                {
-                    mandoubVisibilty(); mandoubName.Text = dataGridView1.CurrentRow.Cells[18].Value.ToString();
-                }
-                PreRelatedID = dataGridView1.CurrentRow.Cells[19].Value.ToString();
-                Comment.Text = dataGridView1.CurrentRow.Cells[24].Value.ToString();
-                if (dataGridView1.CurrentRow.Cells[25].Value.ToString() != "غير مؤرشف")
-                {
-                    ArchivedSt.CheckState = CheckState.Checked;
-                    ArchivedSt.Text = "مؤرشف";
-                    ArchivedSt.BackColor = Color.Green;
-                }
-                else
-                {
-                    ArchivedSt.CheckState = CheckState.Unchecked;
-                    ArchivedSt.Text = "غير مؤرشف";
-                    ArchivedSt.BackColor = Color.Red;
-                }
-                ArchivedSt.Visible = true;
-                labelArch.Visible = true;
-                btnSavePrint.Text = "حفظ";
-                btnSavePrint.Visible = false;
+                saConn.Close();
             }
+            //if (combbox.Items.Count > 0) combbox.SelectedIndex = 0;
         }
-
-        private void SearchFile_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void ListSearch_TextChanged(object sender, EventArgs e)
-        {
-            FillDataGridView(); BindingSource bs = new BindingSource();
-            bs.DataSource = dataGridView1.DataSource;
-            bs.Filter = dataGridView1.Columns[2].HeaderText.ToString() + " LIKE '" + ListSearch.Text + "%'";
-            dataGridView1.DataSource = bs;
-            ColorFulGrid9();
-        }
-        private void ColorFulGrid9()
-        {
-            dataGridView1.DefaultCellStyle.SelectionBackColor = Color.DarkTurquoise;
-            dataGridView1.DefaultCellStyle.SelectionForeColor = Color.WhiteSmoke;
-            dataGridView1.BackgroundColor = Color.White;
-
-            for (int i = 0; i < dataGridView1.Rows.Count - 1; i++)
-            {
-                dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.White;
-                if (dataGridView1.Rows[i].Cells[25].Value.ToString() == "مؤرشف نهائي") dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
-
-                //else dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.;
-
-            }
-            //
-        }
-
-
-
-
-
-        private void button4_Click_1(object sender, EventArgs e)
-        {
-            var selectRows = dataGridView1.SelectedRows;
-            foreach (var row in selectRows)
-            {
-                int id = (int)((DataGridViewRow)row).Cells[0].Value;
-                //OpenFile(id, 2);
-                FillDatafromGenArch("data2", colIDs[1], "TableStudent");
-            }
-            if (ApplicantID != 0) FillDatafromGenArch("data2", colIDs[1], "TableStudent"); //OpenFile(ApplicantID, 2);
-            //ApplicantID = 0;
-        }
-
-        private void Form8_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            string primeryLink = @"D:\PrimariFiles\";
-            if (!Directory.Exists(@"D:\"))
-            {
-                string appFileName = Environment.GetCommandLineArgs()[0];
-                string directory = Path.GetDirectoryName(appFileName);
-                directory = directory + @"\";
-                primeryLink = directory + @"PrimariFiles\";
-            }
-            dataSourceWrite(primeryLink + @"\updatingStatus.txt", "Allowed");
-        }
-        private void dataSourceWrite(string dataSourcepath, string text)
-        {
-            using (FileStream fs = File.Create(dataSourcepath))
-            {
-                string dataasstring = text;
-                byte[] info = new UTF8Encoding(true).GetBytes(dataasstring);
-                fs.Write(info, 0, info.Length);
-                fs.Close();
-            }
-        }
-
-        private void btnEditID_Click(object sender, EventArgs e)
-        {
-            if (btnEditID.Text == "إجراء")
-            {
-                btnEditID.Text = "تعديل";
-                SqlConnection sqlCon = new SqlConnection(DataSource);
-                SqlCommand sqlCmd = new SqlCommand("update TableStudent SET DocID = @DocID WHERE ID = @ID", sqlCon);
-                sqlCmd.CommandType = CommandType.Text;
-                if (sqlCon.State == ConnectionState.Closed)
-                    sqlCon.Open();
-                sqlCmd.Parameters.AddWithValue("@ID", ApplicantID);
-                sqlCmd.Parameters.AddWithValue("@DocID", txtEditID1.Text + txtEditID2.Text);
-                sqlCmd.ExecuteNonQuery();
-                sqlCon.Close();
-                txtEditID1.Visible = txtEditID2.Visible = false;
-            }
-            else
-            {
-                btnEditID.Text = "إجراء";
-                txtEditID1.Visible = txtEditID2.Visible = true;
-            }
-        }
-
-        private void التاريخ_الميلادي_TextChanged(object sender, EventArgs e)
-        {
-            التاريخ_الميلادي_off.Text = التاريخ_الميلادي.Text.Split('-')[1] + " - " + التاريخ_الميلادي.Text.Split('-')[0] + " - " + التاريخ_الميلادي.Text.Split('-')[2];
-        }
-
-        //private void OpenFile(int id, int fileNo)
+        //private void flllPanelItemsboxes(string rowID, string cellValue)
         //{
-        //    string query;
+        //    //MessageBox.Show("rowID = " + rowID + " - cellValue=" + cellValue);
+        //    string query = "select * from TableAddContext where " + rowID + "=N'" + cellValue + "' and ColRight = ''";
+        //    SqlConnection sqlCon = new SqlConnection(DataSource);
+        //    if (sqlCon.State == ConnectionState.Closed)
+        //        sqlCon.Open();
+        //    SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+        //    sqlDa.SelectCommand.CommandType = CommandType.Text;
+        //    DataTable dtbl = new DataTable();
+        //    sqlDa.Fill(dtbl);
+        //    //MessageBox.Show(query);
+        //    Console.WriteLine(query + " - " + dtbl.Rows.Count.ToString());
+        //    if (dtbl.Rows.Count > 0)
 
-        //    SqlConnection Con = new SqlConnection(DataSource);
-        //    if (fileNo == 1)
-        //    {
-        //        query = "select Data1, Extension1,FileName1 from TableStudent where ID=@id";
-        //    }
-        //    else
-        //    {
-        //        query = "select Data2, Extension2,FileName2 from TableStudent where ID=@id";
-        //    }
-        //    SqlCommand sqlCmd1 = new SqlCommand(query, Con);
-        //    sqlCmd1.Parameters.Add("@Id", SqlDbType.Int).Value = id;
-        //    if (Con.State == ConnectionState.Closed)
-        //        Con.Open();
-
-        //    var reader = sqlCmd1.ExecuteReader();
-        //    if (reader.Read())
-        //    {
-        //        if (fileNo == 1)
+        //        foreach (DataRow dr in dtbl.Rows)
+        //        //if (cellValue == dataGridView1.Rows[index].Cells[rowID].Value.ToString())
         //        {
-        //            var name = reader["FileName1"].ToString();
-        //            var Data = (byte[])reader["Data1"];
-        //            var ext = reader["Extension1"].ToString();
-        //            var NewFileName = name.Replace(ext, DateTime.Now.ToString("ddMMyyyyhhmmss")) + ext;
-        //            File.WriteAllBytes(NewFileName, Data);
-        //            System.Diagnostics.Process.Start(NewFileName);
+        //            ColName = dr["ColName"].ToString();
+        //            ColRight = dr["ColRight"].ToString();
+        //            startID = dr["starText"].ToString();
+        //            if (startID == "")
+        //            {
+        //                picStar.Visible = false; btnPrevious.Visible = true;
+        //                StrSpecPur = dr["TextModel"].ToString();
+        //            }
         //        }
-        //        else
-        //        {
-        //            var name = reader["FileName2"].ToString();
-        //            var Data = (byte[])reader["Data2"];
-        //            var ext = reader["Extension2"].ToString();
-        //            var NewFileName = name.Replace(ext, DateTime.Now.ToString("ddMMyyyyhhmmss")) + ext;
-        //            File.WriteAllBytes(NewFileName, Data);
-        //            System.Diagnostics.Process.Start(NewFileName);
-        //        }
-
-        //    }
-        //    Con.Close();
-
         //}
-
-        void FillDatafromGenArch(string doc, string id, string table)
+        private void checkStarTextExist(string dataSource, string col, string genTable)
         {
-            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
+            string query = "select ID," + col + " from " + genTable;
+
+            SqlConnection sqlCon = new SqlConnection(dataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
-            SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableGeneralArch where  رقم_المرجع='" + id + "' and نوع_المستند='" + doc + "' and docTable='" + table + "'", sqlCon);
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
             sqlDa.Fill(dtbl);
-            sqlCon.Close();
-            foreach (DataRow reader in dtbl.Rows)
+            int count = 0;
+            panelIndex = 0;
+            
+            foreach (Control control in flowLayoutPanel1.Controls)
             {
-                var name = reader["المستند"].ToString();
-                var Data = (byte[])reader["Data1"];
-                var ext = reader["Extension1"].ToString();
-                var NewFileName = name.Replace(ext, DateTime.Now.ToString("ddMMyyyyhhmmss")) + ext;
-                File.WriteAllBytes(NewFileName, Data);
-                System.Diagnostics.Process.Start(NewFileName);
+                control.Visible = false;
+                control.Name = "unvalid";
             }
 
-
+            foreach (DataRow row in dtbl.Rows)
+            {
+                if (row[col].ToString() != "")
+                    ViewArchShow(SuffReplacements(row[col].ToString(), 0, 0), row["ID"].ToString());
+                count++;
+            }
+            عدد_النماذج.Text = "عدد المكاذج " + count;
             sqlCon.Close();
         }
 
-        private void ResetAll_Click(object sender, EventArgs e)
+        private void قائمة_النصوص_الفرعية_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Clear_Fields();
+            if (AppType.Checked)
+                checkStarTextExist(DataSource, قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), "TableCollectStarText");
+            else checkStarTextExist(DataSource, قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), "TableAuthStarText");
+
+            flllPanelItemsboxes("ColName", قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString());
         }
-        private void Clear_Fields()
+        private void flllPanelItemsboxes(string rowID, string cellValue)
         {
-            مقدم_الطلب.Text = مكان_الإصدار.Text = UniName.Text = مكان_الإصدار.Text = FacultyName.Text = StudyLevel.Text = "";
-            StudyLevel.Text = "";
-            StudyYear.Text = "";
-            MatricNom.Text = "";
-            النوع.CheckState = CheckState.Checked;
-            labeldoctype.Text = "رقم جواز السفر: ";
-            رقم_الهوية.Text = "P";
-            AttendViceConsul.SelectedIndex = 2;
-            نوع_الهوية.SelectedIndex = 0;
-            System.Globalization.CultureInfo TypeOfLanguage = new System.Globalization.CultureInfo("ar-SA");
-            InputLanguage.CurrentInputLanguage = InputLanguage.FromCulture(TypeOfLanguage);
-            CultureInfo arSA = new CultureInfo("ar-SA");
-            arSA.DateTimeFormat.Calendar = new GregorianCalendar();
+            string query = "select * from TableAddContext where " + rowID + "=N'" + cellValue + "' and ColRight = ''";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            if (dtbl.Rows.Count > 0)
+                foreach (DataRow dr in dtbl.Rows)                
+                {
+                    starIndex = dr["starText"].ToString();                    
+                }
+        }
 
+        private void نص_مرجعي_Click(object sender, EventArgs e)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlCommand sqlCmd = new SqlCommand("UPDATE TableAddContext SET starText=@starText WHERE ColName = N'" + قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString()+"'", sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            //MessageBox.Show(starButton);
+            sqlCmd.Parameters.AddWithValue("@starText", starButton);
+            sqlCmd.ExecuteNonQuery();
+            النص.Text = "";
+            if (AppType.Checked)
+                checkStarTextExist(DataSource, قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), "TableCollectStarText");
+            else checkStarTextExist(DataSource, قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), "TableAuthStarText");
 
-            Thread.CurrentThread.CurrentCulture = arSA;
-            new System.Globalization.GregorianCalendar();
+            flllPanelItemsboxes("ColName", قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString());
+        }
 
-            التاريخ_الميلادي.Text = DateTime.Now.ToString("dd-MM-yyyy");
-            Iqrarid.Text = "ق س ج/80/" + التاريخ_الميلادي.Text.Split('-')[2].Replace("20", "") + "/08/" + loadRerNo(loadIDNo());
-            mandoubName.Text = ListSearch.Text = "";
-            النوع.CheckState = CheckState.Checked;
-            mandoubVisibilty();
+        private void تعيين_كخيار_Click(object sender, EventArgs e)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlCommand sqlCmd = new SqlCommand("UPDATE TableAddContext SET starText=@starText WHERE ColName = N'" + قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString() + "'", sqlCon);
+            sqlCmd.CommandType = CommandType.Text;            
+            sqlCmd.Parameters.AddWithValue("@starText", "");
+            sqlCmd.ExecuteNonQuery();
+            النص.Text = "";
+            if (AppType.Checked)
+                checkStarTextExist(DataSource, قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), "TableCollectStarText");
+            else checkStarTextExist(DataSource, قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), "TableAuthStarText");
+
+            flllPanelItemsboxes("ColName", قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString());
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string query = "delete from TableCollectStarText where ID = '" + starButton + "'";
+            if (!AppType.Checked)
+                query = "delete from TableAuthStarText where ID = '" + starButton + "'";
             
-            btnSavePrint.Text = "طباعة وحفظ";
-            btnSavePrint.Visible = true;
-            btnSavePrint.Enabled = true;
-            Comment.Text = "لا تعليق";
-            FillDataGridView();
-            ArchivedSt.Text = "غير مؤرشف";
-            ArchivedSt.Visible = false;
-            labelArch.Visible = false;
-            ArchivedSt.BackColor = Color.Red;
-            SearchFile.Visible = false;
-            fileloaded = false;
-            newData = true;
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();
+            النص.Text = "";
+            if (AppType.Checked)
+                checkStarTextExist(DataSource, قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), "TableCollectStarText");
+            else checkStarTextExist(DataSource, قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), "TableAuthStarText");
+
+            flllPanelItemsboxes("ColName", قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString());
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            النص.Text = SuffReversReplacements(النص.Text, 0, 0); 
+            string query = "UPDATE TableCollectStarText SET "+ قائمة_النصوص_الفرعية.Text.Replace(" ","_") + "=N'" + النص.Text + "'";
+            if (!AppType.Checked)
+                query = "UPDATE TableAuthStarText SET " + قائمة_النصوص_الفرعية.Text.Replace(" ", "_") + "=N'" + النص.Text + "'"; 
+            
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();
+            النص.Text = "";
+            if (AppType.Checked)
+                checkStarTextExist(DataSource, قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), "TableCollectStarText");
+            else checkStarTextExist(DataSource, قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), "TableAuthStarText");
+
+            flllPanelItemsboxes("ColName", قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString());
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            النص.Text = SuffReversReplacements(النص.Text,0,0);
+            if (AppType.Checked)
+            {
+                if (checkStarTextExist(DataSource, قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), النص.Text, "TableCollectStarText")) return;
+            }
+            else if (!AppType.Checked)
+            {
+                if (checkStarTextExist(DataSource, قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), النص.Text, "TableAuthStarText")) return;
+            }
+            string query = "insert TableCollectStarText into (" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_") + ") value (N'" + النص.Text + "')";
+            if (!AppType.Checked)
+                query = "insert TableAuthStarText into (" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_") + ") value (N'" + النص.Text + "')";
+
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();
+            النص.Text = "";
+            if (AppType.Checked)
+                checkStarTextExist(DataSource, قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), "TableCollectStarText");
+            else checkStarTextExist(DataSource, قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), "TableAuthStarText");
+
+            flllPanelItemsboxes("ColName", قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString());
+        }
+
+        private bool checkStarTextExist(string dataSource, string col, string text, string genTable)
+        {
+            string query = "select * from " + genTable + " where " + col + "=N'" + text + "'";
+            SqlConnection sqlCon = new SqlConnection(dataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            if (dtbl.Rows.Count > 0) return true;
+            else return false;
+            sqlCon.Close();
         }
     }
 }
