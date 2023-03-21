@@ -168,10 +168,10 @@ namespace PersAhwal
             // btnSaveEnd
             // 
             this.btnSaveEnd.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSaveEnd.Location = new System.Drawing.Point(754, 662);
+            this.btnSaveEnd.Location = new System.Drawing.Point(749, 674);
             this.btnSaveEnd.Name = "btnSaveEnd";
             this.btnSaveEnd.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.btnSaveEnd.Size = new System.Drawing.Size(275, 55);
+            this.btnSaveEnd.Size = new System.Drawing.Size(285, 55);
             this.btnSaveEnd.TabIndex = 510;
             this.btnSaveEnd.Text = "حفظ وإنهاء الارشفة";
             this.btnSaveEnd.UseVisualStyleBackColor = true;
@@ -465,7 +465,7 @@ namespace PersAhwal
             this.drawPicPanel.Controls.Add(this.dataGridView3);
             this.drawPicPanel.Location = new System.Drawing.Point(749, 7);
             this.drawPicPanel.Name = "drawPicPanel";
-            this.drawPicPanel.Size = new System.Drawing.Size(285, 635);
+            this.drawPicPanel.Size = new System.Drawing.Size(285, 661);
             this.drawPicPanel.TabIndex = 839;
             // 
             // تعليق
@@ -534,7 +534,7 @@ namespace PersAhwal
             this.dataGridView3.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.LightGreen;
             this.dataGridView3.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dataGridView3.RowTemplate.Height = 30;
-            this.dataGridView3.Size = new System.Drawing.Size(0, 51);
+            this.dataGridView3.Size = new System.Drawing.Size(0, 77);
             this.dataGridView3.TabIndex = 840;
             this.dataGridView3.Visible = false;
             // 
@@ -545,9 +545,9 @@ namespace PersAhwal
             this.panelFinalArch.Controls.Add(this.btnAuth);
             this.panelFinalArch.Controls.Add(this.reLoadPic);
             this.panelFinalArch.Controls.Add(this.button2);
-            this.panelFinalArch.Location = new System.Drawing.Point(1037, 410);
+            this.panelFinalArch.Location = new System.Drawing.Point(1040, 410);
             this.panelFinalArch.Name = "panelFinalArch";
-            this.panelFinalArch.Size = new System.Drawing.Size(332, 196);
+            this.panelFinalArch.Size = new System.Drawing.Size(329, 196);
             this.panelFinalArch.TabIndex = 840;
             this.panelFinalArch.Visible = false;
             // 
@@ -701,7 +701,6 @@ namespace PersAhwal
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1370, 741);
-            this.Controls.Add(this.Combo1);
             this.Controls.Add(this.mandoubName);
             this.Controls.Add(this.btnArchMandoub);
             this.Controls.Add(this.panelpicTemp);
@@ -722,8 +721,9 @@ namespace PersAhwal
             this.Controls.Add(this.lalProType);
             this.Controls.Add(this.txtIDNo);
             this.Controls.Add(this.button4);
-            this.Controls.Add(this.Combo2);
             this.Controls.Add(this.button3);
+            this.Controls.Add(this.Combo1);
+            this.Controls.Add(this.Combo2);
             this.Name = "FormPics";
             this.Text = "أرشفة الملفات";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormPics_FormClosed);

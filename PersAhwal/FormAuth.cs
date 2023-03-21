@@ -93,6 +93,8 @@ namespace PersAhwal
         bool ShowNewApp = false;
         string[] dataGrid = new string[50];
         string StrSpecPur = "";
+        string starText = "";
+        string starTextSub = "";
         int LegaceyIndex = 0;
         string LegaceyItem = "";
         string LegaceyPreStr = "";
@@ -157,10 +159,13 @@ namespace PersAhwal
         int txtRevIndex = 0;
         int txtRigIndex = 0;
         int txtReviewListIndex = 0;
+        int txtRightListIndex = 0;
+        string txtReviewLast = "";
+        string قائمة_الحقوقLast = "";
+        string selectTable = "";
         public FormAuth(int atvc, int rowid, string AuthNo, string datasource, string filespathIn, string filespathOut, string empName, string jobposition, string greDate, string hijriDate,bool testItems )
         {
             InitializeComponent();
-           
             FilespathIn = filespathIn;
             FilespathOut =  filespathOut + @"\" ;
             test = testItems;
@@ -1780,12 +1785,12 @@ namespace PersAhwal
                     if (settings[1] == "1")
                     {
                         إلغاء_توكيل_سابق.Checked = true;
-                        panelAuthOptions.Size = new System.Drawing.Size(1168, 203); 
+                        panelAuthOptions.Size = new System.Drawing.Size(1063, 203); 
                     }
                     else
                     {
                         إلغاء_توكيل_سابق.Checked = false;
-                        panelAuthOptions.Size = new System.Drawing.Size(1168, 244);
+                        panelAuthOptions.Size = new System.Drawing.Size(1063, 244);
                     }
                         if (txtReview.Text == "" && نوع_التوكيل.Text != "توكيل بصيغة غير مدرجة")
                         checkAutoUpdate.Checked = true;
@@ -2508,6 +2513,17 @@ namespace PersAhwal
                     ColName = dr["ColName"].ToString();
                     الحقوق_off.Text = ColRight = dr["ColRight"].ToString().Replace("-", "_");
                     StrSpecPur = dr["TextModel"].ToString();
+                    starText = dr["starText"].ToString();
+                    starTextSub = dr["starTextSub"].ToString();
+                    if (starText != "") 
+                    {
+                        picStarRight.Visible = true;
+                    }
+                    
+                    if (starTextSub != "") 
+                    {
+                        picStarSub.Visible = true;
+                    }
                     timer1.Enabled = true;
                     //MessageBox.Show("ColRight = " + ColRight);
                     //MessageBox.Show(StrSpecPur);
@@ -2908,7 +2924,7 @@ namespace PersAhwal
                     if (!backgroundWorker1.IsBusy)
                         backgroundWorker1.RunWorkerAsync();
                     //authrights
-                    panelAuthOptions.Size = new System.Drawing.Size(1168, 244);
+                    panelAuthOptions.Size = new System.Drawing.Size(1063, 244);
                     if (نوع_التوكيل.Text == "توكيل بصيغة غير مدرجة" && إجراء_التوكيل.Text == "توكيل بصيغة غير مدرجة")
                     {
                         إجراء_التوكيل.BackColor = System.Drawing.Color.MistyRose;
@@ -2993,8 +3009,9 @@ namespace PersAhwal
                     timer5.Enabled = true;
                     break;
                 case 3:
-                    removeSpace(قائمة_الحقوق);
-                    removeSpace(txtReview);
+                    checkAutoUpdate.Checked = false;
+                    قائمة_الحقوق.Text = removeSpace(قائمة_الحقوق.Text,true);
+                    txtReview.Text = removeSpace(txtReview.Text,false);
                     SuffConvertments(txtReview, صفة_مقدم_الطلب_off.SelectedIndex, صفة_الموكل_off.SelectedIndex);
                     SuffConvertments(قائمة_الحقوق, صفة_مقدم_الطلب_off.SelectedIndex, صفة_الموكل_off.SelectedIndex);
                     SuffConvertments(التوثيق, صفة_مقدم_الطلب_off.SelectedIndex, صفة_الموكل_off.SelectedIndex);
@@ -3023,10 +3040,10 @@ namespace PersAhwal
                         fillTextBoxes(Vitext3, 3);
                         fillTextBoxes(Vitext4, 4);
                         fillTextBoxes(Vitext5, 5);
-                        txtReview.Size = new System.Drawing.Size(1168, 57);
+                        txtReview.Size = new System.Drawing.Size(1063, 57);
                     }
                     else 
-                        txtReview.Size = new System.Drawing.Size(1168, 150);
+                        txtReview.Size = new System.Drawing.Size(1063, 150);
 
                     
                     if (!save2DataBase(PanelItemsboxes)) 
@@ -3423,10 +3440,11 @@ namespace PersAhwal
 
         private void إجراء_التوكيل_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
+            reversTextReview();
+            reversTextRight();
+
             checkBoxesJob();
             fillInfo(PanelItemsboxes, false);
-            reversTextReview();
             //if (نوع_التوكيل.Text == "شهادة ميلاد" && Vitext1.Text != "")
             //{
             //    BirthName = Vitext1.Text.Split('_');
@@ -3449,14 +3467,23 @@ namespace PersAhwal
             getRightsEarlier(DataSource);
             صفة_الموكل_off.SelectedIndex = Appcases(جنس_الموكَّل, addAuthticIndex);
             صفة_مقدم_الطلب_off.SelectedIndex = Appcases(النوع, addNameIndex);            
+            
             if (الحقوق_الممنوحة.Text == "")
             {
                 savedRights.Checked = false;
                 صفة_الموكل_off.Enabled = true;
-                flllPanelItemsboxes("ColName", إجراء_التوكيل.Text + "-" + نوع_التوكيل.SelectedIndex.ToString());
                 bool genForm = false;
                 if (نوع_التوكيل.Text == "توكيل بصيغة غير مدرجة") genForm = true;
-                PopulateCheckBoxes(genForm,ColRight.Replace(" ", "_"), "TableAuthRights", DataSource, صفة_مقدم_الطلب_off.SelectedIndex, true);
+
+                flllPanelItemsboxes("ColName", إجراء_التوكيل.Text + "-" + نوع_التوكيل.SelectedIndex.ToString());
+                if (starText != "")
+                {
+                    starTectRightJob();
+                }
+                else
+                {
+                    PopulateCheckBoxes(genForm, ColRight.Replace(" ", "_"), "TableAuthRights", DataSource, صفة_مقدم_الطلب_off.SelectedIndex, true);
+                }
                 //autoCompleteTextBox(txtAddRight, DataSource, "قائمة_الحقوق_الكاملة", "TableAuthRight");
             }
             else
@@ -3477,6 +3504,35 @@ namespace PersAhwal
                 txtReview.Text = txtRev.Text;
             }
         }
+
+        private void starTectRightJob()
+        {
+            picStarRight.Visible = true;
+            قائمة_الحقوق.Text = txtRightList[Convert.ToInt32(starText)-1];
+            string[] textRights = قائمة_الحقوق.Text.Split('،');
+
+            foreach (string text in textRights)
+            {
+                if (text.Contains("الحق في توكيل الغير"))
+                    authother = text;
+
+                if (text.Contains("ويعتبر التوكيل الصادر"))
+                    removeAuthother = text;
+                if (text.Contains("لمن يشهد والله"))
+                    lastSentence = text;
+            }
+            
+            if (!توكيل_الغير.Checked && authother != "")
+            {
+                قائمة_الحقوق.Text = قائمة_الحقوق.Text.Replace(authother, "") + " ";
+            }
+
+            if (!إلغاء_توكيل_سابق.Checked && removeAuthother != "")
+            {
+                قائمة_الحقوق.Text = قائمة_الحقوق.Text.Replace(removeAuthother, "") + " ";
+            }
+        }
+
         private void إجراء_التوكيل_TextChanged(object sender, EventArgs e)
         {
             if (إجراء_التوكيل.Text != "إختر الإجراء")
@@ -4658,6 +4714,7 @@ namespace PersAhwal
                     error2.Enabled = false;
                 }
                 }
+            txtReview.Text = removeSpace(txtReview.Text,false);
         }
 
         private void allowedEdit_SelectedIndexChanged(object sender, EventArgs e)
@@ -5063,13 +5120,13 @@ namespace PersAhwal
             {
                 PanelButtonInfo.Visible = true;
                 
-                txtReview.Size = new System.Drawing.Size(1168, 57);
+                txtReview.Size = new System.Drawing.Size(1063, 57);
                 checkAutoUpdate.Height = 57;
             }
             else
             {
                 PanelButtonInfo.Visible = false;
-                txtReview.Size = new System.Drawing.Size(1168, 154);
+                txtReview.Size = new System.Drawing.Size(1063, 154);
                 checkAutoUpdate.Height = 154;
             }
             
@@ -5233,14 +5290,18 @@ namespace PersAhwal
         {
             if (!قائمة_الحقوق.Text.Contains("ويعتبر التوكيل الصادر") && إلغاء_توكيل_سابق.Checked)
             {
-                panelAuthOptions.Size = new System.Drawing.Size(1168, 203);
+                panelAuthOptions.Size = new System.Drawing.Size(1063, 203);
                 قائمة_الحقوق.Text = قائمة_الحقوق.Text.Replace(lastSentence, removeAuthother + lastSentence);
                 panelRemove.Visible = buttonRemove.Visible = true;
             }
             else if (!إلغاء_توكيل_سابق.Checked)
             {
-                panelAuthOptions.Size = new System.Drawing.Size(1168, 244);
-                قائمة_الحقوق.Text = قائمة_الحقوق.Text.Replace(removeAuthother, "");
+                panelAuthOptions.Size = new System.Drawing.Size(1063, 244);
+                try
+                {
+                    قائمة_الحقوق.Text = قائمة_الحقوق.Text.Replace(removeAuthother, "");
+                }
+                catch (Exception ex) { }
                 panelRemove.Visible = buttonRemove.Visible = false;
             }
         }
@@ -5284,12 +5345,12 @@ namespace PersAhwal
         {
             if (panelRemove.Visible)
             {
-                panelAuthOptions.Size = new System.Drawing.Size(1168, 203);
+                panelAuthOptions.Size = new System.Drawing.Size(1063, 203);
                 buttonRemove.Visible = true;
             }
             else
             {
-                panelAuthOptions.Size = new System.Drawing.Size(1168, 244);
+                panelAuthOptions.Size = new System.Drawing.Size(1063, 244);
                 buttonRemove.Visible = false;
             }
         }
@@ -5381,6 +5442,83 @@ namespace PersAhwal
             }
 
         }
+        
+        private string SuffConvertments(string text, int person1, int person2)
+        {
+            string[] words = text.Split(' ');
+            
+            foreach (string word in words)
+            {
+                if (word == "" || word == " ") continue;
+                for (int gridIndex = 0; gridIndex < dataGridView2.Rows.Count - 1; gridIndex++)
+                {
+                    string code = dataGridView2.Rows[gridIndex].Cells["الرموز"].Value.ToString();
+                    string person = dataGridView2.Rows[gridIndex].Cells["الضمير"].Value.ToString();
+                    
+                    string replacemest1 = dataGridView2.Rows[gridIndex].Cells["المقابل" + (person1 + 1).ToString()].Value.ToString();
+                    string replacemest2 = dataGridView2.Rows[gridIndex].Cells["المقابل" + (person2 + 1).ToString()].Value.ToString();
+
+                    string[] replacemests = new string[6];
+                    replacemests[0] = dataGridView2.Rows[gridIndex].Cells["المقابل1"].Value.ToString();
+                    replacemests[1] = dataGridView2.Rows[gridIndex].Cells["المقابل2"].Value.ToString();
+                    replacemests[2] = dataGridView2.Rows[gridIndex].Cells["المقابل3"].Value.ToString();
+                    replacemests[3] = dataGridView2.Rows[gridIndex].Cells["المقابل4"].Value.ToString();
+                    replacemests[4] = dataGridView2.Rows[gridIndex].Cells["المقابل5"].Value.ToString();
+                    replacemests[5] = dataGridView2.Rows[gridIndex].Cells["المقابل6"].Value.ToString();
+
+                    for (int cellIndex = 0; cellIndex < 6; cellIndex++)
+                    {
+                        if (word == replacemests[cellIndex] || word == replacemests[cellIndex] + "،")
+                        {
+                            Console.WriteLine(word);
+                            if (person == "1")
+                            { 
+                                if (word != replacemests[person1]) {
+                                    var selectedOption = MessageBox.Show("هل تود إجراء التصحيح التلقائي (" + replacemests[person2] + ")", "تم رصد خطاء في الصياغة (" + word + ")", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                                    if (selectedOption == DialogResult.Yes)
+                                    {
+                                        text = text.Replace(word, replacemests[person1]);
+                                        break;
+                                    }
+                                //    MessageBox.Show(word); 
+                                }
+                            }
+                            if (person == "2")
+                            { 
+                                if (word != replacemests[person2]) {
+                                    var selectedOption = MessageBox.Show("هل تود إجراء التصحيح التلقائي (" + replacemests[person2] + ")", "تم رصد خطاء في الصياغة (" + word + ")", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                                    if (selectedOption == DialogResult.Yes)
+                                    {
+                                        text = text.Replace(word, replacemests[person2]);
+                                        break;
+                                    }
+                                //    MessageBox.Show(word); 
+                                }
+                            }
+                            if (person == "3")
+                            { 
+                                if (word != replacemests[person1]) {
+                                    var selectedOption = MessageBox.Show("هل تود إجراء التصحيح التلقائي ("+ replacemests[person1] +")", "تم رصد خطاء في الصياغة (" + word + ")", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                                    if (selectedOption == DialogResult.Yes)
+                                    {
+                                        text = text.Replace(word, replacemests[person1]);
+                                        break;
+                                    }
+                                //    MessageBox.Show(word); 
+                                }
+                            }
+                            //text = text.Replace(replacemest[cellIndex], code);
+                            //break;
+                        }
+                    }
+
+                }
+            }
+            return text;
+        }
         private string SuffOrigConvertments(string text)
         {
             try
@@ -5450,6 +5588,30 @@ namespace PersAhwal
 
 
         }
+        private void reversTextRight()
+        {
+            string query = "select " + إجراء_التوكيل.Text.Replace(" ", "_") + " from TableAuthRightStarText order by ID desc";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            txtRightListIndex = 0;
+            txtRightList = new string[dtbl.Rows.Count];
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                if (dataRow[إجراء_التوكيل.Text.Replace(" ", "_")].ToString() == "") continue;
+                txtRightList[txtRightListIndex] = dataRow[إجراء_التوكيل.Text.Replace(" ", "_")].ToString();
+                Console.WriteLine(txtRightList[txtRightListIndex]);
+                txtRightListIndex++;
+            }
+
+
+        }
+       
 
         private void reversTextReviewold()
         {
@@ -5499,52 +5661,7 @@ namespace PersAhwal
             }
         }
         private void reversTextRights()
-        {
-            string query = "select * from TableAuth where إجراء_التوكيل = N'" + إجراء_التوكيل.Text + "' order by ID desc";
-            SqlConnection sqlCon = new SqlConnection(DataSource);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
-            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
-            sqlDa.SelectCommand.CommandType = CommandType.Text;
-            DataTable dtbl = new DataTable();
-            sqlDa.Fill(dtbl);
-            sqlCon.Close();
-            int index = 0;
-            txtRightList = new string[dtbl.Rows.Count];
-            foreach (DataRow dataRow in dtbl.Rows)
-            {
-
-                if (dataRow["الحقوق_الممنوحة"].ToString() == "") continue;
-
-                txtRightList[index] = dataRow["الحقوق_الممنوحة"].ToString().Replace("1_","").Replace("0_","");
-                
-                Console.WriteLine(txtRightList[index]);
-                if (dataRow["itext1"].ToString() != "" && txtRightList[index].Contains(dataRow["itext1"].ToString()))
-                    txtRightList[index] = txtRightList[index].Replace(dataRow["itext1"].ToString(), "t1");
-                if (dataRow["itext2"].ToString() != "" && txtRightList[index].Contains(dataRow["itext2"].ToString()))
-                    txtRightList[index] = txtRightList[index].Replace(dataRow["itext2"].ToString(), "t2");
-                if (dataRow["itext3"].ToString() != "" && txtRightList[index].Contains(dataRow["itext3"].ToString()))
-                    txtRightList[index] = txtRightList[index].Replace(dataRow["itext3"].ToString(), "t3");
-                if (dataRow["itext4"].ToString() != "" && txtRightList[index].Contains(dataRow["itext4"].ToString()))
-                    txtRightList[index] = txtRightList[index].Replace(dataRow["itext4"].ToString(), "t4");
-                if (dataRow["itext5"].ToString() != "" && txtRightList[index].Contains(dataRow["itext5"].ToString()))
-                    txtRightList[index] = txtRightList[index].Replace(dataRow["itext5"].ToString(), "t5");
-
-                if (dataRow["icheck1"].ToString() != "" && txtRightList[index].Contains(dataRow["icheck1"].ToString()))
-                    txtRightList[index] = txtRightList[index].Replace(dataRow["icheck1"].ToString(), "c1");
-
-                if (dataRow["icombo1"].ToString() != "" && txtRightList[index].Contains(dataRow["icombo1"].ToString()))
-                    txtRightList[index] = txtRightList[index].Replace(dataRow["icombo1"].ToString(), "m1");
-                if (dataRow["icombo2"].ToString() != "" && txtRightList[index].Contains(dataRow["icombo2"].ToString()))
-                    txtRightList[index] = txtRightList[index].Replace(dataRow["icombo2"].ToString(), "m2");
-
-                if (dataRow["ibtnAdd1"].ToString() != "" && txtRightList[index].Contains(dataRow["ibtnAdd1"].ToString()))
-                    txtRightList[index] = txtRightList[index].Replace(dataRow["ibtnAdd1"].ToString(), "a1");
-                if (dataRow["itxtDate1"].ToString() != "" && txtRightList[index].Contains(dataRow["itxtDate1"].ToString()))
-                    txtRightList[index] = txtRightList[index].Replace(dataRow["itxtDate1"].ToString(), "n1");                
-                    Console.WriteLine(txtRightList[index]);
-                index++;
-            }
+        {            
         }
 
 
@@ -5557,69 +5674,47 @@ namespace PersAhwal
                 text = text.Replace("auth1", legaceyAuthInfo);
             if (text.Contains("  "))
                 text = text.Replace("  ", " ");
-            if (text.Contains("t1"))
-                text = text.Replace("t1", Vitext1.Text);
-            if (text.Contains("t2"))
-                text = text.Replace("t2", Vitext2.Text);
-            if (text.Contains("t3"))
-                text = text.Replace("t3", Vitext3.Text);
-            if (text.Contains("t4"))
-                text = text.Replace("t4", Vitext4.Text);
-            if (text.Contains("t5"))
-                text = text.Replace("t5", Vitext5.Text);
+            if (text.Contains(Vitext1.Text))
+                text = text.Replace(Vitext1.Text,"t1");
+            if (text.Contains(Vitext2.Text))
+                text = text.Replace(Vitext2.Text,"t2");
+            if (text.Contains(Vitext3.Text))
+                text = text.Replace(Vitext3.Text,"t3");
+            if (text.Contains(Vitext4.Text))
+                text = text.Replace(Vitext4.Text,"t4");
+            if (text.Contains(Vitext5.Text))
+                text = text.Replace(Vitext5.Text,"t5");
+            
+            if (text.Contains(Vicheck1.Text))
+                text = text.Replace(Vicheck1.Text,"c1");
+            if (text.Contains(Vicombo1.Text))
+                text = text.Replace(Vicombo1.Text,"m1");
+            if (text.Contains(Vicombo2.Text))
+                text = text.Replace(Vicombo2.Text,"m2");
 
-            if (text.Contains("c1"))
-                text = text.Replace("c1", Vicheck1.Text);
-            if (text.Contains("m1"))
-                text = text.Replace("m1", Vicombo1.Text);
-            if (text.Contains("m2"))
-                text = text.Replace("m2", Vicombo2.Text);
-
-            if (text.Contains("a1"))
-                text = text.Replace("a1", LibtnAdd1.Text);
-            if (text.Contains("n1"))
-                text = text.Replace("n1", " " + VitxtDate1.Text + " ");
-            if (text.Contains("@*@"))
-            {
-                spacialCharacter = "@*@";
-                text = text.Replace("@*@", "لدى  برقم الايبان (" + Vitext3.Text + ")");
-            }
-            if (text.Contains("#8"))
-                text = text.Replace("#8", removedDocNo.Text);
-            if (text.Contains("#6"))
-                text = text.Replace("#6", removedDocSource.Text);
-            if (text.Contains("#7"))
-                text = text.Replace("#7", removedDocDate.Text);
-
-            for (int gridIndex = 0; gridIndex < dataGridView2.Rows.Count - 1; gridIndex++)
-            {
-                string code = dataGridView2.Rows[gridIndex].Cells["الرموز"].Value.ToString();
-                string person = dataGridView2.Rows[gridIndex].Cells["الضمير"].Value.ToString();
-                string[] replacemest = new string[6];
-                try
-                {
-                    replacemest[0] = dataGridView2.Rows[gridIndex].Cells["المقابل1"].Value.ToString();
-                    replacemest[1] = dataGridView2.Rows[gridIndex].Cells["المقابل2"].Value.ToString();
-                    replacemest[2] = dataGridView2.Rows[gridIndex].Cells["المقابل3"].Value.ToString();
-                    replacemest[3] = dataGridView2.Rows[gridIndex].Cells["المقابل4"].Value.ToString();
-                    replacemest[4] = dataGridView2.Rows[gridIndex].Cells["المقابل5"].Value.ToString();
-                    replacemest[5] = dataGridView2.Rows[gridIndex].Cells["المقابل6"].Value.ToString();
-                }
-                catch (Exception ex) { return text; }
-                if (text.Contains(code))
-                {
-                    if (person == "1")
-                        text = text.Replace(code, replacemest[appCaseIndex]);
-                    else if (person == "2")
-                        text = text.Replace(code, replacemest[intAuthcases]);
-                }
-            }
+            if (text.Contains(LibtnAdd1.Text))
+                text = text.Replace(LibtnAdd1.Text,"a1");
+            if (text.Contains(VitxtDate1.Text))
+                text = text.Replace(VitxtDate1.Text,"n1" );
+            if (text.Contains(VitxtDate1.Text))
+                text = text.Replace(VitxtDate1.Text,"n1" );
+            if (text.Contains("لدى  برقم الايبان (" + Vitext3.Text + ")"))            
+                text = text.Replace("لدى  برقم الايبان (" + Vitext3.Text + ")", "لدى  برقم الايبان (@*@)");            
+            if (text.Contains(removedDocNo.Text))
+                text = text.Replace(removedDocNo.Text,"#8");
+            if (text.Contains(removedDocSource.Text))
+                text = text.Replace(removedDocSource.Text,"#6");
+            if (text.Contains(removedDocDate.Text))
+                text = text.Replace(removedDocDate.Text, "#7");
+            text = SuffConvertments(text, صفة_مقدم_الطلب_off.SelectedIndex, صفة_الموكل_off.SelectedIndex);
             return text;
         }
         private void fileUpdate_Click(object sender, EventArgs e)
         {
             checkAutoUpdate.Checked = false;
-            if(txtRevIndex == txtReviewList.Length) txtRevIndex = 0;
+            txtReviewLast = txtReview.Text;
+            if (txtRevIndex == txtReviewList.Length) txtRevIndex = 0;
+            Console.WriteLine(txtReviewList[txtRevIndex]);
             StrSpecPur = SuffOrigConvertments(txtReviewList[txtRevIndex]);
             //MessageBox.Show(txtReview.Text);
             txtReview.Text = SuffReplacements(StrSpecPur, صفة_مقدم_الطلب_off.SelectedIndex, صفة_الموكل_off.SelectedIndex);
@@ -5628,8 +5723,9 @@ namespace PersAhwal
 
         private void pictureBox3_Click(object sender, EventArgs e)
         {
+            قائمة_الحقوقLast = قائمة_الحقوق.Text;
             if (txtRigIndex == txtRightList.Length) txtRigIndex = 0;
-            قائمة_الحقوق.Text = SuffOrigConvertments(txtRightList [txtRigIndex]);
+            قائمة_الحقوق.Text = SuffOrigConvertments(txtRightList [txtRigIndex]); 
             //MessageBox.Show(قائمة_الحقوق.Text);
             قائمة_الحقوق.Text = SuffReplacements(قائمة_الحقوق.Text, صفة_مقدم_الطلب_off.SelectedIndex, صفة_الموكل_off.SelectedIndex);
             highlightSentences();
@@ -5639,16 +5735,55 @@ namespace PersAhwal
         }
 
 
-        private void removeSpace(TextBox text)
+        private string removeSpace(string text, bool addLast)
         {
-            text.Text = text.Text.Replace("،", "، ");
-            for (; text.Text.Contains("  ");)
+            string authother = "";
+            string removeAuthother = "";
+            string lastSentence = "";
+            string[] sentences = text.Split('،');
+            foreach (string sentence in sentences)
             {
-                text.Text = text.Text.Replace("  ", " ");
+                if (sentence.Contains("الحق في توكيل الغير"))
+                    authother = sentence;
+                if (sentence.Contains("ويعتبر التوكيل الصادر"))
+                    removeAuthother = sentence;
+                if (sentence.Contains("لمن يشهد والله"))
+                    lastSentence = sentence;
             }
-            text.Text = text.Text.Trim();
+            if (addLast)
+            {
+                if (!text.Contains("لمن يشهد والله"))
+                    text = text + "، وأذنت لمن يشهد والله خير الشاهدين";
+                else
+                    text = text.Replace(lastSentence, "، وأذنت لمن يشهد والله خير الشاهدين");
+            }
+            try
+            {
+                text = text.Replace(authother, "");
+                text = text.Replace(removeAuthother, "");
+            }
+            catch (Exception ex) { }
+
+            for (; text.Contains("،،");)
+            {
+                text = text.Replace("،،", "، ");
+            }
+            text = text.Replace("، ،", "، ");
+            text = text.Replace("،", "، ");
+            text = text.Replace("1_", "");
+            text = text.Replace("0_", "");
+            text = text.Replace("،،", "،");
+            text = text.Replace("..", ".");
+            for (; text.Contains("  ");)
+            {
+                text = text.Replace("  ", " ");
+            }
+            text = text.Trim();
+
+
+            return text;
         }
-            private void highlightSentences() 
+        private void highlightSentences() 
         {
             authother = removeAuthother = lastSentence = "";
             string[] sentences = قائمة_الحقوق.Text.Split('،');
@@ -5672,6 +5807,136 @@ namespace PersAhwal
         private void قائمة_الحقوق_Click(object sender, EventArgs e)
         {
             
+        }
+
+        private void picStarSub_VisibleChanged(object sender, EventArgs e)
+        {
+            if (picStarSub.Visible)
+                picStarSubAdd.Visible = false;
+            picStarSubAdd.Visible = true;
+            
+        }
+
+        private void picStarRight_VisibleChanged(object sender, EventArgs e)
+        {
+            if (picStarRight.Visible)
+                picStarRightAdd.Visible = false;
+            else picStarRightAdd.Visible = true;
+            
+        }
+
+        private void pictureBox5_Click(object sender, EventArgs e)
+        {
+            txtReview.Text = txtReviewLast;
+        }
+
+        private void pictureBox7_Click(object sender, EventArgs e)
+        {
+            قائمة_الحقوق.Text = قائمة_الحقوقLast;
+        }
+
+        private void قائمة_الحقوق_TextChanged(object sender, EventArgs e)
+        {
+            قائمة_الحقوق.Text = removeSpace(قائمة_الحقوق.Text, true);
+        }
+
+        private void panelAuthRights_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void picStarSubAdd_Click(object sender, EventArgs e)
+        {
+            selectTable = "TableAuthStarText";            
+            updateText(txtReview);
+        }
+        private string updateText(TextBox text)
+        {
+            
+            if (!checkColExistance(selectTable, نوع_التوكيل.Text.Replace(" ", "_") + "_" + إجراء_التوكيل.Text.Replace(" ", "_")))
+                CreateColumn(نوع_التوكيل.Text.Replace(" ", "_") + "_" + إجراء_التوكيل.Text.Replace(" ", "_"), selectTable, "max");
+
+            string textRevers = SuffReversReplacements(text.Text, 0, 0);
+            string query = "UPDATE " + selectTable + " SET " + نوع_التوكيل.Text.Replace(" ", "_") + "_" + إجراء_التوكيل.Text.Replace(" ", "_") + "=N'" + textRevers + "' where ID = " + starButton;
+            if (starButton == "")
+                query = "insert into " + selectTable + " (" + نوع_التوكيل.Text.Replace(" ", "_") + "_" + إجراء_التوكيل.Text.Replace(" ", "_") + ") value (N'" + textRevers + "');SELECT @@IDENTITY as lastid";
+
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+
+            if (starButton == "")
+                sqlCmd.ExecuteNonQuery();
+            else
+            {
+                var reader = sqlCmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    return reader["lastid"].ToString();
+                }
+                sqlCon.Close();
+            }
+            return starButton;
+        }
+        private void CreateColumn(string Columnname, string tableName, string size)
+        {
+
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return; }
+            SqlCommand sqlCmd = new SqlCommand("alter table " + tableName + " add " + Columnname + " nvarchar(" + size + ")", sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            try
+            {
+                sqlCmd.ExecuteNonQuery();
+            }
+            catch (Exception ex) { return; }
+            sqlCon.Close();
+        }
+        private bool checkColExistance(string table, string colName)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return false; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT name FROM sys.columns WHERE object_id = OBJECT_ID('" + table + "')", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+
+            foreach (DataRow row in dtbl.Rows)
+            {
+
+                if (row["name"].ToString() == colName)
+                {
+                    return true;
+                }
+            }
+            //MessageBox.Show(table+" - "+ colName);
+            return false;
+
+        }
+
+        private void picStarRightAdd_Click(object sender, EventArgs e)
+        {
+            if (الموضوع.SelectedIndex == 1)
+            {
+                selectTable = "TableAuthStarText";
+            }
+            else if (الموضوع.SelectedIndex == 2)
+            {
+                selectTable = "TableAuthRightStarText";
+            }
         }
 
         private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)

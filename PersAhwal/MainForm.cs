@@ -9184,40 +9184,51 @@ namespace PersAhwal
         {
             fillSamplesCodes(Database); 
             
-            calcStarTextCollection(DataSource, "نوع_الإجراء", "TableCollection", "TableCollectStarText");
-            calcStarTextAuth(DataSource, "إجراء_التوكيل", "TableAuth", "TableAuthStarText");
+            calcStarTextCollection(DataSource, "نوع_الإجراء", "نوع_المعاملة", "TableCollection", "TableCollectStarText");
+            calcStarTextAuth(DataSource, "إجراء_التوكيل", "نوع_التوكيل", "TableAuth", "TableAuthStarText");
+            calcStarTextAuthRight(DataSource, "إجراء_التوكيل", "نوع_التوكيل", "TableAuth", "TableAuthRightStarText");
         }
 
-        private void calcStarTextCollection(string dataSource, string col, string table, string genTable)
+        private void calcStarTextCollection(string dataSource, string col,string colMain, string table, string genTable)
         {
-            string query = "select distinct "+col+" from "+table;
-            SqlConnection sqlCon = new SqlConnection(dataSource);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
-            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
-            sqlDa.SelectCommand.CommandType = CommandType.Text;
-            DataTable dtbl = new DataTable();
-            sqlDa.Fill(dtbl);
-            foreach (DataRow row in dtbl.Rows)
+            string[] ColLists = getMainCol(dataSource, colMain, table);
+            foreach (string colList in ColLists)
             {
-                string column = row[col].ToString().Replace(" ","_");
-                if (!checkColExist(genTable, column)) 
+                string query = "select distinct " + col + " from " + table + " where " + colMain + "=N'" + colList + "'";
+                SqlConnection sqlCon = new SqlConnection(dataSource);
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+                SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+                sqlDa.SelectCommand.CommandType = CommandType.Text;
+                DataTable dtbl = new DataTable();
+                sqlDa.Fill(dtbl);
+
+                foreach (DataRow row in dtbl.Rows)
                 {
-                    CreateColumn(column, genTable);
+                    if (colList == "" || row[col].ToString() == "") continue;
+                    string column = colList.Replace(" ", "_") + "_" + row[col].ToString().Replace(" ", "_");
+
+
+                    if (!checkColExist(genTable, column))
+                    {
+                        CreateColumn(column, genTable);
+                        Console.WriteLine(column);
+                    }
                 }
-            }
-            foreach (DataRow row in dtbl.Rows)
-            {
-                string column = row[col].ToString();
-                reversTextReviewCol(DataSource, column);
+
+                foreach (DataRow row in dtbl.Rows)
+                {
+                    string column = row[col].ToString();
+                    if (colList == "" || column == "") continue;
+                    reversTextReviewCol(DataSource, column, colList);
+                }
             }
             sqlCon.Close();
         }
         
-        
-        private void calcStarTextAuth(string dataSource, string col, string table, string genTable)
+        private string[] getMainCol(string dataSource, string colMain, string table)
         {
-            string query = "select distinct "+col+" from "+table;
+            string query = "select distinct "+colMain+" from "+table;
             SqlConnection sqlCon = new SqlConnection(dataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
@@ -9225,18 +9236,79 @@ namespace PersAhwal
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
             sqlDa.Fill(dtbl);
+            string[] columns = new string[dtbl.Rows.Count];
+            int count = 0;
             foreach (DataRow row in dtbl.Rows)
             {
-                string column = row[col].ToString().Replace(" ","_");
-                if (!checkColExist(genTable, column)) 
+                columns[count] = row[colMain].ToString();
+                count++;
+            }
+            sqlCon.Close();
+            return columns;
+        }
+        
+        
+        private void calcStarTextAuth(string dataSource, string col,string colMain, string table, string genTable)
+        {
+            string[] ColLists = getMainCol(dataSource, colMain, table);
+            foreach (string colList in ColLists)
+            {
+                string query = "select distinct " + col + " from " + table + " where " + colMain + "=N'" + colList + "'";
+                SqlConnection sqlCon = new SqlConnection(dataSource);
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+                SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+                sqlDa.SelectCommand.CommandType = CommandType.Text;
+                DataTable dtbl = new DataTable();
+                sqlDa.Fill(dtbl);
+                foreach (DataRow row in dtbl.Rows)
                 {
-                    CreateColumn(column, genTable);
+                    if (colList == "" || row[col].ToString() == "") continue;
+                    string column = colList.Replace(" ", "_") + "_" + row[col].ToString().Replace(" ", "_"); 
+                    
+                    if (!checkColExist(genTable, column))
+                    {
+                        CreateColumn(column, genTable);
+                    }
+                }
+                foreach (DataRow row in dtbl.Rows)
+                {
+                    string column = row[col].ToString();
+                    if (colList == "" || column == "") continue;
+                    reversTextReviewAuth(DataSource, column, colList);
                 }
             }
-            foreach (DataRow row in dtbl.Rows)
+            sqlCon.Close();
+        }
+        
+        private void calcStarTextAuthRight(string dataSource, string col,string colMain, string table, string genTable)
+        {
+            string[] ColLists = getMainCol(dataSource, colMain, table);
+            foreach (string colList in ColLists)
             {
-                string column = row[col].ToString();
-                reversTextReviewAuth(DataSource, column);
+                string query = "select distinct " + col + " from " + table + " where " + colMain + "=N'" + colList + "'";
+                SqlConnection sqlCon = new SqlConnection(dataSource);
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+                SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+                sqlDa.SelectCommand.CommandType = CommandType.Text;
+                DataTable dtbl = new DataTable();
+                sqlDa.Fill(dtbl);
+                foreach (DataRow row in dtbl.Rows)
+                {
+                    if (colList == "" || row[col].ToString() == "") continue;
+                    string column = colList.Replace(" ", "_") + "_" + row[col].ToString().Replace(" ", "_");
+                    if (!checkColExist(genTable, column))
+                    {
+                        CreateColumn(column, genTable);
+                    }
+                }
+                foreach (DataRow row in dtbl.Rows)
+                {
+                    string column = row[col].ToString();
+                    if (colList == "" || column == "") continue;
+                    reversTextReviewAuthRight(DataSource, column, colList);
+                }
             }
             sqlCon.Close();
         }
@@ -9250,7 +9322,11 @@ namespace PersAhwal
             SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
-            sqlDa.Fill(dtbl);
+            try
+            {
+                sqlDa.Fill(dtbl);
+            }
+            catch (Exception ex) { }
             if (dtbl.Rows.Count > 0) return true;
             else return false;
             sqlCon.Close();
@@ -9258,7 +9334,8 @@ namespace PersAhwal
         
         private int checkTotalRows(string dataSource, string genTable)
         {
-            string query = "select * from "+ genTable;
+            string countRow = "0";
+            string query = "select count(ID) as count from "+ genTable;
             SqlConnection sqlCon = new SqlConnection(dataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
@@ -9266,23 +9343,38 @@ namespace PersAhwal
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
             sqlDa.Fill(dtbl);
-            
-            return dtbl.Rows.Count;
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                countRow = dataRow["count"].ToString();
+            }
+                return Convert.ToInt32(countRow);
             sqlCon.Close();
         }
         
         private int checkTotalcolRows(string dataSource, string genTable, string col)
         {
-            string query = "select * from "+ genTable +" where "+col + " is not null";
+            string countRow = "0";
+            string query = "select count(ID) as count from " + genTable +" where "+col + " is not null";
             SqlConnection sqlCon = new SqlConnection(dataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
-            sqlDa.Fill(dtbl);
-            
-            return dtbl.Rows.Count;
+            try
+            {
+                //Console.WriteLine(query);
+                sqlDa.Fill(dtbl);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(query);
+            }
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                countRow = dataRow["count"].ToString();
+            }
+            return Convert.ToInt32(countRow);
             sqlCon.Close();
         }
         
@@ -9303,6 +9395,8 @@ namespace PersAhwal
 
         private void updateNewText(string dataSource, string col, string text, string genTable, string ID)
         {
+            //MessageBox.Show(ID);
+            if (col.Contains("(") || col.Contains(")")) return;
             string query = "update " + genTable + " set " + col + "=N'" + text + "' where ID=" + ID;
             SqlConnection sqlCon = new SqlConnection(dataSource);
             if (sqlCon.State == ConnectionState.Closed)
@@ -9313,13 +9407,18 @@ namespace PersAhwal
                 catch (Exception ex) { return; }
             SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
             sqlCmd.CommandType = CommandType.Text;
-            sqlCmd.ExecuteNonQuery();
+            Console.WriteLine("updateNewText " + query);
+            try
+            {
+                sqlCmd.ExecuteNonQuery();
+            }
+            catch (Exception ex) { }
             sqlCon.Close();
         }
 
-        private void reversTextReviewAuth(string dataSource, string إجراء_التوكيل)
+        private void reversTextReviewAuth(string dataSource, string إجراء_التوكيل, string نوع_التوكيل)
         {
-            string query = "select * from TableAuth where إجراء_التوكيل = N'" + إجراء_التوكيل + "' order by ID desc";
+            string query = "select * from TableAuth where إجراء_التوكيل = N'" + إجراء_التوكيل + "' and نوع_التوكيل = N'" + نوع_التوكيل + "' order by ID desc";
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
@@ -9364,26 +9463,90 @@ namespace PersAhwal
                 txtReviewList = SuffOrigConvertments(txtReviewList);
 
                 int TotalRows = checkTotalRows(dataSource, "TableAuthStarText");
-                int TotalcolRows = checkTotalcolRows(dataSource, "TableAuthStarText", إجراء_التوكيل.Replace(" ", "_"));
+                int TotalcolRows = checkTotalcolRows(dataSource, "TableAuthStarText",نوع_التوكيل.Replace(" ", "_") +"_"+إجراء_التوكيل.Replace(" ", "_"));
 
 
-                Console.WriteLine("checkTotalRows = " + TotalRows);
-                Console.WriteLine("checkTotalcolRows = " + TotalcolRows);
+                Console.WriteLine("checkTotalRowsSub = " + TotalRows);
+                Console.WriteLine("checkTotalcolRowsSub = " + TotalcolRows);
 
 
-                if (TotalRows == TotalcolRows && !checkStarTextExist(dataSource, إجراء_التوكيل.Replace(" ", "_"), txtReviewList, "TableAuthStarText"))
-                    insertNewText(dataSource, إجراء_التوكيل.Replace(" ", "_"), txtReviewList, "TableAuthStarText");
-                else if (TotalRows != TotalcolRows && !checkStarTextExist(dataSource, إجراء_التوكيل.Replace(" ", "_"), txtReviewList, "TableAuthStarText"))
-                    updateNewText(dataSource, إجراء_التوكيل.Replace(" ", "_"), txtReviewList, "TableAuthStarText", (TotalcolRows + 1).ToString());
+                if (TotalRows == TotalcolRows && !checkStarTextExist(dataSource,نوع_التوكيل.Replace(" ", "_") +"_"+إجراء_التوكيل.Replace(" ", "_"), txtReviewList, "TableAuthStarText"))
+                    insertNewText(dataSource, نوع_التوكيل.Replace(" ", "_") +"_"+إجراء_التوكيل.Replace(" ", "_"), txtReviewList, "TableAuthStarText");
+                else if (TotalRows != TotalcolRows && !checkStarTextExist(dataSource,نوع_التوكيل.Replace(" ", "_") +"_"+إجراء_التوكيل.Replace(" ", "_"), txtReviewList, "TableAuthStarText"))
+                    updateNewText(dataSource,نوع_التوكيل.Replace(" ", "_") +"_"+إجراء_التوكيل.Replace(" ", "_"), txtReviewList, "TableAuthStarText", (TotalcolRows + 1).ToString());
+
+                Console.WriteLine(txtReviewList);
+                index++;
+            }
+        }
+        private void reversTextReviewAuthRight(string dataSource, string إجراء_التوكيل, string نوع_التوكيل)
+        {
+            string query = "select * from TableAuth where إجراء_التوكيل = N'" + إجراء_التوكيل + "' and نوع_التوكيل = N'" + نوع_التوكيل + "' order by ID desc";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            int index = 0;
+            
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                if (dataRow["الحقوق_الممنوحة"].ToString() == "") continue;
+
+                string txtReviewList = dataRow["الحقوق_الممنوحة"].ToString();
+
+                Console.WriteLine(txtReviewList);
+                if (dataRow["itext1"].ToString() != "" && txtReviewList.Contains(dataRow["itext1"].ToString()))
+                    txtReviewList = txtReviewList.Replace(dataRow["itext1"].ToString(), "t1");
+                if (dataRow["itext2"].ToString() != "" && txtReviewList.Contains(dataRow["itext2"].ToString()))
+                    txtReviewList = txtReviewList.Replace(dataRow["itext2"].ToString(), "t2");
+                if (dataRow["itext3"].ToString() != "" && txtReviewList.Contains(dataRow["itext3"].ToString()))
+                    txtReviewList = txtReviewList.Replace(dataRow["itext3"].ToString(), "t3");
+                if (dataRow["itext4"].ToString() != "" && txtReviewList.Contains(dataRow["itext4"].ToString()))
+                    txtReviewList = txtReviewList.Replace(dataRow["itext4"].ToString(), "t4");
+                if (dataRow["itext5"].ToString() != "" && txtReviewList.Contains(dataRow["itext5"].ToString()))
+                    txtReviewList = txtReviewList.Replace(dataRow["itext5"].ToString(), "t5");
+
+                if (dataRow["icheck1"].ToString() != "" && txtReviewList.Contains(dataRow["icheck1"].ToString()))
+                    txtReviewList = txtReviewList.Replace(dataRow["icheck1"].ToString(), "c1");
+
+                if (dataRow["icombo1"].ToString() != "" && txtReviewList.Contains(dataRow["icombo1"].ToString()))
+                    txtReviewList = txtReviewList.Replace(dataRow["icombo1"].ToString(), "m1");
+                if (dataRow["icombo2"].ToString() != "" && txtReviewList.Contains(dataRow["icombo2"].ToString()))
+                    txtReviewList = txtReviewList.Replace(dataRow["icombo2"].ToString(), "m2");
+
+                if (dataRow["ibtnAdd1"].ToString() != "" && txtReviewList.Contains(dataRow["ibtnAdd1"].ToString()))
+                    txtReviewList = txtReviewList.Replace(dataRow["ibtnAdd1"].ToString(), "a1");
+                if (dataRow["itxtDate1"].ToString() != "" && txtReviewList.Contains(dataRow["itxtDate1"].ToString()))
+                    txtReviewList = txtReviewList.Replace(dataRow["itxtDate1"].ToString(), "n1");
+
+                txtReviewList = SuffOrigConvertments(txtReviewList);
+
+                int TotalRows = checkTotalRows(dataSource, "TableAuthRightStarText");
+                int TotalcolRows = checkTotalcolRows(dataSource, "TableAuthRightStarText",نوع_التوكيل.Replace(" ", "_") +"_"+إجراء_التوكيل.Replace(" ", "_"));
+
+
+                Console.WriteLine("checkTotalRowsRight = " + TotalRows);
+                Console.WriteLine("checkTotalcolRowsRight = " + TotalcolRows);
+
+
+                if (TotalRows == TotalcolRows && !checkStarTextExist(dataSource,نوع_التوكيل.Replace(" ", "_") +"_"+إجراء_التوكيل.Replace(" ", "_"), txtReviewList, "TableAuthRightStarText"))
+                    insertNewText(dataSource,نوع_التوكيل.Replace(" ", "_") +"_"+إجراء_التوكيل.Replace(" ", "_"), txtReviewList, "TableAuthRightStarText");
+                else if (TotalRows != TotalcolRows && !checkStarTextExist(dataSource,نوع_التوكيل.Replace(" ", "_") +"_"+إجراء_التوكيل.Replace(" ", "_"), txtReviewList, "TableAuthRightStarText"))
+                    updateNewText(dataSource,نوع_التوكيل.Replace(" ", "_") +"_"+إجراء_التوكيل.Replace(" ", "_"), txtReviewList, "TableAuthRightStarText", (TotalcolRows + 1).ToString());
 
                 Console.WriteLine(txtReviewList);
                 index++;
             }
         }
 
-        private void reversTextReviewCol(string dataSource, string نوع_الإجراء)
+        private void reversTextReviewCol(string dataSource, string نوع_الإجراء, string نوع_المعاملة)
         {
-            string query = "select * from TableCollection where نوع_الإجراء = N'" + نوع_الإجراء + "' order by ID desc";
+            string query = "select * from TableCollection where نوع_الإجراء = N'" + نوع_الإجراء + "' and نوع_المعاملة = N'" + نوع_المعاملة + "' order by ID desc";
+            //MessageBox.Show(query);
             SqlConnection sqlCon = new SqlConnection(dataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
@@ -9439,17 +9602,19 @@ namespace PersAhwal
                 txtReviewList = SuffOrigConvertments(txtReviewList);
 
                 int TotalRows = checkTotalRows(dataSource, "TableCollectStarText");
-                int TotalcolRows = checkTotalcolRows(dataSource, "TableCollectStarText", نوع_الإجراء.Replace(" ", "_"));
+                int TotalcolRows = checkTotalcolRows(dataSource, "TableCollectStarText",نوع_المعاملة.Replace(" ", "_") +"_"+ نوع_الإجراء.Replace(" ", "_"));
 
 
-                Console.WriteLine("checkTotalRows = " + TotalRows);
-                Console.WriteLine("checkTotalcolRows = " + TotalcolRows);
+                Console.WriteLine("checkTotalRowsCol = " + TotalRows);
+                Console.WriteLine("checkTotalcolRowsCol = " + TotalcolRows);
 
-
-                if (TotalRows == TotalcolRows && !checkStarTextExist(dataSource, نوع_الإجراء.Replace(" ", "_"), txtReviewList, "TableCollectStarText")) 
-                    insertNewText(dataSource, نوع_الإجراء.Replace(" ", "_"), txtReviewList, "TableCollectStarText");
-                else if (TotalRows != TotalcolRows && !checkStarTextExist(dataSource, نوع_الإجراء.Replace(" ", "_"), txtReviewList, "TableCollectStarText")) 
-                    updateNewText(dataSource, نوع_الإجراء.Replace(" ", "_"), txtReviewList, "TableCollectStarText",(TotalcolRows+1).ToString());
+                //MessageBox.Show(نوع_الإجراء.Replace(" ", "_") + TotalRows.ToString() + "/" + TotalcolRows);
+                
+                if (TotalcolRows < TotalRows && !checkStarTextExist(dataSource,نوع_المعاملة.Replace(" ", "_") +"_"+ نوع_الإجراء.Replace(" ", "_"), txtReviewList, "TableCollectStarText"))
+                    updateNewText(dataSource,نوع_المعاملة.Replace(" ", "_") +"_"+ نوع_الإجراء.Replace(" ", "_"), txtReviewList, "TableCollectStarText", (TotalcolRows + 1).ToString());
+                
+                else if (!checkStarTextExist(dataSource,نوع_المعاملة.Replace(" ", "_") +"_"+ نوع_الإجراء.Replace(" ", "_"), txtReviewList, "TableCollectStarText")) 
+                    insertNewText(dataSource,نوع_المعاملة.Replace(" ", "_") +"_"+ نوع_الإجراء.Replace(" ", "_"), txtReviewList, "TableCollectStarText");
                 Console.WriteLine(txtReviewList);
                 index++;
             }

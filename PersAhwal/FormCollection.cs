@@ -321,22 +321,34 @@ namespace PersAhwal
                     finalPanel.Visible = true;
                     panelAuthRights.Visible = btnNext.Visible = PanelDataGrid.Visible = panelapplicationInfo.Visible = false;
                     removeSpace(txtReview);
+                    
+                    
                     string codedText = TextReviewCoding(txtReview.Text);
                     int TotalRows = checkTotalRows(DataSource, "TableCollectStarText");
                     int TotalcolRows = checkTotalcolRows(DataSource, "TableCollectStarText", نوع_الإجراء.Text.Replace(" ", "_"));
                     Console.WriteLine("checkTotalRows = " + TotalRows);
-                    Console.WriteLine("checkTotalcolRows = " + TotalcolRows);                    
-                    if (TotalRows == TotalcolRows && !checkStarTextExist(DataSource, نوع_الإجراء.Text.Replace(" ", "_"), codedText, "TableCollectStarText"))
-                        TotalcolRows = insertNewText(DataSource, نوع_الإجراء.Text.Replace(" ", "_"), codedText, "TableCollectStarText");
-                    else if (TotalRows != TotalcolRows && !checkStarTextExist(DataSource, نوع_الإجراء.Text.Replace(" ", "_"), codedText, "TableCollectStarText"))
-                        updateNewText(DataSource, نوع_الإجراء.Text.Replace(" ", "_"), codedText, "TableCollectStarText", (TotalcolRows + 1).ToString());
+                    Console.WriteLine("checkTotalcolRows = " + TotalcolRows);
 
-                    if (!checkStarTextExist(DataSource, نوع_الإجراء.Text.Replace(" ", "_"), codedText, "TableCollectStarText")) {
-                        var selectedOption = MessageBox.Show("إعتماد النص كنص مرجعي لمعاملة " + نوع_الإجراء.Text +"؟", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (!checkStarTextExist(DataSource, نوع_الإجراء.Text.Replace(" ", "_"), codedText, "TableCollectStarText"))
+                    {
+                        if (TotalcolRows < TotalRows)
+                            updateNewText(DataSource, نوع_الإجراء.Text.Replace(" ", "_"), codedText, "TableCollectStarText", (TotalcolRows + 1).ToString()); 
+                        else
+                            TotalcolRows = insertNewText(DataSource, نوع_الإجراء.Text.Replace(" ", "_"), codedText, "TableCollectStarText");
+                        
+                    }
+                    MessageBox.Show("TotalcolRows  " + TotalcolRows.ToString());
 
-                        if (selectedOption == DialogResult.Yes)
+
+                    if(TotalcolRows.ToString() != startID) {
+                        if (!checkStarTextExist(DataSource, نوع_الإجراء.Text.Replace(" ", "_"), codedText, "TableCollectStarText"))
                         {
-                            updateStar(DataSource, TotalcolRows.ToString());
+                            var selectedOption = MessageBox.Show("إعتماد النص كنص مرجعي لمعاملة " + نوع_الإجراء.Text + "؟", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                            if (selectedOption == DialogResult.Yes)
+                            {
+                                updateStar(DataSource, TotalcolRows.ToString());
+                            }
                         }
                     }
                     break;
@@ -355,7 +367,7 @@ namespace PersAhwal
             SqlCommand sqlCmd = new SqlCommand("INSERT INTO " + genTable + " (" + col + ")  values (N'" + text + "') ;SELECT @@IDENTITY as lastid", sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             var reader = sqlCmd.ExecuteReader();
-            MessageBox.Show("insert " + text);
+            //MessageBox.Show("insert " + text);
             if (reader.Read())
             {
                 return Convert.ToInt32(reader["lastid"].ToString());
@@ -373,7 +385,7 @@ namespace PersAhwal
                     sqlCon.Open();
                 }
                 catch (Exception ex) { return; }
-            MessageBox.Show("update " + text);
+            //MessageBox.Show("update " + text);
             SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.ExecuteNonQuery();
@@ -542,7 +554,7 @@ namespace PersAhwal
                         التوقيع_off.Text = مقدم_الطلب.Text.Split('_')[0] + Environment.NewLine + "توقيع "
                             + مقدم_الطلب.Text.Split('_')[1] + "/ ـ..................................";
                     }
-                    
+                    //MessageBox.Show("التوقيع_off " + التوقيع_off.Text);
                     break;
                 case 2:
                     // افادة وشهادة لمن يهمه الامر
@@ -590,13 +602,14 @@ namespace PersAhwal
                 else
                 {
                     auth = " بأن المواطن" + preffix[onBehalfIndex, 5] + " /" + اسم_الموكل_بالتوقيع.Text + " قد حضر" + preffix[onBehalfIndex, 3] + " ووقع" + preffix[onBehalfIndex, 3] + " بتوقيع" + preffix[onBehalfIndex, 4] + " على هذا الإقرار في حضور الشهود المذكورين أعلاه بعد تلاوته علي" + preffix[onBehalfIndex, 4] + " وبعد أن فهم" + preffix[onBehalfIndex, 3] + " مضمونه ومحتواه، وذلك بناءً على الحق الممنوح لها بموجب التوكيل الصادر عن " + جهة_إصدار_الوكالة.Text + " بالرقم " + رقم_الوكالة.Text + " بتاريخ " + تاريخ_إصدار_الوكالة.Text;
-                    التوقيع_off.Text = اسم_الموكل_بالتوقيع.Text;
+                    //التوقيع_off.Text = اسم_الموكل_بالتوقيع.Text;
                     التوثيق_off.Text = auth + "، صدر تحت توقيعي وختم القنصلية العامة";
                 }
             }
             else التوثيق_off.Text = auth + "، صدر تحت توقيعي وختم القنصلية العامة";
             if(!موقع_المعاملة.Text.Contains(AuthTitle))
                 موقع_المعاملة.Text = موقع_المعاملة.Text + Environment.NewLine + AuthTitle;
+            //MessageBox.Show("التوقيع_off " + التوقيع_off.Text);
         } 
         
        
@@ -3133,6 +3146,7 @@ namespace PersAhwal
                     ColName = dr["ColName"].ToString();
                     ColRight = dr["ColRight"].ToString();
                     startID = dr["starText"].ToString();
+
                     if (startID == "")
                     {
                         picStar.Visible = false; btnPrevious.Visible = true;
@@ -3142,6 +3156,7 @@ namespace PersAhwal
                         picStar.Visible = true; btnPrevious.Visible = false;
                         StrSpecPur = checkStarTextExist(DataSource, نوع_الإجراء.Text.Replace(" ", "_"), startID);                        
                     }
+                   // MessageBox.Show("startID " +startID);
                     if(StrSpecPur == "")
                         StrSpecPur = dr["TextModel"].ToString();
 
@@ -3337,20 +3352,20 @@ namespace PersAhwal
 
         private void موقع_المعاملة_SelectedIndexChanged(object sender, EventArgs e)
         {
-            التوقيع_off.Text = موقع_المعاملة.Text;
+            //التوقيع_off.Text = موقع_المعاملة.Text;
         }
 
         private void موقع_المعاملة_TextChanged(object sender, EventArgs e)
         {
             try
             {
-                التوقيع_off.Text = موقع_المعاملة.Text.Split(Convert.ToChar(Environment.NewLine))[0];
+                موقع_المعاملة_off.Text = موقع_المعاملة.Text.Split(Convert.ToChar(Environment.NewLine))[0];
             }
             catch (Exception ex)
             {
-                التوقيع_off.Text = موقع_المعاملة.Text;
+                موقع_المعاملة_off.Text = موقع_المعاملة.Text;
             }
-            
+
         }
 
         private void طريقة_الطلب_TextChanged(object sender, EventArgs e)
@@ -3620,6 +3635,26 @@ namespace PersAhwal
             bs.Filter = dataGridView1.Columns[2].HeaderText.ToString() + " LIKE '" + ListSearch.Text + "%'";
             dataGridView1.DataSource = bs;
             ColorFulGrid9();
+        }
+
+        private void picStar_VisibleChanged(object sender, EventArgs e)
+        {
+            if(picStar.Visible)
+                button19.Width = 10;
+            else 
+                button19.Width = 57;
+        }
+
+        private void PanelButtonInfo_VisibleChanged(object sender, EventArgs e)
+        {
+            if (PanelButtonInfo.Visible) 
+            {
+                PaneltxtReview.Height = 231;
+            }
+            else {
+                PaneltxtReview.Height = 360;
+            
+            }
         }
     }    
 }

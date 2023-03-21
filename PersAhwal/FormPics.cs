@@ -1173,7 +1173,7 @@ namespace PersAhwal
                 if (allInsertNamesList[rows] != "")
                 {
                     //MessageBox.Show(allInsertNamesList[rows] +" - "+paraValues[rows]);
-                    sqlCmd.Parameters.AddWithValue("@" + allInsertNamesList[rows], paraValues[rows]);
+                    sqlCmd.Parameters.AddWithValue("@" + allInsertNamesList[rows], paraValues[rows]); 
                 }
             }
             try
@@ -2564,6 +2564,10 @@ namespace PersAhwal
             {
                 archCase = 2; return "تم إصدارالمكاتبة النهائية باسم /" + name + " ولكن لم تتم أرشفتها بعد";
             }
+            else if (data2check && checkArchCase(documenNo).Contains("مؤرشف نهائي_"))
+            {
+                archCase = 5; return "تم إصدارالمكاتبة باسم /" + name + " وقد تمت أرشفتها بصورة نهائية وفي انتظار نسخة المواطن بعد البصمة";
+            }
             else if (data2check && checkArchCase(documenNo) != "مؤرشف نهائي")
             {
                 archCase = 3; return "تم إصدارالمكاتبة باسم /" + name + " وقد تمت أرشفتها بصورة نهائية وقد تمت إعادة طباعتها مجددا";
@@ -2572,10 +2576,7 @@ namespace PersAhwal
             {
                 archCase = 4; return "تم إصدارالمكاتبة باسم /" + name + " وقد تمت أرشفتها بصورة نهائية";
             }
-            else if (data2check && checkArchCase(documenNo).Contains("مؤرشف نهائي_"))
-            {
-                archCase = 5; return "تم إصدارالمكاتبة باسم /" + name + " وقد تمت أرشفتها بصورة نهائية وفي انتظار نسخة المواطن بعد البصمة";
-            }
+            
             else
             {
                 archCase = 0; return "لا يوجد بالنظام معاملة بالرقم " + documenNo;
