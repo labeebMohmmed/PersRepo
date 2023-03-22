@@ -265,6 +265,9 @@
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.picStarRightAdd = new System.Windows.Forms.PictureBox();
+            this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.button7 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.PanelDataGrid.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
@@ -292,6 +295,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picStarRightAdd)).BeginInit();
+            this.flowLayoutPanel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // labDescribed
@@ -1399,6 +1403,8 @@
             // 
             // checkAutoUpdate
             // 
+            this.checkAutoUpdate.Checked = true;
+            this.checkAutoUpdate.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkAutoUpdate.Font = new System.Drawing.Font("Arabic Typesetting", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkAutoUpdate.Location = new System.Drawing.Point(1242, 202);
             this.checkAutoUpdate.Name = "checkAutoUpdate";
@@ -1424,11 +1430,11 @@
             // قائمة_الحقوق
             // 
             this.قائمة_الحقوق.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.قائمة_الحقوق.Location = new System.Drawing.Point(3, 3);
+            this.قائمة_الحقوق.Location = new System.Drawing.Point(8, 3);
             this.قائمة_الحقوق.Multiline = true;
             this.قائمة_الحقوق.Name = "قائمة_الحقوق";
             this.قائمة_الحقوق.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.قائمة_الحقوق.Size = new System.Drawing.Size(1037, 1000);
+            this.قائمة_الحقوق.Size = new System.Drawing.Size(1003, 1000);
             this.قائمة_الحقوق.TabIndex = 653;
             this.قائمة_الحقوق.Click += new System.EventHandler(this.قائمة_الحقوق_Click);
             this.قائمة_الحقوق.TextChanged += new System.EventHandler(this.قائمة_الحقوق_TextChanged);
@@ -2136,11 +2142,11 @@
             // txtReview
             // 
             this.txtReview.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtReview.Location = new System.Drawing.Point(205, 202);
+            this.txtReview.Location = new System.Drawing.Point(229, 202);
             this.txtReview.Multiline = true;
             this.txtReview.Name = "txtReview";
             this.txtReview.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.txtReview.Size = new System.Drawing.Size(1031, 57);
+            this.txtReview.Size = new System.Drawing.Size(1007, 57);
             this.txtReview.TabIndex = 652;
             this.txtReview.TextChanged += new System.EventHandler(this.txtReview_TextChanged);
             this.txtReview.MouseHover += new System.EventHandler(this.txtReview_MouseHover);
@@ -2704,6 +2710,7 @@
             this.panelAuthRights.Controls.Add(this.PanelButtonInfo);
             this.panelAuthRights.Controls.Add(this.checkAutoUpdate);
             this.panelAuthRights.Controls.Add(this.txtReview);
+            this.panelAuthRights.Controls.Add(this.button7);
             this.panelAuthRights.Controls.Add(this.picStarSubAdd);
             this.panelAuthRights.Controls.Add(this.picStarSub);
             this.panelAuthRights.Controls.Add(this.pictureBox5);
@@ -2731,6 +2738,7 @@
             this.panelAuthRights.Controls.Add(this.حقوق_التوكيل);
             this.panelAuthRights.Controls.Add(this.الحقوق_الممنوحة);
             this.panelAuthRights.Controls.Add(this.الاعدادات);
+            this.panelAuthRights.Controls.Add(this.flowLayoutPanel3);
             this.panelAuthRights.Location = new System.Drawing.Point(8, 40);
             this.panelAuthRights.Name = "panelAuthRights";
             this.panelAuthRights.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -3138,7 +3146,7 @@
             // picStarSubAdd
             // 
             this.picStarSubAdd.Image = global::PersAhwal.Properties.Resources.R;
-            this.picStarSubAdd.Location = new System.Drawing.Point(155, 202);
+            this.picStarSubAdd.Location = new System.Drawing.Point(153, 202);
             this.picStarSubAdd.Name = "picStarSubAdd";
             this.picStarSubAdd.Size = new System.Drawing.Size(44, 35);
             this.picStarSubAdd.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -3149,19 +3157,19 @@
             // picStarSub
             // 
             this.picStarSub.Image = global::PersAhwal.Properties.Resources.star;
-            this.picStarSub.Location = new System.Drawing.Point(105, 202);
+            this.picStarSub.Location = new System.Drawing.Point(103, 202);
             this.picStarSub.Name = "picStarSub";
             this.picStarSub.Size = new System.Drawing.Size(44, 35);
             this.picStarSub.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.picStarSub.TabIndex = 699;
             this.picStarSub.TabStop = false;
-            this.picStarSub.Visible = false;
             this.picStarSub.VisibleChanged += new System.EventHandler(this.picStarSub_VisibleChanged);
+            this.picStarSub.Click += new System.EventHandler(this.picStarSub_Click);
             // 
             // pictureBox5
             // 
             this.pictureBox5.Image = global::PersAhwal.Properties.Resources.png_clipart_computer_icons_back_icon_cdr_angle;
-            this.pictureBox5.Location = new System.Drawing.Point(55, 202);
+            this.pictureBox5.Location = new System.Drawing.Point(53, 202);
             this.pictureBox5.Name = "pictureBox5";
             this.pictureBox5.Size = new System.Drawing.Size(44, 35);
             this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -3172,7 +3180,7 @@
             // fileUpdate
             // 
             this.fileUpdate.Image = global::PersAhwal.Properties.Resources.retacke;
-            this.fileUpdate.Location = new System.Drawing.Point(5, 202);
+            this.fileUpdate.Location = new System.Drawing.Point(3, 202);
             this.fileUpdate.Name = "fileUpdate";
             this.fileUpdate.Size = new System.Drawing.Size(44, 35);
             this.fileUpdate.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -3189,8 +3197,8 @@
             this.picStarRight.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.picStarRight.TabIndex = 701;
             this.picStarRight.TabStop = false;
-            this.picStarRight.Visible = false;
             this.picStarRight.VisibleChanged += new System.EventHandler(this.picStarRight_VisibleChanged);
+            this.picStarRight.Click += new System.EventHandler(this.picStarRight_Click);
             // 
             // pictureBox7
             // 
@@ -3235,6 +3243,40 @@
             this.picStarRightAdd.TabStop = false;
             this.picStarRightAdd.Click += new System.EventHandler(this.picStarRightAdd_Click);
             // 
+            // flowLayoutPanel3
+            // 
+            this.flowLayoutPanel3.AutoScroll = true;
+            this.flowLayoutPanel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flowLayoutPanel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.flowLayoutPanel3.Controls.Add(this.textBox1);
+            this.flowLayoutPanel3.Location = new System.Drawing.Point(255, 682);
+            this.flowLayoutPanel3.Name = "flowLayoutPanel3";
+            this.flowLayoutPanel3.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(1033, 256);
+            this.flowLayoutPanel3.TabIndex = 705;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox1.Location = new System.Drawing.Point(3, 3);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.textBox1.Size = new System.Drawing.Size(1037, 1000);
+            this.textBox1.TabIndex = 653;
+            // 
+            // button7
+            // 
+            this.button7.BackColor = System.Drawing.SystemColors.Control;
+            this.button7.FlatAppearance.BorderSize = 0;
+            this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button7.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button7.Location = new System.Drawing.Point(203, 202);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(20, 35);
+            this.button7.TabIndex = 706;
+            this.button7.UseVisualStyleBackColor = false;
+            // 
             // FormAuth
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3246,8 +3288,8 @@
             this.Controls.Add(this.PanelFiles);
             this.Controls.Add(this.labDescribed);
             this.Controls.Add(this.panelapplicationInfo);
-            this.Controls.Add(this.finalPanel);
             this.Controls.Add(this.PanelDataGrid);
+            this.Controls.Add(this.finalPanel);
             this.Name = "FormAuth";
             this.Text = "توكيلات";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormAuth_FormClosed);
@@ -3292,6 +3334,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picStarRightAdd)).EndInit();
+            this.flowLayoutPanel3.ResumeLayout(false);
+            this.flowLayoutPanel3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -3530,5 +3574,8 @@
         private System.Windows.Forms.PictureBox pictureBox7;
         private System.Windows.Forms.PictureBox picStarSubAdd;
         private System.Windows.Forms.PictureBox picStarRightAdd;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button button7;
     }
 }

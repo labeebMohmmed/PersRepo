@@ -3656,5 +3656,10 @@ namespace PersAhwal
             
             }
         }
+
+        private void picStar_Click(object sender, EventArgs e)
+        {
+
+        }
     }    
 }

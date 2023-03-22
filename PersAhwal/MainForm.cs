@@ -372,7 +372,8 @@ namespace PersAhwal
             Console.WriteLine(7);
             //backgroundWorker1.RunWorkerAsync();
             backgroundWorker2.RunWorkerAsync();
-            backgroundWorker3.RunWorkerAsync();
+            if (Server == "57" && UserJobposition.Contains("قنصل"))
+                backgroundWorker3.RunWorkerAsync();
 
 
             //MessageBox.Show("FilespathIn " + FilespathIn);
@@ -9182,7 +9183,7 @@ namespace PersAhwal
         }
         private void backgroundWorker3_DoWork(object sender, DoWorkEventArgs e)
         {
-            fillSamplesCodes(Database); 
+            fillSamplesCodes(Database);
             
             calcStarTextCollection(DataSource, "نوع_الإجراء", "نوع_المعاملة", "TableCollection", "TableCollectStarText");
             calcStarTextAuth(DataSource, "إجراء_التوكيل", "نوع_التوكيل", "TableAuth", "TableAuthStarText");

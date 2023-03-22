@@ -163,6 +163,7 @@ namespace PersAhwal
         string txtReviewLast = "";
         string قائمة_الحقوقLast = "";
         string selectTable = "";
+        int starTextSubIndex = 0;
         public FormAuth(int atvc, int rowid, string AuthNo, string datasource, string filespathIn, string filespathOut, string empName, string jobposition, string greDate, string hijriDate,bool testItems )
         {
             InitializeComponent();
@@ -1785,12 +1786,12 @@ namespace PersAhwal
                     if (settings[1] == "1")
                     {
                         إلغاء_توكيل_سابق.Checked = true;
-                        panelAuthOptions.Size = new System.Drawing.Size(1063, 203); 
+                        panelAuthOptions.Size = new System.Drawing.Size(1033, 203); 
                     }
                     else
                     {
                         إلغاء_توكيل_سابق.Checked = false;
-                        panelAuthOptions.Size = new System.Drawing.Size(1063, 244);
+                        panelAuthOptions.Size = new System.Drawing.Size(1033, 244);
                     }
                         if (txtReview.Text == "" && نوع_التوكيل.Text != "توكيل بصيغة غير مدرجة")
                         checkAutoUpdate.Checked = true;
@@ -2515,15 +2516,21 @@ namespace PersAhwal
                     StrSpecPur = dr["TextModel"].ToString();
                     starText = dr["starText"].ToString();
                     starTextSub = dr["starTextSub"].ToString();
+                    starTextSub = "";
                     if (starText != "") 
                     {
-                        picStarRight.Visible = true;
+                        //picStarRight.Visible = true;
                     }
                     
                     if (starTextSub != "") 
                     {
-                        picStarSub.Visible = true;
+                        selectTable = "TableAuthStarText";
+                        StrSpecPur = SuffOrigConvertments(getStarText(selectTable, نوع_التوكيل.Text.Replace(" ", "_") + "_" + إجراء_التوكيل.Text.Replace(" ", "_"), starTextSub.Split('_')[0]));
+                        txtReview.Text = SuffReplacements(StrSpecPur, صفة_مقدم_الطلب_off.SelectedIndex, صفة_الموكل_off.SelectedIndex);
+                        //MessageBox.Show(starTextSub.Split('_')[0]);
                     }
+                    else 
+                        checkAutoUpdate.Checked = true;
                     timer1.Enabled = true;
                     //MessageBox.Show("ColRight = " + ColRight);
                     //MessageBox.Show(StrSpecPur);
@@ -2924,7 +2931,7 @@ namespace PersAhwal
                     if (!backgroundWorker1.IsBusy)
                         backgroundWorker1.RunWorkerAsync();
                     //authrights
-                    panelAuthOptions.Size = new System.Drawing.Size(1063, 244);
+                    panelAuthOptions.Size = new System.Drawing.Size(1033, 244);
                     if (نوع_التوكيل.Text == "توكيل بصيغة غير مدرجة" && إجراء_التوكيل.Text == "توكيل بصيغة غير مدرجة")
                     {
                         إجراء_التوكيل.BackColor = System.Drawing.Color.MistyRose;
@@ -3005,8 +3012,11 @@ namespace PersAhwal
                         LibtnAdd1Vis = true;
                         fillTextBoxesInvers();
                     }
+                    if (starTextSub == "" && txtReview.Text == "")
+                        checkAutoUpdate.Checked = true;
                     authJob();
                     timer5.Enabled = true;
+
                     break;
                 case 3:
                     checkAutoUpdate.Checked = false;
@@ -3040,10 +3050,10 @@ namespace PersAhwal
                         fillTextBoxes(Vitext3, 3);
                         fillTextBoxes(Vitext4, 4);
                         fillTextBoxes(Vitext5, 5);
-                        txtReview.Size = new System.Drawing.Size(1063, 57);
+                        txtReview.Size = new System.Drawing.Size(1007, 57);
                     }
                     else 
-                        txtReview.Size = new System.Drawing.Size(1063, 150);
+                        txtReview.Size = new System.Drawing.Size(1007, 150);
 
                     
                     if (!save2DataBase(PanelItemsboxes)) 
@@ -4963,7 +4973,7 @@ namespace PersAhwal
             // 
             TextBox textBox1 = new TextBox();
             textBox1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            textBox1.Location = new System.Drawing.Point(1063, 44);
+            textBox1.Location = new System.Drawing.Point(1007, 44);
             textBox1.Name = "textBox1_" + ButtonInfoIndex.ToString() + ".";
             textBox1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             textBox1.Size = new System.Drawing.Size(230, 35);
@@ -5120,13 +5130,13 @@ namespace PersAhwal
             {
                 PanelButtonInfo.Visible = true;
                 
-                txtReview.Size = new System.Drawing.Size(1063, 57);
+                txtReview.Size = new System.Drawing.Size(1007, 57);
                 checkAutoUpdate.Height = 57;
             }
             else
             {
                 PanelButtonInfo.Visible = false;
-                txtReview.Size = new System.Drawing.Size(1063, 154);
+                txtReview.Size = new System.Drawing.Size(1007, 154);
                 checkAutoUpdate.Height = 154;
             }
             
@@ -5290,13 +5300,13 @@ namespace PersAhwal
         {
             if (!قائمة_الحقوق.Text.Contains("ويعتبر التوكيل الصادر") && إلغاء_توكيل_سابق.Checked)
             {
-                panelAuthOptions.Size = new System.Drawing.Size(1063, 203);
+                panelAuthOptions.Size = new System.Drawing.Size(1033, 203);
                 قائمة_الحقوق.Text = قائمة_الحقوق.Text.Replace(lastSentence, removeAuthother + lastSentence);
                 panelRemove.Visible = buttonRemove.Visible = true;
             }
             else if (!إلغاء_توكيل_سابق.Checked)
             {
-                panelAuthOptions.Size = new System.Drawing.Size(1063, 244);
+                panelAuthOptions.Size = new System.Drawing.Size(1033, 244);
                 try
                 {
                     قائمة_الحقوق.Text = قائمة_الحقوق.Text.Replace(removeAuthother, "");
@@ -5345,12 +5355,12 @@ namespace PersAhwal
         {
             if (panelRemove.Visible)
             {
-                panelAuthOptions.Size = new System.Drawing.Size(1063, 203);
+                panelAuthOptions.Size = new System.Drawing.Size(1033, 203);
                 buttonRemove.Visible = true;
             }
             else
             {
-                panelAuthOptions.Size = new System.Drawing.Size(1063, 244);
+                panelAuthOptions.Size = new System.Drawing.Size(1033, 244);
                 buttonRemove.Visible = false;
             }
         }
@@ -5712,7 +5722,9 @@ namespace PersAhwal
         private void fileUpdate_Click(object sender, EventArgs e)
         {
             checkAutoUpdate.Checked = false;
-            txtReviewLast = txtReview.Text;
+            if (txtReviewLast == "")
+                txtReviewLast = txtReview.Text;
+            
             if (txtRevIndex == txtReviewList.Length) txtRevIndex = 0;
             Console.WriteLine(txtReviewList[txtRevIndex]);
             StrSpecPur = SuffOrigConvertments(txtReviewList[txtRevIndex]);
@@ -5811,18 +5823,10 @@ namespace PersAhwal
 
         private void picStarSub_VisibleChanged(object sender, EventArgs e)
         {
-            if (picStarSub.Visible)
-                picStarSubAdd.Visible = false;
-            picStarSubAdd.Visible = true;
-            
         }
 
         private void picStarRight_VisibleChanged(object sender, EventArgs e)
         {
-            if (picStarRight.Visible)
-                picStarRightAdd.Visible = false;
-            else picStarRightAdd.Visible = true;
-            
         }
 
         private void pictureBox5_Click(object sender, EventArgs e)
@@ -5848,13 +5852,26 @@ namespace PersAhwal
         private void picStarSubAdd_Click(object sender, EventArgs e)
         {
             selectTable = "TableAuthStarText";            
-            updateText(txtReview);
+            string ID = updateText(txtReview);
+            string query = "UPDATE TableAddContext SET starTextSub = N'"+ ID + "_"+ starTextSub + "' where ColName =N'" + نوع_التوكيل.Text.Replace(" ", "_") + "_" + إجراء_التوكيل.Text.Replace(" ", "_") + "'" ;
+            if(starTextSub == "")
+                query = "UPDATE TableAddContext SET starTextSub = "+ ID + " where ColName =N'" + نوع_التوكيل.Text.Replace(" ", "_") + "_" + إجراء_التوكيل.Text.Replace(" ", "_") + "'" ;
+            
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();
         }
         private string updateText(TextBox text)
         {
-            
+            string starButton = "";
             if (!checkColExistance(selectTable, نوع_التوكيل.Text.Replace(" ", "_") + "_" + إجراء_التوكيل.Text.Replace(" ", "_")))
                 CreateColumn(نوع_التوكيل.Text.Replace(" ", "_") + "_" + إجراء_التوكيل.Text.Replace(" ", "_"), selectTable, "max");
+            else {
+                starButton = getStarID(selectTable, نوع_التوكيل.Text.Replace(" ", "_") + "_" + إجراء_التوكيل.Text.Replace(" ", "_"), text.Text);
+            }
 
             string textRevers = SuffReversReplacements(text.Text, 0, 0);
             string query = "UPDATE " + selectTable + " SET " + نوع_التوكيل.Text.Replace(" ", "_") + "_" + إجراء_التوكيل.Text.Replace(" ", "_") + "=N'" + textRevers + "' where ID = " + starButton;
@@ -5926,17 +5943,79 @@ namespace PersAhwal
             return false;
 
         }
+        
+        private string getStarID(string table, string colName, string text)
+        {
+            string ID = "";
+            string query = "select ID from " + table + " where " + colName + " = N'" + text + "'";
+            Console.WriteLine(query);
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return ""; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+
+            foreach (DataRow row in dtbl.Rows)
+            {
+                ID = row["ID"].ToString();
+            }
+            
+            return ID;
+
+        }
+        
+        
 
         private void picStarRightAdd_Click(object sender, EventArgs e)
         {
-            if (الموضوع.SelectedIndex == 1)
+            selectTable = "TableAuthRightStarText";            
+        }
+
+        private void picStarSub_Click(object sender, EventArgs e)
+        {
+            selectTable = "TableAuthStarText";
+            checkAutoUpdate.Checked = false;
+            if (starTextSubIndex == starTextSub.Split('_').Length) starTextSubIndex = 0;
+            if (txtReviewLast == "")
+                txtReviewLast = txtReview.Text;
+            StrSpecPur = SuffOrigConvertments(getStarText(selectTable, نوع_التوكيل.Text.Replace(" ", "_") + "_" + إجراء_التوكيل.Text.Replace(" ", "_"), starTextSub.Split('_')[starTextSubIndex]));
+            txtReview.Text = SuffReplacements(StrSpecPur, صفة_مقدم_الطلب_off.SelectedIndex, صفة_الموكل_off.SelectedIndex);
+            starTextSubIndex++;
+        }
+        private string getStarText(string table, string colName, string ID)
+        {
+            string text = "";
+            string query = "select " + colName + " from " + table + " where ID = '" + ID + "'";
+            Console.WriteLine(query);
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            try
             {
-                selectTable = "TableAuthStarText";
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
             }
-            else if (الموضوع.SelectedIndex == 2)
+            catch (Exception ex) { return ""; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+
+            foreach (DataRow row in dtbl.Rows)
             {
-                selectTable = "TableAuthRightStarText";
+                text = row[colName].ToString();
             }
+            return text;
+        }
+        private void picStarRight_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
