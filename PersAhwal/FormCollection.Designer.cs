@@ -153,8 +153,8 @@
             this.Vitext8 = new System.Windows.Forms.TextBox();
             this.Litext9 = new System.Windows.Forms.Label();
             this.Vitext9 = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.textLong = new System.Windows.Forms.TextBox();
+            this.Litext0 = new System.Windows.Forms.Label();
+            this.Vitext0 = new System.Windows.Forms.TextBox();
             this.Licheck3 = new System.Windows.Forms.Label();
             this.Vicheck3 = new System.Windows.Forms.CheckBox();
             this.Licombo1 = new System.Windows.Forms.Label();
@@ -183,6 +183,8 @@
             this.Licheck5 = new System.Windows.Forms.Label();
             this.Vicheck5 = new System.Windows.Forms.CheckBox();
             this.LibtnAdd1 = new System.Windows.Forms.Button();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.LibtnAdd2 = new System.Windows.Forms.Button();
             this.LibtnAdd3 = new System.Windows.Forms.Button();
             this.LibtnAdd4 = new System.Windows.Forms.Button();
@@ -213,7 +215,9 @@
             this.button3 = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
             this.عنوان_المكاتبة = new System.Windows.Forms.ComboBox();
-            this.button19 = new System.Windows.Forms.Button();
+            this.picStar = new System.Windows.Forms.PictureBox();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.fileUpdate = new System.Windows.Forms.PictureBox();
             this.txtReview = new System.Windows.Forms.TextBox();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.finalPanel = new System.Windows.Forms.FlowLayoutPanel();
@@ -243,11 +247,7 @@
             this.backgroundWorker2 = new System.ComponentModel.BackgroundWorker();
             this.timer3 = new System.Windows.Forms.Timer(this.components);
             this.btnPrevious = new System.Windows.Forms.Button();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.picStar = new System.Windows.Forms.PictureBox();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.fileUpdate = new System.Windows.Forms.PictureBox();
+            this.picStarRightAdd = new System.Windows.Forms.PictureBox();
             this.PanelFiles.SuspendLayout();
             this.panelapplicationInfo.SuspendLayout();
             this.Panelapp.SuspendLayout();
@@ -256,17 +256,18 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panelAuthRights.SuspendLayout();
             this.PanelItemsboxes.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.PanelButtonInfo.SuspendLayout();
             this.panelRemove.SuspendLayout();
             this.PaneltxtReview.SuspendLayout();
-            this.finalPanel.SuspendLayout();
-            this.flowLayoutPanel1.SuspendLayout();
-            this.panellError.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picStar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fileUpdate)).BeginInit();
+            this.finalPanel.SuspendLayout();
+            this.flowLayoutPanel1.SuspendLayout();
+            this.panellError.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picStarRightAdd)).BeginInit();
             this.SuspendLayout();
             // 
             // PanelFiles
@@ -894,6 +895,7 @@
             this.الشاهد_الأول.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.الشاهد_الأول.Size = new System.Drawing.Size(297, 35);
             this.الشاهد_الأول.TabIndex = 634;
+            this.الشاهد_الأول.TextChanged += new System.EventHandler(this.الشاهد_الأول_TextChanged);
             // 
             // labeltitle12
             // 
@@ -962,6 +964,7 @@
             this.الشاهد_الثاني.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.الشاهد_الثاني.Size = new System.Drawing.Size(297, 35);
             this.الشاهد_الثاني.TabIndex = 637;
+            this.الشاهد_الثاني.TextChanged += new System.EventHandler(this.الشاهد_الثاني_TextChanged);
             // 
             // labeltitle13
             // 
@@ -1554,8 +1557,8 @@
             this.PanelItemsboxes.Controls.Add(this.Vitext8);
             this.PanelItemsboxes.Controls.Add(this.Litext9);
             this.PanelItemsboxes.Controls.Add(this.Vitext9);
-            this.PanelItemsboxes.Controls.Add(this.label6);
-            this.PanelItemsboxes.Controls.Add(this.textLong);
+            this.PanelItemsboxes.Controls.Add(this.Litext0);
+            this.PanelItemsboxes.Controls.Add(this.Vitext0);
             this.PanelItemsboxes.Controls.Add(this.Licheck3);
             this.PanelItemsboxes.Controls.Add(this.Vicheck3);
             this.PanelItemsboxes.Controls.Add(this.Licombo1);
@@ -1848,28 +1851,28 @@
             this.Vitext9.TabIndex = 620;
             this.Vitext9.Visible = false;
             // 
-            // label6
+            // Litext0
             // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(1020, 82);
-            this.label6.Name = "label6";
-            this.label6.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label6.Size = new System.Drawing.Size(84, 27);
-            this.label6.TabIndex = 621;
-            this.label6.Text = "النص الطويل:";
-            this.label6.Visible = false;
+            this.Litext0.AutoSize = true;
+            this.Litext0.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Litext0.Location = new System.Drawing.Point(1020, 82);
+            this.Litext0.Name = "Litext0";
+            this.Litext0.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.Litext0.Size = new System.Drawing.Size(84, 27);
+            this.Litext0.TabIndex = 621;
+            this.Litext0.Text = "النص الطويل:";
+            this.Litext0.Visible = false;
             // 
-            // textLong
+            // Vitext0
             // 
-            this.textLong.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textLong.Location = new System.Drawing.Point(338, 85);
-            this.textLong.Multiline = true;
-            this.textLong.Name = "textLong";
-            this.textLong.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.textLong.Size = new System.Drawing.Size(676, 42);
-            this.textLong.TabIndex = 622;
-            this.textLong.Visible = false;
+            this.Vitext0.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Vitext0.Location = new System.Drawing.Point(338, 85);
+            this.Vitext0.Multiline = true;
+            this.Vitext0.Name = "Vitext0";
+            this.Vitext0.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.Vitext0.Size = new System.Drawing.Size(676, 42);
+            this.Vitext0.TabIndex = 622;
+            this.Vitext0.Visible = false;
             // 
             // Licheck3
             // 
@@ -2198,6 +2201,28 @@
             this.LibtnAdd1.Visible = false;
             this.LibtnAdd1.Click += new System.EventHandler(this.LibtnAdd1_Click);
             // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
+            this.pictureBox2.Location = new System.Drawing.Point(989, 215);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(40, 37);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox2.TabIndex = 603;
+            this.pictureBox2.TabStop = false;
+            this.pictureBox2.Visible = false;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(943, 215);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(40, 37);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 602;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.Visible = false;
+            // 
             // LibtnAdd2
             // 
             this.LibtnAdd2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
@@ -2515,7 +2540,7 @@
             this.PaneltxtReview.Controls.Add(this.button3);
             this.PaneltxtReview.Controls.Add(this.label12);
             this.PaneltxtReview.Controls.Add(this.عنوان_المكاتبة);
-            this.PaneltxtReview.Controls.Add(this.button19);
+            this.PaneltxtReview.Controls.Add(this.picStarRightAdd);
             this.PaneltxtReview.Controls.Add(this.picStar);
             this.PaneltxtReview.Controls.Add(this.pictureBox3);
             this.PaneltxtReview.Controls.Add(this.fileUpdate);
@@ -2568,26 +2593,46 @@
             "إقرار بالتنازل",
             "استخراج وثائق و موافقة بالسفر",
             "مطابقة اسماء ومستندات"});
-            this.عنوان_المكاتبة.Location = new System.Drawing.Point(186, 3);
+            this.عنوان_المكاتبة.Location = new System.Drawing.Point(217, 3);
             this.عنوان_المكاتبة.Name = "عنوان_المكاتبة";
             this.عنوان_المكاتبة.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.عنوان_المكاتبة.Size = new System.Drawing.Size(425, 39);
+            this.عنوان_المكاتبة.Size = new System.Drawing.Size(394, 39);
             this.عنوان_المكاتبة.TabIndex = 675;
             this.عنوان_المكاتبة.Text = "عنوان المكاتبة";
             // 
-            // button19
+            // picStar
             // 
-            this.button19.BackColor = System.Drawing.SystemColors.Control;
-            this.button19.Enabled = false;
-            this.button19.FlatAppearance.BorderSize = 0;
-            this.button19.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button19.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button19.Location = new System.Drawing.Point(170, 3);
-            this.button19.Name = "button19";
-            this.button19.Size = new System.Drawing.Size(10, 35);
-            this.button19.TabIndex = 693;
-            this.button19.UseVisualStyleBackColor = false;
-            this.button19.Visible = false;
+            this.picStar.Image = global::PersAhwal.Properties.Resources.star;
+            this.picStar.Location = new System.Drawing.Point(111, 3);
+            this.picStar.Name = "picStar";
+            this.picStar.Size = new System.Drawing.Size(47, 39);
+            this.picStar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picStar.TabIndex = 692;
+            this.picStar.TabStop = false;
+            this.picStar.VisibleChanged += new System.EventHandler(this.picStar_VisibleChanged);
+            this.picStar.Click += new System.EventHandler(this.picStar_Click);
+            // 
+            // pictureBox3
+            // 
+            this.pictureBox3.Image = global::PersAhwal.Properties.Resources.png_clipart_computer_icons_back_icon_cdr_angle;
+            this.pictureBox3.Location = new System.Drawing.Point(58, 3);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(47, 39);
+            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox3.TabIndex = 690;
+            this.pictureBox3.TabStop = false;
+            this.pictureBox3.Click += new System.EventHandler(this.pictureBox3_Click);
+            // 
+            // fileUpdate
+            // 
+            this.fileUpdate.Image = global::PersAhwal.Properties.Resources.retacke;
+            this.fileUpdate.Location = new System.Drawing.Point(5, 3);
+            this.fileUpdate.Name = "fileUpdate";
+            this.fileUpdate.Size = new System.Drawing.Size(47, 39);
+            this.fileUpdate.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.fileUpdate.TabIndex = 689;
+            this.fileUpdate.TabStop = false;
+            this.fileUpdate.Click += new System.EventHandler(this.fileUpdate_Click);
             // 
             // txtReview
             // 
@@ -2596,7 +2641,7 @@
             this.txtReview.Multiline = true;
             this.txtReview.Name = "txtReview";
             this.txtReview.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.txtReview.Size = new System.Drawing.Size(1292, 300);
+            this.txtReview.Size = new System.Drawing.Size(1292, 171);
             this.txtReview.TabIndex = 671;
             // 
             // backgroundWorker1
@@ -2916,62 +2961,16 @@
             this.btnPrevious.UseVisualStyleBackColor = false;
             this.btnPrevious.Click += new System.EventHandler(this.button18_Click);
             // 
-            // pictureBox2
+            // picStarRightAdd
             // 
-            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(989, 215);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(40, 37);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox2.TabIndex = 603;
-            this.pictureBox2.TabStop = false;
-            this.pictureBox2.Visible = false;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(943, 215);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(40, 37);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 602;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.Visible = false;
-            // 
-            // picStar
-            // 
-            this.picStar.Image = global::PersAhwal.Properties.Resources.star;
-            this.picStar.Location = new System.Drawing.Point(117, 3);
-            this.picStar.Name = "picStar";
-            this.picStar.Size = new System.Drawing.Size(47, 39);
-            this.picStar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.picStar.TabIndex = 692;
-            this.picStar.TabStop = false;
-            this.picStar.Visible = false;
-            this.picStar.VisibleChanged += new System.EventHandler(this.picStar_VisibleChanged);
-            this.picStar.Click += new System.EventHandler(this.picStar_Click);
-            // 
-            // pictureBox3
-            // 
-            this.pictureBox3.Image = global::PersAhwal.Properties.Resources.png_clipart_computer_icons_back_icon_cdr_angle;
-            this.pictureBox3.Location = new System.Drawing.Point(64, 3);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(47, 39);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox3.TabIndex = 690;
-            this.pictureBox3.TabStop = false;
-            this.pictureBox3.Click += new System.EventHandler(this.pictureBox3_Click);
-            // 
-            // fileUpdate
-            // 
-            this.fileUpdate.Image = global::PersAhwal.Properties.Resources.retacke;
-            this.fileUpdate.Location = new System.Drawing.Point(11, 3);
-            this.fileUpdate.Name = "fileUpdate";
-            this.fileUpdate.Size = new System.Drawing.Size(47, 39);
-            this.fileUpdate.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.fileUpdate.TabIndex = 689;
-            this.fileUpdate.TabStop = false;
-            this.fileUpdate.Click += new System.EventHandler(this.fileUpdate_Click);
+            this.picStarRightAdd.Image = global::PersAhwal.Properties.Resources.R;
+            this.picStarRightAdd.Location = new System.Drawing.Point(164, 3);
+            this.picStarRightAdd.Name = "picStarRightAdd";
+            this.picStarRightAdd.Size = new System.Drawing.Size(47, 39);
+            this.picStarRightAdd.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picStarRightAdd.TabIndex = 705;
+            this.picStarRightAdd.TabStop = false;
+            this.picStarRightAdd.Click += new System.EventHandler(this.picStarRightAdd_Click);
             // 
             // FormCollection
             // 
@@ -2982,9 +2981,9 @@
             this.Controls.Add(this.PanelFiles);
             this.Controls.Add(this.btnNext);
             this.Controls.Add(this.panelapplicationInfo);
-            this.Controls.Add(this.finalPanel);
             this.Controls.Add(this.PanelDataGrid);
             this.Controls.Add(this.labDescribed);
+            this.Controls.Add(this.finalPanel);
             this.Controls.Add(this.panelAuthRights);
             this.Name = "FormCollection";
             this.Text = "FormCollection";
@@ -3003,23 +3002,24 @@
             this.panelAuthRights.PerformLayout();
             this.PanelItemsboxes.ResumeLayout(false);
             this.PanelItemsboxes.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.PanelButtonInfo.ResumeLayout(false);
             this.PanelButtonInfo.PerformLayout();
             this.panelRemove.ResumeLayout(false);
             this.panelRemove.PerformLayout();
             this.PaneltxtReview.ResumeLayout(false);
             this.PaneltxtReview.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picStar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.fileUpdate)).EndInit();
             this.finalPanel.ResumeLayout(false);
             this.finalPanel.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
             this.panellError.ResumeLayout(false);
             this.panellError.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picStar)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.fileUpdate)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picStarRightAdd)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -3123,8 +3123,8 @@
         private System.Windows.Forms.TextBox Vitext8;
         private System.Windows.Forms.Label Litext9;
         private System.Windows.Forms.TextBox Vitext9;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox textLong;
+        private System.Windows.Forms.Label Litext0;
+        private System.Windows.Forms.TextBox Vitext0;
         private System.Windows.Forms.Label Licheck3;
         private System.Windows.Forms.CheckBox Vicheck3;
         private System.Windows.Forms.Label Licombo1;
@@ -3240,6 +3240,6 @@
         private System.Windows.Forms.PictureBox pictureBox3;
         private System.Windows.Forms.Button btnPrevious;
         private System.Windows.Forms.PictureBox picStar;
-        private System.Windows.Forms.Button button19;
+        private System.Windows.Forms.PictureBox picStarRightAdd;
     }
 }

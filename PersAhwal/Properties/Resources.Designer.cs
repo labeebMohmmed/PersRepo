@@ -63,6 +63,16 @@ namespace PersAhwal.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap _61_613900_svg_royalty_free_download_png_icon_free_download {
+            get {
+                object obj = ResourceManager.GetObject("61-613900_svg-royalty-free-download-png-icon-free-download", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap add {
             get {
                 object obj = ResourceManager.GetObject("add", resourceCulture);
@@ -193,6 +203,26 @@ namespace PersAhwal.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap computer_icons_businessperson_business_to_business_service_business {
+            get {
+                object obj = ResourceManager.GetObject("computer-icons-businessperson-business-to-business-service-business", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap computer_icons_businessperson_business_to_business_service_business1 {
+            get {
+                object obj = ResourceManager.GetObject("computer-icons-businessperson-business-to-business-service-business1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap doc {
             get {
                 object obj = ResourceManager.GetObject("doc", resourceCulture);
@@ -243,6 +273,37 @@ namespace PersAhwal.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap img_144812 {
+            get {
+                object obj = ResourceManager.GetObject("img_144812", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap img_222195 {
+            get {
+                object obj = ResourceManager.GetObject("img_222195", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap kisspng_invoice_computer_icons_electronic_billing_receipt_invoices_vector_drawing_5ab11071c9e381_4781539515215535218269 {
+            get {
+                object obj = ResourceManager.GetObject("kisspng-invoice-computer-icons-electronic-billing-receipt-invoices-vector-drawing" +
+                        "-5ab11071c9e381.4781539515215535218269", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap list {
             get {
                 object obj = ResourceManager.GetObject("list", resourceCulture);
@@ -286,6 +347,16 @@ namespace PersAhwal.Properties {
         internal static System.Drawing.Bitmap notprocessed {
             get {
                 object obj = ResourceManager.GetObject("notprocessed", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap OIP__2_ {
+            get {
+                object obj = ResourceManager.GetObject("OIP (2)", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -546,6 +617,26 @@ namespace PersAhwal.Properties {
         internal static System.Drawing.Bitmap wrong {
             get {
                 object obj = ResourceManager.GetObject("wrong", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap شس {
+            get {
+                object obj = ResourceManager.GetObject("شس", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap قق {
+            get {
+                object obj = ResourceManager.GetObject("قق", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

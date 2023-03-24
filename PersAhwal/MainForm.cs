@@ -43,6 +43,7 @@ namespace PersAhwal
 
     public partial class MainForm : Form
     {
+        string AuthTitle = "";
         DataTable dataRowTable;
         static string[] queryNewYear = new string[15];
         string DataSource, DataSource56, DataSource57, GregorianDate, HijriDate, GregorianDateReport;
@@ -205,20 +206,18 @@ namespace PersAhwal
             DataSource = dataSource57;
             DataSource56 = dataSource56;
             DataSource57 = dataSource57;
-
             Realwork = realwork;
             //checkColumnNames("تقاضي_4");
             GregorianDate = gregorianDate;
             HijriDate = hijriDate;
             Console.WriteLine(1);
-            //MessageBox.Show(HijriDate);
-            // BackupDataBase(DataSource57, "AhwalDataBase");
-            //MessageBox.Show(DocIDGenerator());
-            //DeleteEmptyFiles("TableAddContext");
+
+            
+
             if (Server == "57")
             {
 
-                label2.Text = "نافذة قسم الأحوال الشخصية";
+                //label2.Text = "قسم الأحوال الشخصية والمعاملات القنصلية";
                 panel2.BackColor = System.Drawing.SystemColors.ButtonShadow;
                 ReportType.Items.Add("تقرير المأذونية الشهري");
 
@@ -227,7 +226,7 @@ namespace PersAhwal
             {
                 DataSource = dataSource56;
                 this.Name = "القائمة الرئيسة نافذة قسم شؤون الرعايا";
-                label2.Text = "نافذة قسم شؤون الرعايا";
+                //label2.Text = "نافذة قسم شؤون الرعايا";
             }
 
             if (Directory.Exists(@"D:\"))
@@ -298,8 +297,6 @@ namespace PersAhwal
                 Combtn0.Location = new System.Drawing.Point(427, 402);
                 Combtn1.Location = new System.Drawing.Point(427, 402 + 39);
                 Combtn2.Location = new System.Drawing.Point(427, 402 + (39 * 2));
-                Combtn3.Location = new System.Drawing.Point(427, 402 + (39 * 3));
-                بيانات_الموظفين_والملحقين_بالموظفين.Location = new System.Drawing.Point(427, 402 + (39 * 4));
             }
             perbtn1.Visible = false;
             Pers_Peope = pers_Peope;
@@ -315,6 +312,17 @@ namespace PersAhwal
             FilespathIn = filepathIn;
             ArchFile = archFile;
             FilespathOut = filepathOut;
+            if (!File.Exists(filepathOut + @"\autoDocs.txt"))
+            {
+                Console.WriteLine(filepathOut + @"\autoDocs.txt");
+                dataSourceWrite(filepathOut + @"\autoDocs.txt", "Yes");
+            }
+            else
+            {
+                Console.WriteLine(filepathOut + @"\autoDocs.txt");
+                if (File.ReadAllText(filepathOut + @"\autoDocs.txt") != "Yes")
+                    checkBox1.Checked = false;
+            }
 
             UserJobposition = jobposition;
             //persbtn2MessageBox.Show(UserJobposition);
@@ -343,8 +351,7 @@ namespace PersAhwal
                 //    PROCEGenNames();
             }
             else
-            {
-                بيانات_الموظفين_والملحقين_بالموظفين.Text = "مناديب القنصلية العامة";
+            {               
                 picSettings.Visible = false;
                 empUpdate.BringToFront();
                 empUpdate.Visible = true;
@@ -409,8 +416,24 @@ namespace PersAhwal
             //    //MessageBox.Show(str);
             //}
 
+            getTitle(DataSource, EmployeeName);
         }
-
+        private void getTitle(string source, string empName)
+        {
+            string query = "select AuthenticType from TableUser where EmployeeName = N'" + empName + "'";
+            SqlConnection sqlCon = new SqlConnection(source);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                AuthTitle = dataRow["AuthenticType"].ToString();
+            }
+        }
         private void backgroundWorker1_DoWork_1(object sender, DoWorkEventArgs e)
         {
             return;
@@ -1348,15 +1371,13 @@ namespace PersAhwal
             attendedVC.SelectedIndex = 2;
             if (UserJobposition.Contains("قنصل"))
             {
-                picVersio.Visible = labversio.Visible = true;
+                picVersio.Visible =  true;
                 picadd.Visible = true;
                 labelmonth.Visible = true;
                 picremove.Visible = true;
                 labeldate.Visible = true;
                 picaddmonth.Visible = true;
-                pictremovemonth.Visible = true;
-                btnMessSave.Text = "حفظ وتأكيد";
-                // btnDeleteHand.Visible = true;                
+                pictremovemonth.Visible = true;              
             }
             txtEmbassey.SelectedIndex = 26;
         }
@@ -2077,7 +2098,7 @@ namespace PersAhwal
                     var p = document.InsertParagraph(Environment.NewLine);
                     p.InsertTableAfterSelf(t);
 
-                    string strAttvCo = Environment.NewLine + "ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ" + Environment.NewLine + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + attendedVC.Text + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + "ع/ القنصل العام بالإنابة";
+                    string strAttvCo = Environment.NewLine + "ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ" + Environment.NewLine + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + attendedVC.Text + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + AuthTitle;;
                     var AttvCo = document.InsertParagraph(strAttvCo)
                         .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
                         .FontSize(20d)
@@ -2157,7 +2178,7 @@ namespace PersAhwal
                     var p = document.InsertParagraph(Environment.NewLine);
                     p.InsertTableAfterSelf(t);
 
-                    string strAttvCo = Environment.NewLine + "ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ" + Environment.NewLine + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + attendedVC.Text + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + "ع/ القنصل العام بالإنابة";
+                    string strAttvCo = Environment.NewLine + "ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ" + Environment.NewLine + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + attendedVC.Text + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + AuthTitle;;
                     var AttvCo = document.InsertParagraph(strAttvCo)
                         .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
                         .FontSize(20d)
@@ -2225,7 +2246,7 @@ namespace PersAhwal
                 var p = document.InsertParagraph(Environment.NewLine);
                 p.InsertTableAfterSelf(t);
 
-                string strAttvCo = Environment.NewLine + "ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ" + Environment.NewLine + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + attendedVC.Text + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + "ع/ القنصل العام بالإنابة";
+                string strAttvCo = Environment.NewLine + "ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ" + Environment.NewLine + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + attendedVC.Text + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + AuthTitle;;
                 var AttvCo = document.InsertParagraph(strAttvCo)
                     .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
                     .FontSize(20d)
@@ -2306,7 +2327,7 @@ namespace PersAhwal
                 var p = document.InsertParagraph(Environment.NewLine);
                 p.InsertTableAfterSelf(t);
 
-                string strAttvCo = Environment.NewLine + "ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ" + Environment.NewLine + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + attendedVC.Text + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + "ع/ القنصل العام بالإنابة";
+                string strAttvCo = Environment.NewLine + "ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ" + Environment.NewLine + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + attendedVC.Text + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + AuthTitle;
                 var AttvCo = document.InsertParagraph(strAttvCo)
                     .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
                     .FontSize(20d)
@@ -2393,7 +2414,7 @@ namespace PersAhwal
                 var p = document.InsertParagraph(Environment.NewLine);
                 p.InsertTableAfterSelf(t);
 
-                string strAttvCo = Environment.NewLine + "ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ" + Environment.NewLine + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + attendedVC.Text + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + "ع/ القنصل العام بالإنابة";
+                string strAttvCo = Environment.NewLine + "ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ" + Environment.NewLine + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + attendedVC.Text + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + AuthTitle;;
                 var AttvCo = document.InsertParagraph(strAttvCo)
                     .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
                     .FontSize(20d)
@@ -2472,7 +2493,7 @@ namespace PersAhwal
 
                     string column = "@" + items;
                     DataTable dataRowTable = new DataTable();
-                    SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
+                    SqlConnection sqlCon = new SqlConnection(DataSource);
                     if (sqlCon.State == ConnectionState.Closed)
                         try
                         {
@@ -2618,7 +2639,7 @@ namespace PersAhwal
                     .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
                     .FontSize(18d).FontSize(18d).Alignment = Alignment.left;
 
-                string strAttvCo = Environment.NewLine + "ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ سوداتي جدة ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ" + Environment.NewLine + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + attendedVC.Text + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + "ع/ القنصل العام بالإنابة";
+                string strAttvCo = Environment.NewLine + "ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ سوداتي جدة ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ" + Environment.NewLine + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + attendedVC.Text + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + AuthTitle;;
                 var AttvCo = document.InsertParagraph(strAttvCo)
                     .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
                     .FontSize(20d)
@@ -2713,7 +2734,7 @@ namespace PersAhwal
                 var p = document.InsertParagraph(Environment.NewLine);
                 p.InsertTableAfterSelf(t);
 
-                string strAttvCo = Environment.NewLine + "ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ" + Environment.NewLine + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + attendedVC.Text + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + "ع/ القنصل العام بالإنابة";
+                string strAttvCo = Environment.NewLine + "ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ" + Environment.NewLine + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + attendedVC.Text + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + AuthTitle;;
                 var AttvCo = document.InsertParagraph(strAttvCo)
                     .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
                     .FontSize(20d)
@@ -2885,15 +2906,16 @@ namespace PersAhwal
                     {
                         AllSum = 0;
                         for (int c = 1; c < 15; c++)
-                        {
+                        {                            
                             AllSum = AllSum + rep1[r, c];
+                            
                         }
-
+                        Console.WriteLine("AllSum " + AllSum);
                         monthSumV[r] = AllSum;
 
                     }
 
-                    
+                    AllSum = 0;
                     for (int c = 0; c < preInfo.Items.Count; c++)
                     {
                         AllSum = AllSum + monthSumV[c];
@@ -2923,22 +2945,6 @@ namespace PersAhwal
                         t.Rows[w + 1].Cells[13].Paragraphs[0].Append(rep1[w, 1].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;//0 1 2 4 6 9
                         t.Rows[w + 1].Cells[14].Paragraphs[0].Append(subInfoName[w].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
                     }
-                    //                    int w = 4;
-                    //t.Rows[preInfo.Items.Count + 1].Cells[0].Paragraphs[0].Append(AllSum.ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    //t.Rows[preInfo.Items.Count + 1].Cells[1].Paragraphs[0].Append(monthSumH[13].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    //t.Rows[preInfo.Items.Count + 1].Cells[2].Paragraphs[0].Append(monthSumH[12].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    //t.Rows[preInfo.Items.Count + 1].Cells[3].Paragraphs[0].Append(monthSumH[11].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    //t.Rows[preInfo.Items.Count + 1].Cells[4].Paragraphs[0].Append(monthSumH[10].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    //t.Rows[preInfo.Items.Count + 1].Cells[5].Paragraphs[0].Append(monthSumH[9].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    //t.Rows[preInfo.Items.Count + 1].Cells[6].Paragraphs[0].Append(monthSumH[8].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    //t.Rows[preInfo.Items.Count + 1].Cells[7].Paragraphs[0].Append(monthSumH[7].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    //t.Rows[preInfo.Items.Count + 1].Cells[8].Paragraphs[0].Append(monthSumH[6].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    //t.Rows[preInfo.Items.Count + 1].Cells[9].Paragraphs[0].Append(monthSumH[5].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    //t.Rows[preInfo.Items.Count + 1].Cells[10].Paragraphs[0].Append(monthSumH[4].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    //t.Rows[preInfo.Items.Count + 1].Cells[11].Paragraphs[0].Append(monthSumH[3].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    //t.Rows[preInfo.Items.Count + 1].Cells[12].Paragraphs[0].Append(monthSumH[2].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    //t.Rows[preInfo.Items.Count + 1].Cells[13].Paragraphs[0].Append(monthSumH[1].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    //t.Rows[preInfo.Items.Count + 1].Cells[14].Paragraphs[0].Append(totalCount).FontSize(12d).Bold().Alignment = Alignment.center;
                 }
                 else if (Server == "56")
                 {
@@ -3008,7 +3014,7 @@ namespace PersAhwal
                     monthSumV[preInfo.Items.Count] = AllSum;
 
                     
-                    for (int w = 0; w < preInfo.Items.Count; w++)
+                    for (int w = 0; w <= preInfo.Items.Count; w++)
                     {
                         t.Rows[w + 1].Cells[0].Paragraphs[0].Append(monthSumV[w].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
                         t.Rows[w + 1].Cells[1].Paragraphs[0].Append(rep1[w, 6].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
@@ -3034,7 +3040,7 @@ namespace PersAhwal
 
                 var p = document.InsertParagraph(Environment.NewLine);
                 p.InsertTableAfterSelf(t);
-                string strAttvCo = Environment.NewLine + Environment.NewLine + "      "+ attendedVC.Text+ "           " + Environment.NewLine + "      " + "ع/ القنصل العام بالإنابة           ";
+                string strAttvCo = Environment.NewLine + Environment.NewLine + "      "+ attendedVC.Text+ "           " + Environment.NewLine + "      " + AuthTitle+"           ";
                 var AttvCo = document.InsertParagraph(strAttvCo)
                     .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
                     .FontSize(20d)
@@ -3316,60 +3322,6 @@ namespace PersAhwal
 
                                     case 10:
 
-                                        Messid = Convert.ToInt32(reader["ID"].ToString());
-                                        txtMessApp.Text = reader["DocID"].ToString();
-                                        txtMessAuth.Text = reader["AuthName"].ToString();
-                                        txtAuthNo.Text = reader["AuthNo"].ToString();
-                                        if (reader["Gender"].ToString() == "ذكر")
-                                        {
-                                            checkMessAppSex.Text = "ذكر";
-                                            checkMessAppSex.CheckState = CheckState.Unchecked;
-                                        }
-                                        else
-                                        {
-                                            checkMessAppSex.Text = "أنثى";
-                                            checkMessAppSex.CheckState = CheckState.Checked;
-                                        }
-                                        txtMessSource.Text = reader["Institute"].ToString();
-                                        txtMessGreDate.Text = reader["GriDate"].ToString();
-                                        processed.Text = reader["Viewed"].ToString();
-                                        if (btnMessSave.Text == "حفظ")
-                                        {
-                                            btnMessSave.Text = "تعديل";
-                                        }
-                                        else if (btnMessSave.Text == "حفظ وتأكيد")
-                                            btnMessSave.Text = "تعديل وتأكيد";
-
-                                        if (reader["ArchivedState"].ToString() == "مؤرشف نهائي")
-                                        {
-                                            checkMessArch.CheckState = CheckState.Checked;
-                                            checkMessArch.Text = "المكاتبة مؤرشفة";
-                                            checkMessArch.BackColor = Color.Green;
-                                            btnMessArch.Text = "معاينة المكاتبة";
-                                            btnMessArch.Width = 93;
-                                            processed.Visible = button13.Visible = true;
-                                        }
-                                        else if (reader["ArchivedState"].ToString().Contains("ملغي"))
-                                        {
-                                            checkMessArch.CheckState = CheckState.Checked;
-                                            checkMessArch.Text = "المكاتبة تم إلغاؤها";
-                                            checkMessArch.BackColor = Color.Green;
-                                            btnMessArch.Text = "معاينة المكاتبة";
-                                            btnMessArch.Width = 93;
-                                            processed.Visible = button13.Visible = true;
-                                        }
-                                        else
-                                        {
-                                            checkMessArch.CheckState = CheckState.Unchecked;
-                                            checkMessArch.Text = "غير مؤرشف";
-                                            checkMessArch.BackColor = Color.Red;
-                                            btnMessArch.Text = "تحميل ملف ارشفة المعاملة";
-                                            btnMessArch.Width = 184;
-                                            processed.Visible = button13.Visible = false;
-                                        }
-
-
-                                        break;
 
                                     case 11:
 
@@ -3567,62 +3519,7 @@ namespace PersAhwal
                                         break;
 
 
-                                    case 10:
-
-                                        Messid = Convert.ToInt32(reader["ID"].ToString());
-                                        txtMessApp.Text = reader["AppName"].ToString();
-                                        txtMessAuth.Text = reader["AuthName"].ToString();
-                                        txtAuthNo.Text = reader["AuthNo"].ToString();
-                                        if (reader["Gender"].ToString() == "ذكر")
-                                        {
-                                            checkMessAppSex.Text = "ذكر";
-                                            checkMessAppSex.CheckState = CheckState.Unchecked;
-                                        }
-                                        else
-                                        {
-                                            checkMessAppSex.Text = "أنثى";
-                                            checkMessAppSex.CheckState = CheckState.Checked;
-                                        }
-                                        txtMessSource.Text = reader["Institute"].ToString();
-                                        txtMessGreDate.Text = reader["GriDate"].ToString();
-                                        processed.Text = reader["Viewed"].ToString();
-                                        if (btnMessSave.Text == "حفظ")
-                                        {
-                                            btnMessSave.Text = "تعديل";
-                                        }
-                                        else if (btnMessSave.Text == "حفظ وتأكيد")
-                                            btnMessSave.Text = "تعديل وتأكيد";
-
-                                        if (reader["ArchivedState"].ToString() == "مؤرشف نهائي")
-                                        {
-                                            checkMessArch.CheckState = CheckState.Checked;
-                                            checkMessArch.Text = "المكاتبة مؤرشفة";
-                                            checkMessArch.BackColor = Color.Green;
-                                            btnMessArch.Text = "معاينة المكاتبة";
-                                            btnMessArch.Width = 93;
-                                            processed.Visible = button13.Visible = true;
-                                        }
-                                        else if (reader["ArchivedState"].ToString().Contains("ملغي"))
-                                        {
-                                            checkMessArch.CheckState = CheckState.Checked;
-                                            checkMessArch.Text = "المكاتبة تم إلغاؤها";
-                                            checkMessArch.BackColor = Color.Green;
-                                            btnMessArch.Text = "معاينة المكاتبة";
-                                            btnMessArch.Width = 93;
-                                            processed.Visible = button13.Visible = true;
-                                        }
-                                        else
-                                        {
-                                            checkMessArch.CheckState = CheckState.Unchecked;
-                                            checkMessArch.Text = "غير مؤرشف";
-                                            checkMessArch.BackColor = Color.Red;
-                                            btnMessArch.Text = "تحميل ملف ارشفة المعاملة";
-                                            btnMessArch.Width = 184;
-                                            processed.Visible = button13.Visible = false;
-                                        }
-
-
-                                        break;
+                                    
 
                                     case 11:
 
@@ -4562,40 +4459,14 @@ namespace PersAhwal
 
             if (persbtn3.SelectedIndex >= 1 && persbtn3.SelectedIndex <= 7)
             {
-                if (mangerArch.CheckState == CheckState.Checked)
-                {
-                    string[] str = new string[persbtn3.Items.Count];
-                    for (int x = 0; x < persbtn3.Items.Count; x++) { str[x] = persbtn3.Items[x].ToString(); }
-                    string[] strSub = new string[1] { "" };
-                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
-                    FormPics form2 = new FormPics(Server,EmployeeName, attendedVC.Text,UserJobposition, DataSource, persbtn3.SelectedIndex, FormDataFile, FilespathOut, 3, str, strSub, true, MandoubM, GriDateM);
-                    form2.ShowDialog();
-                }
-                else
-                {
-                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
-                    Form3 form3 = new Form3(attendedVC.SelectedIndex, IDNo, persbtn3.SelectedIndex, EmployeeName, DataSource, FilespathIn, FilespathOut, UserJobposition, GregorianDate, HijriDate);
-                    form3.ShowDialog();
-                }
+                dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
+                Form3 form3 = new Form3(attendedVC.SelectedIndex, IDNo, persbtn3.SelectedIndex, EmployeeName, DataSource, FilespathIn, FilespathOut, UserJobposition, GregorianDate, HijriDate);
+                form3.ShowDialog();
             }
 
             else if (persbtn3.SelectedIndex == 8)
             {
-                if (mangerArch.CheckState == CheckState.Checked)
-                {
-                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
-                    string[] str = new string[persbtn3.Items.Count];
-                    for (int x = 0; x < persbtn3.Items.Count; x++) { str[x] = persbtn3.Items[x].ToString(); }
-                    string[] strSub = new string[4] { "نقل كفالة مقدم الطلب إلى كفالة طرف ثاني", "نقل كفالة طرف ثاني إلى كفالة مقدم الطلب", "نقل كفالة أحد مكفولي مقدم الطلب إلى كفالة طرف ثاني", "استقدام على كفالة طرف ثاني" };
-                    FormPics form2 = new FormPics(Server,EmployeeName, attendedVC.Text,UserJobposition, DataSource, persbtn3.SelectedIndex, FormDataFile, FilespathOut, 5, str, strSub, true, MandoubM, GriDateM);
-                    form2.ShowDialog();
-                }
-                else
-                {
-                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
-                    Form5 form5 = new Form5(attendedVC.SelectedIndex, IDNo, EmployeeName, DataSource, FilespathIn, FilespathOut, UserJobposition, GregorianDate, HijriDate);
-                    form5.ShowDialog();
-                }
+                
             }
             else if (persbtn3.SelectedIndex == 9)
             {
@@ -4606,40 +4477,16 @@ namespace PersAhwal
 
             else if (persbtn3.SelectedIndex == 10)
             {
-                if (mangerArch.CheckState == CheckState.Checked)
-                {
-                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
-                    string[] str = new string[persbtn3.Items.Count];
-                    for (int x = 0; x < persbtn3.Items.Count; x++) { str[x] = persbtn3.Items[x].ToString(); }
-                    string[] strSub = new string[7] { "استخراج وثائق للابناء", "عدم ممانعة سفر الابناء", "استخراج وثائق وعدم ممانعة سفر الابناء", "استخراج وثائق وعدم ممانعة سفر الابناء والزوجة", "استخراج وثائق وعدم ممانعة سفر الابناء بصحبة مرافق غير الزوجة", "عدم ممانعة سفر الابناء والزوجة", "عدم ممانعة سفر الزوجة" };
-                    FormPics form2 = new FormPics(Server,EmployeeName, attendedVC.Text,UserJobposition, DataSource, persbtn3.SelectedIndex, FormDataFile, FilespathOut, 2, str, strSub, true, MandoubM, GriDateM);
-                    form2.ShowDialog();
-                }
-                else
-                {
-                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
-                    Form2 form2 = new Form2(attendedVC.SelectedIndex, IDNo, EmployeeName, DataSource, FilespathIn, FilespathOut, UserJobposition, GregorianDate, HijriDate);
-                    form2.ShowDialog();
-                }
+                dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
+                Form2 form2 = new Form2(attendedVC.SelectedIndex, IDNo, EmployeeName, DataSource, FilespathIn, FilespathOut, UserJobposition, GregorianDate, HijriDate);
+                form2.ShowDialog();
             }
 
             else if (persbtn3.SelectedIndex == 11)
             {
-                if (mangerArch.CheckState == CheckState.Checked)
-                {
-                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
-                    string[] str = new string[persbtn3.Items.Count];
-                    for (int x = 0; x < persbtn3.Items.Count; x++) { str[x] = persbtn3.Items[x].ToString(); }
-                    string[] strSub = new string[2] { "اثبات اسمان لذات واحدة", "اثبات صحة وثائق" };
-                    FormPics form2 = new FormPics(Server,EmployeeName, attendedVC.Text,UserJobposition, DataSource, persbtn3.SelectedIndex, FormDataFile, FilespathOut, 7, str, strSub, true, MandoubM, GriDateM);
-                    form2.ShowDialog();
-                }
-                else
-                {
-                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
-                    Form7 form7 = new Form7(attendedVC.SelectedIndex, IDNo, EmployeeName, DataSource, FilespathIn, FilespathOut, UserJobposition, GregorianDate, HijriDate);
-                    form7.ShowDialog();
-                }
+                dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
+                Form7 form7 = new Form7(attendedVC.SelectedIndex, IDNo, EmployeeName, DataSource, FilespathIn, FilespathOut, UserJobposition, GregorianDate, HijriDate);
+                form7.ShowDialog();
             }
 
             else if (persbtn3.SelectedIndex == 12)
@@ -4724,15 +4571,15 @@ namespace PersAhwal
 
         private void ShehadaBox_SelectedIndexChanged_1(object sender, EventArgs e)
         {
-            if (persbtn5.SelectedIndex == 0)
+            if (persbtn555.SelectedIndex == 0)
             {
                 if (mangerArch.CheckState == CheckState.Checked)
                 {
                     dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
-                    string[] str = new string[persbtn5.Items.Count];
-                    for (int x = 0; x < persbtn5.Items.Count; x++) { str[x] = persbtn5.Items[x].ToString(); }
+                    string[] str = new string[persbtn555.Items.Count];
+                    for (int x = 0; x < persbtn555.Items.Count; x++) { str[x] = persbtn555.Items[x].ToString(); }
                     string[] strSub = new string[2] { "عدم ممانعة زواج", "عدم ممانعة وشهادة كفاءة" };
-                    FormPics form2 = new FormPics(Server,EmployeeName, attendedVC.Text,UserJobposition, DataSource, persbtn5.SelectedIndex, FormDataFile, FilespathOut, 9, str, strSub, true, MandoubM, GriDateM);
+                    FormPics form2 = new FormPics(Server,EmployeeName, attendedVC.Text,UserJobposition, DataSource, persbtn555.SelectedIndex, FormDataFile, FilespathOut, 9, str, strSub, true, MandoubM, GriDateM);
                     form2.ShowDialog();
                 }
                 else
@@ -4742,15 +4589,15 @@ namespace PersAhwal
                     form9.ShowDialog();
                 }
             }
-            if (persbtn5.SelectedIndex == 1)
+            if (persbtn555.SelectedIndex == 1)
             {
                 if (mangerArch.CheckState == CheckState.Checked)
                 {
                     dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
-                    string[] str = new string[persbtn5.Items.Count];
-                    for (int x = 0; x < persbtn5.Items.Count; x++) { str[x] = persbtn5.Items[x].ToString(); }
+                    string[] str = new string[persbtn555.Items.Count];
+                    for (int x = 0; x < persbtn555.Items.Count; x++) { str[x] = persbtn555.Items[x].ToString(); }
                     string[] strSub = new string[1] { "" };
-                    FormPics form2 = new FormPics(Server,EmployeeName, attendedVC.Text,UserJobposition, DataSource, persbtn5.SelectedIndex, FormDataFile, FilespathOut, 9, str, strSub, true, MandoubM, GriDateM);
+                    FormPics form2 = new FormPics(Server,EmployeeName, attendedVC.Text,UserJobposition, DataSource, persbtn555.SelectedIndex, FormDataFile, FilespathOut, 9, str, strSub, true, MandoubM, GriDateM);
                     form2.ShowDialog();
                 }
                 else
@@ -4758,10 +4605,10 @@ namespace PersAhwal
                     if (mangerArch.CheckState == CheckState.Checked)
                     {
                         dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
-                        string[] str = new string[persbtn5.Items.Count];
-                        for (int x = 0; x < persbtn5.Items.Count; x++) { str[x] = persbtn5.Items[x].ToString(); }
+                        string[] str = new string[persbtn555.Items.Count];
+                        for (int x = 0; x < persbtn555.Items.Count; x++) { str[x] = persbtn555.Items[x].ToString(); }
                         string[] strSub = new string[1] { "" };
-                        FormPics form2 = new FormPics(Server,EmployeeName, attendedVC.Text,UserJobposition, DataSource, persbtn5.SelectedIndex, FormDataFile, FilespathOut, 9, str, strSub, true, MandoubM, GriDateM);
+                        FormPics form2 = new FormPics(Server,EmployeeName, attendedVC.Text,UserJobposition, DataSource, persbtn555.SelectedIndex, FormDataFile, FilespathOut, 9, str, strSub, true, MandoubM, GriDateM);
                         form2.ShowDialog();
                     }
                     else
@@ -4772,15 +4619,15 @@ namespace PersAhwal
                     }
                 }
             }
-            else if (persbtn5.SelectedIndex == 2)
+            else if (persbtn555.SelectedIndex == 2)
             {
                 if (mangerArch.CheckState == CheckState.Checked)
                 {
                     dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
-                    string[] str = new string[persbtn5.Items.Count];
-                    for (int x = 0; x < persbtn5.Items.Count; x++) { str[x] = persbtn5.Items[x].ToString(); }
+                    string[] str = new string[persbtn555.Items.Count];
+                    for (int x = 0; x < persbtn555.Items.Count; x++) { str[x] = persbtn555.Items[x].ToString(); }
                     string[] strSub = new string[1] { "" };
-                    FormPics form2 = new FormPics(Server,EmployeeName, attendedVC.Text,UserJobposition, DataSource, persbtn5.SelectedIndex, FormDataFile, FilespathOut, 10, str, strSub, true, MandoubM, GriDateM);
+                    FormPics form2 = new FormPics(Server,EmployeeName, attendedVC.Text,UserJobposition, DataSource, persbtn555.SelectedIndex, FormDataFile, FilespathOut, 10, str, strSub, true, MandoubM, GriDateM);
                     form2.ShowDialog();
                 }
                 else
@@ -4790,33 +4637,16 @@ namespace PersAhwal
                     form10.ShowDialog();
                 }
             }
-            else if (persbtn5.SelectedIndex == 3)
+            
+            else if (persbtn555.SelectedIndex == 4)
             {
                 if (mangerArch.CheckState == CheckState.Checked)
                 {
                     dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
-                    string[] str = new string[persbtn5.Items.Count];
-                    for (int x = 0; x < persbtn5.Items.Count; x++) { str[x] = persbtn5.Items[x].ToString(); }
+                    string[] str = new string[persbtn555.Items.Count];
+                    for (int x = 0; x < persbtn555.Items.Count; x++) { str[x] = persbtn555.Items[x].ToString(); }
                     string[] strSub = new string[1] { "" };
-                    FormPics form2 = new FormPics(Server, EmployeeName, attendedVC.Text, UserJobposition, DataSource, persbtn5.SelectedIndex, FormDataFile, FilespathOut, 15, str, strSub, true, MandoubM, GriDateM);
-                    form2.ShowDialog();
-                }
-                else
-                {
-                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
-                    MerriageDoc merriageDoc = new MerriageDoc(DataSource, false, EmployeeName, attendedVC.SelectedIndex, GregorianDate, HijriDate,FilespathIn, FilespathOut);
-                    merriageDoc.ShowDialog();
-                }
-            }
-            else if (persbtn5.SelectedIndex == 4)
-            {
-                if (mangerArch.CheckState == CheckState.Checked)
-                {
-                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
-                    string[] str = new string[persbtn5.Items.Count];
-                    for (int x = 0; x < persbtn5.Items.Count; x++) { str[x] = persbtn5.Items[x].ToString(); }
-                    string[] strSub = new string[1] { "" };
-                    FormPics form2 = new FormPics(Server, EmployeeName, attendedVC.Text, UserJobposition, DataSource, persbtn5.SelectedIndex, FormDataFile, FilespathOut, 16, str, strSub, true, MandoubM, GriDateM);
+                    FormPics form2 = new FormPics(Server, EmployeeName, attendedVC.Text, UserJobposition, DataSource, persbtn555.SelectedIndex, FormDataFile, FilespathOut, 16, str, strSub, true, MandoubM, GriDateM);
                     form2.ShowDialog();
                 }
                 else
@@ -4825,50 +4655,19 @@ namespace PersAhwal
                     PassAway passAway = new PassAway(attendedVC.SelectedIndex, DataSource, FilespathIn, FilespathOut, UserJobposition, EmployeeName, GregorianDate, HijriDate);
                     passAway.ShowDialog();
                 }
-            }else if (persbtn5.SelectedIndex == 5)
-            {
-                if (mangerArch.CheckState == CheckState.Checked)
-                {
-                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
-                    string[] str = new string[persbtn5.Items.Count];
-                    for (int x = 0; x < persbtn5.Items.Count; x++) { str[x] = persbtn5.Items[x].ToString(); }
-                    string[] strSub = new string[1] { "" };
-                    FormPics form2 = new FormPics(Server, EmployeeName, attendedVC.Text, UserJobposition, DataSource, persbtn5.SelectedIndex, FormDataFile, FilespathOut, 17, str, strSub, true, MandoubM, GriDateM);
-                    form2.ShowDialog();
-                }
-                else
-                {
-                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
-                    FormDivorce formDivorce = new FormDivorce(DataSource, false, EmployeeName, attendedVC.SelectedIndex, GregorianDate, HijriDate);
-                    formDivorce.ShowDialog();
-                }
             }
         }
 
         private void VisaBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (persbtn6.SelectedIndex == 0)
-            {
-                if (mangerArch.CheckState == CheckState.Checked)
-                {
-                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
-                    string[] str = new string[persbtn6.Items.Count];
-                    for (int x = 0; x < persbtn6.Items.Count; x++) { str[x] = persbtn6.Items[x].ToString(); }
-                    string[] strSub = new string[1] { "" };
-                    FormPics form2 = new FormPics(Server,EmployeeName, attendedVC.Text,UserJobposition, DataSource, persbtn6.SelectedIndex, FormDataFile, FilespathOut, 4, str, strSub, true, MandoubM, GriDateM);
-                    form2.ShowDialog();
-                }
-                else
-                {
-                    dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
-                    Form4 form4 = new Form4(attendedVC.SelectedIndex, -1, EmployeeName, DataSource, FilespathIn, FilespathOut, UserJobposition, GregorianDate, HijriDate);
-                    form4.ShowDialog();
-                }
-            }
-            if (persbtn6.SelectedIndex == 1)
-            {
-                MessageBox.Show("غير مدرجة حتى الآن");
-            }
+            //if (persbtn6.SelectedIndex == 0)
+            //{
+                
+            //}
+            //if (persbtn6.SelectedIndex == 1)
+            //{
+            //    MessageBox.Show("غير مدرجة حتى الآن");
+            //}
 
         }
 
@@ -4885,7 +4684,7 @@ namespace PersAhwal
             {
                 flowLayoutPanel1.Visible = SearchPanel.Visible = true;
                 panel4.Visible = false;
-                PanelMandounb.Visible = fileManagePanel2.Visible =  panelReceMess.Visible = ReportPanel.Visible = false;
+                PanelMandounb.Visible = fileManagePanel2.Visible = ReportPanel.Visible = false;
                 
             }
             else SearchPanel.Visible = false;
@@ -4955,7 +4754,7 @@ namespace PersAhwal
                 ReportPanel.BringToFront();
                 flowLayoutPanel1.Visible = ReportPanel.Visible = true;
                 panel4.Visible = false;
-                PanelMandounb.Visible = SearchPanel.Visible = fileManagePanel2.Visible = panelReceMess.Visible =  SearchPanel.Visible = false;
+                PanelMandounb.Visible = SearchPanel.Visible = fileManagePanel2.Visible = SearchPanel.Visible = false;
                 fillYears(yearReport);
             }
             else ReportPanel.Visible = false;
@@ -4972,7 +4771,7 @@ namespace PersAhwal
             btnArchieve.Name = Doc+"_"+ IDA[Buttons].ToString();//DocM[x], GriDateM[x], AppNameM[x] + " عن طريق " + MandoubM[x],
                                                                                      //btnArchieve.Name = DocA[Buttons].ToString()+"_"+ IDA[Buttons].ToString();//DocM[x], GriDateM[x], AppNameM[x] + " عن طريق " + MandoubM[x],
             btnArchieve.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            btnArchieve.Size = new System.Drawing.Size(568, 34 * size);
+            btnArchieve.Size = new System.Drawing.Size(530, 34 * size);
             btnArchieve.TabIndex = 512;
             btnArchieve.Click += new System.EventHandler(this.button_Click);
             if (size == 1)
@@ -5099,15 +4898,15 @@ namespace PersAhwal
 
         private void button4_Click_3(object sender, EventArgs e)
         {
-            if (panelReceMess.Visible == false)
-            {
-                flowLayoutPanel1.Visible = panelReceMess.Visible = true;
-                panel4.Visible = false;
-                PanelMandounb.Visible = fileManagePanel2.Visible =  SearchPanel.Visible = ReportPanel.Visible = false;
+            //if (panelReceMess.Visible == false)
+            //{
+            //    flowLayoutPanel1.Visible = panelReceMess.Visible = true;
+            //    panel4.Visible = false;
+            //    PanelMandounb.Visible = fileManagePanel2.Visible =  ReportPanel.Visible = SearchPanel.Visible = ReportPanel.Visible = PanelMandounb.Visible = false;
 
 
-            }
-            else panelReceMess.Visible = false;
+            //}
+            //else panelReceMess.Visible = false;
         }
 
      
@@ -5166,34 +4965,34 @@ namespace PersAhwal
 
         private void checkMessAppSex_CheckedChanged(object sender, EventArgs e)
         {
-            if (checkMessAppSex.CheckState == CheckState.Unchecked)
-            {
-                checkMessAppSex.Text = "ذكر";
-            }
-            else if (checkMessAppSex.CheckState == CheckState.Checked)
-            {
-                checkMessAppSex.Text = "إنثى";
-            }
+            //if (checkMessAppSex.CheckState == CheckState.Unchecked)
+            //{
+            //    checkMessAppSex.Text = "ذكر";
+            //}
+            //else if (checkMessAppSex.CheckState == CheckState.Checked)
+            //{
+            //    checkMessAppSex.Text = "إنثى";
+            //}
 
         }
 
         private void btnMessArch_Click_1(object sender, EventArgs e)
         {
-            if (btnMessArch.Text == "تحميل ملف ارشفة المعاملة")
-            {
-                OpenFileDialog dlg = new OpenFileDialog();
-                dlg.ShowDialog();
-                ArchfilePath = dlg.FileName;
-            }
-            else
-            {
-                OpenMessFile(Messid, "TableReceMess");
-            }
+            //if (btnMessArch.Text == "تحميل ملف ارشفة المعاملة")
+            //{
+            //    OpenFileDialog dlg = new OpenFileDialog();
+            //    dlg.ShowDialog();
+            //    ArchfilePath = dlg.FileName;
+            //}
+            //else
+            //{
+            //    OpenMessFile(Messid, "TableReceMess");
+            //}
         }
 
         private void txtMessNo_TextChanged_1(object sender, EventArgs e)
         {
-            FillDataGridView(txtMessNo.Text);
+            //FillDataGridView(txtMessNo.Text);
         }
 
         private void btnMessView_Click(object sender, EventArgs e)
@@ -5216,47 +5015,6 @@ namespace PersAhwal
 
         }
 
-        private void ArchfilePathEdit(string archfile)
-        {
-            if (archfile != "")
-            {
-                SqlConnection sqlCon = new SqlConnection(DataSource);
-                if (sqlCon.State == ConnectionState.Closed)
-                    try
-                    {
-                        sqlCon.Open();
-                    }
-                    catch (Exception ex) { return; }
-                SqlCommand sqlCmd = new SqlCommand("UPDATE TableReceMess SET Data1=@Data1,Extension1=@Extension1,FileName1=@FileName1 WHERE ID=@ID", sqlCon);
-                sqlCmd.CommandType = CommandType.Text;
-                sqlCmd.Parameters.AddWithValue("@ID", Messid);
-                sqlCmd.Parameters.AddWithValue("@ArchivedState", "مؤرشف بتاريخ " + GregorianDate);
-                using (Stream stream = File.OpenRead(archfile))
-                {
-                    byte[] buffer1 = new byte[stream.Length];
-                    stream.Read(buffer1, 0, buffer1.Length);
-                    var fileinfo1 = new FileInfo(filePath);
-                    string extn1 = fileinfo1.Extension;
-                    string DocName1 = fileinfo1.Name;
-                    sqlCmd.Parameters.Add("@Data1", SqlDbType.VarBinary).Value = buffer1;
-                    sqlCmd.Parameters.Add("@Extension1", SqlDbType.Char).Value = extn1;
-                    sqlCmd.Parameters.Add("@FileName1", SqlDbType.NVarChar).Value = DocName1;
-                }
-
-                if (btnMessSave.Text == "حفظ")
-                {
-                    sqlCmd.Parameters.AddWithValue("@Viewed", GregorianDate);
-
-                }
-                else if (btnMessSave.Text == "حفظ وتأكيد")
-                { sqlCmd.Parameters.AddWithValue("@Viewed", GregorianDate + "_تمت معالجة الملف بواسطة" + EmployeeName); }
-
-
-
-                sqlCmd.ExecuteNonQuery();
-                sqlCon.Close();
-            }
-        }
 
 
 
@@ -5281,16 +5039,16 @@ namespace PersAhwal
 
         private void btnHandArch_Click_1(object sender, EventArgs e)
         {
-            if (btnMessArch.Text == "تحميل ملف ارشفة المعاملة")
-            {
-                OpenFileDialog dlg = new OpenFileDialog();
-                dlg.ShowDialog();
-                ArchfilePath = dlg.FileName;
-            }
-            else
-            {
-                OpenMessFile(Messid, "TableHandAuth");
-            }
+            //if (btnMessArch.Text == "تحميل ملف ارشفة المعاملة")
+            //{
+            //    OpenFileDialog dlg = new OpenFileDialog();
+            //    dlg.ShowDialog();
+            //    ArchfilePath = dlg.FileName;
+            //}
+            //else
+            //{
+            //    OpenMessFile(Messid, "TableHandAuth");
+            //}
         }
 
         private void checkHASex_CheckedChanged(object sender, EventArgs e)
@@ -5550,7 +5308,7 @@ namespace PersAhwal
         {
             if (mangerArch.CheckState == CheckState.Checked)
             {
-                mangerArch.Text = "توزيع المهام";
+                mangerArch.Text = "الارشفة الأولية";
                 persbtn2.Visible = persbtn10.Visible = false;
                 perbtn1.Visible = docCollectCombo.Visible = true;
                 docCollectCombo.BringToFront();
@@ -6366,21 +6124,27 @@ namespace PersAhwal
 
         private void picVersio_Click(object sender, EventArgs e)
         {
-            string currentVersion = getVersio();
-            //text 1.0.0.336.O------ server = 1.0.0.333.F
-            string str = currentVersion.Split('.')[0] + "." + currentVersion.Split('.')[1] + "." + currentVersion.Split('.')[2] + "." + (Convert.ToInt32(currentVersion.Split('.')[3]) + 1).ToString();
+            if (UserJobposition.Contains("قنصل")) {
+                string currentVersion = getVersio();
+                //text 1.0.0.336.O------ server = 1.0.0.333.F
+                string str = currentVersion.Split('.')[0] + "." + currentVersion.Split('.')[1] + "." + currentVersion.Split('.')[2] + "." + (Convert.ToInt32(currentVersion.Split('.')[3]) + 1).ToString();
 
-            var selectedOption = MessageBox.Show("", "تحديث إجباري؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (selectedOption == DialogResult.Yes)
-            {
-                VersionUpdate(str + ".F");
-                
+                var selectedOption = MessageBox.Show("", "تحديث إجباري؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (selectedOption == DialogResult.Yes)
+                {
+                    VersionUpdate(str + ".F");
+
+                }
+                else
+                {
+                    VersionUpdate(str + ".O");
+                }
+                timer4Update();
+            } else {
+                File.Delete(primeryLink + "fileUpdate.txt");
+                System.Diagnostics.Process.Start(getAppFolder() + @"\setup.exe");
+                this.Close();
             }
-            else
-            {
-                VersionUpdate(str + ".O");
-            }
-            timer4Update();
         }
 
         private void upDateClose()
@@ -6747,7 +6511,7 @@ namespace PersAhwal
                 if (index == 9 && UserJobposition.Contains("قنصل"))
                 {
                     fileManagePanel2.Visible = true;
-                    PanelMandounb.Visible = flowLayoutPanel1.Visible = panelReceMess.Visible = SearchPanel.Visible = ReportPanel.Visible = false;
+                    PanelMandounb.Visible = flowLayoutPanel1.Visible = ReportPanel.Visible = SearchPanel.Visible = ReportPanel.Visible = PanelMandounb.Visible = false;
                     txtIndivNo.Text = txtFileNo.Text = "";
                 }
                 else if (index == 9 && !UserJobposition.Contains("قنصل"))
@@ -6979,21 +6743,7 @@ namespace PersAhwal
 
         private void button30_Click_1(object sender, EventArgs e)
         {
-            if (بيانات_الموظفين_والملحقين_بالموظفين.Text == "مناديب القنصلية العامة") {
-                fillMandoubGrid();
-                PanelMandounb.BringToFront();
-                PanelMandounb.Visible = true;
-                return;
-            }
-            string serverType = "شؤون رعايا";
-            if (Server == "57")
-            {
-                DataSource = DataSource57;
-                serverType = "احوال شخصية";
-            }
-            dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
-            SignUp signUp = new SignUp(EmployeeName, UserJobposition, DataSource, serverType, GregorianDate);
-            signUp.ShowDialog();
+            
         }
 
         private void reportpass_TextChanged(object sender, EventArgs e)
@@ -7232,15 +6982,13 @@ namespace PersAhwal
 
         private void empUpdate_Click_1(object sender, EventArgs e)
         {
-            File.Delete(primeryLink + "fileUpdate.txt");
-            System.Diagnostics.Process.Start(getAppFolder() + @"\setup.exe");
-            this.Close();
+            if (!backgroundWorker2.IsBusy) backgroundWorker2.RunWorkerAsync();
+            if (!backgroundWorker1.IsBusy) backgroundWorker1.RunWorkerAsync();
         }
 
         private void fileUpdate_Click_1(object sender, EventArgs e)
         {
-            if (!backgroundWorker2.IsBusy) backgroundWorker2.RunWorkerAsync(); 
-            if (!backgroundWorker1.IsBusy) backgroundWorker1.RunWorkerAsync();            
+                        
         }
 
         private void persbtn11_Click(object sender, EventArgs e)
@@ -7337,12 +7085,12 @@ namespace PersAhwal
         {
             if (checkBox1.Checked)
             {
-                checkBox1.Text = "فتح الأرشفة تلقائي";
-                dataSourceWrite(primeryLink + "autoDocs.txt", "Yes");
+                checkBox1.Text = "معاينة الأرشفة الاولية تلقائيا";
+                dataSourceWrite(FilespathOut + @"\autoDocs.txt", "Yes");
             }
             else {
-                checkBox1.Text = "إيقاف فتح الأرشفة";
-                dataSourceWrite(primeryLink + "autoDocs.txt", "No");
+                checkBox1.Text = "إيقاف معاينة الأرشفة";
+                dataSourceWrite(FilespathOut + @"\autoDocs.txt", "No");
             }
         }
 
@@ -8011,8 +7759,7 @@ namespace PersAhwal
         
         private int getcountReportsCalcs(string dataSource,string query)
         {
-            Console.WriteLine(query);
-            SqlConnection sqlCon = new SqlConnection(dataSource);
+            SqlConnection sqlCon = new SqlConnection(dataSource.Replace("ArchFilesDB", "AhwalDataBase"));
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
@@ -8022,6 +7769,7 @@ namespace PersAhwal
             sqlCon.Close();
             foreach (DataRow dataRow in table.Rows)
             {
+                Console.WriteLine(dataRow["count"].ToString());
                 return Convert.ToInt32( dataRow["count"].ToString());
             }
             return 0;
@@ -8127,15 +7875,7 @@ namespace PersAhwal
 
         private void button20_Click_1(object sender, EventArgs e)
         {
-            if (!panelDate.Visible)
-            {
-                panelDate.Visible = true;
-                panelDate.BringToFront();
-            }
-            else {
-                panelDate.Visible = false;
-                panelDate.SendToBack();
-            }
+            
         }
 
         private string[] getColList(string table)
@@ -9007,6 +8747,138 @@ namespace PersAhwal
             }
         }
 
+        private void persbtn66_Click(object sender, EventArgs e)
+        {
+            if (mangerArch.CheckState == CheckState.Checked)
+            {
+                dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
+                string[] str = new string[1] { "تاشيرة دخول" };
+                string[] strSub = new string[1] { "" };
+                FormPics form2 = new FormPics(Server, EmployeeName, attendedVC.Text, UserJobposition, DataSource, 0, FormDataFile, FilespathOut, 4, str, strSub, true, MandoubM, GriDateM);
+                form2.ShowDialog();
+            }
+            else
+            {
+                dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
+                Form4 form4 = new Form4(attendedVC.SelectedIndex, -1, EmployeeName, DataSource, FilespathIn, FilespathOut, UserJobposition, GregorianDate, HijriDate);
+                form4.ShowDialog();
+            }
+        }
+
+        private void persbtn55_Click(object sender, EventArgs e)
+        {
+            if (mangerArch.CheckState == CheckState.Checked)
+            {
+                dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
+                string[] str = new string[persbtn555.Items.Count];
+                for (int x = 0; x < persbtn555.Items.Count; x++) { str[x] = persbtn555.Items[x].ToString(); }
+                string[] strSub = new string[1] { "" };
+                FormPics form2 = new FormPics(Server, EmployeeName, attendedVC.Text, UserJobposition, DataSource, persbtn555.SelectedIndex, FormDataFile, FilespathOut, 15, str, strSub, true, MandoubM, GriDateM);
+                form2.ShowDialog();
+            }
+            else
+            {
+                dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
+                MerriageDoc merriageDoc = new MerriageDoc(DataSource, false, EmployeeName, attendedVC.SelectedIndex, GregorianDate, HijriDate, FilespathIn, FilespathOut);
+                merriageDoc.ShowDialog();
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (mangerArch.CheckState == CheckState.Checked)
+            {
+                dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
+                string[] str = new string[persbtn555.Items.Count];
+                for (int x = 0; x < persbtn555.Items.Count; x++) { str[x] = persbtn555.Items[x].ToString(); }
+                string[] strSub = new string[1] { "" };
+                FormPics form2 = new FormPics(Server, EmployeeName, attendedVC.Text, UserJobposition, DataSource, persbtn555.SelectedIndex, FormDataFile, FilespathOut, 17, str, strSub, true, MandoubM, GriDateM);
+                form2.ShowDialog();
+            }
+            else
+            {
+                dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
+                FormDivorce formDivorce = new FormDivorce(DataSource, false, EmployeeName, attendedVC.SelectedIndex, GregorianDate, HijriDate);
+                formDivorce.ShowDialog();
+            }
+        }
+
+        private void pictureBox5_Click(object sender, EventArgs e)
+        {
+            if (!panelDate.Visible)
+            {
+                panelDate.Visible = true;
+                panelDate.BringToFront();
+            }
+            else
+            {
+                panelDate.Visible = false;
+                panelDate.SendToBack();
+            }
+        }
+
+        private void pictureBox4_Click_1(object sender, EventArgs e)
+        {
+            
+            string serverType = "شؤون رعايا";
+            if (Server == "57")
+            {
+                DataSource = DataSource57;
+                serverType = "احوال شخصية";
+            }
+            dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
+            SignUp signUp = new SignUp(EmployeeName, UserJobposition, DataSource, serverType, GregorianDate);
+            signUp.ShowDialog();
+        }
+
+        private void pictureBox6_Click(object sender, EventArgs e)
+        {
+            if (PanelMandounb.Visible == false)
+            {
+                fillMandoubGrid();
+                PanelMandounb.BringToFront();
+                PanelMandounb.Visible = true;
+                PanelMandounb.Visible = ReportPanel.Visible = ReportPanel.Visible = SearchPanel.Visible = ReportPanel.Visible = fileManagePanel2.Visible = SearchPanel.Visible = false;
+                
+            }
+            else PanelMandounb.Visible = false; 
+            
+            
+            return;
+        }
+
+        private void pictureBox7_Click(object sender, EventArgs e)
+        {
+            if (paneloldPro.Visible == false)
+            {
+                ReportPanel.BringToFront();
+                paneloldPro.Visible =  true;
+                panel4.Visible = false;
+                PanelMandounb.Visible = ReportPanel.Visible = SearchPanel.Visible = ReportPanel.Visible = PanelMandounb.Visible = fileManagePanel2.Visible = SearchPanel.Visible = false;
+                fillYears(yearReport);
+            }
+            else paneloldPro.Visible = false;
+        }
+
+        private void button3_Click_2(object sender, EventArgs e)
+        {
+            if (mangerArch.CheckState == CheckState.Checked)
+            {
+                dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
+                string[] str = new string[persbtn3.Items.Count];
+                for (int x = 0; x < persbtn3.Items.Count; x++) { str[x] = persbtn3.Items[x].ToString(); }
+                string[] strSub = new string[4] { "نقل كفالة مقدم الطلب إلى كفالة طرف ثاني", "نقل كفالة طرف ثاني إلى كفالة مقدم الطلب", "نقل كفالة أحد مكفولي مقدم الطلب إلى كفالة طرف ثاني", "استقدام على كفالة طرف ثاني" };
+                FormPics form2 = new FormPics(Server, EmployeeName, attendedVC.Text, UserJobposition, DataSource, persbtn3.SelectedIndex, FormDataFile, FilespathOut, 5, str, strSub, true, MandoubM, GriDateM);
+                form2.ShowDialog();
+            }
+            else
+            {
+                dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
+                Form5 form5 = new Form5(attendedVC.SelectedIndex, IDNo, EmployeeName, DataSource, FilespathIn, FilespathOut, UserJobposition, GregorianDate, HijriDate);
+                form5.ShowDialog();
+            }
+        }
+
         private void timer2_Tick_1(object sender, EventArgs e)
         { 
             //CultureInfo arSA = new CultureInfo("ar-SA");
@@ -9184,7 +9056,7 @@ namespace PersAhwal
         private void backgroundWorker3_DoWork(object sender, DoWorkEventArgs e)
         {
             fillSamplesCodes(Database);
-            
+            return;
             calcStarTextCollection(DataSource, "نوع_الإجراء", "نوع_المعاملة", "TableCollection", "TableCollectStarText");
             calcStarTextAuth(DataSource, "إجراء_التوكيل", "نوع_التوكيل", "TableAuth", "TableAuthStarText");
             calcStarTextAuthRight(DataSource, "إجراء_التوكيل", "نوع_التوكيل", "TableAuth", "TableAuthRightStarText");

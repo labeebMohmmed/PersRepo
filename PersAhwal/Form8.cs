@@ -260,11 +260,13 @@ namespace PersAhwal
                 if (sentence.Contains("لمن يشهد والله"))
                     lastSentence = sentence;
             }
-            if (!text.Contains("لمن يشهد والله"))
-                text = text + "، وأذنت لمن يشهد والله خير الشاهدين";
-            else 
-                text = text.Replace(lastSentence, "، وأذنت لمن يشهد والله خير الشاهدين");
-
+            if (الموضوع.SelectedIndex == 2)
+            {
+                if (!text.Contains("لمن يشهد والله"))
+                    text = text + "، وأذنت لمن يشهد والله خير الشاهدين";
+                else
+                    text = text.Replace(lastSentence, "، وأذنت لمن يشهد والله خير الشاهدين");
+            }
             try
             {
                 text = text.Replace(authother, "");
@@ -670,7 +672,7 @@ namespace PersAhwal
         {
             if (الموضوع.SelectedIndex == 0)
             {
-                checkStarTextExist(DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_") +"_"+ قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), selectTable);
+                checkStarTextExist(DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), selectTable);
                 getstarText("ColName", قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString(), "ColRight = ''");
             }
             else if (الموضوع.SelectedIndex == 1)

@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormAuth));
             this.labDescribed = new System.Windows.Forms.Button();
             this.btnNext = new System.Windows.Forms.Button();
@@ -173,6 +173,8 @@
             this.Licheck5 = new System.Windows.Forms.Label();
             this.Vicheck5 = new System.Windows.Forms.CheckBox();
             this.LibtnAdd1 = new System.Windows.Forms.Button();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.LibtnAdd2 = new System.Windows.Forms.Button();
             this.LibtnAdd3 = new System.Windows.Forms.Button();
             this.LibtnAdd4 = new System.Windows.Forms.Button();
@@ -234,6 +236,11 @@
             this.button16 = new System.Windows.Forms.Button();
             this.labl5 = new System.Windows.Forms.Label();
             this.button17 = new System.Windows.Forms.Button();
+            this.button7 = new System.Windows.Forms.Button();
+            this.picStarSubAdd = new System.Windows.Forms.PictureBox();
+            this.picStarSub = new System.Windows.Forms.PictureBox();
+            this.pictureBox5 = new System.Windows.Forms.PictureBox();
+            this.fileUpdate = new System.Windows.Forms.PictureBox();
             this.button12 = new System.Windows.Forms.Button();
             this.الحقوق_off = new System.Windows.Forms.ComboBox();
             this.savedRights = new System.Windows.Forms.CheckBox();
@@ -244,30 +251,23 @@
             this.button11 = new System.Windows.Forms.Button();
             this.صفة_الموكل_off = new System.Windows.Forms.ComboBox();
             this.button2 = new System.Windows.Forms.Button();
+            this.picStarRightAdd = new System.Windows.Forms.PictureBox();
+            this.picStarRight = new System.Windows.Forms.PictureBox();
+            this.pictureBox7 = new System.Windows.Forms.PictureBox();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.button8 = new System.Windows.Forms.Button();
             this.التوثيق = new System.Windows.Forms.TextBox();
+            this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.buttonRemove = new System.Windows.Forms.Button();
             this.الحقوق_الممنوحة = new System.Windows.Forms.TextBox();
             this.الاعدادات = new System.Windows.Forms.TextBox();
+            this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.timer3 = new System.Windows.Forms.Timer(this.components);
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.timer4 = new System.Windows.Forms.Timer(this.components);
             this.backgroundWorker2 = new System.ComponentModel.BackgroundWorker();
             this.timer5 = new System.Windows.Forms.Timer(this.components);
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.picStarSubAdd = new System.Windows.Forms.PictureBox();
-            this.picStarSub = new System.Windows.Forms.PictureBox();
-            this.pictureBox5 = new System.Windows.Forms.PictureBox();
-            this.fileUpdate = new System.Windows.Forms.PictureBox();
-            this.picStarRight = new System.Windows.Forms.PictureBox();
-            this.pictureBox7 = new System.Windows.Forms.PictureBox();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.pictureBox4 = new System.Windows.Forms.PictureBox();
-            this.picStarRightAdd = new System.Windows.Forms.PictureBox();
-            this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button7 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.PanelDataGrid.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
@@ -278,23 +278,23 @@
             this.panelRemove.SuspendLayout();
             this.panelAuthOptions.SuspendLayout();
             this.PanelItemsboxes.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.finalPanel.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.panellError.SuspendLayout();
             this.panelAuthRights.SuspendLayout();
             this.PanelButtonInfo.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picStarSubAdd)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picStarSub)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fileUpdate)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picStarRightAdd)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picStarRight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picStarRightAdd)).BeginInit();
             this.flowLayoutPanel3.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -348,23 +348,23 @@
             this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle11;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle10.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle12;
             this.dataGridView1.Location = new System.Drawing.Point(3, 0);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -2099,6 +2099,28 @@
             this.LibtnAdd1.TextChanged += new System.EventHandler(this.LibtnAdd1_TextChanged);
             this.LibtnAdd1.Click += new System.EventHandler(this.LibtnAdd1_Click);
             // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
+            this.pictureBox2.Location = new System.Drawing.Point(95, 174);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(40, 37);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox2.TabIndex = 603;
+            this.pictureBox2.TabStop = false;
+            this.pictureBox2.Visible = false;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(49, 174);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(40, 37);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 602;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.Visible = false;
+            // 
             // LibtnAdd2
             // 
             this.LibtnAdd2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
@@ -2895,6 +2917,63 @@
             this.button17.TabIndex = 637;
             this.button17.UseVisualStyleBackColor = false;
             // 
+            // button7
+            // 
+            this.button7.BackColor = System.Drawing.SystemColors.Control;
+            this.button7.FlatAppearance.BorderSize = 0;
+            this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button7.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button7.Location = new System.Drawing.Point(203, 202);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(20, 35);
+            this.button7.TabIndex = 706;
+            this.button7.UseVisualStyleBackColor = false;
+            // 
+            // picStarSubAdd
+            // 
+            this.picStarSubAdd.Image = global::PersAhwal.Properties.Resources.R;
+            this.picStarSubAdd.Location = new System.Drawing.Point(153, 202);
+            this.picStarSubAdd.Name = "picStarSubAdd";
+            this.picStarSubAdd.Size = new System.Drawing.Size(44, 35);
+            this.picStarSubAdd.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picStarSubAdd.TabIndex = 703;
+            this.picStarSubAdd.TabStop = false;
+            this.picStarSubAdd.Click += new System.EventHandler(this.picStarSubAdd_Click);
+            // 
+            // picStarSub
+            // 
+            this.picStarSub.Image = global::PersAhwal.Properties.Resources.star;
+            this.picStarSub.Location = new System.Drawing.Point(103, 202);
+            this.picStarSub.Name = "picStarSub";
+            this.picStarSub.Size = new System.Drawing.Size(44, 35);
+            this.picStarSub.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picStarSub.TabIndex = 699;
+            this.picStarSub.TabStop = false;
+            this.picStarSub.VisibleChanged += new System.EventHandler(this.picStarSub_VisibleChanged);
+            this.picStarSub.Click += new System.EventHandler(this.picStarSub_Click);
+            // 
+            // pictureBox5
+            // 
+            this.pictureBox5.Image = global::PersAhwal.Properties.Resources.png_clipart_computer_icons_back_icon_cdr_angle;
+            this.pictureBox5.Location = new System.Drawing.Point(53, 202);
+            this.pictureBox5.Name = "pictureBox5";
+            this.pictureBox5.Size = new System.Drawing.Size(44, 35);
+            this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox5.TabIndex = 698;
+            this.pictureBox5.TabStop = false;
+            this.pictureBox5.Click += new System.EventHandler(this.pictureBox5_Click);
+            // 
+            // fileUpdate
+            // 
+            this.fileUpdate.Image = global::PersAhwal.Properties.Resources.retacke;
+            this.fileUpdate.Location = new System.Drawing.Point(3, 202);
+            this.fileUpdate.Name = "fileUpdate";
+            this.fileUpdate.Size = new System.Drawing.Size(44, 35);
+            this.fileUpdate.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.fileUpdate.TabIndex = 688;
+            this.fileUpdate.TabStop = false;
+            this.fileUpdate.Click += new System.EventHandler(this.fileUpdate_Click);
+            // 
             // button12
             // 
             this.button12.BackColor = System.Drawing.SystemColors.Control;
@@ -3038,6 +3117,51 @@
             this.button2.Text = "الحقوق:";
             this.button2.UseVisualStyleBackColor = false;
             // 
+            // picStarRightAdd
+            // 
+            this.picStarRightAdd.Image = global::PersAhwal.Properties.Resources.R;
+            this.picStarRightAdd.Location = new System.Drawing.Point(153, 306);
+            this.picStarRightAdd.Name = "picStarRightAdd";
+            this.picStarRightAdd.Size = new System.Drawing.Size(44, 35);
+            this.picStarRightAdd.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picStarRightAdd.TabIndex = 704;
+            this.picStarRightAdd.TabStop = false;
+            this.picStarRightAdd.Click += new System.EventHandler(this.picStarRightAdd_Click);
+            // 
+            // picStarRight
+            // 
+            this.picStarRight.Image = global::PersAhwal.Properties.Resources.star;
+            this.picStarRight.Location = new System.Drawing.Point(103, 306);
+            this.picStarRight.Name = "picStarRight";
+            this.picStarRight.Size = new System.Drawing.Size(44, 35);
+            this.picStarRight.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picStarRight.TabIndex = 701;
+            this.picStarRight.TabStop = false;
+            this.picStarRight.VisibleChanged += new System.EventHandler(this.picStarRight_VisibleChanged);
+            this.picStarRight.Click += new System.EventHandler(this.picStarRight_Click);
+            // 
+            // pictureBox7
+            // 
+            this.pictureBox7.Image = global::PersAhwal.Properties.Resources.png_clipart_computer_icons_back_icon_cdr_angle;
+            this.pictureBox7.Location = new System.Drawing.Point(53, 306);
+            this.pictureBox7.Name = "pictureBox7";
+            this.pictureBox7.Size = new System.Drawing.Size(44, 35);
+            this.pictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox7.TabIndex = 700;
+            this.pictureBox7.TabStop = false;
+            this.pictureBox7.Click += new System.EventHandler(this.pictureBox7_Click);
+            // 
+            // pictureBox3
+            // 
+            this.pictureBox3.Image = global::PersAhwal.Properties.Resources.retacke;
+            this.pictureBox3.Location = new System.Drawing.Point(3, 306);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(44, 35);
+            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox3.TabIndex = 696;
+            this.pictureBox3.TabStop = false;
+            this.pictureBox3.Click += new System.EventHandler(this.pictureBox3_Click);
+            // 
             // button8
             // 
             this.button8.BackColor = System.Drawing.SystemColors.Control;
@@ -3060,6 +3184,16 @@
             this.التوثيق.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.التوثيق.Size = new System.Drawing.Size(1179, 57);
             this.التوثيق.TabIndex = 690;
+            // 
+            // pictureBox4
+            // 
+            this.pictureBox4.Image = global::PersAhwal.Properties.Resources.retacke;
+            this.pictureBox4.Location = new System.Drawing.Point(7, 568);
+            this.pictureBox4.Name = "pictureBox4";
+            this.pictureBox4.Size = new System.Drawing.Size(44, 35);
+            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox4.TabIndex = 697;
+            this.pictureBox4.TabStop = false;
             // 
             // buttonRemove
             // 
@@ -3097,6 +3231,28 @@
             this.الاعدادات.TabIndex = 687;
             this.الاعدادات.Visible = false;
             // 
+            // flowLayoutPanel3
+            // 
+            this.flowLayoutPanel3.AutoScroll = true;
+            this.flowLayoutPanel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flowLayoutPanel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.flowLayoutPanel3.Controls.Add(this.textBox1);
+            this.flowLayoutPanel3.Location = new System.Drawing.Point(255, 682);
+            this.flowLayoutPanel3.Name = "flowLayoutPanel3";
+            this.flowLayoutPanel3.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(1033, 256);
+            this.flowLayoutPanel3.TabIndex = 705;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox1.Location = new System.Drawing.Point(3, 3);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.textBox1.Size = new System.Drawing.Size(1037, 1000);
+            this.textBox1.TabIndex = 653;
+            // 
             // timer3
             // 
             this.timer3.Enabled = true;
@@ -3120,162 +3276,6 @@
             // 
             this.timer5.Interval = 1000;
             this.timer5.Tick += new System.EventHandler(this.timer5_Tick);
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(95, 174);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(40, 37);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox2.TabIndex = 603;
-            this.pictureBox2.TabStop = false;
-            this.pictureBox2.Visible = false;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(49, 174);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(40, 37);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 602;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.Visible = false;
-            // 
-            // picStarSubAdd
-            // 
-            this.picStarSubAdd.Image = global::PersAhwal.Properties.Resources.R;
-            this.picStarSubAdd.Location = new System.Drawing.Point(153, 202);
-            this.picStarSubAdd.Name = "picStarSubAdd";
-            this.picStarSubAdd.Size = new System.Drawing.Size(44, 35);
-            this.picStarSubAdd.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.picStarSubAdd.TabIndex = 703;
-            this.picStarSubAdd.TabStop = false;
-            this.picStarSubAdd.Click += new System.EventHandler(this.picStarSubAdd_Click);
-            // 
-            // picStarSub
-            // 
-            this.picStarSub.Image = global::PersAhwal.Properties.Resources.star;
-            this.picStarSub.Location = new System.Drawing.Point(103, 202);
-            this.picStarSub.Name = "picStarSub";
-            this.picStarSub.Size = new System.Drawing.Size(44, 35);
-            this.picStarSub.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.picStarSub.TabIndex = 699;
-            this.picStarSub.TabStop = false;
-            this.picStarSub.VisibleChanged += new System.EventHandler(this.picStarSub_VisibleChanged);
-            this.picStarSub.Click += new System.EventHandler(this.picStarSub_Click);
-            // 
-            // pictureBox5
-            // 
-            this.pictureBox5.Image = global::PersAhwal.Properties.Resources.png_clipart_computer_icons_back_icon_cdr_angle;
-            this.pictureBox5.Location = new System.Drawing.Point(53, 202);
-            this.pictureBox5.Name = "pictureBox5";
-            this.pictureBox5.Size = new System.Drawing.Size(44, 35);
-            this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox5.TabIndex = 698;
-            this.pictureBox5.TabStop = false;
-            this.pictureBox5.Click += new System.EventHandler(this.pictureBox5_Click);
-            // 
-            // fileUpdate
-            // 
-            this.fileUpdate.Image = global::PersAhwal.Properties.Resources.retacke;
-            this.fileUpdate.Location = new System.Drawing.Point(3, 202);
-            this.fileUpdate.Name = "fileUpdate";
-            this.fileUpdate.Size = new System.Drawing.Size(44, 35);
-            this.fileUpdate.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.fileUpdate.TabIndex = 688;
-            this.fileUpdate.TabStop = false;
-            this.fileUpdate.Click += new System.EventHandler(this.fileUpdate_Click);
-            // 
-            // picStarRight
-            // 
-            this.picStarRight.Image = global::PersAhwal.Properties.Resources.star;
-            this.picStarRight.Location = new System.Drawing.Point(103, 306);
-            this.picStarRight.Name = "picStarRight";
-            this.picStarRight.Size = new System.Drawing.Size(44, 35);
-            this.picStarRight.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.picStarRight.TabIndex = 701;
-            this.picStarRight.TabStop = false;
-            this.picStarRight.VisibleChanged += new System.EventHandler(this.picStarRight_VisibleChanged);
-            this.picStarRight.Click += new System.EventHandler(this.picStarRight_Click);
-            // 
-            // pictureBox7
-            // 
-            this.pictureBox7.Image = global::PersAhwal.Properties.Resources.png_clipart_computer_icons_back_icon_cdr_angle;
-            this.pictureBox7.Location = new System.Drawing.Point(53, 306);
-            this.pictureBox7.Name = "pictureBox7";
-            this.pictureBox7.Size = new System.Drawing.Size(44, 35);
-            this.pictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox7.TabIndex = 700;
-            this.pictureBox7.TabStop = false;
-            this.pictureBox7.Click += new System.EventHandler(this.pictureBox7_Click);
-            // 
-            // pictureBox3
-            // 
-            this.pictureBox3.Image = global::PersAhwal.Properties.Resources.retacke;
-            this.pictureBox3.Location = new System.Drawing.Point(3, 306);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(44, 35);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox3.TabIndex = 696;
-            this.pictureBox3.TabStop = false;
-            this.pictureBox3.Click += new System.EventHandler(this.pictureBox3_Click);
-            // 
-            // pictureBox4
-            // 
-            this.pictureBox4.Image = global::PersAhwal.Properties.Resources.retacke;
-            this.pictureBox4.Location = new System.Drawing.Point(7, 568);
-            this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(44, 35);
-            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox4.TabIndex = 697;
-            this.pictureBox4.TabStop = false;
-            // 
-            // picStarRightAdd
-            // 
-            this.picStarRightAdd.Image = global::PersAhwal.Properties.Resources.R;
-            this.picStarRightAdd.Location = new System.Drawing.Point(153, 306);
-            this.picStarRightAdd.Name = "picStarRightAdd";
-            this.picStarRightAdd.Size = new System.Drawing.Size(44, 35);
-            this.picStarRightAdd.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.picStarRightAdd.TabIndex = 704;
-            this.picStarRightAdd.TabStop = false;
-            this.picStarRightAdd.Click += new System.EventHandler(this.picStarRightAdd_Click);
-            // 
-            // flowLayoutPanel3
-            // 
-            this.flowLayoutPanel3.AutoScroll = true;
-            this.flowLayoutPanel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.flowLayoutPanel3.Controls.Add(this.textBox1);
-            this.flowLayoutPanel3.Location = new System.Drawing.Point(255, 682);
-            this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(1033, 256);
-            this.flowLayoutPanel3.TabIndex = 705;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(3, 3);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.textBox1.Size = new System.Drawing.Size(1037, 1000);
-            this.textBox1.TabIndex = 653;
-            // 
-            // button7
-            // 
-            this.button7.BackColor = System.Drawing.SystemColors.Control;
-            this.button7.FlatAppearance.BorderSize = 0;
-            this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button7.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button7.Location = new System.Drawing.Point(203, 202);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(20, 35);
-            this.button7.TabIndex = 706;
-            this.button7.UseVisualStyleBackColor = false;
             // 
             // FormAuth
             // 
@@ -3311,6 +3311,8 @@
             this.panelAuthOptions.PerformLayout();
             this.PanelItemsboxes.ResumeLayout(false);
             this.PanelItemsboxes.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.finalPanel.ResumeLayout(false);
             this.finalPanel.PerformLayout();
             this.flowLayoutPanel2.ResumeLayout(false);
@@ -3323,17 +3325,15 @@
             this.panelAuthRights.PerformLayout();
             this.PanelButtonInfo.ResumeLayout(false);
             this.PanelButtonInfo.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picStarSubAdd)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picStarSub)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fileUpdate)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picStarRightAdd)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picStarRight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picStarRightAdd)).EndInit();
             this.flowLayoutPanel3.ResumeLayout(false);
             this.flowLayoutPanel3.PerformLayout();
             this.ResumeLayout(false);

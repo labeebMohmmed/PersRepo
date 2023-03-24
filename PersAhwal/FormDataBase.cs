@@ -91,9 +91,8 @@ namespace PersAhwal
             DataSource57 = dataSource57;
             DataSource = DataSource57;
             cVersion56 = getVersio(DataSource56);
-
-            
-            if (!File.Exists(primeryLink + @"\Personnel\getVersio.txt"))
+           
+             if (!File.Exists(primeryLink + @"\Personnel\getVersio.txt"))
             {
                 dataSourceWrite(primeryLink + @"\Personnel\getVersio.txt", getVersio(DataSource57));
             }
