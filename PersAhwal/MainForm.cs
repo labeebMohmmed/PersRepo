@@ -3725,6 +3725,46 @@ namespace PersAhwal
             return found;
         }
         
+        private string[] getDocs(string search, string doc)
+        {
+            
+            string query = "select * from TableGeneralArch where  رقم_معاملة_القسم=N'" + search + "' and نوع_المستند='" + doc + "'";
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return null; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            Console.WriteLine(query);
+            //MessageBox.Show(query);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            string[] locations = new string[dtbl.Rows.Count];
+            int i = 0;
+            foreach (DataRow reader in dtbl.Rows)
+            {
+                var name = reader["المستند"].ToString();
+                if (name != "")
+                try
+                {
+                    var Data = (byte[])reader["Data1"];
+                    var ext = reader["Extension1"].ToString();
+                        var NewFileName = FilespathOut + @"\" + name.Replace(ext, DateTime.Now.ToString("ddMMyyyyhhmmss")) + ext;              
+                    File.WriteAllBytes(NewFileName, Data);
+                        locations[i] = NewFileName;
+                        i++;
+                }
+                catch (Exception ex) {
+                    
+                }
+            }
+            return locations;
+        }
+        
         private void getAuthGenArch(string search, string doc, Button button)
         {
 
@@ -3790,7 +3830,7 @@ namespace PersAhwal
             string ReportName = DateTime.Now.ToString("mmss");
             string routeDoc = FilespathIn + @"\MessageCap.docx";
             loadMessageNo();
-            ActiveCopy = FilespathOut + "Message"+ ReportName + ".docx";
+            ActiveCopy = FilespathOut + @"\Message"+ ReportName + ".docx";
             if (!File.Exists(ActiveCopy))
             {
                 System.IO.File.Copy(routeDoc, ActiveCopy);
@@ -3863,8 +3903,29 @@ namespace PersAhwal
 
                 oBDoc2.Activate();
                 oBDoc2.Save();
-                //addMessageArch(ActiveCopy, noID);
-                oBMicroWord2.Visible = true;
+                oBDoc2.Close(false, oBMiss2);
+                oBMicroWord2.Quit(false, false);
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(oBMicroWord2);                
+                object doNotSaveChanges = Word.WdSaveOptions.wdSaveChanges;
+
+                string[] locations = getDocs(txDocID.Text, "data2");
+                using (DocX document = DocX.Load(ActiveCopy))
+                {
+                    Paragraph p1 = document.InsertParagraph();
+
+                    // Append content to the Paragraph
+                    for (int x = 0; x < locations.Length; x++)
+                    {
+                        var image = document.AddImage(locations[x]);
+                        // Set Picture Height and Width.
+                        var picture = image.CreatePicture(600, 500);
+
+                        p1.AppendPicture(picture);
+                    }
+                    document.Save();
+                }
+                System.Diagnostics.Process.Start(ActiveCopy);
+                
                 NewMessageNo();
             }
 
@@ -5102,8 +5163,8 @@ namespace PersAhwal
             }
             //MessageBox.Show(DocId);
             CreateMessageWord(applicantName, embassey, DocId, strMessageType, bolApplicantSex, date.Text, HijriDate, attendedVC.Text, comboReceiver.Text);
-            PrintMessage.Visible = false;
-            DetecedForm.Width = 393;
+            //PrintMessage.Visible = false;
+            //DetecedForm.Width = 393;
         }
        
         private string getWifeName(string query)
