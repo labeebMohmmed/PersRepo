@@ -209,6 +209,7 @@ namespace PersAhwal
             Realwork = realwork;
             //checkColumnNames("تقاضي_4");
             GregorianDate = gregorianDate;
+            
             HijriDate = hijriDate;
             Console.WriteLine(1);
 
@@ -3195,7 +3196,7 @@ namespace PersAhwal
 
             if (sqlCon.State == ConnectionState.Closed)
 
-                if (txtSearch.Text != "")
+                if (txDocID.Text != "")
                 {
                     for (TableIndex = 1; TableIndex < 13; TableIndex++)
                     {
@@ -3217,7 +3218,7 @@ namespace PersAhwal
                                 if (TableIndex != 10 && TableIndex != 11)
                                 {
                                     IDNo = Convert.ToInt32(reader["ID"].ToString());
-                                    txtSearch.Text = reader["DocID"].ToString();
+                                    txDocID.Text = reader["DocID"].ToString();
                                     date.Text = reader["GriDate"].ToString();
 
                                     string viewSt = reader["Viewed"].ToString();
@@ -3253,7 +3254,7 @@ namespace PersAhwal
                                         ArchiveSt.BackColor = Color.Red;
                                     }
 
-                                    SearchPanel.Height = 296;
+                                    SearchPanel.Height = 391;
                                 }
                                 switch (TableIndex)
                                 {
@@ -3333,11 +3334,11 @@ namespace PersAhwal
                         else
                         {
                             SearchPanel.Height = 40;
-                            sqlCmd1.Parameters.Add("@رقم_التوكيل", SqlDbType.NVarChar).Value = txtSearch.Text;
+                            sqlCmd1.Parameters.Add("@رقم_التوكيل", SqlDbType.NVarChar).Value = txDocID.Text;
                             var reader = sqlCmd1.ExecuteReader();
                             if (reader.Read())
                             {
-                                authNo = txtSearch.Text;
+                                authNo = txDocID.Text;
                                 IDNo = Convert.ToInt32(reader["ID"].ToString());
                                 applicant.Text = reader["مقدم_الطلب"].ToString();
                                 date.Text = reader["التاريخ_الميلادي"].ToString();
@@ -3367,7 +3368,7 @@ namespace PersAhwal
                                     ArchiveSt.BackColor = Color.Red;
                                 }
 
-                                SearchPanel.Height = 296;
+                                SearchPanel.Height = 391;
                                 break;
                             }
                         }
@@ -3384,7 +3385,7 @@ namespace PersAhwal
 
             if (sqlCon.State == ConnectionState.Closed)
 
-                if (txtSearch.Text != "")
+                if (txDocID.Text != "")
                 {
                     for (TableIndex = 1; TableIndex < 13; TableIndex++)
                     {
@@ -3440,7 +3441,7 @@ namespace PersAhwal
                                         ArchiveSt.BackColor = Color.Red;
                                     }
 
-                                    SearchPanel.Height = 296;
+                                    SearchPanel.Height = 391;
                                 }
                                 switch (TableIndex)
                                 {
@@ -3531,11 +3532,11 @@ namespace PersAhwal
                         else
                         {
                             SearchPanel.Height = 40;
-                            sqlCmd1.Parameters.Add("@رقم_التوكيل", SqlDbType.NVarChar).Value = txtSearch.Text;
+                            sqlCmd1.Parameters.Add("@رقم_التوكيل", SqlDbType.NVarChar).Value = txDocID.Text;
                             var reader = sqlCmd1.ExecuteReader();
                             if (reader.Read())
                             {
-                                authNo = txtSearch.Text;
+                                authNo = txDocID.Text;
                                 IDNo = Convert.ToInt32(reader["ID"].ToString());
                                 applicant.Text = reader["مقدم_الطلب"].ToString();
                                 date.Text = reader["التاريخ_الميلادي"].ToString();
@@ -3564,7 +3565,7 @@ namespace PersAhwal
                                     ArchiveSt.BackColor = Color.Red;
                                 }
 
-                                SearchPanel.Height = 296;
+                                SearchPanel.Height = 391;
                                 break;
                             }
                         }
@@ -3613,7 +3614,7 @@ namespace PersAhwal
 
             if (sqlCon.State == ConnectionState.Closed)
 
-                if (txtSearch.Text != "")
+                if (txDocID.Text != "")
                 {
 
                     if (sqlCon.State == ConnectionState.Closed)
@@ -3635,7 +3636,7 @@ namespace PersAhwal
                         if (column == "رقم_معاملة_القسم")
                             applicant.Text = reader["الاسم"].ToString();
                         else if (column == "الاسم")
-                            txtSearch.Text = reader["رقم_معاملة_القسم"].ToString();
+                            txDocID.Text = reader["رقم_معاملة_القسم"].ToString();
                         date.Text = reader["التاريخ"].ToString();
 
 
@@ -3675,7 +3676,7 @@ namespace PersAhwal
                             Arch2.Enabled = false;
                         }
 
-                        SearchPanel.Height = 296;
+                        SearchPanel.Height = 391;
                     }
 
 
@@ -3783,23 +3784,19 @@ namespace PersAhwal
 
         
         
-        private void CreateMessageWord(string ApplicantName, string EmbassySource, string IqrarNo, string MessageType, string ApplicantSex, string GregorianDate, string HijriDate, string ViseConsul)
+        private void CreateMessageWord(string ApplicantName, string EmbassySource, string IqrarNo, string MessageType, string ApplicantSex, string gregorianDate, string HijriDate, string ViseConsul, string Receiver)
         {
             string ActiveCopy;
             string ReportName = DateTime.Now.ToString("mmss");
             string routeDoc = FilespathIn + @"\MessageCap.docx";
             loadMessageNo();
-            ActiveCopy = FilespathOut + "Message" + ApplicantName + ReportName + ".docx";
+            ActiveCopy = FilespathOut + "Message"+ ReportName + ".docx";
             if (!File.Exists(ActiveCopy))
             {
                 System.IO.File.Copy(routeDoc, ActiveCopy);
                 object oBMiss2 = System.Reflection.Missing.Value;
                 Word.Application oBMicroWord2 = new Word.Application();
-
-
-
                 Word.Document oBDoc2 = oBMicroWord2.Documents.Open(ActiveCopy, oBMiss2);
-
                 Object ParacapitalMessage = "MarkcapitalMessage";
                 Object ParaMApplicantName = "MarkApplicantName";
                 Object ParaMassageIqrarNo = "MarkMassageIqrarNo";
@@ -3810,6 +3807,7 @@ namespace PersAhwal
                 Object ParaDateGre = "MarkDateGre";
                 Object ParaGregorDate2 = "MarkGregorDate2";
                 Object ParaViseConsul1 = "MarkViseConsul1";
+                Object ParaReceiver = "MarkReceiver";
 
 
                 Word.Range BookMApplicantName = oBDoc2.Bookmarks.get_Item(ref ParaMApplicantName).Range;
@@ -3822,18 +3820,21 @@ namespace PersAhwal
                 Word.Range BookGregorDate2 = oBDoc2.Bookmarks.get_Item(ref ParaGregorDate2).Range;
                 Word.Range BookMassageTitle = oBDoc2.Bookmarks.get_Item(ref ParaMassageTitle).Range;
                 Word.Range BookViseConsul1 = oBDoc2.Bookmarks.get_Item(ref ParaViseConsul1).Range;
+                Word.Range BookReceiver = oBDoc2.Bookmarks.get_Item(ref ParaReceiver).Range;
+                
                 string noID = MessageNo + (MessageDocNo + 1).ToString(); 
                 BookMApplicantName.Text = ApplicantName;
                 BookcapitalMessage.Text = EmbassySource;
                 BookMassageNo.Text = noID;
                 BookMassageIqrarNo.Text = IqrarNo;
                 BookApliSex.Text = ApplicantSex;
-                BookDateGre.Text = GregorianDate;
-                BookGregorDate2.Text = GregorianDate;
+                BookDateGre.Text = GregorianDate.Split('-')[1] + "-" + GregorianDate.Split('-')[0] + "-" + GregorianDate.Split('-')[2];
+                BookGregorDate2.Text = gregorianDate.Split('-')[1] + "-" + gregorianDate.Split('-')[0] + "-" + gregorianDate.Split('-')[2];
                 BookHijriDate.Text = HijriDate;
                 BookViseConsul1.Text = ViseConsul;
+                BookReceiver.Text = Receiver;
                 //MessageBox.Show(txtSearch.Text.Split('/')[3]);
-                BookMassageTitle.Text = getDocType(txtSearch.Text.Split('/')[3]);
+                BookMassageTitle.Text = getDocType(txDocID.Text.Split('/')[3]);
 
                 object rangeViseConsul1 = BookViseConsul1;
                 object rangeMApplicantName = BookMApplicantName;
@@ -3845,6 +3846,7 @@ namespace PersAhwal
                 object rangeHijriDate = BookHijriDate;
                 object rangeGregorDate2 = BookGregorDate2;
                 object rangeMassageTitle = BookMassageTitle;
+                object rangeReceiver = BookReceiver;
 
 
                 oBDoc2.Bookmarks.Add("MarkViseConsul1", ref rangeViseConsul1);
@@ -3857,6 +3859,7 @@ namespace PersAhwal
                 oBDoc2.Bookmarks.Add("MarkGregorDate2", ref rangeGregorDate2);
                 oBDoc2.Bookmarks.Add("MarkHijiData", ref rangeHijriDate);
                 oBDoc2.Bookmarks.Add("MarkMassageTitle", ref rangeMassageTitle);
+                oBDoc2.Bookmarks.Add("MarkReceiver", ref rangeReceiver);
 
                 oBDoc2.Activate();
                 oBDoc2.Save();
@@ -3895,7 +3898,7 @@ namespace PersAhwal
         {
             try
             {
-                FillDataGridView(txtSearch.Text);
+                FillDataGridView(txDocID.Text);
             }
             catch (Exception ex)
             {
@@ -3930,7 +3933,7 @@ namespace PersAhwal
         {
             if (!nameNo) return;
             //MessageBox.Show("رقم_معاملة_القسم");
-            FillDatafromGenArch(txtSearch.Text, "رقم_معاملة_القسم");
+            FillDatafromGenArch(txDocID.Text, "رقم_معاملة_القسم");
         }
 
         private void txtSearch_KeyPress_1(object sender, KeyPressEventArgs e)
@@ -3944,7 +3947,7 @@ namespace PersAhwal
         private void Arch1_Click_1(object sender, EventArgs e)
         {
             //OpenFile(IDNo, 1);
-            FillDatafromGenArch(txtSearch.Text, "data1",Arch1);
+            FillDatafromGenArch(txDocID.Text, "data1",Arch1);
         }
 
         private void OpenMessFile(int id, string tableName)
@@ -4673,7 +4676,7 @@ namespace PersAhwal
 
         private void btnSearch_Click_3(object sender, EventArgs e)
         {
-            FillDataGridView(txtSearch.Text);
+            FillDataGridView(txDocID.Text);
         }
 
 
@@ -4801,7 +4804,7 @@ namespace PersAhwal
                 }
                 else {
                     Combtn0.PerformClick();
-                    txtSearch.Text = button.Name.Split('_')[0];
+                    txDocID.Text = button.Name.Split('_')[0];
                     MessageBox.Show("لا توجد بيانات مؤرشفة نهائيا باسم مقدم الطلب ورقم المعاملة");
                 }
             }
@@ -5003,7 +5006,7 @@ namespace PersAhwal
         private void Arch2_Click_2(object sender, EventArgs e)
         {
             //OpenFile(IDNo, 2);
-            FillDatafromGenArch(txtSearch.Text, "data2",Arch2);
+            FillDatafromGenArch(txDocID.Text, "data2",Arch2);
         }
 
         private void button13_Click(object sender, EventArgs e)
@@ -5075,11 +5078,52 @@ namespace PersAhwal
 
         private void PrintMessage_Click_1(object sender, EventArgs e)
         {
+            string embassey = txtEmbassey.Text;
+            string DocId = txDocID.Text;
+            string formType = DocId.Split('/')[3];
+            string applicantName = applicant.Text;
+            if (embassey == "الخرطوم")
+            {
+                embassey = "خارجية الخرطوم";
+            }
+            else 
+                embassey = " سوداني - " + embassey;
 
-            CreateMessageWord(applicant.Text, txtEmbassey.Text, txtSearch.Text, strMessageType, bolApplicantSex, date.Text, HijriDate, attendedVC.Text);
+            if (formType == "15" || formType == "17")
+            {
+                DocId = "(" + DocId.Split('/')[4] + ")";
+                string wife = getWifeName("select اسم_الزوجة from " + getTableList(formType) + " where رقم_المعاملة = N'" + txDocID.Text + "'");
+
+                if (formType == "15" )
+                    applicantName = "الزوج/ " + applicant.Text +" والزوجة/"+ wife;
+                else if ( formType == "17")
+                    applicantName = "المطلق/ " + applicant.Text +" والمطلقة/"+ wife;
+               
+            }
+            //MessageBox.Show(DocId);
+            CreateMessageWord(applicantName, embassey, DocId, strMessageType, bolApplicantSex, date.Text, HijriDate, attendedVC.Text, comboReceiver.Text);
             PrintMessage.Visible = false;
             DetecedForm.Width = 393;
         }
+       
+        private string getWifeName(string query)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            foreach (DataRow row in dtbl.Rows)
+            {
+                //MessageBox.Show(row["docType"].ToString());
+                return row["اسم_الزوجة"].ToString();
+            }
+            return "";
+        }
+        
         private string getDocType(string from)
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
@@ -5092,7 +5136,7 @@ namespace PersAhwal
             sqlCon.Close();
             foreach (DataRow row in dtbl.Rows)
             {
-                MessageBox.Show(row["docType"].ToString());
+                //MessageBox.Show(row["docType"].ToString());
                 return row["docType"].ToString();
             }
             return "";
@@ -6116,10 +6160,8 @@ namespace PersAhwal
         }
 
         private void DetecedForm_Click_1(object sender, EventArgs e)
-        {
-            
-            GoToForm(TableIndex - 1, IDNo);
-            ClearFileds();
+        {            
+            //GoToForm(TableIndex - 1, IDNo);            
         }
 
         private void picVersio_Click(object sender, EventArgs e)
@@ -8991,7 +9033,7 @@ namespace PersAhwal
                     break;
                 case 10:
                     //Form11 form11  = new Form11(FillDataGridView(DataSource, locaIDNo), DataSource, FilespathIn, FilespathOut, EmployeeName, UserJobposition);
-                    Form11 form11 = new Form11(attendedVC.SelectedIndex, locaIDNo, txtSearch.Text, DataSource, DataSource56,FilespathIn, FilespathOut, EmployeeName, UserJobposition, GregorianDate, HijriDate);
+                    Form11 form11 = new Form11(attendedVC.SelectedIndex, locaIDNo, txDocID.Text, DataSource, DataSource56,FilespathIn, FilespathOut, EmployeeName, UserJobposition, GregorianDate, HijriDate);
                     form11.ShowDialog();
                     break;
                 default:
