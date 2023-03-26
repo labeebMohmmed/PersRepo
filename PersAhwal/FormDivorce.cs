@@ -1027,5 +1027,30 @@ namespace PersAhwal
         {
             ColorFulGrid9();
         }
+
+        string lastInput3 = "";
+        private void تاريخ_الايصال_TextChanged(object sender, EventArgs e)
+        {
+            if (تاريخ_الايصال.Text.Length == 10)
+            {
+                int month = Convert.ToInt32(SpecificDigit(تاريخ_الايصال.Text, 1, 2));
+                if (month > 12)
+                {
+                    MessageBox.Show("الشهر يحب أن يكون أقل من 12");
+                    //VitxtDate1.Text = "";
+                    تاريخ_الايصال.Text = SpecificDigit(تاريخ_الايصال.Text, 3, 10);
+                    return;
+                }
+            }
+
+            if (تاريخ_الايصال.Text.Length == 11)
+            {
+                تاريخ_الايصال.Text = lastInput3; return;
+            }
+            if (تاريخ_الايصال.Text.Length == 10) return;
+            if (تاريخ_الايصال.Text.Length == 4) تاريخ_الايصال.Text = "-" + تاريخ_الايصال.Text;
+            else if (تاريخ_الايصال.Text.Length == 7) تاريخ_الايصال.Text = "-" + تاريخ_الايصال.Text;
+            lastInput3 = تاريخ_الايصال.Text;
+        }
     }
 }

@@ -49,9 +49,14 @@ namespace PersAhwal
         {
             InitializeComponent();
             NewFiles = newFiles;
-
+            FilepathOut = filepathOut;
             ServerModelFiles = modelFiles;
             ServerModelForms = modelForms;
+
+            if (!Directory.Exists(archFile + @"\formUpdated"))
+            {
+                System.IO.Directory.CreateDirectory(archFile + @"\formUpdated");
+            }
 
             if (Directory.Exists(@"D:\"))
             {

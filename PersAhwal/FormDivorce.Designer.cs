@@ -44,6 +44,7 @@
             this.btnFileUpload = new System.Windows.Forms.Button();
             this.btnFileDownload = new System.Windows.Forms.Button();
             this.PanelMain = new System.Windows.Forms.Panel();
+            this.labDescribed = new System.Windows.Forms.Button();
             this.المهنة = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.طريقة_الطلب = new System.Windows.Forms.ComboBox();
@@ -103,8 +104,9 @@
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.button7 = new System.Windows.Forms.Button();
             this.button8 = new System.Windows.Forms.Button();
-            this.labDescribed = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.تاريخ_الايصال = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.PanelFiles.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView6)).BeginInit();
             this.PanelMain.SuspendLayout();
@@ -258,6 +260,8 @@
             // 
             // PanelMain
             // 
+            this.PanelMain.Controls.Add(this.تاريخ_الايصال);
+            this.PanelMain.Controls.Add(this.label3);
             this.PanelMain.Controls.Add(this.labDescribed);
             this.PanelMain.Controls.Add(this.المهنة);
             this.PanelMain.Controls.Add(this.label6);
@@ -311,6 +315,20 @@
             this.PanelMain.TabIndex = 698;
             this.PanelMain.Visible = false;
             this.PanelMain.Paint += new System.Windows.Forms.PaintEventHandler(this.PanelMain_Paint);
+            // 
+            // labDescribed
+            // 
+            this.labDescribed.BackColor = System.Drawing.SystemColors.Control;
+            this.labDescribed.FlatAppearance.BorderSize = 0;
+            this.labDescribed.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.labDescribed.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labDescribed.Location = new System.Drawing.Point(191, 651);
+            this.labDescribed.Name = "labDescribed";
+            this.labDescribed.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.labDescribed.Size = new System.Drawing.Size(989, 35);
+            this.labDescribed.TabIndex = 963;
+            this.labDescribed.Text = "الملخص";
+            this.labDescribed.UseVisualStyleBackColor = false;
             // 
             // المهنة
             // 
@@ -993,24 +1011,31 @@
             this.button8.UseVisualStyleBackColor = true;
             this.button8.Visible = false;
             // 
-            // labDescribed
-            // 
-            this.labDescribed.BackColor = System.Drawing.SystemColors.Control;
-            this.labDescribed.FlatAppearance.BorderSize = 0;
-            this.labDescribed.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.labDescribed.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labDescribed.Location = new System.Drawing.Point(191, 651);
-            this.labDescribed.Name = "labDescribed";
-            this.labDescribed.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.labDescribed.Size = new System.Drawing.Size(989, 35);
-            this.labDescribed.TabIndex = 963;
-            this.labDescribed.Text = "الملخص";
-            this.labDescribed.UseVisualStyleBackColor = false;
-            // 
             // timer1
             // 
             this.timer1.Enabled = true;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // تاريخ_الايصال
+            // 
+            this.تاريخ_الايصال.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.تاريخ_الايصال.Location = new System.Drawing.Point(948, 254);
+            this.تاريخ_الايصال.Name = "تاريخ_الايصال";
+            this.تاريخ_الايصال.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.تاريخ_الايصال.Size = new System.Drawing.Size(259, 35);
+            this.تاريخ_الايصال.TabIndex = 964;
+            this.تاريخ_الايصال.TextChanged += new System.EventHandler(this.تاريخ_الايصال_TextChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(1225, 257);
+            this.label3.Name = "label3";
+            this.label3.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.label3.Size = new System.Drawing.Size(87, 27);
+            this.label3.TabIndex = 965;
+            this.label3.Text = "تاريخ الايصال:";
             // 
             // FormDivorce
             // 
@@ -1116,5 +1141,7 @@
         private System.Windows.Forms.TextBox المهنة;
         private System.Windows.Forms.Button labDescribed;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.TextBox تاريخ_الايصال;
+        private System.Windows.Forms.Label label3;
     }
 }

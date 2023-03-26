@@ -43,6 +43,7 @@ namespace PersAhwal
 
     public partial class MainForm : Form
     {
+        string messageID = "";
         string AuthTitle = "";
         DataTable dataRowTable;
         static string[] queryNewYear = new string[15];
@@ -209,7 +210,9 @@ namespace PersAhwal
             Realwork = realwork;
             //checkColumnNames("تقاضي_4");
             GregorianDate = gregorianDate;
-            
+            string docID = DocIDGenerator("1");
+            //MessageBox.Show(docID);
+
             HijriDate = hijriDate;
             Console.WriteLine(1);
 
@@ -219,12 +222,14 @@ namespace PersAhwal
             {
 
                 //label2.Text = "قسم الأحوال الشخصية والمعاملات القنصلية";
-                panel2.BackColor = System.Drawing.SystemColors.ButtonShadow;
+                panel2.BackColor = label2.BackColor = ConsulateEmployee.BackColor = System.Drawing.SystemColors.ButtonShadow;
+                
                 ReportType.Items.Add("تقرير المأذونية الشهري");
 
             }
             else if (Server == "56")
             {
+                label2.BackColor = ConsulateEmployee.BackColor = System.Drawing.SystemColors.ActiveCaption;
                 DataSource = dataSource56;
                 this.Name = "القائمة الرئيسة نافذة قسم شؤون الرعايا";
                 //label2.Text = "نافذة قسم شؤون الرعايا";
@@ -2487,10 +2492,8 @@ namespace PersAhwal
                 string[] tableName = new string[2] { "قسيمة زواج", "إشهاد اثبات طلاق" };
                 for (int x = 0; x < 2; x++)
                 {
-                    string query =
-                        "select ID, اسم_الزوج as الاسم, رقم_المعاملة as رقم_معاملة_القسم from " + table[x] + " " +
-                        "where DATEPART (MONTH, التاريخ_الميلادي) = " + (Convert.ToInt32(month) + 1).ToString() + " and DATEPART (YEAR, التاريخ_الميلادي) = " + year + "and رقم_المعاملة in (select رقم_معاملة_القسم from TableGeneralArch " +
-                        "where docTable = N'" + table[x] + "' and المستند like N'الإيصال المالي%')";
+                    string query = "select ID, اسم_الزوج as الاسم, رقم_المعاملة as رقم_معاملة_القسم " +
+                        "from " + table[x] + " where DATEPART (MONTH, تاريخ_الايصال) = " + (Convert.ToInt32(month) + 1).ToString()+" and DATEPART (YEAR, تاريخ_الايصال) = "+ year+" and اسم_الزوج is not null and اسم_الزوج <> ''";
 
                     string column = "@" + items;
                     DataTable dataRowTable = new DataTable();
@@ -2595,10 +2598,8 @@ namespace PersAhwal
                 string[] tableName = new string[2] { "قسيمة زواج", "إشهاد إثبات طلاق" };
                 for (int x = 0; x < 2; x++)
                 {
-                    string query =
-                        "select ID, اسم_الزوج as الاسم, اسم_الزوجة , رقم_المعاملة as رقم_معاملة_القسم from " + table[x] + " " 
-                        +"where DATEPART (MONTH, التاريخ_الميلادي) = " + (Convert.ToInt32(month) + 1).ToString() + " and DATEPART (YEAR, التاريخ_الميلادي) = " + year + "and  رقم_المعاملة in (select رقم_معاملة_القسم from TableGeneralArch " +
-                        "where docTable = N'" + table[x] + "' and المستند like N'الإيصال المالي%')";
+                    string query = "select ID, اسم_الزوج as الاسم, رقم_المعاملة as رقم_معاملة_القسم " +
+                        "from " + table[x] + " where DATEPART (MONTH, تاريخ_الايصال) = " + (Convert.ToInt32(month) + 1).ToString() + " and DATEPART (YEAR, تاريخ_الايصال) = " + year + " and اسم_الزوج is not null and اسم_الزوج <> ''";
 
                     string column = "@" + items;
                     DataTable dataRowTable = new DataTable();
@@ -3824,7 +3825,7 @@ namespace PersAhwal
 
         
         
-        private void CreateMessageWord(string ApplicantName, string EmbassySource, string IqrarNo, string MessageType, string ApplicantSex, string gregorianDate, string HijriDate, string ViseConsul, string Receiver)
+        private string CreateMessageWord(string ApplicantName, string EmbassySource, string IqrarNo, string MessageType, string ApplicantSex, string gregorianDate, string HijriDate, string ViseConsul, string Receiver)
         {
             string ActiveCopy;
             string ReportName = DateTime.Now.ToString("mmss");
@@ -3848,6 +3849,7 @@ namespace PersAhwal
                 Object ParaGregorDate2 = "MarkGregorDate2";
                 Object ParaViseConsul1 = "MarkViseConsul1";
                 Object ParaReceiver = "MarkReceiver";
+                Object ParaReference = "MarkReference";
 
 
                 Word.Range BookMApplicantName = oBDoc2.Bookmarks.get_Item(ref ParaMApplicantName).Range;
@@ -3861,11 +3863,11 @@ namespace PersAhwal
                 Word.Range BookMassageTitle = oBDoc2.Bookmarks.get_Item(ref ParaMassageTitle).Range;
                 Word.Range BookViseConsul1 = oBDoc2.Bookmarks.get_Item(ref ParaViseConsul1).Range;
                 Word.Range BookReceiver = oBDoc2.Bookmarks.get_Item(ref ParaReceiver).Range;
+                Word.Range BookReference = oBDoc2.Bookmarks.get_Item(ref ParaReference).Range;
                 
-                string noID = MessageNo + (MessageDocNo + 1).ToString(); 
                 BookMApplicantName.Text = ApplicantName;
                 BookcapitalMessage.Text = EmbassySource;
-                BookMassageNo.Text = noID;
+                BookMassageNo.Text = messageID;
                 BookMassageIqrarNo.Text = IqrarNo;
                 BookApliSex.Text = ApplicantSex;
                 BookDateGre.Text = GregorianDate.Split('-')[1] + "-" + GregorianDate.Split('-')[0] + "-" + GregorianDate.Split('-')[2];
@@ -3873,6 +3875,9 @@ namespace PersAhwal
                 BookHijriDate.Text = HijriDate;
                 BookViseConsul1.Text = ViseConsul;
                 BookReceiver.Text = Receiver;
+                if (رقم_البرقية.Text != "" && تاريخ_البرقية.Text != "")
+                    BookReference.Text = "بالإشارة إلى برقيتكم لنا بالرقم " + رقم_البرقية.Text + " بتاريخ " + تاريخ_البرقية.Text + "، ";
+                else BookReference.Text = "";
                 //MessageBox.Show(txtSearch.Text.Split('/')[3]);
                 BookMassageTitle.Text = getDocType(txDocID.Text.Split('/')[3]);
 
@@ -3887,6 +3892,7 @@ namespace PersAhwal
                 object rangeGregorDate2 = BookGregorDate2;
                 object rangeMassageTitle = BookMassageTitle;
                 object rangeReceiver = BookReceiver;
+                object rangeReference = BookReference;
 
 
                 oBDoc2.Bookmarks.Add("MarkViseConsul1", ref rangeViseConsul1);
@@ -3900,6 +3906,7 @@ namespace PersAhwal
                 oBDoc2.Bookmarks.Add("MarkHijiData", ref rangeHijriDate);
                 oBDoc2.Bookmarks.Add("MarkMassageTitle", ref rangeMassageTitle);
                 oBDoc2.Bookmarks.Add("MarkReceiver", ref rangeReceiver);
+                oBDoc2.Bookmarks.Add("MarkReference", ref rangeReference);
 
                 oBDoc2.Activate();
                 oBDoc2.Save();
@@ -3923,12 +3930,9 @@ namespace PersAhwal
                         p1.AppendPicture(picture);
                     }
                     document.Save();
-                }
-                System.Diagnostics.Process.Start(ActiveCopy);
-                
-                NewMessageNo();
+                }                
             }
-
+            return ActiveCopy;
         }
 
         private void NewMessageNo()
@@ -4428,12 +4432,12 @@ namespace PersAhwal
         //    
 
         //}
-        private string DocIDGenerator()
-        {
-            string formtype = "21";
+        private string DocIDGenerator(string formtype)
+        {            
             string year = DateTime.Now.Year.ToString().Replace("20", "");
-            string query = "select max(cast (right(رقم_معاملة_القسم,LEN(رقم_معاملة_القسم) - 15) as int)) as newDocID from TableGeneralArch where رقم_معاملة_القسم like N'ق س ج/80/" + year + "/" + formtype + "%'";
-            
+            string diff = (14 + (formtype.Length - 1)).ToString();
+            string query = "select max(cast (right(رقم_معاملة_القسم,LEN(رقم_معاملة_القسم) - "+ diff+") as int)) as newDocID from TableGeneralArch where رقم_معاملة_القسم like N'ق س ج/80/" + year+"/"+ formtype+"/%'";
+            Console.WriteLine(query);
             return "ق س ج/80/" + year + "/" + formtype + "/" + getUniqueID(query);
         }
         private string getUniqueID(string query)
@@ -4749,7 +4753,7 @@ namespace PersAhwal
                 flowLayoutPanel1.Visible = SearchPanel.Visible = true;
                 panel4.Visible = false;
                 PanelMandounb.Visible = fileManagePanel2.Visible = ReportPanel.Visible = false;
-                
+                txDocID.Select();
             }
             else SearchPanel.Visible = false;
         }
@@ -5139,7 +5143,22 @@ namespace PersAhwal
 
         private void PrintMessage_Click_1(object sender, EventArgs e)
         {
-            string embassey = txtEmbassey.Text;
+            if (!رقم_البرقية.Visible)
+            {
+                var selectedOption = MessageBox.Show("", "الاشارة إلى برقية؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (selectedOption == DialogResult.Yes)
+                {
+                    SearchPanel.Height = 476;
+                    رقم_البرقية.Visible = تاريخ_البرقية.Visible = button7.Visible = button6.Visible = true;
+                    return;
+                }
+                else if (selectedOption == DialogResult.No)
+                {
+                    SearchPanel.Height = 389;
+                    رقم_البرقية.Visible = تاريخ_البرقية.Visible = button7.Visible = button6.Visible = false;
+                }
+            }
+                string embassey = txtEmbassey.Text;
             string DocId = txDocID.Text;
             string formType = DocId.Split('/')[3];
             string applicantName = applicant.Text;
@@ -5156,17 +5175,56 @@ namespace PersAhwal
                 string wife = getWifeName("select اسم_الزوجة from " + getTableList(formType) + " where رقم_المعاملة = N'" + txDocID.Text + "'");
 
                 if (formType == "15" )
-                    applicantName = "الزوج/ " + applicant.Text +" والزوجة/"+ wife;
+                    applicantName = "الزوج/ " + applicant.Text +" والزوجة/ "+ wife;
                 else if ( formType == "17")
-                    applicantName = "المطلق/ " + applicant.Text +" والمطلقة/"+ wife;
+                    applicantName = "المطلق/ " + applicant.Text +" والمطلقة/ "+ wife;
                
             }
             //MessageBox.Show(DocId);
-            CreateMessageWord(applicantName, embassey, DocId, strMessageType, bolApplicantSex, date.Text, HijriDate, attendedVC.Text, comboReceiver.Text);
-            //PrintMessage.Visible = false;
-            //DetecedForm.Width = 393;
+            messageID = DocIDGenerator("1");
+            string location = CreateMessageWord(applicantName, embassey, DocId, strMessageType, bolApplicantSex, date.Text, HijriDate, attendedVC.Text, comboReceiver.Text);
+            if (location != "")
+            {
+                using (Stream stream = File.OpenRead(location))
+                {
+                    byte[] buffer1 = new byte[stream.Length];
+                    stream.Read(buffer1, 0, buffer1.Length);
+                    var fileinfo1 = new FileInfo(location);
+                    string extn1 = fileinfo1.Extension;
+                    string DocName1 = fileinfo1.Name;
+                    
+                    //MessageBox.Show(docID);
+                    insertmessInfo(IDNo.ToString(), GregorianDate, ConsulateEmployee.Text, DataSource, extn1, DocName1, messageID, "data1", buffer1, getTableList(formType), applicant.Text);
+                    //Console.WriteLine(docid);
+                }
+            }
+            System.Diagnostics.Process.Start(location);
         }
-       
+
+        private void insertmessInfo(string id, string date, string employee, string dataSource, string extn1, string DocName1, string messNo, string docType, byte[] buffer1, string table, string name)
+        {
+            string query = "INSERT INTO TableGeneralArch (Data1,Extension1,نوع_المستند,رقم_معاملة_القسم,المستند,الموظف,التاريخ,رقم_المرجع,docTable,الاسم) values (@Data1,@Extension1,@نوع_المستند,@رقم_معاملة_القسم,@المستند,@الموظف,@التاريخ,@رقم_المرجع,@docTable,@الاسم)";
+
+            //MessageBox.Show(query);
+                SqlConnection sqlCon = new SqlConnection(dataSource.Replace("AhwalDataBase", "ArchFilesDB"));
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.Parameters.AddWithValue("@رقم_معاملة_القسم", messNo);
+            //MessageBox.Show(messNo);
+            sqlCmd.Parameters.AddWithValue("@نوع_المستند", docType);
+            sqlCmd.Parameters.AddWithValue("@الموظف", employee);
+            sqlCmd.Parameters.AddWithValue("@التاريخ", date);
+            sqlCmd.Parameters.AddWithValue("@رقم_المرجع", id);
+            sqlCmd.Parameters.AddWithValue("@الاسم", name);
+            sqlCmd.Parameters.Add("@Data1", SqlDbType.VarBinary).Value = buffer1;
+            sqlCmd.Parameters.Add("@Extension1", SqlDbType.Char).Value = extn1;
+            sqlCmd.Parameters.Add("@المستند", SqlDbType.NVarChar).Value = DocName1;
+            sqlCmd.Parameters.Add("@docTable", SqlDbType.NVarChar).Value = table;
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
+        }
         private string getWifeName(string query)
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
@@ -8768,7 +8826,7 @@ namespace PersAhwal
 
         private void button2_Click(object sender, EventArgs e)
         {
-            Form8 form8 = new Form8(DataSource);
+            Form8 form8 = new Form8(DataSource, ArchFile);
             form8.ShowDialog();
         }
 
