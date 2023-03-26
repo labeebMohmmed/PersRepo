@@ -1015,14 +1015,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="PersAhwal.exe" size="7829504">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="PersAhwal.exe" size="7830528">
       <assemblyIdentity name="PersAhwal" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>EIzwXdIU24lBeq4pmtffAYdS4unI06hvTE5k6SwtzZ0=</dsig:DigestValue>
+        <dsig:DigestValue>MdlMNGRTI0bQL50wpffERcUtg2Yhmq4Jnd7IqLy5xFM=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -1034,7 +1034,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>btNsLg332RMrSIr9bKZzOz8gUp0TxtxHD39QtgSZi2I=</dsig:DigestValue>
+        <dsig:DigestValue>/y6UQwoN1Fgc72CCmMdPnXqe+d26xENybg/drTBsp1Y=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

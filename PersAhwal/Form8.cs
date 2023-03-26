@@ -18,6 +18,7 @@ using DocumentFormat.OpenXml.Office2010.Excel;
 using DocumentFormat.OpenXml.Drawing;
 using ZXing;
 using DocumentFormat.OpenXml.Office2013.Excel;
+using System.Data.SqlTypes;
 
 namespace PersAhwal
 {
@@ -50,6 +51,7 @@ namespace PersAhwal
             setlistFiels();
             الموضوع.SelectedIndex = otherPro.SelectedIndex = 0;
             الموضوع.Select();
+            altColName();
         }
 
         private void setCheclList()
@@ -147,6 +149,48 @@ namespace PersAhwal
             //MessageBox.Show(table+" - "+ colName);
             return false;
 
+        }
+        
+        private void altColName()
+        {
+            fileComboBox(قائمة_النصوص_العامة, DataSource, "EnglishGenIgrar", "TableListCombo", true);
+
+            string query = "select ID, right(altColName,len(altColName)-len(Substring(altColName,0,CharIndex('-',altColName)))-1) as col ,Substring(altColName,0,CharIndex('-',altColName)) as subCol , ColName from TableAddContext  where ColRight = '' and Lang = N'الانجليزية'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return ; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+
+            foreach (DataRow row in dtbl.Rows)
+            {
+                try
+                {
+                    string column = قائمة_النصوص_العامة.Items[Convert.ToInt32(row["col"].ToString())].ToString();
+                    updatealtColName(row["ID"].ToString(), column, row["subCol"].ToString());
+                }catch (Exception ex) { }  
+            }
+            
+        }
+
+        
+        
+        private void updatealtColName(string id,string col, string subCol)
+        {
+            string query = "update TableAddContext set altColName = N'"+ col +"-"+subCol +"' where ID = " + id;
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            sqlCmd.CommandType = CommandType.Text;            
+            sqlCmd.ExecuteNonQuery();
         }
 
 
