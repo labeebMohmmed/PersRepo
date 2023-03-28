@@ -51,7 +51,7 @@ namespace PersAhwal
             setlistFiels();
             الموضوع.SelectedIndex = otherPro.SelectedIndex = 0;
             الموضوع.Select();
-            altColName();
+            //altColName();
         }
 
         private void setCheclList()
@@ -78,16 +78,16 @@ namespace PersAhwal
             listFiels[8] = "تاريخ3";
             listFiels[9] = "تاريخ4";
             listFiels[10] = "تاريخ5";
-            listFiels[11] = "خيار متعدد1";
-            listFiels[12] = "خيار متعدد2";
-            listFiels[13] = "خيار متعدد3";
-            listFiels[14] = "خيار متعدد4";
-            listFiels[15] = "خيار متعدد5";
-            listFiels[16] = "خيار ثنائي1";
-            listFiels[17] = "خيار ثنائي2";
-            listFiels[18] = "خيار ثنائي3";
-            listFiels[19] = "خيار ثنائي4";
-            listFiels[20] = "خيار ثنائي5";
+            listFiels[11] = "خ_متعدد1";
+            listFiels[12] = "خ_متعدد2";
+            listFiels[13] = "خ_متعدد3";
+            listFiels[14] = "خ_متعدد4";
+            listFiels[15] = "خ_متعدد5";
+            listFiels[16] = "خ_ثنائي1";
+            listFiels[17] = "خ_ثنائي2";
+            listFiels[18] = "خ_ثنائي3";
+            listFiels[19] = "خ_ثنائي4";
+            listFiels[20] = "خ_ثنائي5";
             listFiels[21] = "حقل7";
             listFiels[22] = "حقل8";
             listFiels[23] = "حقل9";
@@ -153,9 +153,12 @@ namespace PersAhwal
         
         private void altColName()
         {
+            //fileComboBox(قائمة_النصوص_العامة, DataSource, "ArabicGenIgrar", "TableListCombo", true);
+            //fileComboBox(قائمة_النصوص_العامة, DataSource, "EnglishGenIgrar", "TableListCombo", false);
+
             fileComboBox(قائمة_النصوص_العامة, DataSource, "EnglishGenIgrar", "TableListCombo", true);
 
-            string query = "select ID, right(altColName,len(altColName)-len(Substring(altColName,0,CharIndex('-',altColName)))-1) as col ,Substring(altColName,0,CharIndex('-',altColName)) as subCol , ColName from TableAddContext  where ColRight = '' and Lang = N'الانجليزية'";
+            string query = "select ID, right(ColName,len(ColName)-len(Substring(ColName,0,CharIndex('-',ColName)))-1) as col ,Substring(ColName,0,CharIndex('-',ColName)) as subCol , ColName from TableAddContext  where ColRight = '' and Lang = N'الانجليزية'";
             SqlConnection sqlCon = new SqlConnection(DataSource);
             try
             {
@@ -174,7 +177,8 @@ namespace PersAhwal
                 try
                 {
                     string column = قائمة_النصوص_العامة.Items[Convert.ToInt32(row["col"].ToString())].ToString();
-                    updatealtColName(row["ID"].ToString(), column, row["subCol"].ToString());
+                    //MessageBox.Show(column);
+                    updatealtColName(row["ID"].ToString(), column);
                 }catch (Exception ex) { }  
             }
             
@@ -182,9 +186,9 @@ namespace PersAhwal
 
         
         
-        private void updatealtColName(string id,string col, string subCol)
+        private void updatealtColName(string id,string col)
         {
-            string query = "update TableAddContext set altColName = N'"+ col +"-"+subCol +"' where ID = " + id;
+            string query = "update TableAddContext set altColName = N'"+ col +"' where ID = " + id;
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
@@ -243,21 +247,48 @@ namespace PersAhwal
             return false;
 
         }
-
-
-        private void fileComboBox(ComboBox combbox, string source, string comlumnName, string tableName, bool clear)
+        
+        
+        private bool checkRowExist(string dataSource, string col, string subTable)
         {
+            string query = "SELECT ID FROM TableAddContext where altColName = N'" + col + "' and altSubColName=N'" + subTable + "'";
+            SqlConnection sqlCon = new SqlConnection(dataSource);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return false; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            Console.WriteLine("checkSubColExist " + query);
+            //MessageBox.Show(dtbl.Rows.Count.ToString());
+            if (dtbl.Rows.Count > 0)
+            {
+                
+                return true;
+            }
 
-            if (clear) combbox.Items.Clear();
+            return false;
+
+        }
+
+
+        private void fileComboBox(ComboBox combbox, string source, string comlumnName, string right, bool clear)
+        {
+            combbox.Items.Clear();
             using (SqlConnection saConn = new SqlConnection(source))
             {
                 saConn.Open();
 
-                string query = "select " + comlumnName + " from " + tableName;
+                string query = "select distinct "+ comlumnName+" from TableAddContext where "+ comlumnName+" is not null and ColRight "+ right+" order by "+ comlumnName+" asc";
                 SqlCommand cmd = new SqlCommand(query, saConn);
                 cmd.CommandType = CommandType.Text;
 
-
+                Console.WriteLine(query);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -267,15 +298,36 @@ namespace PersAhwal
 
                     foreach (DataRow dataRow in table.Rows)
                     {
-                        if (dataRow[comlumnName].ToString() != "")
-                        {
-                            bool found = false;
-                            for (int x = 0; x < combbox.Items.Count; x++)
-                            {
-                                if (combbox.Items[x].ToString() == dataRow[comlumnName].ToString()) found = true;
-                            }
-                            if (!found) combbox.Items.Add(dataRow[comlumnName].ToString());
-                        }
+                        combbox.Items.Add(dataRow[comlumnName].ToString());                        
+                    }
+                }
+                catch (Exception ex) { }
+                saConn.Close();
+            }
+        }
+        
+        private void fileComboBoxSub(ComboBox combbox, string source, string comlumnName, string SubComlumnName, string right, bool clear)
+        {
+            combbox.Items.Clear();
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                saConn.Open();
+
+                string query = "select distinct "+ SubComlumnName + " from TableAddContext where "+ SubComlumnName + " is not null and "+ comlumnName + " =N'"+ قائمة_النصوص_العامة .Text+ "'and ColRight " + right+" order by "+ SubComlumnName + " asc";
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.CommandType = CommandType.Text;
+
+                Console.WriteLine(query);
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    DataTable table = new DataTable();
+                    SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                    dataAdapter.Fill(table);
+
+                    foreach (DataRow dataRow in table.Rows)
+                    {
+                        combbox.Items.Add(dataRow[SubComlumnName].ToString());                        
                     }
                 }
                 catch (Exception ex) { }
@@ -285,10 +337,8 @@ namespace PersAhwal
 
         private void Form8_Load(object sender, EventArgs e)
         {
-            //checkColExist(DataSource, selectTable);
-            fileComboBox(قائمة_النصوص_العامة, DataSource, "ArabicGenIgrar", "TableListCombo", true);
-            fileComboBox(قائمة_النصوص_العامة, DataSource, "EnglishGenIgrar", "TableListCombo", false);
-            fileComboBox(الحقوق, DataSource, "ColRight", "TableAddContext", true);
+            fileComboBox(قائمة_النصوص_العامة, DataSource, "altColName", "=''", false);
+            fileComboBox(الحقوق, DataSource, "ColRight", "<> ''", true);
         }
 
         private void AppType_CheckedChanged(object sender, EventArgs e)
@@ -297,15 +347,13 @@ namespace PersAhwal
             {
 
                 قائمة_النصوص_العامة.Items.Clear();
-                fileComboBox(قائمة_النصوص_العامة, DataSource, "ArabicGenIgrar", "TableListCombo", true);
-                fileComboBox(قائمة_النصوص_العامة, DataSource, "EnglishGenIgrar", "TableListCombo", false);
-                //checkColExist(DataSource, selectTable);
+                fileComboBox(قائمة_النصوص_العامة, DataSource, "altColName", "=''", true);
                 الحقوق_lab.Visible = الحقوق.Visible = false;
             }
             else if (الموضوع.SelectedIndex == 1)
             {
                 قائمة_النصوص_العامة.Items.Clear();
-                fileComboBox(قائمة_النصوص_العامة, DataSource, "AuthTypes", "TableListCombo", true);
+                fileComboBox(قائمة_النصوص_العامة, DataSource, "altColName", "<>''", true);
                 الحقوق_lab.Visible = الحقوق.Visible = true;
                 //checkColExist(DataSource, selectTable);
             }
@@ -313,7 +361,7 @@ namespace PersAhwal
             else if (الموضوع.SelectedIndex == 2)
             {
                 قائمة_النصوص_العامة.Items.Clear();
-                fileComboBox(قائمة_النصوص_العامة, DataSource, "AuthTypes", "TableListCombo", true);
+                fileComboBox(قائمة_النصوص_العامة, DataSource, "altColName", "<>''", true);
                 الحقوق_lab.Visible = الحقوق.Visible = true;
                 //checkColExist(DataSource, selectTable);
             }
@@ -444,25 +492,25 @@ namespace PersAhwal
             if (text.Contains("t0"))
                 text = text.Replace("t0", "حقل0");
             if (text.Contains("c1"))
-                text = text.Replace("c1", "خيار ثنائي1");
+                text = text.Replace("c1", "خ_ثنائي1");
             if (text.Contains("c2"))
-                text = text.Replace("c2", "خيار ثنائي2");
+                text = text.Replace("c2", "خ_ثنائي2");
             if (text.Contains("c3"))
-                text = text.Replace("c3", "خيار ثنائي3");
+                text = text.Replace("c3", "خ_ثنائي3");
             if (text.Contains("c4"))
-                text = text.Replace("c4", "خيار ثنائي4");
+                text = text.Replace("c4", "خ_ثنائي4");
             if (text.Contains("c5"))
-                text = text.Replace("c5", "خيار ثنائي5");
+                text = text.Replace("c5", "خ_ثنائي5");
             if (text.Contains("m1"))
-                text = text.Replace("m1", "خيار متعدد1");
+                text = text.Replace("m1", "خ_متعدد1");
             if (text.Contains("m2"))
-                text = text.Replace("m2", "خيار متعدد2");
+                text = text.Replace("m2", "خ_متعدد2");
             if (text.Contains("m3"))
-                text = text.Replace("m3", "خيار متعدد3");
+                text = text.Replace("m3", "خ_متعدد3");
             if (text.Contains("m4"))
-                text = text.Replace("m4", "خيار متعدد4");
+                text = text.Replace("m4", "خ_متعدد4");
             if (text.Contains("m5"))
-                text = text.Replace("m5", "خيار متعدد5");
+                text = text.Replace("m5", "خ_متعدد5");
             if (text.Contains("n1"))
                 text = text.Replace("n1", "تاريخ1");
             if (text.Contains("n2"))
@@ -666,24 +714,27 @@ namespace PersAhwal
 
         private void قائمة_النصوص_SelectedIndexChanged(object sender, EventArgs e)
         {
-            newFillComboBox1(قائمة_النصوص_الفرعية, DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_"));
-
+            //newFillComboBox1(قائمة_النصوص_الفرعية, DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_"));
+            string right = "= ''";
+            if(الموضوع.SelectedIndex != 0)
+                right = "<> ''";
+            fileComboBoxSub(قائمة_النصوص_الفرعية, DataSource, "altColName", "altSubColName", right, true);
             if (قائمة_النصوص_العامة.Text != "" && قائمة_النصوص_الفرعية.Text != "")
             {
                 if (الموضوع.SelectedIndex == 0)
                 {
                     checkStarTextExist(DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), selectTable);
-                    getstarText("ColName", قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString(), "ColRight = ''");
+                    starIndex = getstarText(قائمة_النصوص_الفرعية.Text, قائمة_النصوص_العامة.SelectedIndex.ToString(), "starText");
                 }
                 else if (الموضوع.SelectedIndex == 1)
                 {
                     checkStarTextExist(DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), selectTable);
-                    getstarTextSub("ColName", قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString(), "ColRight <> ''");
+                    starIndexSub = getstarText(قائمة_النصوص_الفرعية.Text, قائمة_النصوص_العامة.SelectedIndex.ToString(), "starTextSub");
                 }
                 else if (الموضوع.SelectedIndex == 2)
                 {
                     checkStarTextExist(DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), selectTable);
-                    getstarText("ColName", قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString(), "ColRight <> ''");
+                    starIndex = getstarText(قائمة_النصوص_الفرعية.Text, قائمة_النصوص_العامة.SelectedIndex.ToString(), "starText");
                 }
                 view_PreReq(false);
                 finalReq();
@@ -802,17 +853,17 @@ namespace PersAhwal
             if (الموضوع.SelectedIndex == 0)
             {
                 checkStarTextExist(DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), selectTable);
-                getstarText("ColName", قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString(), "ColRight = ''");
+                starIndex =getstarText(قائمة_النصوص_الفرعية.Text, قائمة_النصوص_العامة.SelectedIndex.ToString(), "starText");
             }
             else if (الموضوع.SelectedIndex == 1)
             {
                 checkStarTextExist(DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), selectTable);
-                getstarTextSub("ColName", قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString(), "ColRight <> ''");
+                starIndex = getstarText(قائمة_النصوص_الفرعية.Text, قائمة_النصوص_العامة.SelectedIndex.ToString(), "starTextSub");
             }
             else if (الموضوع.SelectedIndex == 2)
             {
                 checkStarTextExist(DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), selectTable);
-                getstarText("ColName", قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString(), "ColRight <> ''");
+                starIndex = getstarText(قائمة_النصوص_الفرعية.Text, قائمة_النصوص_العامة.SelectedIndex.ToString(), "starText");
             }
             view_PreReq(false);
             finalReq();
@@ -963,9 +1014,10 @@ namespace PersAhwal
                 }
             }
         }
-        private void getstarText(string rowID, string cellValue, string colright)
+        private string getstarText( string col,string subCol, string starText)
         {
-            string query = "select * from TableAddContext where " + rowID + "=N'" + cellValue + "' and " + colright;
+            string star = "";
+            string query = "select * from TableAddContext where altColName=N'" + col + "' and altSubColName=N'" + subCol + "'";
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
@@ -976,25 +1028,9 @@ namespace PersAhwal
             if (dtbl.Rows.Count > 0)
                 foreach (DataRow dr in dtbl.Rows)
                 {
-                    starIndex = dr["starText"].ToString();
+                    star= dr[starText].ToString();
                 }
-        }
-
-        private void getstarTextSub(string rowID, string cellValue, string colright)
-        {
-            string query = "select * from TableAddContext where " + rowID + "=N'" + cellValue + "' and " + colright;
-            SqlConnection sqlCon = new SqlConnection(DataSource);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
-            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
-            sqlDa.SelectCommand.CommandType = CommandType.Text;
-            DataTable dtbl = new DataTable();
-            sqlDa.Fill(dtbl);
-            if (dtbl.Rows.Count > 0)
-                foreach (DataRow dr in dtbl.Rows)
-                {
-                    starIndexSub = dr["starTextSub"].ToString();
-                }
+            return star;
         }
 
         private void نص_مرجعي_Click(object sender, EventArgs e)
@@ -1006,7 +1042,7 @@ namespace PersAhwal
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
-            SqlCommand sqlCmd = new SqlCommand("UPDATE TableAddContext SET starText=@starText WHERE ColName = N'" + قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString() + "'", sqlCon);
+            SqlCommand sqlCmd = new SqlCommand("UPDATE TableAddContext SET starText=@starText  where altColName = N'" + قائمة_النصوص_العامة.Text + "' and altSubColName=N'" + قائمة_النصوص_الفرعية.Text + "'", sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             //MessageBox.Show(starButton);
             sqlCmd.Parameters.AddWithValue("@starText", starButton);
@@ -1015,17 +1051,17 @@ namespace PersAhwal
             if (الموضوع.SelectedIndex == 0)
             {
                 checkStarTextExist(DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), selectTable);
-                getstarText("ColName", قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString(), "ColRight = ''");
+                starIndex = getstarText( قائمة_النصوص_الفرعية.Text , قائمة_النصوص_العامة.SelectedIndex.ToString(), "starText");
             }
             else if (الموضوع.SelectedIndex == 1)
             {
                 checkStarTextExist(DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), selectTable);
-                getstarTextSub("ColName", قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString(), "ColRight <> ''");
+                starIndexSub = getstarText( قائمة_النصوص_الفرعية.Text, قائمة_النصوص_العامة.SelectedIndex.ToString(), "starTextSub");
             }
             else if (الموضوع.SelectedIndex == 2)
             {
                 checkStarTextExist(DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), selectTable);
-                getstarText("ColName", قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString(), "ColRight <> ''");
+                starIndex = getstarText( قائمة_النصوص_الفرعية.Text , قائمة_النصوص_العامة.SelectedIndex.ToString(), "starText");
             }
         }
 
@@ -1034,7 +1070,7 @@ namespace PersAhwal
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
-            SqlCommand sqlCmd = new SqlCommand("UPDATE TableAddContext SET starText=@starText WHERE ColName = N'" + قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString() + "'", sqlCon);
+            SqlCommand sqlCmd = new SqlCommand("UPDATE TableAddContext SET starText=@starText where altColName = N'" + قائمة_النصوص_العامة.Text + "' and altSubColName=N'" + قائمة_النصوص_الفرعية.Text + "'", sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.Parameters.AddWithValue("@starText", "");
             sqlCmd.ExecuteNonQuery();
@@ -1042,17 +1078,18 @@ namespace PersAhwal
             if (الموضوع.SelectedIndex == 0)
             {
                 checkStarTextExist(DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), selectTable);
-                getstarText("ColName", قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString(), "ColRight = ''");
+                starIndex = getstarText(قائمة_النصوص_الفرعية.Text, قائمة_النصوص_العامة.SelectedIndex.ToString(), "starText");
+                
             }
             else if (الموضوع.SelectedIndex == 1)
             {
                 checkStarTextExist(DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), selectTable);
-                getstarTextSub("ColName", قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString(), "ColRight <> ''");
+                starIndexSub = getstarText(قائمة_النصوص_الفرعية.Text, قائمة_النصوص_العامة.SelectedIndex.ToString(), "starTextSub");
             }
             else if (الموضوع.SelectedIndex == 2)
             {
                 checkStarTextExist(DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), selectTable);
-                getstarText("ColName", قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString(), "ColRight <> ''");
+                starIndex = getstarText(قائمة_النصوص_الفرعية.Text, قائمة_النصوص_العامة.SelectedIndex.ToString(), "starText");
             }
         }
 
@@ -1074,42 +1111,27 @@ namespace PersAhwal
             if (الموضوع.SelectedIndex == 0)
             {
                 checkStarTextExist(DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), selectTable);
-                getstarText("ColName", قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString(), "ColRight = ''");
+                starIndex = getstarText(قائمة_النصوص_الفرعية.Text, قائمة_النصوص_العامة.SelectedIndex.ToString(), "starText");
             }
             else if (الموضوع.SelectedIndex == 1)
             {
                 checkStarTextExist(DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), selectTable);
-                getstarTextSub("ColName", قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString(), "ColRight <> ''");
+                starIndexSub = getstarText(قائمة_النصوص_الفرعية.Text, قائمة_النصوص_العامة.SelectedIndex.ToString(), "starTextSub");
             }
             else if (الموضوع.SelectedIndex == 2)
             {
                 checkStarTextExist(DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), selectTable);
-                getstarText("ColName", قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString(), "ColRight <> ''");
+                starIndex = getstarText(قائمة_النصوص_الفرعية.Text, قائمة_النصوص_العامة.SelectedIndex.ToString(), "starText");
             }
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            insert = false;
-            if (الموضوع.SelectedIndex < 2)
-                updateAllFields();
+            //insert = false;
+            //if (الموضوع.SelectedIndex < 2)
+            //    //updateAllFields();
 
-            int selectText = قائمة_النصوص_الفرعية.SelectedIndex;
-            updateText();
-            النص.Text = "";
-            if (الموضوع.SelectedIndex == 0)
-            {
-                getstarText("ColName", قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString(), "ColRight = ''");
-            }
-            else if (الموضوع.SelectedIndex == 1)
-            {
-                getstarTextSub("ColName", قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString(), "ColRight <> ''");
-            }
-            else if (الموضوع.SelectedIndex == 2)
-            {
-                getstarText("ColName", قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString(), "ColRight <> ''");
-            }
-            قائمة_النصوص_الفرعية.SelectedIndex = selectText;
+            
         }
 
         private string updateText()
@@ -1143,7 +1165,7 @@ namespace PersAhwal
             return starButton;
         }
 
-        private void updateAllFields()
+        private void updateAllFields(string text)
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
@@ -1175,11 +1197,11 @@ namespace PersAhwal
                     }
                 }
             }
-            queryAll = "UPDATE TableAddContext SET " + updateValues + " WHERE ColName = N'" + قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString() + "'";
-            save2DataBase(PanelItemsboxes, updateAllIndex);
+            queryAll = "UPDATE TableAddContext SET " + updateValues + " WHERE altColName = N'" + قائمة_النصوص_العامة.Text + " and altSubColName = N'" + قائمة_النصوص_الفرعية.Text+ "'";
+            save2DataBase(PanelItemsboxes, updateAllIndex, text);
         }
         
-        private void insertAllFields()
+        private void insertAllFields(string text)
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
@@ -1215,13 +1237,13 @@ namespace PersAhwal
                 }
             }
             queryAll = "insert into TableAddContext (" + insertItems + ") values (" + insertValues+ ")";
-            save2DataBase(PanelItemsboxes, insertAllIndex);
+            save2DataBase(PanelItemsboxes, insertAllIndex, text);
             
         }
 
         
 
-        private bool save2DataBase(FlowLayoutPanel panel, int index)
+        private bool save2DataBase(FlowLayoutPanel panel, int index, string text)
         {
             SqlConnection sqlConnection = new SqlConnection(DataSource);
             if (sqlConnection.State == ConnectionState.Closed)
@@ -1256,7 +1278,7 @@ namespace PersAhwal
                     else
                         sqlCommand.Parameters.AddWithValue("@ColRight", الحقوق.Text);
                     sqlCommand.Parameters.AddWithValue("@ColName", قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString());
-                    sqlCommand.Parameters.AddWithValue("@TextModel", النص.Text);
+                    sqlCommand.Parameters.AddWithValue("@TextModel", text);
                     var selectedOption = MessageBox.Show("تعين النص كمرجع", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                     if (selectedOption == DialogResult.Yes)
@@ -1298,80 +1320,76 @@ namespace PersAhwal
         private void button3_Click(object sender, EventArgs e)
         {
             insert = true;
-
-            if (!checkColExist(DataSource,"TableListCombo", قائمة_النصوص_العامة.Text.Replace(" ", "_")))
+            string RevText = SuffReversReplacements(النص.Text, 0, 0);
+            if (!checkRowExist(DataSource, قائمة_النصوص_العامة.Text, قائمة_النصوص_الفرعية.Text))
             {
-                CreateColumn(قائمة_النصوص_العامة.Text.Replace(" ", "_"), "TableListCombo", "500");
-                قائمة_النصوص_العامة.Items.Add(قائمة_النصوص_العامة.Text);
-
+                insertAllFields(RevText);
                 if (الموضوع.SelectedIndex == 0)
                 {
-                    if (!checkSubColExist(DataSource, "ArabicGenIgrar", قائمة_النصوص_العامة.Text))
-                        addMainAuth("ArabicGenIgrar",قائمة_النصوص_العامة.Text);
+                    if (!checkColExistance(selectTable, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_")))
+                        CreateColumn(قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), selectTable, "max");
+
+                    if (checkStarTextExist(DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), النص.Text, selectTable) == "") return;
                 }
-                else
+                else if (الموضوع.SelectedIndex == 1)
                 {
-                    if (!checkSubColExist(DataSource, "AuthTypes", قائمة_النصوص_العامة.Text))
-                        addMainAuth("AuthTypes",قائمة_النصوص_العامة.Text);
+                    if (!checkColExistance(selectTable, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_")))
+                        CreateColumn(قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), selectTable, "max");
+
+                    if (checkStarTextExist(DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), النص.Text, selectTable) == "") return;
+                }
+                else if (الموضوع.SelectedIndex == 2)
+                {
+                    if (!checkColExistance(selectTable, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_")))
+                        CreateColumn(قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), selectTable, "max");
+
+                    if (checkStarTextExist(DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), النص.Text, selectTable) == "") return;
+                }
+                string query = "insert TableCollectStarText into (" + قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_") + ") value (N'" + النص.Text + "')";
+                if (الموضوع.SelectedIndex == 1)
+                    query = "insert TableAuthStarText into (" + قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_") + ") value (N'" + النص.Text + "')";
+                if (الموضوع.SelectedIndex == 2)
+                    query = "insert TableAuthRightStarText into (" + قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_") + ") value (N'" + النص.Text + "')";
+
+                SqlConnection sqlCon = new SqlConnection(DataSource);
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+                SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+                sqlCmd.CommandType = CommandType.Text;
+                sqlCmd.ExecuteNonQuery();
+                النص.Text = "";
+                if (الموضوع.SelectedIndex == 0)
+                {
+                    starIndex = getstarText(قائمة_النصوص_الفرعية.Text, قائمة_النصوص_العامة.SelectedIndex.ToString(), "starText");
+                }
+                else if (الموضوع.SelectedIndex == 1)
+                {
+                    starIndexSub = getstarText(قائمة_النصوص_الفرعية.Text, قائمة_النصوص_العامة.SelectedIndex.ToString(), "starTextSub");
+                }
+                else if (الموضوع.SelectedIndex == 2)
+                {
+                    starIndex = getstarText(قائمة_النصوص_الفرعية.Text, قائمة_النصوص_العامة.SelectedIndex.ToString(), "starText");
                 }
             }
-            
-            if (!checkSubColExist(DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_"), قائمة_النصوص_الفرعية.Text))
-            {
-                //MessageBox.Show("insert ed");
-                addMainAuth(قائمة_النصوص_العامة.Text.Replace(" ", "_"), قائمة_النصوص_الفرعية.Text);
-                قائمة_النصوص_الفرعية.Items.Add(قائمة_النصوص_الفرعية.Text);
-            }
-
-            //MessageBox.Show("insert");
-            insertAllFields();
-
-            النص.Text = SuffReversReplacements(النص.Text, 0, 0);
-            if (الموضوع.SelectedIndex == 0)
-            {
-                if (!checkColExistance(selectTable, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_")))
-                    CreateColumn(قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), selectTable, "max");
-
-                if (checkStarTextExist(DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), النص.Text, selectTable) == "") return;
-            }
-            else if (الموضوع.SelectedIndex == 1)
-            {
-                if (!checkColExistance(selectTable, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_")))
-                    CreateColumn(قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), selectTable, "max");
-
-                if (checkStarTextExist(DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), النص.Text, selectTable) == "") return;
-            }
-            else if (الموضوع.SelectedIndex == 2)
-            {
-                if (!checkColExistance(selectTable, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_")))
-                    CreateColumn(قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), selectTable, "max");
-
-                if (checkStarTextExist(DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), النص.Text, selectTable) == "") return;
-            }
-            string query = "insert TableCollectStarText into (" + قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_") + ") value (N'" + النص.Text + "')";
-            if (الموضوع.SelectedIndex == 1)
-                query = "insert TableAuthStarText into (" + قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_") + ") value (N'" + النص.Text + "')";
-            if (الموضوع.SelectedIndex == 2)
-                query = "insert TableAuthRightStarText into (" + قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_") + ") value (N'" + النص.Text + "')";
-
-            SqlConnection sqlCon = new SqlConnection(DataSource);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
-            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
-            sqlCmd.CommandType = CommandType.Text;
-            sqlCmd.ExecuteNonQuery();
-            النص.Text = "";
-            if (الموضوع.SelectedIndex == 0)
-            {
-                getstarText("ColName", قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString(), "ColRight = ''");
-            }
-            else if (الموضوع.SelectedIndex == 1)
-            {
-                getstarTextSub("ColName", قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString(), "ColRight <> ''");
-            }
-            else if (الموضوع.SelectedIndex == 2)
-            {
-                getstarText("ColName", قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString(), "ColRight <> ''");
+            else {
+                if (الموضوع.SelectedIndex < 2)
+                    updateAllFields(RevText);
+                int selectText = قائمة_النصوص_الفرعية.SelectedIndex;
+                updateText();
+                النص.Text = "";
+                if (الموضوع.SelectedIndex == 0)
+                {
+                    starIndex = getstarText(قائمة_النصوص_الفرعية.Text, قائمة_النصوص_العامة.SelectedIndex.ToString(), "starText");
+                }
+                else if (الموضوع.SelectedIndex == 1)
+                {
+                    starIndexSub = getstarText(قائمة_النصوص_الفرعية.Text, قائمة_النصوص_العامة.SelectedIndex.ToString(), "starText");
+                }
+                else if (الموضوع.SelectedIndex == 2)
+                {
+                    starIndex = getstarText(قائمة_النصوص_الفرعية.Text, قائمة_النصوص_العامة.SelectedIndex.ToString(), "starText");
+                }
+                قائمة_النصوص_الفرعية.SelectedIndex = selectText;
             }
         }
 
@@ -1416,27 +1434,27 @@ namespace PersAhwal
             if (text.Contains("حقل0"))
                 text = text.Replace("حقل0", "itext0");
 
-            if (text.Contains("خيار ثنائي1"))
-                text = text.Replace("خيار ثنائي1", "icheck1");
-            if (text.Contains("خيار ثنائي2"))
-                text = text.Replace("خيار ثنائي2", "icheck2");
-            if (text.Contains("خيار ثنائي3"))
-                text = text.Replace("خيار ثنائي3", "icheck3");
-            if (text.Contains("خيار ثنائي4"))
-                text = text.Replace("خيار ثنائي4", "icheck4");
-            if (text.Contains("خيار ثنائي5"))
-                text = text.Replace("خيار ثنائي5", "icheck5");
+            if (text.Contains("خ_ثنائي1"))
+                text = text.Replace("خ_ثنائي1", "icheck1");
+            if (text.Contains("خ_ثنائي2"))
+                text = text.Replace("خ_ثنائي2", "icheck2");
+            if (text.Contains("خ_ثنائي3"))
+                text = text.Replace("خ_ثنائي3", "icheck3");
+            if (text.Contains("خ_ثنائي4"))
+                text = text.Replace("خ_ثنائي4", "icheck4");
+            if (text.Contains("خ_ثنائي5"))
+                text = text.Replace("خ_ثنائي5", "icheck5");
 
-            if (text.Contains("خيار متعدد1"))
-                text = text.Replace("خيار متعدد1", "icombo1");
-            if (text.Contains("خيار متعدد2"))
-                text = text.Replace("خيار متعدد2", "icombo2");
-            if (text.Contains("خيار متعدد3"))
-                text = text.Replace("خيار متعدد3", "icombo3");
-            if (text.Contains("خيار متعدد4"))
-                text = text.Replace("خيار متعدد4", "icombo4");
-            if (text.Contains("خيار متعدد5"))
-                text = text.Replace("خيار متعدد5", "icombo5");
+            if (text.Contains("خ_متعدد1"))
+                text = text.Replace("خ_متعدد1", "icombo1");
+            if (text.Contains("خ_متعدد2"))
+                text = text.Replace("خ_متعدد2", "icombo2");
+            if (text.Contains("خ_متعدد3"))
+                text = text.Replace("خ_متعدد3", "icombo3");
+            if (text.Contains("خ_متعدد4"))
+                text = text.Replace("خ_متعدد4", "icombo4");
+            if (text.Contains("خ_متعدد5"))
+                text = text.Replace("خ_متعدد5", "icombo5");
 
             if (text.Contains("تاريخ1"))
                 text = text.Replace("تاريخ1", "itxtDate1");
@@ -1525,7 +1543,7 @@ namespace PersAhwal
         }
             public void panelFill(string dataSource, string field)
         {
-            string query = "select * from TableAddContext where ColName = N'" + قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString() + "'";
+            string query = "select * from TableAddContext where altColName = N'" + قائمة_النصوص_الفرعية.Text + "' and altSubColName = N'" + قائمة_النصوص_العامة.Text+ "'";
 
             SqlConnection sqlCon = new SqlConnection(dataSource);
             if (sqlCon.State == ConnectionState.Closed)
@@ -1633,12 +1651,11 @@ namespace PersAhwal
 
             if (الموضوع.SelectedIndex == 0)
             {
-                fileComboBox(قائمة_النصوص_العامة, DataSource, "ArabicGenIgrar", "TableListCombo", true);
-                fileComboBox(قائمة_النصوص_العامة, DataSource, "EnglishGenIgrar", "TableListCombo", false);
+                fileComboBox(قائمة_النصوص_العامة, DataSource, "altColName", "= '' ", true);                
             }
             else
             {
-                fileComboBox(قائمة_النصوص_العامة, DataSource, "AuthTypes", "TableListCombo", true);
+                fileComboBox(قائمة_النصوص_العامة, DataSource, "altColName", "<> ''", true);
             }
 
             if (قائمة_النصوص_العامة.Text != "" && قائمة_النصوص_الفرعية.Text != "")
@@ -1648,15 +1665,15 @@ namespace PersAhwal
                     checkStarTextExist(DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), selectTable);
                     if (الموضوع.SelectedIndex == 0)
                     {
-                        getstarText("ColName", قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString(), "ColRight = ''");
+                        starIndex = getstarText(قائمة_النصوص_الفرعية.Text, قائمة_النصوص_العامة.SelectedIndex.ToString(), "starText");
                     }
                     else if (الموضوع.SelectedIndex == 1)
                     {
-                        getstarTextSub("ColName", قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString(), "ColRight <> ''");
+                        starIndexSub = getstarText(قائمة_النصوص_الفرعية.Text, قائمة_النصوص_العامة.SelectedIndex.ToString(), "starTextSub");
                     }
                     else if (الموضوع.SelectedIndex == 2)
                     {
-                        getstarText("ColName", قائمة_النصوص_الفرعية.Text + "-" + قائمة_النصوص_العامة.SelectedIndex.ToString(), "ColRight <> ''");
+                        starIndex = getstarText(قائمة_النصوص_الفرعية.Text, قائمة_النصوص_العامة.SelectedIndex.ToString(), "starText");
                     }
                 }
                 view_PreReq(false);
@@ -1688,42 +1705,45 @@ namespace PersAhwal
             SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
-            sqlDa.Fill(dtbl);
-            sqlCon.Close();
-            int rowIndex = 0;
-            foreach (DataRow row in dtbl.Rows)
+            try
             {
-                if (rowIndex != 0)
+                sqlDa.Fill(dtbl);
+                sqlCon.Close();
+                int rowIndex = 0;
+                foreach (DataRow row in dtbl.Rows)
                 {
-
-                    setCheclList();
-                    checlList[2] = "";
-
-                    string[] Text_statis = row[col.Replace("-", "_")].ToString().Split('_');
-                    if (row[col.Replace("-", "_")].ToString() == "") continue;
-
-                    string text = SuffReplacements(Text_statis[0], 0, 0);
-                    if (text.Contains("الحق في توكيل الغير"))
-                        authother = text;
-
-                    if (text.Contains("ويعتبر التوكيل الصادر"))
-                        removeAuthother = text;
-                    if (text.Contains("لمن يشهد والله"))
-                        lastSentence = text;
-                    try
+                    if (rowIndex != 0)
                     {
-                        if (!txtRights.Text.Contains(lastSentence))
-                            txtRights.Text = txtRights.Text + "، " + lastSentence;
-                        if (!txtRights.Text.Contains(text))
-                            txtRights.Text = txtRights.Text + text + " ";
-                        txtRights.Text = txtRights.Text.Replace(authother, "") + " ";
-                        txtRights.Text = txtRights.Text.Replace(removeAuthother, "") + " ";
-                        //MessageBox.Show(txtRights.Text);
+
+                        setCheclList();
+                        checlList[2] = "";
+
+                        string[] Text_statis = row[col.Replace("-", "_")].ToString().Split('_');
+                        if (row[col.Replace("-", "_")].ToString() == "") continue;
+
+                        string text = SuffReplacements(Text_statis[0], 0, 0);
+                        if (text.Contains("الحق في توكيل الغير"))
+                            authother = text;
+
+                        if (text.Contains("ويعتبر التوكيل الصادر"))
+                            removeAuthother = text;
+                        if (text.Contains("لمن يشهد والله"))
+                            lastSentence = text;
+                        try
+                        {
+                            if (!txtRights.Text.Contains(lastSentence))
+                                txtRights.Text = txtRights.Text + "، " + lastSentence;
+                            if (!txtRights.Text.Contains(text))
+                                txtRights.Text = txtRights.Text + text + " ";
+                            txtRights.Text = txtRights.Text.Replace(authother, "") + " ";
+                            txtRights.Text = txtRights.Text.Replace(removeAuthother, "") + " ";
+                            //MessageBox.Show(txtRights.Text);
+                        }
+                        catch (Exception ex) { }
                     }
-                    catch (Exception ex) { }
+                    rowIndex++;
                 }
-                rowIndex++;
-            }
+            }catch (Exception ex) { }
 
             //using (SqlConnection con = new SqlConnection(dataSource))
             //{
@@ -2095,6 +2115,11 @@ namespace PersAhwal
             {
                 otherPro.Select();
             }
+        }
+
+        private void نص_itext1_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -29,7 +29,8 @@ namespace PersAhwal
         string ServerType = "57";
         string GriDate = "";
         bool grdview = false;
-        public SignUp(string employeename, string jobposition, string datasource, string serverType, string griDate)
+        string Update = "";
+        public SignUp(string employeename, string jobposition, string datasource, string serverType, string griDate, string update)
         {
             InitializeComponent();
             DataSource = datasource;
@@ -37,6 +38,13 @@ namespace PersAhwal
             Jobposition = jobposition;
             ServerType = serverType;
             GriDate = griDate;
+            Update = update;
+            if (update == "yes")
+            {
+                Register.Text = "تحديث";
+                JobPossition.Enabled = false;
+                ApplicantName.Enabled = false;
+            }
             //this.Size = new Size(799, 573);
             //MessageBox.Show(employeename);
             if (jobposition.Contains("قنصل"))
@@ -116,7 +124,53 @@ namespace PersAhwal
         private void button1_Click(object sender, EventArgs e)
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
-            string addInfo = "تم إعادة ضبط كلمة المرور لحساب الموظف/" + ApplicantName.Text + " بتاريخ " + GriDate +Environment.NewLine + "----------------------------------------------";
+            string addInfo = "قام " + ApplicantName.Text + " بتحديث بيانات حسابه بتاريخ " + GriDate +Environment.NewLine + "----------------------------------------------";
+            if (Register.Text == "تحديث")
+            {
+                if (password1.Text != password2.Text)
+                {
+                    MessageBox.Show("كلمة المرور غير متطابقة");
+                    return;
+                }
+                if (password1.Text == userpass)
+                {
+                    MessageBox.Show("كلمة المرور الجديدة لا يمكن أن تطابق الكلمة السابقة");
+                    return;
+                }
+                
+                if (password1.Text.Length < 6)
+                {
+                    MessageBox.Show("كلمة المرور يجب أن لا تقل عن ستة رموز");
+                    return;
+                }
+                if (password1.Text.All(char.IsDigit))
+                {
+                    MessageBox.Show("كلمة المرور يجب أن تحتوي على أحرف");
+                    return;
+                }
+
+                if (sqlCon.State == ConnectionState.Closed)
+                        sqlCon.Open();
+                    SqlCommand sqlCmd = new SqlCommand("UPDATE TableUser SET UserName = @UserName,JobPosition = @JobPosition,Gender = @Gender,EmployeeName = @EmployeeName,Pass = @Pass,RestPAss=@RestPAss,comment=@comment WHERE ID = @ID", sqlCon);
+                    sqlCmd.CommandType = CommandType.Text;
+                    sqlCmd.Parameters.AddWithValue("@ID", IDEmp);
+                    sqlCmd.Parameters.AddWithValue("@Pass", password1.Text);
+                    sqlCmd.Parameters.AddWithValue("@UserName", userName.Text);
+                    sqlCmd.Parameters.AddWithValue("@JobPosition", JobPossition.Text);
+                    sqlCmd.Parameters.AddWithValue("@Gender", EmpGender.Text);
+                    sqlCmd.Parameters.AddWithValue("@EmployeeName", ApplicantName.Text);
+                    sqlCmd.Parameters.AddWithValue("@RestPAss", "done");
+                    sqlCmd.Parameters.AddWithValue("@comment", addInfo + التعليقات_السابقة_Off.Text);
+
+                    sqlCmd.ExecuteNonQuery();
+                    MessageBox.Show("تم تحديث بيانات الحساب");
+                    IDEmp = 0;
+                    this.Close(); 
+                
+                return;
+            }
+             addInfo = "تم إعادة ضبط كلمة المرور لحساب الموظف/" + ApplicantName.Text + " بتاريخ " + GriDate + Environment.NewLine + "----------------------------------------------";
+
             if (resetpassword && password1.Text == userpass)
             {
 
@@ -216,6 +270,10 @@ namespace PersAhwal
             password2.Visible = false;
             labelpass2.Visible = false;
             labelpass1.Visible = false;
+            if (Update == "yes")
+            {
+                password1.Visible = password2.Visible = labelpass1.Visible = labelpass2.Visible = true;
+            }
         }
 
         private void button1_Click_1(object sender, EventArgs e)
@@ -284,6 +342,10 @@ namespace PersAhwal
                 btnActivete.Visible = true;
                 btnDeActivete.Visible = true;
                 grdview = false;
+                if (Update == "yes")
+                {
+                    password1.Visible = password2.Visible = labelpass1.Visible = labelpass2.Visible = true;
+                }
             }
         }
         void FillDatafromGenArch(string doc, string id, string table)
@@ -346,6 +408,10 @@ namespace PersAhwal
                         btnActivete.Visible = true;
                         btnDeActivete.Visible = true;
                         grdview = false;
+                        if (Update == "yes")
+                        {
+                            password1.Visible = password2.Visible = labelpass1.Visible = labelpass2.Visible = true;
+                        }
                         dataGridView1.Visible = true;  
                     }
                     else continue;
@@ -368,14 +434,14 @@ namespace PersAhwal
                 sqlCmd.Parameters.AddWithValue("@Gender", EmpGender.Text);
                 sqlCmd.Parameters.AddWithValue("@UserName", userName.Text);
                 sqlCmd.Parameters.AddWithValue("@Email", "");
-                sqlCmd.Parameters.AddWithValue("@Pass", password1.Text);
+            sqlCmd.Parameters.AddWithValue("@Pass", userpass);
                 sqlCmd.Parameters.AddWithValue("@Aproved", "أكده " + Jobposition + " " + Employeename);
                 sqlCmd.Parameters.AddWithValue("@Purpose", ServerType);
                 sqlCmd.Parameters.AddWithValue("@comment", addInfo + التعليقات_السابقة_Off.Text);
                 try
                 {
                     sqlCmd.ExecuteNonQuery();
-                    MessageBox.Show("تم التأكيد بنجاح");
+                    MessageBox.Show("تم تفعيل الحساب بنجاح");
                 }
                 catch (Exception ex)
                 {
@@ -420,13 +486,13 @@ namespace PersAhwal
 
         private void ApplicantName_TextChanged(object sender, EventArgs e)
         {
-            if(grdview)return;
+            if(grdview || Update == "yes") return;
             checkName(ApplicantName.Text, userName.Text);
         }
 
         private void userName_TextChanged(object sender, EventArgs e)
         {
-            if (grdview) return;
+            if (grdview || Update == "yes") return;
             checkName(ApplicantName.Text, userName.Text);
         }
 

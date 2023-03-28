@@ -167,7 +167,7 @@ namespace PersAhwal
             foreach (DataRow row in dtbl.Rows)
             {
                 
-                if (row["name"].ToString() != "ID" && row["name"].ToString() != "حالة_الارشفة"&& row["name"].ToString() != "sms")
+                if (row["name"].ToString() != "ID" && row["name"].ToString() != "تاريخ_الارشفة1"&& row["name"].ToString() != "تاريخ_الاجراء" && row["name"].ToString() != "تاريخ_الارشفة2" && row["name"].ToString() != "حالة_الارشفة"&& row["name"].ToString() != "sms")
                 {
                     allList[i] = row["name"].ToString();
                     //MessageBox.Show(row["name"].ToString());

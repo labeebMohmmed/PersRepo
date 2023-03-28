@@ -223,7 +223,7 @@ namespace PersAhwal
 
                 //label2.Text = "قسم الأحوال الشخصية والمعاملات القنصلية";
                 panel2.BackColor = label2.BackColor = ConsulateEmployee.BackColor = System.Drawing.SystemColors.ButtonShadow;
-                
+                Affbtn1.Visible = false;
                 ReportType.Items.Add("تقرير المأذونية الشهري");
 
             }
@@ -231,6 +231,7 @@ namespace PersAhwal
             {
                 label2.BackColor = ConsulateEmployee.BackColor = System.Drawing.SystemColors.ActiveCaption;
                 DataSource = dataSource56;
+                Affbtn1.Visible = true;    
                 this.Name = "القائمة الرئيسة نافذة قسم شؤون الرعايا";
                 //label2.Text = "نافذة قسم شؤون الرعايا";
             }
@@ -333,6 +334,9 @@ namespace PersAhwal
             UserJobposition = jobposition;
             //persbtn2MessageBox.Show(UserJobposition);
             ConsulateEmployee.Text = EmployeeName;
+            
+            label2.Location = new System.Drawing.Point(ConsulateEmployee.Width+5, 46);
+
             TablesList();
             fileVersio = primeryLink + @"\SuddaneseAffairs\getVersio.txt";
             Console.WriteLine(5);
@@ -6984,7 +6988,7 @@ namespace PersAhwal
                 serverType = "احوال شخصية";
             }
             dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
-            SignUp signUp = new SignUp(EmployeeName, UserJobposition, DataSource, serverType, GregorianDate);
+            SignUp signUp = new SignUp(EmployeeName, UserJobposition, DataSource, serverType, GregorianDate,"yes");
             signUp.ShowDialog();
         }
 
@@ -7143,6 +7147,7 @@ namespace PersAhwal
 
         private void empUpdate_Click_1(object sender, EventArgs e)
         {
+            
             if (!backgroundWorker2.IsBusy) backgroundWorker2.RunWorkerAsync();
             if (!backgroundWorker1.IsBusy) backgroundWorker1.RunWorkerAsync();
         }
@@ -8931,10 +8936,9 @@ namespace PersAhwal
             if (mangerArch.CheckState == CheckState.Checked)
             {
                 dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
-                string[] str = new string[persbtn555.Items.Count];
-                for (int x = 0; x < persbtn555.Items.Count; x++) { str[x] = persbtn555.Items[x].ToString(); }
+                string[] str = new string[1] { "وثيقة زواج" };
                 string[] strSub = new string[1] { "" };
-                FormPics form2 = new FormPics(Server, EmployeeName, attendedVC.Text, UserJobposition, DataSource, persbtn555.SelectedIndex, FormDataFile, FilespathOut, 15, str, strSub, true, MandoubM, GriDateM);
+                FormPics form2 = new FormPics(Server, EmployeeName, attendedVC.Text, UserJobposition, DataSource, 0, FormDataFile, FilespathOut, 15, str, strSub, true, MandoubM, GriDateM);
                 form2.ShowDialog();
             }
             else
@@ -8950,10 +8954,9 @@ namespace PersAhwal
             if (mangerArch.CheckState == CheckState.Checked)
             {
                 dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
-                string[] str = new string[persbtn555.Items.Count];
-                for (int x = 0; x < persbtn555.Items.Count; x++) { str[x] = persbtn555.Items[x].ToString(); }
+                string[] str = new string[1] { "وثيقة طلاق" };
                 string[] strSub = new string[1] { "" };
-                FormPics form2 = new FormPics(Server, EmployeeName, attendedVC.Text, UserJobposition, DataSource, persbtn555.SelectedIndex, FormDataFile, FilespathOut, 17, str, strSub, true, MandoubM, GriDateM);
+                FormPics form2 = new FormPics(Server, EmployeeName, attendedVC.Text, UserJobposition, DataSource, 0, FormDataFile, FilespathOut, 17, str, strSub, true, MandoubM, GriDateM);
                 form2.ShowDialog();
             }
             else
@@ -8988,7 +8991,7 @@ namespace PersAhwal
                 serverType = "احوال شخصية";
             }
             dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
-            SignUp signUp = new SignUp(EmployeeName, UserJobposition, DataSource, serverType, GregorianDate);
+            SignUp signUp = new SignUp(EmployeeName, UserJobposition, DataSource, serverType, GregorianDate,"yes");
             signUp.ShowDialog();
         }
 
@@ -9038,6 +9041,51 @@ namespace PersAhwal
                 Form5 form5 = new Form5(attendedVC.SelectedIndex, IDNo, EmployeeName, DataSource, FilespathIn, FilespathOut, UserJobposition, GregorianDate, HijriDate);
                 form5.ShowDialog();
             }
+        }
+
+        private void picVersio_MouseEnter(object sender, EventArgs e)
+        {
+            label3.Text = "فرض تحديث على جميع أجهزة النظام";
+        }
+
+        private void empUpdate_MouseEnter(object sender, EventArgs e)
+        {
+            label3.Text = "طلب تحديث من النظام";
+        }
+
+        private void pictureBox4_MouseEnter(object sender, EventArgs e)
+        {
+            label3.Text = "إعدادات الحساب";
+        }
+
+        private void pictureBox5_MouseEnter(object sender, EventArgs e)
+        {
+            label3.Text = "إعدادات تقديم وتأخير التاريخ الهجري";
+        }
+
+        private void pictureBox6_MouseEnter(object sender, EventArgs e)
+        {
+            label3.Text = "بيانات مندوبي الجاليات";
+        }
+
+        private void pictureBox7_MouseEnter(object sender, EventArgs e)
+        {
+            label3.Text = "المعاملات السابقة";
+        }
+
+        private void pictureBox1_MouseEnter(object sender, EventArgs e)
+        {
+            label3.Text = "المعاملات الجمهور غير المكتملة";
+        }
+
+        private void pictureBox3_MouseEnter(object sender, EventArgs e)
+        {
+            label3.Text = "معاملات المناديب غير المكتملة";
+        }
+
+        private void panel2_MouseLeave(object sender, EventArgs e)
+        {
+            label3.Text = "";
         }
 
         private void timer2_Tick_1(object sender, EventArgs e)

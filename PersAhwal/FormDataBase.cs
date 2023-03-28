@@ -696,7 +696,7 @@ namespace PersAhwal
                 serverType = "احوال شخصية";
             }
 
-                SignUp signUp = new SignUp("جديد", "غير محدد", DataSource, serverType, GregorianDate);
+                SignUp signUp = new SignUp("جديد", "غير محدد", DataSource, serverType, GregorianDate,"no");
             signUp.Show();
         }
 

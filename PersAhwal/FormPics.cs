@@ -532,6 +532,7 @@ namespace PersAhwal
             catch (Exception ex) { }
             sqlCon.Close();
             panelFinalArch.Visible = true;
+            Console.WriteLine(query);
             //MessageBox.Show("query = " + query + " - Count " + dtbl.Rows.Count.ToString()); 
             if (dtbl.Rows.Count > 0)
             {
