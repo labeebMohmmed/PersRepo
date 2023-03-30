@@ -514,7 +514,10 @@ namespace PersAhwal
                     //MessageBox.Show("versionUpdateInfo");
                     Procede = versionUpdateInfo("SuddaneseAffairs");
                 }
-                if (userApro.Contains("غير")) { MessageBox.Show("حساب المستخدم غير مفعل"); return; }
+                if (userApro == "" || userApro.Contains("غير")) 
+                {
+                    MessageBox.Show("حساب المستخدم غير مفعل أو غير معرف"); return; 
+                }
 
                 if (Password.Text == userpass)
                 {
@@ -696,7 +699,7 @@ namespace PersAhwal
                 serverType = "احوال شخصية";
             }
 
-                SignUp signUp = new SignUp("جديد", "غير محدد", DataSource, serverType, GregorianDate,"no");
+                SignUp signUp = new SignUp("جديد", "غير محدد", DataSource, serverType, GregorianDate,"no","");
             signUp.Show();
         }
 

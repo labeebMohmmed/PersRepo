@@ -19,6 +19,7 @@ using DocumentFormat.OpenXml.Drawing;
 using ZXing;
 using DocumentFormat.OpenXml.Office2013.Excel;
 using System.Data.SqlTypes;
+using Color = System.Drawing.Color;
 
 namespace PersAhwal
 {
@@ -27,6 +28,7 @@ namespace PersAhwal
         int ProcReqID = 0;
         int FinalProcReqID = 0;
         string DataSource = "";
+        string TableProcReqID = "";
         int panelIndex = 0;
         int updateAllIndex = 0;
         int insertAllIndex = 0;
@@ -56,13 +58,14 @@ namespace PersAhwal
 
         private void setCheclList()
         {
-            checlList = new string[6];
+            checlList = new string[7];
             checlList[0] = "نص موضوع الانابة غير موجود";
             checlList[1] = "نص موضوع المكاتبة غير موجود";
             checlList[2] = "نص الحقوق غير موجود";
             checlList[3] = "استمارة الطلب غير موجودة";
             checlList[4] = "المطلوبات الأولية غير محددة";
             checlList[5] = "المطلوبات النهائية غير محددة";
+            checlList[6] = "شرح المعاملة غير موجودة";
         }
             private void setlistFiels()
         {
@@ -306,6 +309,35 @@ namespace PersAhwal
             }
         }
         
+        private void fileComboBox(ComboBox combbox, string source, string comlumnName)
+        {
+            combbox.Items.Clear();
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                saConn.Open();
+
+                string query = "select distinct "+ comlumnName+ " from TableProcReq where " + comlumnName+" is not null";
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.CommandType = CommandType.Text;
+
+                Console.WriteLine(query);
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    DataTable table = new DataTable();
+                    SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                    dataAdapter.Fill(table);
+
+                    foreach (DataRow dataRow in table.Rows)
+                    {
+                        combbox.Items.Add(dataRow[comlumnName].ToString());                        
+                    }
+                }
+                catch (Exception ex) { }
+                saConn.Close();
+            }
+        }
+        
         private void fileComboBoxSub(ComboBox combbox, string source, string comlumnName, string SubComlumnName, string right, bool clear)
         {
             combbox.Items.Clear();
@@ -338,6 +370,8 @@ namespace PersAhwal
         private void Form8_Load(object sender, EventArgs e)
         {
             fileComboBox(قائمة_النصوص_العامة, DataSource, "altColName", "=''", false);
+            
+            fileComboBox(المعاملة, DataSource, "المعاملة");
             fileComboBox(الحقوق, DataSource, "ColRight", "<> ''", true);
         }
 
@@ -801,7 +835,8 @@ namespace PersAhwal
         private void checkStarTextExist(string dataSource, string col, string genTable)
         {
             string query = "select ID," + col + " from " + genTable;
-            Console.WriteLine("checkStarTextExist " + query);
+            Console.WriteLine(query);
+           // MessageBox.Show("checkStarTextExist " + query);
             SqlConnection sqlCon = new SqlConnection(dataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
@@ -832,7 +867,7 @@ namespace PersAhwal
 
                 try
                 {
-                    if (row[col].ToString() != "")
+                    if (row[col].ToString() != "" && !row[col].ToString().Contains("removed"))
                     {
                         ViewArchShow(SuffReplacements(row[col].ToString(), 0, 0), row["ID"].ToString());
                         count++;
@@ -871,6 +906,32 @@ namespace PersAhwal
                 PopulateCheckBoxes(قائمة_النصوص_الفرعية.Text.Replace(" ", "_").Replace("-", "_") + "_"+ قائمة_النصوص_العامة.SelectedIndex.ToString(), "TableAuthRights", DataSource);
 
         }
+
+        private void OpenFile(string documenNo)
+        {
+            string query = "SELECT ID, proForm1,توضيح_المعاملة,Data1, Extension1,المعاملات_المرتبطة from TableProcReq where المعاملة=N'" + documenNo + "'";            
+            SqlConnection Con = new SqlConnection(DataSource);
+            SqlCommand sqlCmd1 = new SqlCommand(query, Con);
+
+            if (Con.State == ConnectionState.Closed)
+                Con.Open();
+            var reader = sqlCmd1.ExecuteReader();
+            if (reader.Read())
+            {
+                string str = reader["proForm1"].ToString();
+                try
+                {
+                    var Data = (byte[])reader["Data1"];
+                }
+                catch (Exception ex)
+                {
+                    return ;
+                }
+            }
+            Con.Close();
+            
+        }
+
         private void view_PreReq(bool view)
         {
             OpenFile(قائمة_النصوص_العامة.Text + "-" + قائمة_النصوص_الفرعية.Text, view);
@@ -897,7 +958,7 @@ namespace PersAhwal
                     sqlCon.Open();
             }
             catch (Exception ex) { return; }
-            SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT * FROM TableProcReq where المعاملة=N'" + قائمة_النصوص_العامة.Text + "-" + قائمة_النصوص_الفرعية.Text + "'", sqlCon);
+            SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT * FROM TableProcReq where  المعاملة=N'" + قائمة_النصوص_العامة.Text + "-" + قائمة_النصوص_الفرعية.Text + "'", sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
             sqlDa.Fill(dtbl);
@@ -906,13 +967,17 @@ namespace PersAhwal
             if (dtbl.Rows.Count > 0)
             {
 
-               
-
 
                 checlList[4] = "";
                 foreach (DataRow row in dtbl.Rows)
                 {
                     ProcReqID = Convert.ToInt32(row["ID"].ToString());
+                    if (row["proForm1"].ToString() != "")
+                        checlList[3] = "";
+                    
+                    if (row["توضيح_المعاملة"].ToString() != "")
+                        checlList[6] = "";
+
                     for (int index = 2; index < 11; index++)
                     {
                         foreach (Control control in panel_المستندات.Controls)
@@ -1095,12 +1160,8 @@ namespace PersAhwal
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string query = "delete from TableCollectStarText where ID = '" + starButton + "'";
-            if (الموضوع.SelectedIndex == 1)
-                query = "delete from TableAuthStarText where ID = '" + starButton + "'";
-            if (الموضوع.SelectedIndex == 2)
-                query = "delete from TableAuthRightStarText where ID = '" + starButton + "'";
-
+            string query = "update "+selectTable+" set "+ قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_") + " =N'"+ النص .Text+"removed"+ "'where ID = '" + starButton + "'";
+            
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
@@ -1123,6 +1184,7 @@ namespace PersAhwal
                 checkStarTextExist(DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), selectTable);
                 starIndex = getstarText(قائمة_النصوص_الفرعية.Text, قائمة_النصوص_العامة.SelectedIndex.ToString(), "starText");
             }
+            //MessageBox.Show(starIndex);
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -1391,6 +1453,8 @@ namespace PersAhwal
                 }
                 قائمة_النصوص_الفرعية.SelectedIndex = selectText;
             }
+            for(int i=0;i<6;i++)
+                MessageBox.Show(checlList[i]);
         }
 
         private string checkStarTextExist(string dataSource, string col, string text, string genTable)
@@ -1612,6 +1676,7 @@ namespace PersAhwal
                 otherPro.Items.Add("المستندات المطلوبة للإجراء");
                 otherPro.Items.Add("المستندات النهائية للارشفة");
                 otherPro.Items.Add("استمارة الطلب");
+                
                 setCheclList();
                 checlList[0] = "";
                 checlList[1] = "نص موضوع المكاتبة غير موجود";
@@ -1619,7 +1684,7 @@ namespace PersAhwal
                 checlList[3] = "استمارة الطلب غير موجودة";
                 checlList[4] = "المطلوبات الأولية غير محددة";
                 checlList[5] = "المطلوبات النهائية غير محددة";
-
+                checlList[6] = "شرح المعاملة غير موجودة";
 
             }
             else if (الموضوع.SelectedIndex == 1)
@@ -1648,7 +1713,7 @@ namespace PersAhwal
 
             }
 
-
+            otherPro.Items.Add("توضيح المعاملات");
             if (الموضوع.SelectedIndex == 0)
             {
                 fileComboBox(قائمة_النصوص_العامة, DataSource, "altColName", "= '' ", true);                
@@ -1799,6 +1864,50 @@ namespace PersAhwal
                 panel_نهائي.Location = new System.Drawing.Point(4, 1);
                 
             }
+            else if (otherPro.Text == "توضيح المعاملات")
+            {
+                dataGridView2.Visible = true;                
+                dataGridView2.BringToFront();
+                dataGridView2.Location = new System.Drawing.Point(4, 1);
+                
+                FillDataGridViewReq("TableProcReq");
+            }
+        }
+
+        private void ColorFulGrid2()
+        {
+            for (int i=0; i < dataGridView2.Rows.Count - 1; i++)
+            {
+                dataGridView2.Rows[i].DefaultCellStyle.BackColor = Color.White;
+                if (dataGridView2.Rows[i].Cells[2].Value.ToString() != "")
+                    dataGridView2.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
+            }
+        }
+                  void FillDataGridViewReq(string table)
+            { 
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return; }
+
+            SqlDataAdapter sqlDa = new SqlDataAdapter("select ID, المعاملة, توضيح_المعاملة from " + table + " order by  المعاملة asc", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            dataGridView2.DataSource = dtbl;
+            //dataGridView1.Sort(dataGridView1.Columns["ID"], System.ComponentModel.ListSortDirection.Descending);
+            //dataGridView1.Columns["ID"].Visible = false;
+            try
+            {
+                dataGridView2.Columns[0].Visible = dataGridView2.Columns[2].Visible = false;
+                dataGridView2.Columns[1].Width = 550;
+                
+            }
+            catch (Exception ex) { }
+            sqlCon.Close();
         }
 
         private void finalReq() {            
@@ -2120,6 +2229,80 @@ namespace PersAhwal
         private void نص_itext1_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            ColorFulGrid2();
+        }
+
+        private void dataGridView2_CellClick_1(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dataGridView2.Rows.Count > 1)
+            {
+                try
+                {
+                    txtExplain.Text = dataGridView2.CurrentRow.Cells["توضيح_المعاملة"].Value.ToString();
+                    if (dataGridView2.CurrentRow.Cells["المعاملة"].Value.ToString() == "")
+                        btnDeleteReq.Enabled = true;
+                    else 
+                        btnDeleteReq.Enabled = true;
+                    
+                    dataGridView2.Visible = false;
+                    TableProcReqID = dataGridView2.CurrentRow.Cells["ID"].Value.ToString();
+                    panel_شرح.Visible = true;
+                    panel_شرح.Size = new System.Drawing.Size(667, 478);
+                    panel_شرح.BringToFront();
+                    panel_شرح.Location = new System.Drawing.Point(4, 1);
+
+                }
+                catch (Exception ex) { }
+            }
+        }
+
+        private void btnExpl_Click(object sender, EventArgs e)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlCommand sqlCmd = new SqlCommand("UPDATE TableProcReq SET توضيح_المعاملة=N'"+ txtExplain.Text + "'  where ID = " + TableProcReqID, sqlCon);
+            sqlCmd.CommandType = CommandType.Text;            
+            sqlCmd.ExecuteNonQuery();
+            button2.PerformClick();
+        }
+
+        private void button15_Click(object sender, EventArgs e)
+        {
+            string query = "delete from TableProcReq where ID = " + TableProcReqID + "";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();
+            button2.PerformClick();
+        }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            dataGridView2.Visible = true;
+            dataGridView2.BringToFront();
+            dataGridView2.Location = new System.Drawing.Point(4, 1);
+
+            FillDataGridViewReq("TableProcReq");
+        }
+
+        private void المعاملة_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (قائمة_النصوص_العامة.Text == "" || قائمة_النصوص_الفرعية.Text == "") return;
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlCommand sqlCmd = new SqlCommand("UPDATE TableProcReq SET المعاملات_المرتبطة=N'" + المعاملة.Text + "'  where المعاملة = N'" + قائمة_النصوص_العامة.Text + "_" + قائمة_النصوص_الفرعية.Text + "'", sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();            
         }
     }
 }

@@ -197,6 +197,7 @@ namespace PersAhwal
         string titleReport = "";
         string totalCount = "";
         string CountName = "";
+        string headTitle= "";
         string[] subInfoName;
         int tablesCount = 1;
         public MainForm(string career, int id, string server, string Employee, string jobposition, string dataSource56, string dataSource57, string filepathIn, string filepathOut, string archFile, string formDataFile, bool pers_Peope, string gregorianDate, string hijriDate, string modelFiles, string modelForms, bool realwork)
@@ -355,7 +356,7 @@ namespace PersAhwal
             if (UserJobposition.Contains("قنصل"))
             {
                 picSettings.Visible = Affbtn0.Visible = true;
-                empUpdate.Visible = false;
+                
                 picVersio.BringToFront();
                 //if (Server == "57")
                 //    PROCEGenNames();
@@ -364,7 +365,7 @@ namespace PersAhwal
             {               
                 picSettings.Visible = false;
                 empUpdate.BringToFront();
-                empUpdate.Visible = true;
+                
             }
 
             if (!Directory.Exists(PrimariFiles))
@@ -2108,7 +2109,7 @@ namespace PersAhwal
                     var p = document.InsertParagraph(Environment.NewLine);
                     p.InsertTableAfterSelf(t);
 
-                    string strAttvCo = Environment.NewLine + "ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ" + Environment.NewLine + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + attendedVC.Text + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + AuthTitle;;
+                    string strAttvCo = Environment.NewLine + "ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ" + Environment.NewLine + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + attendedVC.Text + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + headTitle; ;
                     var AttvCo = document.InsertParagraph(strAttvCo)
                         .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
                         .FontSize(20d)
@@ -2188,7 +2189,7 @@ namespace PersAhwal
                     var p = document.InsertParagraph(Environment.NewLine);
                     p.InsertTableAfterSelf(t);
 
-                    string strAttvCo = Environment.NewLine + "ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ" + Environment.NewLine + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + attendedVC.Text + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + AuthTitle;;
+                    string strAttvCo = Environment.NewLine + "ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ" + Environment.NewLine + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + attendedVC.Text + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + headTitle;;
                     var AttvCo = document.InsertParagraph(strAttvCo)
                         .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
                         .FontSize(20d)
@@ -2256,7 +2257,7 @@ namespace PersAhwal
                 var p = document.InsertParagraph(Environment.NewLine);
                 p.InsertTableAfterSelf(t);
 
-                string strAttvCo = Environment.NewLine + "ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ" + Environment.NewLine + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + attendedVC.Text + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + AuthTitle;;
+                string strAttvCo = Environment.NewLine + "ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ" + Environment.NewLine + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + attendedVC.Text + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + headTitle;;
                 var AttvCo = document.InsertParagraph(strAttvCo)
                     .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
                     .FontSize(20d)
@@ -2337,7 +2338,7 @@ namespace PersAhwal
                 var p = document.InsertParagraph(Environment.NewLine);
                 p.InsertTableAfterSelf(t);
 
-                string strAttvCo = Environment.NewLine + "ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ" + Environment.NewLine + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + attendedVC.Text + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + AuthTitle;
+                string strAttvCo = Environment.NewLine + "ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ" + Environment.NewLine + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + attendedVC.Text + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + headTitle;
                 var AttvCo = document.InsertParagraph(strAttvCo)
                     .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
                     .FontSize(20d)
@@ -2424,7 +2425,7 @@ namespace PersAhwal
                 var p = document.InsertParagraph(Environment.NewLine);
                 p.InsertTableAfterSelf(t);
 
-                string strAttvCo = Environment.NewLine + "ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ" + Environment.NewLine + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + attendedVC.Text + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + AuthTitle;;
+                string strAttvCo = Environment.NewLine + "ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ" + Environment.NewLine + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + attendedVC.Text + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + headTitle;;
                 var AttvCo = document.InsertParagraph(strAttvCo)
                     .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
                     .FontSize(20d)
@@ -2460,7 +2461,7 @@ namespace PersAhwal
                 .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
                 .FontSize(16d)
                 .Alignment = Alignment.center;
-                string MessageDir = "الى : القنصل العام" + Environment.NewLine+"من:" + attendedVC.Text;
+                string MessageDir = "الى : "+ headTitle.Replace("ع/","") + Environment.NewLine+"من:" + attendedVC.Text;
                 document.InsertParagraph(MessageDir)
                     .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
                     .FontSize(18d)
@@ -2645,7 +2646,7 @@ namespace PersAhwal
                     .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
                     .FontSize(18d).FontSize(18d).Alignment = Alignment.left;
 
-                string strAttvCo = Environment.NewLine + "ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ سوداتي جدة ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ" + Environment.NewLine + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + attendedVC.Text + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + AuthTitle;;
+                string strAttvCo = Environment.NewLine + "ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ سوداتي جدة ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ" + Environment.NewLine + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + attendedVC.Text + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + headTitle;
                 var AttvCo = document.InsertParagraph(strAttvCo)
                     .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
                     .FontSize(20d)
@@ -2740,7 +2741,7 @@ namespace PersAhwal
                 var p = document.InsertParagraph(Environment.NewLine);
                 p.InsertTableAfterSelf(t);
 
-                string strAttvCo = Environment.NewLine + "ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ" + Environment.NewLine + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + attendedVC.Text + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + AuthTitle;;
+                string strAttvCo = Environment.NewLine + "ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ" + Environment.NewLine + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + attendedVC.Text + Environment.NewLine + "\t\t\t\t\t\t\t\t\t\t" + headTitle;;
                 var AttvCo = document.InsertParagraph(strAttvCo)
                     .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
                     .FontSize(20d)
@@ -3046,7 +3047,7 @@ namespace PersAhwal
 
                 var p = document.InsertParagraph(Environment.NewLine);
                 p.InsertTableAfterSelf(t);
-                string strAttvCo = Environment.NewLine + Environment.NewLine + "      "+ attendedVC.Text+ "           " + Environment.NewLine + "      " + AuthTitle+"           ";
+                string strAttvCo = Environment.NewLine + Environment.NewLine + "      "+ attendedVC.Text+ "           " + Environment.NewLine + "      " + headTitle+"           ";
                 var AttvCo = document.InsertParagraph(strAttvCo)
                     .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
                     .FontSize(20d)
@@ -5308,7 +5309,8 @@ namespace PersAhwal
             autoCompleteTextBox(applicant, DataSource.Replace("AhwalDataBase", "ArchFilesDB"), "الاسم", "TableGeneralArch");
             fileComboBox(AttendViceConsul, DataSource, "ArabicAttendVC", "TableListCombo", true);
             fileComboBox(perbtn1, DataSource, "AuthTypes", "TableListCombo", true);
-            fileComboBox(attendedVC, DataSource, "ArabicAttendVC", "TableListCombo", true);
+            diplomats(attendedVC, DataSource);
+            getHeadTitle(DataSource);
             if (attendedVC.Items.Count >= VCIndexData()) attendedVC.SelectedIndex = VCIndexData();
             if (AttendViceConsul.Items.Count >= VCIndexData()) AttendViceConsul.SelectedIndex = VCIndexData();
             fileComboBox(docCollectCombo, DataSource, "ArabicGenIgrar", "TableListCombo", true);
@@ -5317,6 +5319,64 @@ namespace PersAhwal
             VCIndexLoad = true; loadScanner();
             updataArchData1();
             
+        }
+
+        private void diplomats(ComboBox combbox, string source)
+        {
+            combbox.Items.Clear();
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                saConn.Open();
+
+                string query = "select distinct EmployeeName from TableUser where EmployeeName is not null and الدبلوماسيون = N'yes' and Aproved like N'%أكده%' order by EmployeeName asc";
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.CommandType = CommandType.Text;
+
+                Console.WriteLine(query);
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    DataTable table = new DataTable();
+                    SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                    dataAdapter.Fill(table);
+
+                    foreach (DataRow dataRow in table.Rows)
+                    {
+                        combbox.Items.Add(dataRow["EmployeeName"].ToString());
+                    }
+                }
+                catch (Exception ex) { }
+                saConn.Close();
+            }
+        }
+        
+        private void getHeadTitle(string source)
+        {   using (SqlConnection saConn = new SqlConnection(source))
+            {
+                saConn.Open();
+
+                string query = "select JobPosition,EmployeeName from TableUser where الدبلوماسيون = N'yes' and headOfMission = N'head'";
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.CommandType = CommandType.Text;
+
+                Console.WriteLine(query);
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    DataTable table = new DataTable();
+                    SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                    dataAdapter.Fill(table);
+
+                    foreach (DataRow dataRow in table.Rows)
+                    {
+                        headTitle = dataRow["JobPosition"].ToString();
+                        if (attendedVC.Text != dataRow["JobPosition"].ToString())
+                            headTitle = "ع/" + headTitle;
+                    }
+                }
+                catch (Exception ex) { }
+                saConn.Close();
+            }
         }
         private void autoCompleteTextBox(TextBox textbox, string source, string comlumnName, string tableName)
         {
@@ -6361,12 +6421,10 @@ namespace PersAhwal
                 if (CV < cV && UserJobposition.Contains("قنصل"))
                 {
 
-                    empUpdate.Visible = false;
                 }
                 else
                 {
 
-                    empUpdate.Visible = true;
                 }
             }
 
@@ -6988,7 +7046,7 @@ namespace PersAhwal
                 serverType = "احوال شخصية";
             }
             dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
-            SignUp signUp = new SignUp(EmployeeName, UserJobposition, DataSource, serverType, GregorianDate,"yes");
+            SignUp signUp = new SignUp(EmployeeName, UserJobposition, DataSource, serverType, GregorianDate,"yes",Career);
             signUp.ShowDialog();
         }
 
@@ -8991,7 +9049,7 @@ namespace PersAhwal
                 serverType = "احوال شخصية";
             }
             dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
-            SignUp signUp = new SignUp(EmployeeName, UserJobposition, DataSource, serverType, GregorianDate,"yes");
+            SignUp signUp = new SignUp(EmployeeName, UserJobposition, DataSource, serverType, GregorianDate,"yes", Career);
             signUp.ShowDialog();
         }
 
@@ -9397,7 +9455,7 @@ namespace PersAhwal
         
         private bool checkStarTextExist(string dataSource, string col, string text, string genTable)
         {
-            string query = "select * from "+ genTable + " where "+col+"=N'"+text+"'";
+            string query = "select * from "+ genTable + " where "+col+"=N'"+text+"' or "+col+" = N'"+text+"'+'removed'";
             SqlConnection sqlCon = new SqlConnection(dataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();

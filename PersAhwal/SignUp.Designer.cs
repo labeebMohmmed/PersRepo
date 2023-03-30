@@ -29,8 +29,8 @@ namespace PersAhwal
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.EmpGender = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.ApplicantName = new System.Windows.Forms.TextBox();
@@ -70,6 +70,11 @@ namespace PersAhwal
             this.label10 = new System.Windows.Forms.Label();
             this.btnDeActiveteM = new System.Windows.Forms.Button();
             this.btnActiveteM = new System.Windows.Forms.Button();
+            this.EngEmployeeName = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.headOfMission = new System.Windows.Forms.CheckBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -133,7 +138,7 @@ namespace PersAhwal
             this.label1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.label1.Size = new System.Drawing.Size(87, 27);
             this.label1.TabIndex = 323;
-            this.label1.Text = "اسم المستخدم:";
+            this.label1.Text = "الاسم بالعربية:";
             // 
             // userName
             // 
@@ -149,7 +154,7 @@ namespace PersAhwal
             // 
             this.labelpass2.AutoSize = true;
             this.labelpass2.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelpass2.Location = new System.Drawing.Point(277, 47);
+            this.labelpass2.Location = new System.Drawing.Point(277, 90);
             this.labelpass2.Name = "labelpass2";
             this.labelpass2.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.labelpass2.Size = new System.Drawing.Size(123, 27);
@@ -159,7 +164,7 @@ namespace PersAhwal
             // password2
             // 
             this.password2.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.password2.Location = new System.Drawing.Point(12, 44);
+            this.password2.Location = new System.Drawing.Point(12, 87);
             this.password2.Name = "password2";
             this.password2.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.password2.Size = new System.Drawing.Size(256, 35);
@@ -170,7 +175,7 @@ namespace PersAhwal
             // 
             this.labelpass1.AutoSize = true;
             this.labelpass1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelpass1.Location = new System.Drawing.Point(277, 6);
+            this.labelpass1.Location = new System.Drawing.Point(277, 49);
             this.labelpass1.Name = "labelpass1";
             this.labelpass1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.labelpass1.Size = new System.Drawing.Size(72, 27);
@@ -180,7 +185,7 @@ namespace PersAhwal
             // password1
             // 
             this.password1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.password1.Location = new System.Drawing.Point(12, 3);
+            this.password1.Location = new System.Drawing.Point(12, 46);
             this.password1.Name = "password1";
             this.password1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.password1.Size = new System.Drawing.Size(256, 35);
@@ -194,7 +199,7 @@ namespace PersAhwal
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(830, 129);
+            this.panel1.Size = new System.Drawing.Size(854, 129);
             this.panel1.TabIndex = 332;
             // 
             // panel2
@@ -204,7 +209,7 @@ namespace PersAhwal
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(830, 129);
+            this.panel2.Size = new System.Drawing.Size(854, 129);
             this.panel2.TabIndex = 333;
             // 
             // pictureBox1
@@ -219,7 +224,7 @@ namespace PersAhwal
             // 
             // Register
             // 
-            this.Register.Location = new System.Drawing.Point(12, 111);
+            this.Register.Location = new System.Drawing.Point(12, 149);
             this.Register.Name = "Register";
             this.Register.Size = new System.Drawing.Size(256, 45);
             this.Register.TabIndex = 333;
@@ -296,24 +301,24 @@ namespace PersAhwal
             this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle4;
-            this.dataGridView1.Location = new System.Drawing.Point(12, 352);
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
+            this.dataGridView1.Location = new System.Drawing.Point(12, 390);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.dataGridView1.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
@@ -324,7 +329,7 @@ namespace PersAhwal
             this.dataGridView1.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.LightGreen;
             this.dataGridView1.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dataGridView1.RowTemplate.Height = 30;
-            this.dataGridView1.Size = new System.Drawing.Size(781, 301);
+            this.dataGridView1.Size = new System.Drawing.Size(805, 165);
             this.dataGridView1.TabIndex = 546;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             // 
@@ -337,7 +342,7 @@ namespace PersAhwal
             this.flowLayoutPanel1.Location = new System.Drawing.Point(12, 560);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(734, 93);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(803, 93);
             this.flowLayoutPanel1.TabIndex = 669;
             // 
             // التعليقات_السابقة_Off
@@ -348,11 +353,16 @@ namespace PersAhwal
             this.التعليقات_السابقة_Off.Multiline = true;
             this.التعليقات_السابقة_Off.Name = "التعليقات_السابقة_Off";
             this.التعليقات_السابقة_Off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.التعليقات_السابقة_Off.Size = new System.Drawing.Size(705, 800);
+            this.التعليقات_السابقة_Off.Size = new System.Drawing.Size(774, 800);
             this.التعليقات_السابقة_Off.TabIndex = 671;
             // 
             // panelEmployee
             // 
+            this.panelEmployee.Controls.Add(this.textBox2);
+            this.panelEmployee.Controls.Add(this.label13);
+            this.panelEmployee.Controls.Add(this.headOfMission);
+            this.panelEmployee.Controls.Add(this.label11);
+            this.panelEmployee.Controls.Add(this.EngEmployeeName);
             this.panelEmployee.Controls.Add(this.password1);
             this.panelEmployee.Controls.Add(this.labelName);
             this.panelEmployee.Controls.Add(this.ApplicantName);
@@ -368,7 +378,7 @@ namespace PersAhwal
             this.panelEmployee.Controls.Add(this.labelpass2);
             this.panelEmployee.Location = new System.Drawing.Point(12, 177);
             this.panelEmployee.Name = "panelEmployee";
-            this.panelEmployee.Size = new System.Drawing.Size(781, 159);
+            this.panelEmployee.Size = new System.Drawing.Size(803, 207);
             this.panelEmployee.TabIndex = 671;
             // 
             // panelMandoub
@@ -569,11 +579,65 @@ namespace PersAhwal
             this.btnActiveteM.Visible = false;
             this.btnActiveteM.Click += new System.EventHandler(this.btnActiveteM_Click);
             // 
+            // EngEmployeeName
+            // 
+            this.EngEmployeeName.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.EngEmployeeName.Location = new System.Drawing.Point(413, 159);
+            this.EngEmployeeName.Name = "EngEmployeeName";
+            this.EngEmployeeName.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.EngEmployeeName.Size = new System.Drawing.Size(256, 35);
+            this.EngEmployeeName.TabIndex = 336;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.Location = new System.Drawing.Point(686, 162);
+            this.label11.Name = "label11";
+            this.label11.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.label11.Size = new System.Drawing.Size(98, 27);
+            this.label11.TabIndex = 337;
+            this.label11.Text = "الاسم بالانجليزية:";
+            // 
+            // headOfMission
+            // 
+            this.headOfMission.AutoSize = true;
+            this.headOfMission.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.headOfMission.Location = new System.Drawing.Point(416, 86);
+            this.headOfMission.Name = "headOfMission";
+            this.headOfMission.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.headOfMission.Size = new System.Drawing.Size(91, 31);
+            this.headOfMission.TabIndex = 339;
+            this.headOfMission.Text = "رئيس البعثة";
+            this.headOfMission.UseVisualStyleBackColor = true;
+            // 
+            // textBox2
+            // 
+            this.textBox2.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox2.Location = new System.Drawing.Point(12, 6);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.textBox2.Size = new System.Drawing.Size(256, 35);
+            this.textBox2.TabIndex = 340;
+            this.textBox2.UseSystemPasswordChar = true;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Location = new System.Drawing.Point(277, 9);
+            this.label13.Name = "label13";
+            this.label13.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.label13.Size = new System.Drawing.Size(113, 27);
+            this.label13.TabIndex = 341;
+            this.label13.Text = "كلمة المرور السابقة:";
+            // 
             // SignUp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(830, 730);
+            this.ClientSize = new System.Drawing.Size(854, 707);
+            this.Controls.Add(this.panelEmployee);
             this.Controls.Add(this.btnDeActiveteM);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.flowLayoutPanel1);
@@ -581,7 +645,6 @@ namespace PersAhwal
             this.Controls.Add(this.label4);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.btnActivete);
-            this.Controls.Add(this.panelEmployee);
             this.Controls.Add(this.panelMandoub);
             this.Controls.Add(this.btnActiveteM);
             this.Name = "SignUp";
@@ -643,5 +706,10 @@ namespace PersAhwal
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ComboBox الصفة;
         private System.Windows.Forms.TextBox رقم_الهاتف;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.CheckBox headOfMission;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TextBox EngEmployeeName;
     }
 }
