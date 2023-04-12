@@ -1708,7 +1708,7 @@ namespace PersAhwal
             {
                 values = values +", " +relatedPro[x]+"=@"+ relatedPro[x];
             }
-            string query = "Update TableCollection set " + values + " where ID = " + رقم_المرجع_المرتبط_off.Text;
+            string query = "Update TableCollection set " + values + " where رقم_المعاملة =N'" + رقم_المرجع_المرتبط_off.Text + "'";
             Console.WriteLine(query);
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
@@ -1759,7 +1759,7 @@ namespace PersAhwal
         {
             if (رقم_المرجع_المرتبط_off.Text == "")
                 return false;
-            string query = "SELECT مقدم_الطلب FROM TableCollection where ID =" + رقم_المرجع_المرتبط_off.Text;
+            string query = "SELECT مقدم_الطلب FROM TableCollection where رقم_المعاملة = N'" + رقم_المرجع_المرتبط_off.Text+"'";
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
@@ -2070,8 +2070,11 @@ namespace PersAhwal
                     طريقة_الطلب.Checked = true;
                     اسم_المندوب.Text = "";
                 }
-                else طريقة_الطلب.Checked = false;
-                panelShow(currentPanelIndex);
+                else
+                {
+                    طريقة_الطلب.Checked = false;
+                }
+                    panelShow(currentPanelIndex);
 
                 //                checkAutoUpdate.Checked = false; 
             }
@@ -3290,7 +3293,7 @@ namespace PersAhwal
                     }
                     if (starTextSub == "" && txtReview.Text == "")
                         checkAutoUpdate.Checked = true;
-                    authJob();
+                    
                     timer5.Enabled = true;
                     if (قائمة_الحقوق.Text == "")
                         getDefualtRight(DataSource);
@@ -3377,7 +3380,7 @@ namespace PersAhwal
                     finalPanel.BringToFront();
                     finalPanel.Visible = true;
                     panelAuthRights.Visible = btnNext.Visible = PanelDataGrid.Visible = panelapplicationInfo.Visible = false;
-
+                    authJob();
                     break;
             }
         }
@@ -3443,7 +3446,6 @@ namespace PersAhwal
                 mandoubLabel.Visible = اسم_المندوب.Visible = false;
 
                 proType1 = false;
-                الشاهد_الأول.Enabled = هوية_الأول.Enabled = true;
                 الشاهد_الأول.Text = هوية_الأول.Text = "";
 
             }
@@ -3456,7 +3458,6 @@ namespace PersAhwal
                 //MessageBox.Show(طريقة_الطلب.Text + " false");
                 اسم_المندوب.Text = "إختر اسم المندوب";
 
-                الشاهد_الأول.Enabled = هوية_الأول.Enabled = false;
             }
 
         }
@@ -5621,16 +5622,28 @@ namespace PersAhwal
 
         private void اسم_المندوب_TextUpdate(object sender, EventArgs e)
         {
+            if (اسم_المندوب.Text != "" && !اسم_المندوب.Text.Contains("ختر"))
+            {
+                //MessageBox.Show("update");
 
+                الشاهد_الأول.Text = اسم_المندوب.Text.Split('-')[0].Trim();
+                هوية_الأول.Text = getMandoubPass(DataSource, اسم_المندوب.Text.Split('-')[0].Trim());
+            }
         }
 
         private void اسم_المندوب_TextChanged(object sender, EventArgs e)
         {
-            if (اسم_المندوب.Visible)
+            
+            if (اسم_المندوب.Text != "" && اسم_المندوب.Text != "حضور مباشرة إلى القنصلية" && اسم_المندوب.Text != "إختر اسم المندوب" && طريقة_الطلب.Checked)
             {
+                //MessageBox.Show("change");
+
+                الشاهد_الأول.Enabled = هوية_الأول.Enabled = false;
                 الشاهد_الأول.Text = اسم_المندوب.Text.Split('-')[0].Trim();
                 هوية_الأول.Text = getMandoubPass(DataSource, اسم_المندوب.Text.Split('-')[0].Trim());
             }
+            else
+                الشاهد_الأول.Enabled = هوية_الأول.Enabled = true;
         }
 
         private void FormAuth_FormClosed(object sender, FormClosedEventArgs e)
@@ -5892,7 +5905,7 @@ namespace PersAhwal
                             {
                                 if (word != replacemests[person1] && word != replacemests[person1]+"،")
                                 {
-                                    var selectedOption = MessageBox.Show("هل تود إجراء التصحيح التلقائي (" + replacemests[person2] + ")", "تم رصد خطاء في الصياغة (" + word + ")", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                                    var selectedOption = MessageBox.Show("هل تود إجراء التصحيح التلقائي (" + replacemests[person1] + ")", "تم رصد خطاء في الصياغة (" + word + ")", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                                     if (selectedOption == DialogResult.Yes)
                                     {
@@ -6070,20 +6083,23 @@ namespace PersAhwal
             SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
-            sqlDa.Fill(dtbl);
-            sqlCon.Close();
-            txtReviewListIndex = 0;
-            txtReviewList = new string[dtbl.Rows.Count];
-            if (dtbl.Rows.Count == 0)
-                fileUpdate.Visible = false;
-            foreach (DataRow dataRow in dtbl.Rows)
+            try
             {
-                if (dataRow[col].ToString() == "" && !dataRow[col].ToString().Contains("removed")) continue;
-                txtReviewList[txtReviewListIndex] = dataRow[إجراء_التوكيل.Text.Replace(" ", "_")].ToString();
-                Console.WriteLine(txtReviewList[txtReviewListIndex]);
-                txtReviewListIndex++;
+                sqlDa.Fill(dtbl);
+                sqlCon.Close();
+                txtReviewListIndex = 0;
+                txtReviewList = new string[dtbl.Rows.Count];
+                if (dtbl.Rows.Count == 0)
+                    fileUpdate.Visible = false;
+                foreach (DataRow dataRow in dtbl.Rows)
+                {
+                    if (dataRow[col].ToString() == "" || dataRow[col].ToString().Contains("removed")) continue;
+                    txtReviewList[txtReviewListIndex] = dataRow[إجراء_التوكيل.Text.Replace(" ", "_")].ToString();
+                    Console.WriteLine(txtReviewList[txtReviewListIndex]);
+                    txtReviewListIndex++;
+                }
             }
-
+            catch (Exception ex) { }
 
         }
         private void reversTextRight()
@@ -6096,18 +6112,21 @@ namespace PersAhwal
             SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
-            sqlDa.Fill(dtbl);
-            sqlCon.Close();
-            txtRightListIndex = 0;
-            txtRightList = new string[dtbl.Rows.Count];
-            foreach (DataRow dataRow in dtbl.Rows)
+            try
             {
-                if (dataRow[col].ToString() == "" && !dataRow[col].ToString().Contains("removed")) continue;
-                txtRightList[txtRightListIndex] = dataRow[إجراء_التوكيل.Text.Replace(" ", "_")].ToString();
-                Console.WriteLine(txtRightList[txtRightListIndex]);
-                txtRightListIndex++;
+                sqlDa.Fill(dtbl);
+                sqlCon.Close();
+                txtRightListIndex = 0;
+                txtRightList = new string[dtbl.Rows.Count];
+                foreach (DataRow dataRow in dtbl.Rows)
+                {
+                    if (dataRow[col].ToString() == "" || dataRow[col].ToString().Contains("removed")) continue;
+                    txtRightList[txtRightListIndex] = dataRow[إجراء_التوكيل.Text.Replace(" ", "_")].ToString();
+                    Console.WriteLine(txtRightList[txtRightListIndex]);
+                    txtRightListIndex++;
+                }
             }
-
+            catch (Exception ex) { }
 
         }
 

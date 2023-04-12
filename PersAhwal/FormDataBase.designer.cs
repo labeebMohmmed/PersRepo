@@ -63,12 +63,12 @@ namespace PersAhwal
             // 
             this.labTitel.AutoSize = true;
             this.labTitel.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labTitel.Location = new System.Drawing.Point(422, 35);
+            this.labTitel.Location = new System.Drawing.Point(384, 41);
             this.labTitel.Name = "labTitel";
             this.labTitel.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.labTitel.Size = new System.Drawing.Size(225, 27);
+            this.labTitel.Size = new System.Drawing.Size(247, 27);
             this.labTitel.TabIndex = 14;
-            this.labTitel.Text = "برنامج الاحوال الشخصية وشؤون الؤعايا";
+            this.labTitel.Text = "برنامج الاحوال الشخصية والخدمات القنصلية";
             // 
             // label3
             // 
@@ -232,9 +232,9 @@ namespace PersAhwal
             this.labebserver57.Location = new System.Drawing.Point(46, 258);
             this.labebserver57.Name = "labebserver57";
             this.labebserver57.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.labebserver57.Size = new System.Drawing.Size(367, 27);
+            this.labebserver57.Size = new System.Drawing.Size(345, 27);
             this.labebserver57.TabIndex = 29;
-            this.labebserver57.Text = "مخدم قسمي الاحوال الشخصية وشؤون الرعايا متصلان بشكل صحيح";
+            this.labebserver57.Text = "مخدم الاحوال الشخصية والخدمات القنصلية متصل بشكل صحيح";
             // 
             // timer3
             // 

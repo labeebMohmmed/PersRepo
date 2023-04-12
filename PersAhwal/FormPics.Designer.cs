@@ -30,16 +30,15 @@ namespace PersAhwal
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle37 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle38 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormPics));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle39 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle40 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle41 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle42 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel1 = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.توضيح_المعاملة = new System.Windows.Forms.Button();
             this.btnAuth = new System.Windows.Forms.Button();
             this.btnSaveEnd = new System.Windows.Forms.Button();
             this.Combo1 = new System.Windows.Forms.ComboBox();
@@ -63,11 +62,8 @@ namespace PersAhwal
             this.txtIDNo = new System.Windows.Forms.TextBox();
             this.button5 = new System.Windows.Forms.Button();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
-            this.drawPicPanel = new System.Windows.Forms.Panel();
-            this.تعليق = new System.Windows.Forms.TextBox();
             this.بيانات_المندوب = new System.Windows.Forms.TextBox();
             this.التاريخ_الميلادي = new System.Windows.Forms.TextBox();
-            this.dataGridView3 = new System.Windows.Forms.DataGridView();
             this.panelFinalArch = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.nameSave = new System.Windows.Forms.Button();
@@ -81,25 +77,25 @@ namespace PersAhwal
             this.button1 = new System.Windows.Forms.Button();
             this.تعليق_جديد_Off = new System.Windows.Forms.TextBox();
             this.التعليقات_السابقة_Off = new System.Windows.Forms.TextBox();
-            this.توضيح_المعاملة = new System.Windows.Forms.Button();
+            this.تعليق = new System.Windows.Forms.TextBox();
+            this.drawPicPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
-            this.drawPicPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
             this.panelFinalArch.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.commentPanel.SuspendLayout();
+            this.drawPicPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel1.Controls.Add(this.توضيح_المعاملة);
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Controls.Add(this.dataGridView1);
+            this.panel1.Controls.Add(this.توضيح_المعاملة);
             this.panel1.Location = new System.Drawing.Point(12, 7);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(718, 716);
@@ -115,6 +111,8 @@ namespace PersAhwal
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.LoadCompleted += new System.ComponentModel.AsyncCompletedEventHandler(this.pictureBox1_LoadCompleted);
+            this.pictureBox1.BackgroundImageChanged += new System.EventHandler(this.pictureBox1_BackgroundImageChanged);
+            this.pictureBox1.LocationChanged += new System.EventHandler(this.pictureBox1_LocationChanged);
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // dataGridView1
@@ -123,23 +121,23 @@ namespace PersAhwal
             this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle37.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle37.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle37.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle37.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle37.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle37.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle37.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle37;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle38.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle38.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle38.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle38.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle38.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle38.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle38.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle38;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle6;
             this.dataGridView1.Location = new System.Drawing.Point(357, 253);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -154,6 +152,20 @@ namespace PersAhwal
             this.dataGridView1.Size = new System.Drawing.Size(253, 225);
             this.dataGridView1.TabIndex = 546;
             this.dataGridView1.Visible = false;
+            // 
+            // توضيح_المعاملة
+            // 
+            this.توضيح_المعاملة.BackColor = System.Drawing.SystemColors.Control;
+            this.توضيح_المعاملة.FlatAppearance.BorderSize = 0;
+            this.توضيح_المعاملة.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.توضيح_المعاملة.Font = new System.Drawing.Font("Arabic Typesetting", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.توضيح_المعاملة.Location = new System.Drawing.Point(4, 65);
+            this.توضيح_المعاملة.Name = "توضيح_المعاملة";
+            this.توضيح_المعاملة.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.توضيح_المعاملة.Size = new System.Drawing.Size(574, 588);
+            this.توضيح_المعاملة.TabIndex = 594;
+            this.توضيح_المعاملة.Text = "وصف المعاملة";
+            this.توضيح_المعاملة.UseVisualStyleBackColor = false;
             // 
             // btnAuth
             // 
@@ -190,6 +202,7 @@ namespace PersAhwal
             this.Combo1.TabIndex = 609;
             this.Combo1.Text = "إختر نوع التوكيل";
             this.Combo1.SelectedIndexChanged += new System.EventHandler(this.CombAuthType_SelectedIndexChanged);
+            this.Combo1.TextUpdate += new System.EventHandler(this.Combo1_TextUpdate);
             this.Combo1.TextChanged += new System.EventHandler(this.Combo1_TextChanged);
             // 
             // Combo2
@@ -427,23 +440,23 @@ namespace PersAhwal
             this.dataGridView2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle39.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle39.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle39.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle39.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle39.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle39.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle39.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView2.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle39;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView2.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
             this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle40.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle40.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle40.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle40.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle40.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle40.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle40.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView2.DefaultCellStyle = dataGridViewCellStyle40;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView2.DefaultCellStyle = dataGridViewCellStyle8;
             this.dataGridView2.Location = new System.Drawing.Point(15, 7);
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
@@ -458,34 +471,10 @@ namespace PersAhwal
             this.dataGridView2.TabIndex = 836;
             this.dataGridView2.Visible = false;
             // 
-            // drawPicPanel
-            // 
-            this.drawPicPanel.AutoScroll = true;
-            this.drawPicPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.drawPicPanel.Controls.Add(this.تعليق);
-            this.drawPicPanel.Controls.Add(this.بيانات_المندوب);
-            this.drawPicPanel.Controls.Add(this.التاريخ_الميلادي);
-            this.drawPicPanel.Controls.Add(this.dataGridView3);
-            this.drawPicPanel.Location = new System.Drawing.Point(736, 7);
-            this.drawPicPanel.Name = "drawPicPanel";
-            this.drawPicPanel.Size = new System.Drawing.Size(298, 655);
-            this.drawPicPanel.TabIndex = 839;
-            // 
-            // تعليق
-            // 
-            this.تعليق.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.تعليق.Location = new System.Drawing.Point(34, 299);
-            this.تعليق.Multiline = true;
-            this.تعليق.Name = "تعليق";
-            this.تعليق.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.تعليق.Size = new System.Drawing.Size(215, 35);
-            this.تعليق.TabIndex = 846;
-            this.تعليق.Visible = false;
-            // 
             // بيانات_المندوب
             // 
             this.بيانات_المندوب.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.بيانات_المندوب.Location = new System.Drawing.Point(34, 372);
+            this.بيانات_المندوب.Location = new System.Drawing.Point(78, 85);
             this.بيانات_المندوب.Multiline = true;
             this.بيانات_المندوب.Name = "بيانات_المندوب";
             this.بيانات_المندوب.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -496,50 +485,13 @@ namespace PersAhwal
             // التاريخ_الميلادي
             // 
             this.التاريخ_الميلادي.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.التاريخ_الميلادي.Location = new System.Drawing.Point(34, 331);
+            this.التاريخ_الميلادي.Location = new System.Drawing.Point(78, 44);
             this.التاريخ_الميلادي.Multiline = true;
             this.التاريخ_الميلادي.Name = "التاريخ_الميلادي";
             this.التاريخ_الميلادي.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.التاريخ_الميلادي.Size = new System.Drawing.Size(215, 35);
             this.التاريخ_الميلادي.TabIndex = 844;
             this.التاريخ_الميلادي.Visible = false;
-            // 
-            // dataGridView3
-            // 
-            this.dataGridView3.AllowUserToDeleteRows = false;
-            this.dataGridView3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle41.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle41.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle41.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle41.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle41.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle41.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle41.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView3.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle41;
-            this.dataGridView3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle42.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle42.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle42.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle42.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle42.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle42.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle42.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView3.DefaultCellStyle = dataGridViewCellStyle42;
-            this.dataGridView3.Location = new System.Drawing.Point(24, 433);
-            this.dataGridView3.Name = "dataGridView3";
-            this.dataGridView3.RowTemplate.DefaultCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.dataGridView3.RowTemplate.DefaultCellStyle.BackColor = System.Drawing.Color.White;
-            this.dataGridView3.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Arabic Typesetting", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dataGridView3.RowTemplate.DefaultCellStyle.ForeColor = System.Drawing.Color.Black;
-            this.dataGridView3.RowTemplate.DefaultCellStyle.Padding = new System.Windows.Forms.Padding(4);
-            this.dataGridView3.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.LightGreen;
-            this.dataGridView3.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView3.RowTemplate.Height = 30;
-            this.dataGridView3.Size = new System.Drawing.Size(13, 71);
-            this.dataGridView3.TabIndex = 840;
-            this.dataGridView3.Visible = false;
             // 
             // panelFinalArch
             // 
@@ -702,25 +654,35 @@ namespace PersAhwal
             this.التعليقات_السابقة_Off.TabIndex = 679;
             this.التعليقات_السابقة_Off.Click += new System.EventHandler(this.التعليقات_السابقة_Off_Click);
             // 
-            // توضيح_المعاملة
+            // تعليق
             // 
-            this.توضيح_المعاملة.BackColor = System.Drawing.SystemColors.Control;
-            this.توضيح_المعاملة.FlatAppearance.BorderSize = 0;
-            this.توضيح_المعاملة.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.توضيح_المعاملة.Font = new System.Drawing.Font("Arabic Typesetting", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.توضيح_المعاملة.Location = new System.Drawing.Point(4, 65);
-            this.توضيح_المعاملة.Name = "توضيح_المعاملة";
-            this.توضيح_المعاملة.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.توضيح_المعاملة.Size = new System.Drawing.Size(574, 588);
-            this.توضيح_المعاملة.TabIndex = 594;
-            this.توضيح_المعاملة.Text = "وصف المعاملة";
-            this.توضيح_المعاملة.UseVisualStyleBackColor = false;
+            this.تعليق.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.تعليق.Location = new System.Drawing.Point(78, 3);
+            this.تعليق.Multiline = true;
+            this.تعليق.Name = "تعليق";
+            this.تعليق.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.تعليق.Size = new System.Drawing.Size(215, 35);
+            this.تعليق.TabIndex = 846;
+            this.تعليق.Visible = false;
+            // 
+            // drawPicPanel
+            // 
+            this.drawPicPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.drawPicPanel.Controls.Add(this.تعليق);
+            this.drawPicPanel.Controls.Add(this.التاريخ_الميلادي);
+            this.drawPicPanel.Controls.Add(this.بيانات_المندوب);
+            this.drawPicPanel.Location = new System.Drawing.Point(736, 12);
+            this.drawPicPanel.Name = "drawPicPanel";
+            this.drawPicPanel.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.drawPicPanel.Size = new System.Drawing.Size(298, 650);
+            this.drawPicPanel.TabIndex = 849;
             // 
             // FormPics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1370, 741);
+            this.Controls.Add(this.drawPicPanel);
             this.Controls.Add(this.mandoubName);
             this.Controls.Add(this.btnArchMandoub);
             this.Controls.Add(this.panelpicTemp);
@@ -730,20 +692,19 @@ namespace PersAhwal
             this.Controls.Add(this.label5);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panelFinalArch);
-            this.Controls.Add(this.drawPicPanel);
             this.Controls.Add(this.btnExten);
             this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.btnArchived);
-            this.Controls.Add(this.docId);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.dataGridView2);
             this.Controls.Add(this.commentPanel);
             this.Controls.Add(this.lalProType);
             this.Controls.Add(this.txtIDNo);
-            this.Controls.Add(this.button4);
             this.Controls.Add(this.Combo1);
-            this.Controls.Add(this.button3);
             this.Controls.Add(this.Combo2);
+            this.Controls.Add(this.docId);
+            this.Controls.Add(this.button3);
+            this.Controls.Add(this.button4);
             this.Name = "FormPics";
             this.Text = "أرشفة الملفات";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormPics_FormClosed);
@@ -752,9 +713,6 @@ namespace PersAhwal
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
-            this.drawPicPanel.ResumeLayout(false);
-            this.drawPicPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
             this.panelFinalArch.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
@@ -762,6 +720,8 @@ namespace PersAhwal
             this.panel3.PerformLayout();
             this.commentPanel.ResumeLayout(false);
             this.commentPanel.PerformLayout();
+            this.drawPicPanel.ResumeLayout(false);
+            this.drawPicPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -795,8 +755,6 @@ namespace PersAhwal
         private System.Windows.Forms.TextBox txtIDNo;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.DataGridView dataGridView2;
-        private System.Windows.Forms.Panel drawPicPanel;
-        private System.Windows.Forms.DataGridView dataGridView3;
         private System.Windows.Forms.Panel panelFinalArch;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label label5;
@@ -812,7 +770,8 @@ namespace PersAhwal
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TextBox تعليق_جديد_Off;
         private System.Windows.Forms.TextBox التعليقات_السابقة_Off;
-        private System.Windows.Forms.TextBox تعليق;
         private System.Windows.Forms.Button توضيح_المعاملة;
+        private System.Windows.Forms.TextBox تعليق;
+        private System.Windows.Forms.FlowLayoutPanel drawPicPanel;
     }
 }

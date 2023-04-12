@@ -54,6 +54,9 @@ namespace PersAhwal
 {
     public partial class FormPics : Form
     {
+        string AppNameText = "";
+        string refNo = "";
+        string relatedRefNo = "";
         DeviceInfo AvailableScanner = null;
         string relatedPro = "";
         string[] PathImage = new string[100];
@@ -135,8 +138,9 @@ namespace PersAhwal
             ServerType = serverType;
             DataSource = dataSource;
             FormType = formType;
-            //MessageBox.Show( DocIDGenerator(formType));
-
+            // MessageBox.Show(pictureBox1.ImageLocation.ToString());
+            button4.BringToFront();
+            button3.BringToFront();
             //return;
             btnAuth.Visible = true;
             FilespathIn = filespathIn;
@@ -218,7 +222,7 @@ namespace PersAhwal
                 if (strSubData.Length > 0 && strSubData[0] != "")
                 {
                     Combo2.Visible = true;
-                    Combo2.Items.Clear();
+                    //Combo2.Items.Clear();
                     if (!checkColumnName(Combo1.Text.Replace(" ", "_")))
                     {
                         CreateColumn(Combo1.Text.Replace(" ", "_"));
@@ -239,9 +243,19 @@ namespace PersAhwal
             else if (FormType == 10) {
                 try
                 {
-                    Combo1.Enabled = false;
+                    //Combo1.Enabled = false;
                     Combo1.Text = strData[index];
-                }catch(Exception ex) { }
+                    reqFile = "";
+                    string[] data = new string[2];
+
+                    data[0] = noForm;
+
+                    //Combo2.Items.Clear();
+                    fileComboBoxSub(Combo2, DataSource, "altColName", "altSubColName");
+                    if (ArchiveState) DocIDGenerator(FormType);
+                    loadPreReq(noForm, Combo1.Text, ArchiveState);
+                }
+                catch(Exception ex) { }
 
             }
             if (ArchiveState)
@@ -436,7 +450,7 @@ namespace PersAhwal
             PictureBox picAddReq1 = new PictureBox();
             PictureBox picRemReq1 = new PictureBox();
             PictureBox picUplReq1 = new PictureBox();
-            Label label = new Label();
+            //Button label = new Button();
             
 
             // 
@@ -452,6 +466,8 @@ namespace PersAhwal
             picAddReq1.TabStop = false;
             picAddReq1.Click += new System.EventHandler(this.scanPic);
             picAddReq1.Visible = true;
+
+            
 
             //
             //picUplReq1
@@ -512,19 +528,65 @@ namespace PersAhwal
             drawBoxesindex++;
         }
         
+        private void drawNameBox()
+        {
+            PictureBox picUplReq1 = new PictureBox();
+            System.Windows.Forms.TextBox AppName = new System.Windows.Forms.TextBox();
+
+            AppName.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            AppName.Location = new System.Drawing.Point(3, 38);
+            AppName.Multiline = true;
+            AppName.Name = "AppName";
+            AppName.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            AppName.Size = new System.Drawing.Size(290, 77);
+            AppName.TabIndex = 847;
+            AppName.Visible = true;
+            AppName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            AppName.Text = "اكتب اسم مقدم الطلب";
+            AppName.MouseClick += new System.Windows.Forms.MouseEventHandler(this.AppName_MouseClick); 
+            AppName.TextChanged += new System.EventHandler(this.AppName_TextChanged);
+            drawPicPanel.Controls.Add(AppName);
+        }
+        private void AppName_TextChanged(object sender, EventArgs e)
+        {
+            System.Windows.Forms.TextBox textbox = (System.Windows.Forms.TextBox)sender;
+            AppNameText = textbox.Text; 
+        }
+        
+        private void AppName_MouseClick(object sender, EventArgs e)
+        {
+            System.Windows.Forms.TextBox textbox = (System.Windows.Forms.TextBox)sender;
+            if (textbox.Text == "اكتب اسم مقدم الطلب")
+                textbox.Text = "";
+        }
+
         private void drawBoxesTitle(string text, int xLoc)
         {
-            Label label = new Label();
-            
-            label.AutoSize = true;
-            label.Font = new System.Drawing.Font("Arabic Typesetting", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            label.ForeColor = System.Drawing.Color.Red;
+            Button label = new Button();
+            label.BackColor = System.Drawing.SystemColors.Control;
+            label.FlatAppearance.BorderSize = 0;
+            label.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            label.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             label.Location = new System.Drawing.Point(xLoc, 3 + (32 * drawBoxesindex));
             label.Name = "label";
             label.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            label.Size = new System.Drawing.Size(111, 31);
-            label.TabIndex = 614;
+            label.Size = new System.Drawing.Size(295, 35);
+            label.TabIndex = 593;
             label.Text = text;
+            label.UseVisualStyleBackColor = false;
+
+
+           
+            
+            //label.AutoSize = true;
+            //label.Font = new System.Drawing.Font("Arabic Typesetting", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            //label.ForeColor = System.Drawing.Color.Red;
+            //label.Location = new System.Drawing.Point(xLoc, 3 + (32 * drawBoxesindex));
+            //label.Name = "label";
+            //label.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            //label.Size = new System.Drawing.Size(111, 31);
+            //label.TabIndex = 614;
+            //label.Text = text;
 
             drawPicPanel.Controls.Add(label);
             drawBoxesindex++;
@@ -1355,7 +1417,7 @@ namespace PersAhwal
         private void fileComboBox(ComboBox combbox, string source, string comlumnName, string tableName)
         {
             combbox.Visible = true;
-            combbox.Items.Clear();            
+            //combbox.Items.Clear();            
             using (SqlConnection saConn = new SqlConnection(source))
             {
                 saConn.Open();
@@ -1831,8 +1893,10 @@ namespace PersAhwal
         }
          private void deleteArchRowsData(string v1, string v2, string colName)
         {
+            string dataSource = DataSource.Replace("AhwalDataBase", "ArchFilesDB");
+            dataSource = dataSource.Replace("SudaneseAffairs", "ArchFilesDB");
             string query;
-            SqlConnection Con = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
+            SqlConnection Con = new SqlConnection(dataSource);
             query = "DELETE FROM " + v2 + " where "+ colName+" = N'"+ v1+"'";
             Console.WriteLine(query); 
             //MessageBox.Show(query);
@@ -2265,7 +2329,7 @@ namespace PersAhwal
                             string extn1 = fileinfo1.Extension;
                             string DocName1 = fileinfo1.Name;
                             
-                            insertDoc(docid.ToString(), GregorianDate, EmpName, DataSource, extn1, DocName1, AuthNoPart1, "data1", buffer1);
+                            insertDoc("", docid.ToString(), GregorianDate, EmpName, DataSource, extn1, DocName1, AuthNoPart1, "data1", buffer1);
                             //Console.WriteLine(docid);
                         }
                     }
@@ -2292,14 +2356,14 @@ namespace PersAhwal
                             var fileinfo1 = new FileInfo(location[x]);
                             string extn1 = fileinfo1.Extension;
                             string DocName1 = fileinfo1.Name;
-                            insertDoc(FileIDNo, GregorianDate, EmpName, DataSource, extn1, DocName1, docIDNumber, "data1", buffer1);
+                            insertDoc("",FileIDNo, GregorianDate, EmpName, DataSource, extn1, DocName1, docIDNumber, "data1", buffer1);
                             //Console.WriteLine(docIDNumber);
                         }
                     }
                 }
                 
             }
-            else if (!ArchiveState && (archCase == 2 || archCase == 3)) {
+            else if (!ArchiveState && (archCase == 2 || archCase == 3 || (AppNameText != "" && AppNameText != "اكتب اسم مقدم الطلب"))) {
                 //MessageBox.Show("archCase = " + archCase.ToString());
                 //"تم إصدارالمكاتبة النهائية باسم ولكن لم تتم أرشفتها بعد";
                 UpdateComment(docIDNumber);
@@ -2324,7 +2388,7 @@ namespace PersAhwal
                             var fileinfo1 = new FileInfo(location[x]);
                             string extn1 = fileinfo1.Extension;
                             string DocName1 = fileinfo1.Name;
-                            insertDoc(getProcedName, FileIDNo, GregorianDate, EmpName, DataSource, extn1, DocName1, docIDNumber, "data2", buffer1);
+                            insertDoc(relatedRefNo,getProcedName, FileIDNo, GregorianDate, EmpName, DataSource, extn1, DocName1, docIDNumber, "data2", buffer1);
                         }
                     }
                 }
@@ -2368,7 +2432,7 @@ namespace PersAhwal
                             var fileinfo1 = new FileInfo(location[x]);
                             string extn1 = fileinfo1.Extension;
                             string DocName1 = fileinfo1.Name;
-                            insertDoc(getProcedName,FileIDNo, GregorianDate, EmpName, DataSource, extn1, DocName1, docIDNumber, "data2", buffer1);
+                            insertDoc(relatedRefNo,getProcedName, FileIDNo, GregorianDate, EmpName, DataSource, extn1, DocName1, docIDNumber, "data2", buffer1);
                         }
                     }
                 }
@@ -2387,16 +2451,21 @@ namespace PersAhwal
                 }
             }
         }
-        private string checkArch(string documenNo)
-        {
 
-            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
+        
+
+        private string checkArch(string documenNo, string name)
+        {
+            string dataSource = DataSource.Replace("AhwalDataBase", "ArchFilesDB");
+            dataSource = dataSource.Replace("SudaneseAffairs", "ArchFilesDB");
+            SqlConnection sqlCon = new SqlConnection(dataSource);
             if (sqlCon.State == ConnectionState.Closed)
 
                 sqlCon.Open();
-            SqlDataAdapter sqlDa = new SqlDataAdapter("select ID,نوع_المستند,التاريخ,الاسم,المستند from TableGeneralArch where رقم_معاملة_القسم=@رقم_معاملة_القسم", sqlCon);
+            SqlDataAdapter sqlDa = new SqlDataAdapter("select ID,نوع_المستند,التاريخ,الاسم,المستند,رقم_المرجع,رقم_المرجع_المرتبط_off from TableGeneralArch where رقم_معاملة_القسم=@رقم_معاملة_القسم or رقم_المرجع_المرتبط_off=@رقم_المرجع_المرتبط_off", sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             sqlDa.SelectCommand.Parameters.AddWithValue("@رقم_معاملة_القسم", documenNo);
+            sqlDa.SelectCommand.Parameters.AddWithValue("@رقم_المرجع_المرتبط_off", documenNo);
             DataTable dtbl = new DataTable();
             sqlDa.Fill(dtbl);
             sqlCon.Close();
@@ -2409,30 +2478,34 @@ namespace PersAhwal
             int index1 = 0;
             string[] data2List = new string[100];
             int index2 = 0;
-            string name = "";
+            //MessageBox.Show(documenNo);
             foreach (DataRow row in dtbl.Rows)
             {
                 data3check = true;
-                name = row["الاسم"].ToString();
-                //MessageBox.Show(name);
-                if (name != "")
-                {
-                    if (row["نوع_المستند"].ToString() == "data1")
-                    {
-                        data1check = true;
-                        data1List[index1] = row["المستند"].ToString();
-                        id1List[index1] = row["ID"].ToString();
-                        index1++;
-                    }
+                //name = row["الاسم"].ToString();
+                refNo = row["رقم_المرجع"].ToString();
+                relatedRefNo = row["رقم_المرجع_المرتبط_off"].ToString();
+                //MessageBox.Show(name);MessageBox.Show(relatedRefNo);
+                //if (name != "")
+                //{
 
-                    if (row["نوع_المستند"].ToString() == "data2")
-                    {
-                        data2check = true;
-                        data2List[index2] = row["المستند"].ToString();
-                        //MessageBox.Show(id2List[index2]);
-                        id2List[index2] = row["ID"].ToString();
-                        index2++;
-                    }
+                //}
+
+                if (row["نوع_المستند"].ToString() == "data1")
+                {
+                    data1check = true;
+                    data1List[index1] = row["المستند"].ToString();
+                    id1List[index1] = row["ID"].ToString();
+                    index1++;
+                }
+
+                if (row["نوع_المستند"].ToString() == "data2")
+                {
+                    data2check = true;
+                    data2List[index2] = row["المستند"].ToString();
+                    //MessageBox.Show(id2List[index2]);
+                    id2List[index2] = row["ID"].ToString();
+                    index2++;
                 }
             }
 
@@ -2459,10 +2532,37 @@ namespace PersAhwal
                 btnSaveEnd.Location = new System.Drawing.Point(736, 668);
                 drawBoxesTitle("أرشفة المكاتبات النهائية", 20);
                 drawBoxes("استمارة الطلب بعد البصمة", true, "");
-                drawBoxes("المكاتبة النهائية ", true, "");
-                if(noForm == "15"||noForm == "17")
+                if(noForm == "15")
+                        drawBoxes("وثيقة عقد النكاح", true, "");
+                if(noForm == "17")
+                        drawBoxes("وثيقة اثبات الطلاق", true, "");
+                else
+                        drawBoxes("المكاتبة النهائية ", true, "");
+                if (noForm == "15" || noForm == "17")
                     drawBoxes("الإيصال المالي", true, "");
-                else drawBoxes("أرشفة مستندات أخرى", true, "");
+                drawBoxes("أرشفة مستندات أخرى", true, "");
+            }
+            else if (name == "" && data3check)
+            {
+                var selectedOption = MessageBox.Show("تجاوز؟", "بيانات الطلب غير مكتملة", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (selectedOption == DialogResult.Yes)
+                {
+                    btnSaveEnd.Visible = panelFinalArch.Visible = false;
+                    drawNameBox();
+
+                    btnSaveEnd.Location = new System.Drawing.Point(736, 668);
+                    drawBoxesTitle("أرشفة المكاتبات النهائية", 20);
+                    drawBoxes("استمارة الطلب بعد البصمة", true, "");
+                    if (noForm == "15")
+                        drawBoxes("وثيقة عقد النكاح", true, "");
+                    if (noForm == "17")
+                        drawBoxes("وثيقة اثبات الطلاق", true, "");
+                    else
+                        drawBoxes("المكاتبة النهائية ", true, "");
+                    if (noForm == "15" || noForm == "17")
+                        drawBoxes("الإيصال المالي", true, "");
+                    drawBoxes("أرشفة مستندات أخرى", true, "");
+                }
             }
 
             //if (name == "مؤرشف نهائي")
@@ -2516,7 +2616,7 @@ namespace PersAhwal
         {
             //sqlCmd.Parameters.AddWithValue("@appOldNew", "في انتظار نسخة المواطن");
             string qurey = "update archives set appOldNew=@appOldNew where docID=@docID";
-            
+
             SqlConnection sqlCon = new SqlConnection(DataSource);
             SqlCommand sqlCmd = new SqlCommand(qurey, sqlCon);
             if (sqlCon.State == ConnectionState.Closed)
@@ -2527,7 +2627,41 @@ namespace PersAhwal
             sqlCmd.ExecuteNonQuery();
             sqlCon.Close();
         }
+
+        private void updateGenName(string name, string idDoc)
+        {
+            string dataSource = DataSource.Replace("AhwalDataBase", "ArchFilesDB");
+            dataSource = dataSource.Replace("SudaneseAffairs", "ArchFilesDB");
+            SqlConnection sqlCon = new SqlConnection(dataSource);
+
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            string query = "update TableGeneralArch set الاسم=N'" + name + "', Pass = N'تجاوز الادخال' where رقم_معاملة_القسم = '" + idDoc + "'";
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
+        }
         
+        private void updateAppName(string name, string idDoc, string table)
+        {
+            string dataSource = DataSource.Replace("AhwalDataBase", "ArchFilesDB");
+            dataSource = dataSource.Replace("SudaneseAffairs", "ArchFilesDB");
+            SqlConnection sqlCon = new SqlConnection(dataSource);
+
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            string query = "update TableGeneralArch set الاسم=N'" + name + "', Pass = N'تجاوز الادخال' where رقم_المرجع = '" + idDoc + "' and docTable = '" + table + "'";
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
+        }
+
         private void UpdateComment(string documenNo)
         {
             //sqlCmd.Parameters.AddWithValue("@appOldNew", "في انتظار نسخة المواطن");
@@ -2690,10 +2824,12 @@ namespace PersAhwal
 
         }
 
-        private void insertDoc(string name, string id, string date, string employee, string dataSource, string extn1, string DocName1, string messNo, string docType, byte[] buffer1)
+        private void insertDoc(string relatedRefNo, string name, string id, string date, string employee, string dataSource, string extn1, string DocName1, string messNo, string docType, byte[] buffer1)
         {
-            string query = "INSERT INTO TableGeneralArch (Data1,Extension1,نوع_المستند,رقم_معاملة_القسم,المستند,الموظف,التاريخ,رقم_المرجع,docTable,الاسم) values (@Data1,@Extension1,@نوع_المستند,@رقم_معاملة_القسم,@المستند,@الموظف,@التاريخ,@رقم_المرجع,@docTable,@الاسم)";
-            SqlConnection sqlCon = new SqlConnection(dataSource.Replace("AhwalDataBase", "ArchFilesDB"));
+            string query = "INSERT INTO TableGeneralArch (رقم_المرجع_المرتبط_off,Data1,Extension1,نوع_المستند,رقم_معاملة_القسم,المستند,الموظف,التاريخ,رقم_المرجع,docTable,الاسم) values (@رقم_المرجع_المرتبط_off,@Data1,@Extension1,@نوع_المستند,@رقم_معاملة_القسم,@المستند,@الموظف,@التاريخ,@رقم_المرجع,@docTable,@الاسم)";
+            dataSource = dataSource.Replace("AhwalDataBase", "ArchFilesDB");
+            dataSource = dataSource.Replace("SudaneseAffairs", "ArchFilesDB");
+            SqlConnection sqlCon = new SqlConnection(dataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
@@ -2703,6 +2839,7 @@ namespace PersAhwal
             sqlCmd.Parameters.AddWithValue("@الموظف", employee);
             sqlCmd.Parameters.AddWithValue("@التاريخ", date);
             sqlCmd.Parameters.AddWithValue("@رقم_المرجع", id);
+            sqlCmd.Parameters.AddWithValue("@رقم_المرجع_المرتبط_off", relatedRefNo);
             sqlCmd.Parameters.AddWithValue("@الاسم", name);
             sqlCmd.Parameters.Add("@Data1", SqlDbType.VarBinary).Value = buffer1;
             sqlCmd.Parameters.Add("@Extension1", SqlDbType.Char).Value = extn1;
@@ -2711,10 +2848,13 @@ namespace PersAhwal
             sqlCmd.ExecuteNonQuery();
             sqlCon.Close();
         }
-        private void insertDoc(string id, string date, string employee, string dataSource, string extn1, string DocName1, string messNo, string docType, byte[] buffer1)
+        private void insertDoc(string relatedRefNo,string id, string date, string employee, string dataSource, string extn1, string DocName1, string messNo, string docType, byte[] buffer1)
         {
-            string query = "INSERT INTO TableGeneralArch (Data1,Extension1,نوع_المستند,رقم_معاملة_القسم,المستند,الموظف,التاريخ,رقم_المرجع,docTable) values (@Data1,@Extension1,@نوع_المستند,@رقم_معاملة_القسم,@المستند,@الموظف,@التاريخ,@رقم_المرجع,@docTable)";
-            SqlConnection sqlCon = new SqlConnection(dataSource.Replace("AhwalDataBase", "ArchFilesDB"));
+            dataSource = dataSource.Replace("AhwalDataBase", "ArchFilesDB");
+            dataSource = dataSource.Replace("SudaneseAffairs", "ArchFilesDB");
+            string query = "INSERT INTO TableGeneralArch (رقم_المرجع_المرتبط_off,Data1,Extension1,نوع_المستند,رقم_معاملة_القسم,المستند,الموظف,التاريخ,رقم_المرجع,docTable) values (@رقم_المرجع_المرتبط_off,@Data1,@Extension1,@نوع_المستند,@رقم_معاملة_القسم,@المستند,@الموظف,@التاريخ,@رقم_المرجع,@docTable)";
+            SqlConnection sqlCon = new SqlConnection(dataSource);
+            Console.WriteLine();
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
@@ -2723,7 +2863,8 @@ namespace PersAhwal
             sqlCmd.Parameters.AddWithValue("@نوع_المستند", docType);
             sqlCmd.Parameters.AddWithValue("@الموظف", employee);
             sqlCmd.Parameters.AddWithValue("@التاريخ", date);
-            sqlCmd.Parameters.AddWithValue("@رقم_المرجع", id);            
+            sqlCmd.Parameters.AddWithValue("@رقم_المرجع", id);
+            sqlCmd.Parameters.AddWithValue("@رقم_المرجع_المرتبط_off", relatedRefNo);
             sqlCmd.Parameters.Add("@Data1", SqlDbType.VarBinary).Value = buffer1;
             sqlCmd.Parameters.Add("@Extension1", SqlDbType.Char).Value = extn1;
             sqlCmd.Parameters.Add("@المستند", SqlDbType.NVarChar).Value = DocName1;
@@ -2734,8 +2875,10 @@ namespace PersAhwal
         
         private void insertDocMand(string id, string date, string employee, string dataSource, string extn1, string DocName1, string docType, byte[] buffer1)
         {
+            dataSource = dataSource.Replace("AhwalDataBase", "ArchFilesDB");
+            dataSource = dataSource.Replace("SudaneseAffairs", "ArchFilesDB");
             string query = "INSERT INTO TableGeneralArch (Data1,Extension1,نوع_المستند,رقم_معاملة_القسم,المستند,الموظف,التاريخ,رقم_المرجع,docTable,الاسم) values (@Data1,@Extension1,@نوع_المستند,@رقم_معاملة_القسم,@المستند,@الموظف,@التاريخ,@رقم_المرجع,@docTable,@الاسم)";
-            SqlConnection sqlCon = new SqlConnection(dataSource.Replace("AhwalDataBase", "ArchFilesDB"));
+            SqlConnection sqlCon = new SqlConnection(dataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
@@ -2756,8 +2899,10 @@ namespace PersAhwal
         
         private void updateName(string name,  string messNo,  string table)
         {
+            string dataSource = DataSource.Replace("AhwalDataBase", "ArchFilesDB");
+            dataSource = dataSource.Replace("SudaneseAffairs", "ArchFilesDB");
             string query = "update TableGeneralArch set الاسم=@الاسم where رقم_المرجع=@رقم_المرجع and docTable=@docTable";
-            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
+            SqlConnection sqlCon = new SqlConnection(dataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
@@ -2867,7 +3012,7 @@ namespace PersAhwal
 
             //}
 
-            
+            //this.Close();
             if (ArchiveState && relatedPro != "")
             {
                 var selectedOption = MessageBox.Show("تم رصد " + relatedPro.Split('-')[0] +" بشأن " + relatedPro.Split('-')[1] + " يتم عادة إجراءه مع المعاملة المشار التي تم إجراءها", "هل ترغب في إجراءها؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -2890,11 +3035,11 @@ namespace PersAhwal
                     if (docid == 0)
                     {
                         MessageBox.Show("عملية غير صالحة .. تعذر المتابعة، في حالة تكرار الرسالة يرجى إخطار مشغل البرنامج");
-                        return;
+                        this.Close();
                     }
-                    addRelatedInfo(DataSource, mainTable, docid.ToString(), mainProNo, mainCol);
-                    insertDocMand(DataSource, AuthNoPart1);
-                    addRelatedArch(DataSource, docid.ToString(), mainProNo);
+                    addRelatedInfo(DataSource, mainTable, AuthNoPart1, mainProNo, mainCol);
+                    //insertDocMand(DataSource, AuthNoPart1);
+                    addRelatedArch(DataSource, AuthNoPart1, mainProNo);
                     OpenFile(relatedPro, false);
                     if (File.Exists(reqFile))
                     {
@@ -2903,6 +3048,8 @@ namespace PersAhwal
                     }
                 }
             }
+            if (AppNameText != "" && AppNameText != "اكتب اسم مقدم الطلب")
+                updateAppName(AppNameText, refNo, TableList);
 
             finalArch = false;
             this.Close();
@@ -2912,8 +3059,11 @@ namespace PersAhwal
 
         private void insertDocMand(string dataSource, string id)
         {
+            dataSource = dataSource.Replace("AhwalDataBase", "ArchFilesDB");
+            dataSource = dataSource.Replace("SudaneseAffairs", "ArchFilesDB");
+
             string query = "INSERT INTO TableGeneralArch (رقم_معاملة_القسم) values (@رقم_معاملة_القسم)";
-            SqlConnection sqlCon = new SqlConnection(dataSource.Replace("AhwalDataBase", "ArchFilesDB"));
+            SqlConnection sqlCon = new SqlConnection(dataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
@@ -2926,8 +3076,11 @@ namespace PersAhwal
 
         private void addRelatedArch(string dataSource, string otherID, string relatedDocNo)
         {
+            dataSource = dataSource.Replace("AhwalDataBase", "ArchFilesDB");
+            dataSource = dataSource.Replace("SudaneseAffairs", "ArchFilesDB");
+
             string query = "update TableGeneralArch set رقم_المرجع_المرتبط_off=@رقم_المرجع_المرتبط_off where رقم_معاملة_القسم=@رقم_معاملة_القسم";
-            SqlConnection sqlCon = new SqlConnection(dataSource.Replace("AhwalDataBase", "ArchFilesDB"));
+            SqlConnection sqlCon = new SqlConnection(dataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
@@ -3069,45 +3222,134 @@ namespace PersAhwal
 
         private void CombAuthType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (checkColumnName(Combo1.Text.Replace(" ", "_")))
-            {
-                reqFile = "";
-                string[] data = new string[2];
+            //if (checkColumnName(Combo1.Text.Replace(" ", "_")))
+            //{
+            //    reqFile = "";
+            //    string[] data = new string[2];
 
-                data[0] = noForm;
+            //    data[0] = noForm;
                 
-                Combo2.Items.Clear();
-                fileComboBox(Combo2, DataSource, Combo1.Text.Replace(" ", "_"), "TableListCombo");
-                if (ArchiveState) DocIDGenerator(FormType);
-                if (Combo2.Visible)
-                {
-                    for (int x = 0; x < Combo2.Items.Count; x++)
-                    {
+            //    Combo2.Items.Clear();
+            //    fileComboBox(Combo2, DataSource, Combo1.Text.Replace(" ", "_"), "TableListCombo");
+            //    if (ArchiveState) DocIDGenerator(FormType);
+            //    if (Combo2.Visible)
+            //    {
+            //        for (int x = 0; x < Combo2.Items.Count; x++)
+            //        {
                         
-                        string formNo = Combo1.Text.Trim();
-                        data[1] = Combo2.Items[x].ToString().Trim() +"-"+ Combo1.SelectedIndex.ToString();
-                        //MessageBox.Show(data[1]);
-                        if (PreReqFound(formNo))
-                        {
-                            loadPreReq(noForm, Combo1.Text, ArchiveState);
-                            //MessageBox.Show(formNo); 
-                            //fillFormDocx(formNo, Combo2.Items[x].ToString().Trim() + "-" + Combo1.SelectedIndex.ToString())
-                        }
-                        else 
-                            insertRow(data);
+            //            string formNo = Combo1.Text.Trim();
+            //            data[1] = Combo2.Items[x].ToString().Trim() +"-"+ Combo1.SelectedIndex.ToString();
+            //            //MessageBox.Show(data[1]);
+            //            if (PreReqFound(formNo))
+            //            {
+            //                loadPreReq(noForm, Combo1.Text, ArchiveState);
+            //                //MessageBox.Show(formNo); 
+            //                //fillFormDocx(formNo, Combo2.Items[x].ToString().Trim() + "-" + Combo1.SelectedIndex.ToString())
+            //            }
+            //            else 
+            //                insertRow(data);
+            //        }
+            //    }
+            //    else {
+            //        string formNo = Combo1.Text;
+            //        data[1] = formNo;
+            //        if (PreReqFound(formNo))
+            //            fillFormDocx(formNo, formNo);
+            //        else if (!Combo1.Text.Contains("صيغة غير")) insertRow(data);
+            //    }
+                
+            //    //requiredDocText();
+            //    return;
+            ////}
+            // if (checkaltColName(Combo1.Text))
+            //{
+            //    reqFile = "";
+            //    string[] data = new string[2];
+
+            //    data[0] = noForm;
+                
+            //    //Combo2.Items.Clear();
+            //    fileComboBoxSub(Combo2, DataSource, "altColName", "altSubColName");
+            //    if (ArchiveState) DocIDGenerator(FormType);
+            //    loadPreReq(noForm, Combo1.Text, ArchiveState);
+            //    //if (Combo2.Visible)
+            //    //{
+            //    //    for (int x = 0; x < Combo2.Items.Count; x++)
+            //    //    {
+
+            //    //        string formNo = Combo1.Text.Trim();
+            //    //        data[1] = Combo2.Items[x].ToString().Trim() +"-"+ Combo1.SelectedIndex.ToString();
+            //    //        //MessageBox.Show(data[1]);
+            //    //        if (PreReqFound(formNo))
+            //    //        {
+            //    //            loadPreReq(noForm, Combo1.Text, ArchiveState);
+            //    //            //MessageBox.Show(formNo); 
+            //    //            //fillFormDocx(formNo, Combo2.Items[x].ToString().Trim() + "-" + Combo1.SelectedIndex.ToString())
+            //    //        }
+            //    //        else 
+            //    //            insertRow(data);
+            //    //    }
+            //    //}
+            //    //else {
+            //    //    string formNo = Combo1.Text;
+            //    //    data[1] = formNo;
+            //    //    if (PreReqFound(formNo))
+            //    //        fillFormDocx(formNo, formNo);
+            //    //    else if (!Combo1.Text.Contains("صيغة غير")) insertRow(data);
+            //    //}
+
+            //    //requiredDocText();
+            //    return;
+            //}
+        }
+
+        private void fileComboBoxSub(ComboBox combbox, string source, string comlumnName, string SubComlumnName)
+        {
+            //combbox.Items.Clear();
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                saConn.Open();
+
+                string query = "select distinct " + SubComlumnName + " from TableAddContext where " + SubComlumnName + " is not null and " + comlumnName + " =N'" + Combo1.Text + "' order by " + SubComlumnName + " asc";
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.CommandType = CommandType.Text;
+
+                Console.WriteLine(query);
+               // MessageBox.Show(query);
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    DataTable table = new DataTable();
+                    SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                    dataAdapter.Fill(table);
+
+                    foreach (DataRow dataRow in table.Rows)
+                    {
+                        combbox.Items.Add(dataRow[SubComlumnName].ToString());
                     }
                 }
-                else {
-                    string formNo = Combo1.Text;
-                    data[1] = formNo;
-                    if (PreReqFound(formNo))
-                        fillFormDocx(formNo, formNo);
-                    else if (!Combo1.Text.Contains("صيغة غير")) insertRow(data);
-                }
-                
-                //requiredDocText();
-                return;
+                catch (Exception ex) { }
+                saConn.Close();
             }
+        }
+
+        private bool checkaltColName(string colNo)
+        {
+            string query = "select * from TableAddContext where altColName = N'" + colNo + "'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            Console.WriteLine(query);
+           //MessageBox.Show(query);
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            if (dtbl.Rows.Count != 0)
+                return true;
+            else
+                return false;
         }
 
         private string OpenFile(string documenNo, bool printOut)
@@ -3303,7 +3545,7 @@ namespace PersAhwal
            
             if (checkColumnName(Combo1.Text.Replace(" ", "_")))
             {
-                Combo2.Items.Clear();
+                //Combo2.Items.Clear();
                 fileComboBox(Combo2, DataSource, Combo1.Text.Replace(" ", "_"), "TableListCombo");
                 
                 
@@ -3396,7 +3638,7 @@ namespace PersAhwal
                 if (ServerType != "56")
                 {
                     btnSaveEnd.Visible = view;
-                    if(ArchiveState) 
+                    if (ArchiveState )
                         توضيح_المعاملة.BringToFront();
                 }
                 else btnSaveEnd.Visible = false;
@@ -3496,7 +3738,7 @@ namespace PersAhwal
             dataGridView2.Visible = false;
             panel1.Visible = true;
             Button button = (Button)sender;
-
+            توضيح_المعاملة.SendToBack();
             if (ArchiveState)
             {
                 int picIndex = Convert.ToInt32(button.Name.Split('_')[1]);
@@ -3528,6 +3770,7 @@ namespace PersAhwal
                     pictureBox1.ImageLocation = picPath;
                 }
             }
+           // MessageBox.Show(pictureBox1.ImageLocation.ToString());
         }
 
         private void Combo2_SelectedIndexChanged(object sender, EventArgs e)
@@ -3543,9 +3786,11 @@ namespace PersAhwal
         private string FillDatafromGenArch( string id)
         {
             //MessageBox.Show(id);
+            string dataSource = DataSource.Replace("AhwalDataBase", "ArchFilesDB");
+            dataSource = dataSource.Replace("SudaneseAffairs", "ArchFilesDB");
 
             string NewFileName = "";
-            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
+            SqlConnection sqlCon = new SqlConnection(dataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableGeneralArch where  ID='" + id + "'", sqlCon);
@@ -3608,7 +3853,9 @@ namespace PersAhwal
 
         private void updateNames()
         {
-            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
+            string dataSource = DataSource.Replace("AhwalDataBase", "ArchFilesDB");
+            dataSource = dataSource.Replace("SudaneseAffairs", "ArchFilesDB");
+            SqlConnection sqlCon = new SqlConnection(dataSource);
             //string query = "select رقم_المرجع,docTable from TableGeneralArch WHERE الاسم=@الاسم";
             string query = "select رقم_المرجع,docTable from TableGeneralArch where الاسم is null and رقم_المرجع <> 0";
             if (sqlCon.State == ConnectionState.Closed)
@@ -3636,7 +3883,10 @@ namespace PersAhwal
 
         private void updateGenName(string name, string idDoc, string table)
         {
-            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
+            string dataSource = DataSource.Replace("AhwalDataBase", "ArchFilesDB");
+            dataSource = dataSource.Replace("SudaneseAffairs", "ArchFilesDB");
+
+            SqlConnection sqlCon = new SqlConnection(dataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             string query = "update TableGeneralArch set الاسم=N'" + name + "' where رقم_المرجع = '" + idDoc + "' and docTable=N'" + table + "'";
@@ -3650,7 +3900,10 @@ namespace PersAhwal
         
         private void updateGenNameError(string name, string idDoc)
         {
-            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
+            string dataSource = DataSource.Replace("AhwalDataBase", "ArchFilesDB");
+            dataSource = dataSource.Replace("SudaneseAffairs", "ArchFilesDB");
+
+            SqlConnection sqlCon = new SqlConnection(dataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             string query = "update TableGeneralArch set الاسم=N'" + name + "' where رقم_معاملة_القسم = N'" + idDoc + "'";
@@ -3663,7 +3916,10 @@ namespace PersAhwal
         }
         private void correctNo()
         {
-            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
+            string dataSource = DataSource.Replace("AhwalDataBase", "ArchFilesDB");
+            dataSource = dataSource.Replace("SudaneseAffairs", "ArchFilesDB");
+
+            SqlConnection sqlCon = new SqlConnection(dataSource);
             //string query = "select رقم_المرجع,docTable from TableGeneralArch WHERE الاسم=@الاسم";
             string query = "select ID,رقم_معاملة_القسم from TableGeneralArch where ID >= 18213 and نوع_المستند = 'data1'";
             if (sqlCon.State == ConnectionState.Closed)
@@ -3687,7 +3943,7 @@ namespace PersAhwal
                     //MessageBox.Show(newInfo);
                     if (info[1] != "80")
                     {
-                        sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
+                        sqlCon = new SqlConnection(dataSource);
                         if (sqlCon.State == ConnectionState.Closed)
                             sqlCon.Open();
                         SqlCommand sqlCmd = new SqlCommand("update TableGeneralArch set رقم_معاملة_القسم=@رقم_معاملة_القسم where ID=@id", sqlCon);
@@ -3794,23 +4050,8 @@ namespace PersAhwal
             txtIDNo.Text = docIDNumber = "ق س ج/80/" + year + "/" + noForm + "/" + rowCount;
             smsDocIDNumber = "ق س ج/" + rowCount + "/" + noForm + "/" + year;
 
-
-            if (noForm == "15" || noForm == "17")
-            {
-                if (noForm == "15")
-                    label5.Text = "تاريخ إجراء عقد الزواج:";
-                else if (noForm == "17")
-                    label5.Text = "تاريخ إصدار وثيقة الطلاق:";
-                تاريخ_الميلاد.Width = 90;
-                تاريخ_الميلاد.Visible = label5.Visible = true;
-                تاريخ_الميلاد.Location = new System.Drawing.Point(1044, 288);
-                label5.Location = new System.Drawing.Point(1141, 288); 
-                تاريخ_الميلاد.Text = getProDate(txtIDNo.Text, getTableList(noForm));
-                if (تاريخ_الميلاد.Text == "")
-                    تاريخ_الميلاد.Text = "عام-يوم-شهر";
-            }
-            else 
-                تاريخ_الميلاد.Visible = label5.Visible = false;
+            MerrageAndDivProc();
+            
 
             
             string index = "-1";
@@ -3819,10 +4060,11 @@ namespace PersAhwal
             
             getColList(noForm, ArchiveState, index);
             if (FormType == 12)
-             getComboText(docIDNumber, comboCol[0], comboCol[1]);
-            else {
+                getComboText(docIDNumber, comboCol[0], comboCol[1]);
+            else
+            {
                 Combo1.Text = comboCol[0];
-                
+
                 Combo2.Text = comboCol[1];
             }
             string formName = Combo1.Text+"-"+ Combo2.Text;
@@ -3837,11 +4079,31 @@ namespace PersAhwal
                 drawBoxes(formName, false, wordInFile);
             }
             getProcedName = checkBasicInfo(docIDNumber);
-            string CheckState = checkArch(docIDNumber);
+            string CheckState = checkArch(docIDNumber, getProcedName);
             requiredDocument.Text = CheckState;
             paraValues[2] = docIDNumber;
             docId.Clear();
             docId.Text = DateTime.Now.Year.ToString().Replace("20", "");
+        }
+
+        private void MerrageAndDivProc()
+        {
+            if (noForm == "15" || noForm == "17")
+            {
+                if (noForm == "15")
+                    label5.Text = "تاريخ إجراء عقد الزواج:";
+                else if (noForm == "17")
+                    label5.Text = "تاريخ إصدار وثيقة الطلاق:";
+                تاريخ_الميلاد.Width = 90;
+                تاريخ_الميلاد.Visible = label5.Visible = true;
+                تاريخ_الميلاد.Location = new System.Drawing.Point(1044, 288);
+                label5.Location = new System.Drawing.Point(1141, 288);
+                تاريخ_الميلاد.Text = getProDate(txtIDNo.Text, getTableList(noForm));
+                if (تاريخ_الميلاد.Text == "")
+                    تاريخ_الميلاد.Text = "عام-يوم-شهر";
+            }
+            else
+                تاريخ_الميلاد.Visible = label5.Visible = false;
         }
 
         private string getProDate(string docID, string table)
@@ -4309,7 +4571,9 @@ namespace PersAhwal
         
         private string getUniqueID(string query)
         {
-            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
+            string dataSource = DataSource.Replace("AhwalDataBase", "ArchFilesDB");
+            dataSource = dataSource.Replace("SudaneseAffairs", "ArchFilesDB");
+            SqlConnection sqlCon = new SqlConnection(dataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
@@ -4333,7 +4597,10 @@ namespace PersAhwal
         }
         private bool checkISUnique(string docid)
         {
-            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
+            string dataSource = DataSource.Replace("AhwalDataBase", "ArchFilesDB");
+            dataSource = dataSource.Replace("SudaneseAffairs", "ArchFilesDB");
+
+            SqlConnection sqlCon = new SqlConnection(dataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             //SqlDataAdapter sqlDa = new SqlDataAdapter("select " + docName + " from " + table + " where " + docName + "=@" + docName, sqlCon);
@@ -4476,6 +4743,7 @@ namespace PersAhwal
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
+            //MessageBox.Show( pictureBox1. );
             System.Diagnostics.Process.Start(pictureBox1.ImageLocation);
         }
 
@@ -4483,6 +4751,72 @@ namespace PersAhwal
         {
             if (تاريخ_الميلاد.Text == "عام-يوم-شهر")
                 تاريخ_الميلاد.Text = "";
+        }
+
+        private void pictureBox1_LocationChanged(object sender, EventArgs e)
+        {
+           
+
+        }
+
+        private void pictureBox1_BackgroundImageChanged(object sender, EventArgs e)
+        {
+            MessageBox.Show(pictureBox1.ImageLocation.ToString());
+        }
+
+        private void Combo1_TextUpdate(object sender, EventArgs e)
+        {
+            if (checkaltColName(Combo1.Text))
+            {
+                reqFile = "";
+                string[] data = new string[2];
+
+                data[0] = noForm;
+
+                //Combo2.Items.Clear();
+                fileComboBoxSub(Combo2, DataSource, "altColName", "altSubColName");
+                if (ArchiveState) DocIDGenerator(FormType);
+                loadPreReq(noForm, Combo1.Text, ArchiveState);
+
+                //reqFile = "";
+                //string[] data = new string[2];
+
+                //data[0] = noForm;
+                //MessageBox.Show("message update combo1");
+                ////Combo2.Items.Clear();
+                //fileComboBoxSub(Combo2, DataSource, "altColName", "altSubColName");
+                //if (ArchiveState) DocIDGenerator(FormType);
+                //if (Combo2.Visible)
+                //{
+                //    for (int x = 0; x < Combo2.Items.Count; x++)
+                //    {
+
+                //        string formNo = Combo1.Text.Trim();
+                //        data[1] = Combo2.Items[x].ToString().Trim() + "-" + Combo1.SelectedIndex.ToString();
+                //        //MessageBox.Show(data[1]);
+                //        if (PreReqFound(formNo))
+                //        {
+                //            loadPreReq(noForm, Combo1.Text, ArchiveState);
+                //            //MessageBox.Show(formNo); 
+                //            //fillFormDocx(formNo, Combo2.Items[x].ToString().Trim() + "-" + Combo1.SelectedIndex.ToString())
+                //        }
+                //        else
+                //            insertRow(data);
+                //    }
+                //}
+                //else
+                //{
+                //    string formNo = Combo1.Text;
+                //    data[1] = formNo;
+                //    if (PreReqFound(formNo))
+                //        fillFormDocx(formNo, formNo);
+                //    else if (!Combo1.Text.Contains("صيغة غير")) insertRow(data);
+                //}
+
+                ////requiredDocText();
+                //return;
+            }
+            
         }
 
         private void button4_Click(object sender, EventArgs e)

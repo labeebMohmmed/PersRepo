@@ -445,6 +445,8 @@ namespace PersAhwal
             
             this.Close();
         }
+
+
         private void addNewAppNameInfo1(TextBox textName)
         {
 

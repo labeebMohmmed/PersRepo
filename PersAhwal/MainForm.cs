@@ -303,8 +303,9 @@ namespace PersAhwal
                 }
                 persbtn6.Visible = persbtn9.Visible = docCollectCombo.Visible = false;
                 Combtn0.Location = new System.Drawing.Point(427, 402);
-                Combtn1.Location = new System.Drawing.Point(427, 402 + 39);
-                Combtn2.Location = new System.Drawing.Point(427, 402 + (39 * 2));
+                Combtn1.Location = new System.Drawing.Point(428, 385);
+                Combtn2.Location = new System.Drawing.Point(428, 427);
+                button2.Visible = false;
             }
             perbtn1.Visible = false;
             Pers_Peope = pers_Peope;
@@ -2906,6 +2907,7 @@ namespace PersAhwal
                         }
 
                         monthSumH[c] = AllSum;
+                        Console.WriteLine("AllSum " + AllSum);
                     }
 
 
@@ -2933,9 +2935,8 @@ namespace PersAhwal
                     //for (int x = 0; x < 7; x++)
                     subInfoName[preInfo.Items.Count] = totalCount;
                     monthSumV[preInfo.Items.Count] = AllSum;
-                    for (int w = 0; w <= preInfo.Items.Count; w++)
+                    for (int w = 0; w < preInfo.Items.Count; w++)
                     {
-                        //Console.WriteLine(w.ToString() + "---- monthSumV " + monthSumV[w].ToString());
                         t.Rows[w + 1].Cells[0].Paragraphs[0].Append(monthSumV[w].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;                        
                         t.Rows[w + 1].Cells[1].Paragraphs[0].Append(rep1[w, 13].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
                         t.Rows[w + 1].Cells[2].Paragraphs[0].Append(rep1[w, 12].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
@@ -2952,6 +2953,22 @@ namespace PersAhwal
                         t.Rows[w + 1].Cells[13].Paragraphs[0].Append(rep1[w, 1].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;//0 1 2 4 6 9
                         t.Rows[w + 1].Cells[14].Paragraphs[0].Append(subInfoName[w].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
                     }
+
+                    t.Rows[preInfo.Items.Count + 1].Cells[0].Paragraphs[0].Append(monthSumV[preInfo.Items.Count].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[preInfo.Items.Count + 1].Cells[1].Paragraphs[0].Append(monthSumH[13].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[preInfo.Items.Count + 1].Cells[2].Paragraphs[0].Append(monthSumH[12].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[preInfo.Items.Count + 1].Cells[3].Paragraphs[0].Append(monthSumH[11].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[preInfo.Items.Count + 1].Cells[4].Paragraphs[0].Append(monthSumH[10].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[preInfo.Items.Count + 1].Cells[5].Paragraphs[0].Append(monthSumH[9].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[preInfo.Items.Count + 1].Cells[6].Paragraphs[0].Append(monthSumH[8].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[preInfo.Items.Count + 1].Cells[7].Paragraphs[0].Append(monthSumH[7].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[preInfo.Items.Count + 1].Cells[8].Paragraphs[0].Append(monthSumH[6].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[preInfo.Items.Count + 1].Cells[9].Paragraphs[0].Append(monthSumH[5].ToString()).FontSize(12d).Bold().Alignment = Alignment.center; //7 8
+                    t.Rows[preInfo.Items.Count + 1].Cells[10].Paragraphs[0].Append(monthSumH[4].ToString()).FontSize(12d).Bold().Alignment = Alignment.center; //7 8
+                    t.Rows[preInfo.Items.Count + 1].Cells[11].Paragraphs[0].Append(monthSumH[3].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;//5
+                    t.Rows[preInfo.Items.Count + 1].Cells[12].Paragraphs[0].Append(monthSumH[2].ToString()).FontSize(12d).Bold().Alignment = Alignment.center; //3
+                    t.Rows[preInfo.Items.Count + 1].Cells[13].Paragraphs[0].Append(monthSumH[1].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;//0 1 2 4 6 9
+                    t.Rows[preInfo.Items.Count + 1].Cells[14].Paragraphs[0].Append(subInfoName[preInfo.Items.Count].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
                 }
                 else if (Server == "56")
                 {
@@ -2985,7 +3002,7 @@ namespace PersAhwal
                     t.Rows[0].Cells[7].Paragraphs[0].Append(CountName).FontSize(12d).Bold().Alignment = Alignment.center;
 
                     int AllSum = 0;
-                    for (int c = 1; c < 7; c++)
+                    for (int c = 1; c < 15; c++)
                     {
                         AllSum = 0;
                         for (int r = 0; r < preInfo.Items.Count; r++)
@@ -2994,8 +3011,8 @@ namespace PersAhwal
                         }
 
                         monthSumH[c] = AllSum;
+                        Console.WriteLine("AllSum " + AllSum);
                     }
-
 
                     for (int r = 0; r < preInfo.Items.Count; r++)
                     {
@@ -3021,7 +3038,7 @@ namespace PersAhwal
                     monthSumV[preInfo.Items.Count] = AllSum;
 
                     
-                    for (int w = 0; w <= preInfo.Items.Count; w++)
+                    for (int w = 0; w < preInfo.Items.Count; w++)
                     {
                         t.Rows[w + 1].Cells[0].Paragraphs[0].Append(monthSumV[w].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
                         t.Rows[w + 1].Cells[1].Paragraphs[0].Append(rep1[w, 6].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
@@ -3033,14 +3050,14 @@ namespace PersAhwal
                         t.Rows[w + 1].Cells[7].Paragraphs[0].Append(subInfoName[w].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
                     }
 
-                    //t.Rows[preInfo.Items.Count + 1].Cells[0].Paragraphs[0].Append(AllSum.ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    //t.Rows[preInfo.Items.Count + 1].Cells[1].Paragraphs[0].Append(monthSumH[6].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    //t.Rows[preInfo.Items.Count + 1].Cells[2].Paragraphs[0].Append(monthSumH[5].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    //t.Rows[preInfo.Items.Count + 1].Cells[3].Paragraphs[0].Append(monthSumH[4].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    //t.Rows[preInfo.Items.Count + 1].Cells[4].Paragraphs[0].Append(monthSumH[3].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    //t.Rows[preInfo.Items.Count + 1].Cells[5].Paragraphs[0].Append(monthSumH[2].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    //t.Rows[preInfo.Items.Count + 1].Cells[6].Paragraphs[0].Append(monthSumH[1].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    //t.Rows[preInfo.Items.Count + 1].Cells[7].Paragraphs[0].Append(totalCount).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[preInfo.Items.Count + 1].Cells[0].Paragraphs[0].Append(AllSum.ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[preInfo.Items.Count + 1].Cells[1].Paragraphs[0].Append(monthSumH[6].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[preInfo.Items.Count + 1].Cells[2].Paragraphs[0].Append(monthSumH[5].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[preInfo.Items.Count + 1].Cells[3].Paragraphs[0].Append(monthSumH[4].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[preInfo.Items.Count + 1].Cells[4].Paragraphs[0].Append(monthSumH[3].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[preInfo.Items.Count + 1].Cells[5].Paragraphs[0].Append(monthSumH[2].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[preInfo.Items.Count + 1].Cells[6].Paragraphs[0].Append(monthSumH[1].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[preInfo.Items.Count + 1].Cells[7].Paragraphs[0].Append(totalCount).FontSize(12d).Bold().Alignment = Alignment.center;
                 }
 
 
@@ -6310,6 +6327,7 @@ namespace PersAhwal
 
         private void pictureBox3_Click(object sender, EventArgs e)
         {
+            labelM.Visible = true;
             removeDupArch(); 
             labelM.Text = "";
             foreach (Control control in flowLayoutPanel1.Controls)
@@ -9324,9 +9342,9 @@ namespace PersAhwal
         {
             fillSamplesCodes(Database);
             return;
-            calcStarTextCollection(DataSource, "نوع_الإجراء", "نوع_المعاملة", "TableCollection", "TableCollectStarText");
-            calcStarTextAuth(DataSource, "إجراء_التوكيل", "نوع_التوكيل", "TableAuth", "TableAuthStarText");
-            calcStarTextAuthRight(DataSource, "إجراء_التوكيل", "نوع_التوكيل", "TableAuth", "TableAuthRightStarText");
+            //calcStarTextCollection(DataSource, "نوع_الإجراء", "نوع_المعاملة", "TableCollection", "TableCollectStarText");
+            //calcStarTextAuth(DataSource, "إجراء_التوكيل", "نوع_التوكيل", "TableAuth", "TableAuthStarText");
+            //calcStarTextAuthRight(DataSource, "إجراء_التوكيل", "نوع_التوكيل", "TableAuth", "TableAuthRightStarText");
         }
 
         private void calcStarTextCollection(string dataSource, string col,string colMain, string table, string genTable)
