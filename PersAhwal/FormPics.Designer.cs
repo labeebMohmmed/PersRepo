@@ -667,6 +667,7 @@ namespace PersAhwal
             // 
             // drawPicPanel
             // 
+            this.drawPicPanel.AutoScroll = true;
             this.drawPicPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.drawPicPanel.Controls.Add(this.تعليق);
             this.drawPicPanel.Controls.Add(this.التاريخ_الميلادي);

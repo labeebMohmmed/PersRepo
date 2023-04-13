@@ -563,6 +563,66 @@ namespace PersAhwal
             }
             return updateAll = "UPDATE " + table + " SET " + updateValues + " where ID = @id";
         }
+
+        private bool checkEmpty(FlowLayoutPanel panel)
+        {
+            foreach (Control control in panel.Controls)
+            {
+                if (!control.Visible) continue;
+                if ((control.Name == "Vitext2" || control.Name == "Vitext3" || control.Name == "Vitext4" || control.Name == "Vitext5" || control.Name == "Vitext1") && ButtonInfoIndex != 0)
+                    continue;
+                if (control is TextBox || control is ComboBox)
+                {
+                    if (control.Text == "" || (control.Text == "P0" && !control.Name.Contains("هوية_الموكل")) || control.Text.Contains("إختر"))
+                    {
+                        control.BackColor = System.Drawing.Color.MistyRose;
+                        if (panel.Name == "Panelapp") { panel.Height = 130 * addNameIndex; }
+                        MessageBox.Show("لا يمكن المتابعة يرجى إضافة بيانات الحقل " + numbersToLetters(control.Name.Split('_')[1].Replace(".","")));
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        private string numbersToLetters(string num) {
+            switch (num) {
+                case "0":
+                    return " الأول";
+                    break;
+                case "1":
+                    return " الثاني";
+                    break;
+                case "2":
+                    return " الثالي";
+                    break;
+                case "3":
+                    return " الرابع";
+                    break;
+                case "4":
+                    return " الخامس";
+                    break;
+                case "5":
+                    return " السادس";
+                    break;
+                case "6":
+                    return " السابع";
+                    break;
+                case "7":
+                    return " الثامن";
+                    break;
+                case "8":
+                    return " التاسع";
+                    break;
+                case "9":
+                    return " العاشر";
+                    break;
+               
+                                      
+            }
+            return "";
+        }
+
         private bool save2DataBase(FlowLayoutPanel panel)
         {
 
@@ -584,96 +644,21 @@ namespace PersAhwal
                     foreach (Control control in panel.Controls)
                     {
                         string name = control.Name;
-                        if (control is Label || control is Button || control is PictureBox || control.Name == "رقم_المرجع_المرتبط_off") continue;
+                        if (control is Label || control is Button || control is PictureBox || control.Name.Contains("_off") ) continue;
 
                         if (panel.Name == "PanelItemsboxes")
                             name = name.Replace("V", "");
                         if (name == foundList[i])
                         {
-                            //Console.WriteLine(panel.Name + " - " + name);
-                            if (control.Name == "اسم_المندوب" && control.Visible && !control.Text.Contains("-"))
-                            {
-                                control.BackColor = System.Drawing.Color.MistyRose;
-                                MessageBox.Show("لا يمكن المتابعة يرجى إضافة بيانات الحقل اسم المندوب ومنطقة التغطية مفصولين");
-                                return false;
-                            }
-                            if ((control is TextBox && control.Text == "") || (control is ComboBox && control.Text.Contains("إختر")))
-                                foreach (Control Econtrol in panel.Controls)
-                                {
-                                    if ((Econtrol is TextBox && control.Text == "") || (Econtrol is ComboBox && Econtrol.Text.Contains("ختر")))
-                                        if (panel.Name != "PanelItemsboxes" || (Econtrol.Name != control.Name && Econtrol.Name.Contains(control.Name)) || Econtrol.Name == "اسم_المندوب")
-                                        {
-                                            //MessageBox.Show(Econtrol.Name + " - " + control.Name);
-                                            if (control.Name == "اسم_المندوب" && control.Visible)
-                                            {
-                                                //
-                                                control.BackColor = System.Drawing.Color.MistyRose;
-                                                MessageBox.Show("لا يمكن المتابعة يرجى إضافة بيانات الحقل اسم_المندوب ");
-                                                return false;
-                                            }
-
-                                            else if (!Econtrol.Name.Contains("هوية_الموكل") && control.Name != "اسم_المندوب" && control.Name != "txtRev")
-                                            {
-                                                Econtrol.BackColor = System.Drawing.Color.MistyRose;
-                                                if (panel.Name == "Panelapp") { panel.Height = 130 * addNameIndex; }
-                                                else if (panel.Name == "PanelAuthPers") { panel.Height = 90 * addAuthticIndex; }
-
-                                                MessageBox.Show("لا يمكن المتابعة يرجى إضافة بيانات الحقل " + control.Name.Replace("_", " ") + control.Text);
-                                                return false;
-
-                                            }
-                                        }
-                                        else if (panel.Name == "PanelItemsboxes")
-                                        {
-
-
-
-                                            if (control.Visible && ButtonInfoIndex == 0)
-                                            {
-                                                control.BackColor = System.Drawing.Color.MistyRose;
-                                                MessageBox.Show("لا يمكن المتابعة يرجى إضافة بيانات الحقل غير المكتمل");
-                                                return false;
-                                            }
-                                            else if (control.Visible && ButtonInfoIndex == 0)
-                                            {
-                                                if (!(Vitext1.Text == "" && Vitext2.Text == "" && Vitext3.Text == "" && Vitext4.Text == "" && Vicombo1.Text != ""))
-
-                                                {
-                                                    MessageBox.Show("لا يمكن المتابعة يرجى تكملة بيانات الحقول غير المكتملة");
-                                                    return false;
-                                                }
-                                                //control.BackColor = System.Drawing.Color.MistyRose;
-
-                                            }
-                                        }
-                                }
-                            //if (نوع_التوكيل.Text == "شهادة ميلاد")
-                            //{
-                            //    Vitext1.Text = BirthName[0];
-                            //    Vitext2.Text = BirthPlace[0];
-                            //    Vitext3.Text = BirthDate[0];
-                            //    Vitext4.Text = BirthMother[0];
-                            //    for (int x = 1; x < birthindex; x++)
-                            //    {
-                            //        Vitext1.Text = Vitext1.Text + "_" + BirthName[x];
-                            //        Vitext2.Text = Vitext2.Text + "_" + BirthPlace[x];
-                            //        Vitext3.Text = Vitext3.Text + "_" + BirthDate[x];
-                            //        Vitext4.Text = Vitext4.Text + "_" + BirthMother[x];
-                            //    }
-                            //}
-                            //if(control.Name == "طريقة_الطلب")
-                            //MessageBox.Show(query);
+                            
                             Console.WriteLine(foundList[i] + " - " + control.Text);
                             sqlCommand.Parameters.AddWithValue("@" + foundList[i], control.Text);
                             break;
                         }
                     }
             }
-
-
             try
             {
-                //MessageBox.Show(الاعدادات.Text);
                 sqlCommand.ExecuteNonQuery();
             }
             catch (Exception ex)
@@ -682,6 +667,125 @@ namespace PersAhwal
             }
             return true;
         }
+        //private bool save2DataBase(FlowLayoutPanel panel)
+        //{
+
+        //    string query = checkList(panel, allList, "TableAuth");
+        //    SqlConnection sqlConnection = new SqlConnection(DataSource);
+        //    if (sqlConnection.State == ConnectionState.Closed)
+        //        sqlConnection.Open();
+        //    SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+        //    sqlCommand.CommandType = CommandType.Text;
+        //    sqlCommand.Parameters.AddWithValue("@id", intID);
+        //    bool cont = true;
+        //    for (int i = 0; i < foundList.Length; i++)
+        //    {
+        //        if (foundList[i] == "تعليق")
+        //        {
+        //            sqlCommand.Parameters.AddWithValue("@" + foundList[i], تعليق.Text);
+        //        }
+        //        else
+        //            foreach (Control control in panel.Controls)
+        //            {
+        //                string name = control.Name;
+        //                if (control is Label || control is Button || control is PictureBox || control.Name == "رقم_المرجع_المرتبط_off") continue;
+
+        //                if (panel.Name == "PanelItemsboxes")
+        //                    name = name.Replace("V", "");
+        //                if (name == foundList[i])
+        //                {
+        //                    //Console.WriteLine(panel.Name + " - " + name);
+        //                    if (control.Name == "اسم_المندوب" && control.Visible && !control.Text.Contains("-"))
+        //                    {
+        //                        control.BackColor = System.Drawing.Color.MistyRose;
+        //                        MessageBox.Show("لا يمكن المتابعة يرجى إضافة بيانات الحقل اسم المندوب ومنطقة التغطية مفصولين");
+        //                        return false;
+        //                    }
+        //                    if ((control is TextBox && control.Text == "") || (control is ComboBox && control.Text.Contains("إختر")))
+        //                        foreach (Control Econtrol in panel.Controls)
+        //                        {
+        //                            if ((Econtrol is TextBox && control.Text == "") || (Econtrol is ComboBox && Econtrol.Text.Contains("ختر")))
+        //                                if (panel.Name != "PanelItemsboxes" || (Econtrol.Name != control.Name && Econtrol.Name.Contains(control.Name)) || Econtrol.Name == "اسم_المندوب")
+        //                                {
+        //                                    //MessageBox.Show(Econtrol.Name + " - " + control.Name);
+        //                                    if (control.Name == "اسم_المندوب" && control.Visible)
+        //                                    {
+        //                                        //
+        //                                        control.BackColor = System.Drawing.Color.MistyRose;
+        //                                        MessageBox.Show("لا يمكن المتابعة يرجى إضافة بيانات الحقل اسم_المندوب ");
+        //                                        return false;
+        //                                    }
+
+        //                                    else if (!Econtrol.Name.Contains("هوية_الموكل") && control.Name != "اسم_المندوب" && control.Name != "txtRev")
+        //                                    {
+        //                                        Econtrol.BackColor = System.Drawing.Color.MistyRose;
+        //                                        if (panel.Name == "Panelapp") { panel.Height = 130 * addNameIndex; }
+        //                                        else if (panel.Name == "PanelAuthPers") { panel.Height = 90 * addAuthticIndex; }
+
+        //                                        MessageBox.Show("لا يمكن المتابعة يرجى إضافة بيانات الحقل " + control.Name.Replace("_", " ") + control.Text);
+        //                                        return false;
+
+        //                                    }
+        //                                }
+        //                                else if (panel.Name == "PanelItemsboxes")
+        //                                {
+
+
+
+        //                                    if (control.Visible && ButtonInfoIndex == 0)
+        //                                    {
+        //                                        control.BackColor = System.Drawing.Color.MistyRose;
+        //                                        MessageBox.Show("لا يمكن المتابعة يرجى إضافة بيانات الحقل غير المكتمل");
+        //                                        return false;
+        //                                    }
+        //                                    else if (control.Visible && ButtonInfoIndex == 0)
+        //                                    {
+        //                                        if (!(Vitext1.Text == "" && Vitext2.Text == "" && Vitext3.Text == "" && Vitext4.Text == "" && Vicombo1.Text != ""))
+
+        //                                        {
+        //                                            MessageBox.Show("لا يمكن المتابعة يرجى تكملة بيانات الحقول غير المكتملة");
+        //                                            return false;
+        //                                        }
+        //                                        //control.BackColor = System.Drawing.Color.MistyRose;
+
+        //                                    }
+        //                                }
+        //                        }
+        //                    //if (نوع_التوكيل.Text == "شهادة ميلاد")
+        //                    //{
+        //                    //    Vitext1.Text = BirthName[0];
+        //                    //    Vitext2.Text = BirthPlace[0];
+        //                    //    Vitext3.Text = BirthDate[0];
+        //                    //    Vitext4.Text = BirthMother[0];
+        //                    //    for (int x = 1; x < birthindex; x++)
+        //                    //    {
+        //                    //        Vitext1.Text = Vitext1.Text + "_" + BirthName[x];
+        //                    //        Vitext2.Text = Vitext2.Text + "_" + BirthPlace[x];
+        //                    //        Vitext3.Text = Vitext3.Text + "_" + BirthDate[x];
+        //                    //        Vitext4.Text = Vitext4.Text + "_" + BirthMother[x];
+        //                    //    }
+        //                    //}
+        //                    //if(control.Name == "طريقة_الطلب")
+        //                    //MessageBox.Show(query);
+        //                    Console.WriteLine(foundList[i] + " - " + control.Text);
+        //                    sqlCommand.Parameters.AddWithValue("@" + foundList[i], control.Text);
+        //                    break;
+        //                }
+        //            }
+        //    }
+
+
+        //    try
+        //    {
+        //        //MessageBox.Show(الاعدادات.Text);
+        //        sqlCommand.ExecuteNonQuery();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show(query);
+        //    }
+        //    return true;
+        //}
         private void fillConInfo()
         {
 
@@ -1226,7 +1330,7 @@ namespace PersAhwal
             textJob.Location = new System.Drawing.Point(801, 400);
             textJob.Name = "المهنة_" + addNameIndex + ".";
             textJob.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            textJob.Size = new System.Drawing.Size(570, 35);
+            textJob.Size = new System.Drawing.Size(550, 35);
             textJob.TabIndex = 603;
             textJob.Text = job;
             //autoCompleteTextBox(textJob, DataSource, "jobs", "TableListCombo");
@@ -2163,7 +2267,10 @@ namespace PersAhwal
         private void fillTextBoxesDocx(int index, bool libtnAdd1Vis)
         {
             if (index > 1) index = 2;
-            Microsoft.Office.Interop.Word.Table table = oBDoc.Tables[index];
+            try
+            {
+                Microsoft.Office.Interop.Word.Table table = oBDoc.Tables[index];
+           
             //MessageBox.Show(index.ToString());
             if (!libtnAdd1Vis)
             {
@@ -2217,6 +2324,8 @@ namespace PersAhwal
             catch (Exception ex)
             {
             }
+            }
+            catch (Exception ex1) { }
         }
         private void fillDocFileInfo(Panel panel)
         {
@@ -2252,20 +2361,27 @@ namespace PersAhwal
             btnPrint.Enabled = false;
             //MessageBox.Show(localCopy.Text);
             string pdfFile = localCopy.Text.Replace("docx", "pdf");
-            oBDoc.SaveAs2(localCopy.Text);
-            if (deleteDocxFile == "no")
+            try
+            {
+                oBDoc.SaveAs2(localCopy.Text);
+            }
+            catch (Exception ex) { }
+            if (deleteDocxFile == "pdf")
                 oBDoc.ExportAsFixedFormat(pdfFile, Word.WdExportFormat.wdExportFormatPDF);
-            oBDoc.Close(false, oBMiss);
+            try
+            {
+                oBDoc.Close(false, oBMiss);
             oBMicroWord.Quit(false, false);
             System.Runtime.InteropServices.Marshal.ReleaseComObject(oBMicroWord);
-            if (deleteDocxFile == "no")
+            if (deleteDocxFile == "pdf")
             {
                 System.Diagnostics.Process.Start(pdfFile);
                 File.Delete(localCopy.Text);
             }
             else System.Diagnostics.Process.Start(localCopy.Text);
             object doNotSaveChanges = Word.WdSaveOptions.wdSaveChanges;
-
+            }
+            catch (Exception ex1) { }
         }
         public void ComboProcedure_Text()
         {
@@ -3198,6 +3314,11 @@ namespace PersAhwal
 
                     break;
                 case 2:
+                    
+
+            التاريخ_الميلادي.Text = GreDate;
+            التاريخ_الهجري.Text = HijriDate;
+            
                     updateGenName(مقدم_الطلب.Text, رقم_التوكيل.Text);
                     relatedProUpdate();
                     reversTextRights();
@@ -3222,20 +3343,25 @@ namespace PersAhwal
                     }
                     else addNewAppNameInfo();
 
-                    if (!save2DataBase(Panelapp))
+                    if (!checkEmpty(Panelapp))
                     {
                         currentPanelIndex--; return;
                     }
+                    save2DataBase(Panelapp);
 
                     if (!checkGender(Panelapp, "الموكَّل_", "جنس_الموكَّل_"))
                     {
                         currentPanelIndex--; return;
                     }
                     else addNewAuthNameInfo();
-                    if (!save2DataBase(PanelAuthPers))
+
+                    if (!checkEmpty(PanelAuthPers))
                     {
                         currentPanelIndex--; return;
                     }
+                    save2DataBase(PanelAuthPers);
+
+
                     اسم_الموظف.Text = EmpName;
 
                     string gender = getGender(الشاهد_الأول.Text.Split(' ')[0]);
@@ -3267,11 +3393,11 @@ namespace PersAhwal
                         }
                     }
 
-                    if (!save2DataBase(panelapplicationInfo))
+                    if (!checkEmpty(panelapplicationInfo))
                     {
                         currentPanelIndex--; return;
                     }
-
+                    save2DataBase(panelapplicationInfo);
 
 
                     //MessageBox.Show("صفة_الموكل_off.SelectedIndex " + صفة_الموكل_off.SelectedIndex.ToString() + " - addAuthticIndex " + addAuthticIndex.ToString());
@@ -3336,30 +3462,39 @@ namespace PersAhwal
                     else
                         txtReview.Size = new System.Drawing.Size(1007, 150);
 
-
-                    if (!save2DataBase(PanelItemsboxes))
+                    if (!checkEmpty(PanelItemsboxes))
                     {
                         currentPanelIndex--; return;
                     }
+                    save2DataBase(PanelItemsboxes);
+
                     if (PanelButtonInfo.Visible)
                     {
                         Vitext1.Text = Vitext2.Text = Vitext3.Text = Vitext4.Text = Vitext5.Text = "";
                     }
-                    if (!save2DataBase(panelAuthRights))
-                    {
-                        currentPanelIndex--; return; 
-                    }
-                    
-                    if (!save2DataBase(panelAuthOptions))
-                    {
-                        currentPanelIndex--; return; 
-                    }
 
-                    if (panelRemove.Visible)
-                        if (!save2DataBase(panelRemove))
-                        {
-                            currentPanelIndex--; return;
-                        }
+                    if (!checkEmpty(panelAuthRights))
+                    {
+                        currentPanelIndex--; return;
+                    }
+                    save2DataBase(panelAuthRights);
+
+
+                    if (!checkEmpty(panelAuthOptions))
+                    {
+                        currentPanelIndex--; return;
+                    }
+                    save2DataBase(panelAuthOptions);
+
+
+                    
+                    if (!checkEmpty(panelRemove))
+                    {
+                        currentPanelIndex--; return;
+                    }
+                    save2DataBase(panelRemove);
+
+                    
                     if (!طريقة_الإجراء.Checked)
                     {
                         التوثيق.Size = new System.Drawing.Size(923, 123);
@@ -4143,14 +4278,91 @@ namespace PersAhwal
 
         private void button1_Click_1(object sender, EventArgs e)
         {
+            int count = getTodaDocxPdf();
+            if (count < 4)
+            {
+                var selectedOption = MessageBox.Show("لديك عدد " + (5 - count).ToString() + " عرض متوفر", "طباعة ملف وورد على اي حال", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (selectedOption == DialogResult.Yes)
+                {
+                    FinalPrint("docx");
+                }
+                else if (selectedOption == DialogResult.No)
+                {
+                    FinalPrint("pdf");
+                }
+
+
+            }
+            else
+            {
+                MessageBox.Show("تم استنفاد طلبات التعديل على المعاملات سيتم الطباعة بصيغة pdf");
+                FinalPrint("pdf");
+            }
+
+            FinalPrint("docx");
             
+        }
+
+        private string getDocxPdf()
+        {
+            string doc = "";
+            string query = "select الإجراء_الأخير from TableAuth where رقم_التوكيل = N'" + رقم_التوكيل.Text + "'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                doc = dataRow["الإجراء_الأخير"].ToString();
+            }
+            return doc;
+        }
+
+        private int getTodaDocxPdf()
+        {
+            string query = "select الإجراء_الأخير from TableAuth where التاريخ_الميلادي = N'" + GreDate + "' and الإجراء_الأخير = N'docx'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            return dtbl.Rows.Count;
+        }
+
+        private void setDocxPdf(string doc)
+        {
+            string query = "update TableAuth set الإجراء_الأخير = N'" + doc + "' where رقم_التوكيل = N'" + رقم_التوكيل.Text + "'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
+        }
+
+        private void FinalPrint(string doc) {
+
+            if (getDocxPdf() != "docx")
+                setDocxPdf(doc);
+
             if (!AuthenticatOther()) return;
             if (طريقة_الإجراء.Checked)
                 SuffConvertments(التوثيق, صفة_مقدم_الطلب_off.SelectedIndex, صفة_الموكل_off.SelectedIndex);
             else
             {
-                if(نوع_الموقع.Checked)
-                SuffConvertments(التوثيق, 0, صفة_الموكل_off.SelectedIndex);
+                if (نوع_الموقع.Checked)
+                    SuffConvertments(التوثيق, 0, صفة_الموكل_off.SelectedIndex);
                 else SuffConvertments(التوثيق, 1, صفة_الموكل_off.SelectedIndex);
             }
 
@@ -4163,7 +4375,6 @@ namespace PersAhwal
 
             save2DataBase(panelapplicationInfo);
 
-            int count = getEdited(GreDate);
 
 
             footers();
@@ -4172,24 +4383,21 @@ namespace PersAhwal
 
             //MessageBox.Show(قائمة_الحقوق.Text);
 
-            fillDocFileInfo(panelapplicationInfo);            
+            fillDocFileInfo(panelapplicationInfo);
             fillDocFileAppInfo(Panelapp);
             fillDocFileInfo(panelAuthRights);
             fillDocFileInfo(panelAuthOptions);
             fillDocFileInfo(finalPanel);
             fillDocFileInfo(flowLayoutPanel2);
             notFiled = false;
-            //}
-            edited.Text = "YES";
             حالة_الارشفة.Text = "غير مؤرشف";
 
-            updateerrorList(قائمة_الحقوق.Text, "editRights");
 
             if (checkAutoUpdate.Checked) txtRev.Text = "";
             else txtRev.Text = txtReview.Text;
             if (!save2DataBase(finalPanel)) return;
 
-            fillPrintDocx(edited.Text);
+            fillPrintDocx(doc);
 
             addarchives();
             if (!وجهة_التوكيل.Text.Contains("الخرطوم"))
@@ -4198,7 +4406,7 @@ namespace PersAhwal
             relatedProUpdate();
             this.Close();
         }
-        private void authJob()
+            private void authJob()
         {
             string auth = " المواطن" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 15] + " المذكور" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 15] + " أعلاه قد حضر" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 3] + " ووقع" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 3] + " بتوقيع" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 4] + " على هذا التوكيل في حضور الشاهدين المشار إليهما أعلاه وذلك بعد تلاوته علي" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 4] + " وبعد أن فهم" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 3] + " مضمونه ومحتواه";
             if (!طريقة_الطلب.Checked)
@@ -4682,43 +4890,8 @@ namespace PersAhwal
             sqlCon.Close();
         }
 
-        private int getEdited(string date)
-        {
-            int count = -1;
-            SqlConnection sqlCon = new SqlConnection(DataSource);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
-            SqlDataAdapter sqlDa = new SqlDataAdapter("select COUNT(edited) as edit from TableAuth where التاريخ_الميلادي =N'" + date + "' and edited = 'YES'", sqlCon);
-            sqlDa.SelectCommand.CommandType = CommandType.Text;
-            DataTable dtbl = new DataTable();
-            sqlDa.Fill(dtbl);
-            sqlCon.Close();
-            foreach (DataRow reader in dtbl.Rows)
-            {
-                count = Convert.ToInt32(reader["edit"].ToString());
-            }
+        
 
-            return count;
-        }
-
-        private string getEditedCase(string docID)
-        {
-            string edit = "";
-            SqlConnection sqlCon = new SqlConnection(DataSource);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
-            SqlDataAdapter sqlDa = new SqlDataAdapter("select edited as edit from TableAuth where رقم_التوكيل =N'" + docID + "'", sqlCon);
-            sqlDa.SelectCommand.CommandType = CommandType.Text;
-            DataTable dtbl = new DataTable();
-            sqlDa.Fill(dtbl);
-            sqlCon.Close();
-            foreach (DataRow reader in dtbl.Rows)
-            {
-                edit = reader["edit"].ToString();
-            }
-
-            return edit;
-        }
 
         private void btnFile2_Click(object sender, EventArgs e)
         {
@@ -4851,55 +5024,8 @@ namespace PersAhwal
             flowLayoutPanel2.Size = new System.Drawing.Size(940, 178);
         }
 
-        private void error1_CheckedChanged(object sender, EventArgs e)
-        {
-            errors_Check();
-        }
-        private void errors_Check()
-        {
-            if (error6.Checked)
-                texterror.Text = error1.Checked.ToString() + "_" + error2.Checked.ToString() + "_" + error3.Checked.ToString() + "_" + error4.Checked.ToString() + "_" + error5.Checked.ToString() + "_" + otherError.Text;
-            else texterror.Text = error1.Checked.ToString() + "_" + error2.Checked.ToString() + "_" + error3.Checked.ToString() + "_" + error4.Checked.ToString() + "_" + error5.Checked.ToString() + "_" + error6.Checked.ToString(); ;
-
-        }
-
-        private void error2_CheckedChanged(object sender, EventArgs e)
-        {
-            if (error2.Checked)
-                texterror.Text = error1.Checked.ToString() + "_" + error2.Checked.ToString() + "_" + error3.Checked.ToString() + "_" + error4.Checked.ToString() + "_" + error5.Checked.ToString() + "_" + otherError.Text;
-            else texterror.Text = error1.Checked.ToString() + "_" + error2.Checked.ToString() + "_" + error3.Checked.ToString() + "_" + error4.Checked.ToString() + "_" + error5.Checked.ToString() + "_" + error6.Checked.ToString(); ;
-
-        }
-
-        private void error3_CheckedChanged(object sender, EventArgs e)
-        {
-            errors_Check();
-        }
-
-        private void error4_CheckedChanged(object sender, EventArgs e)
-        {
-            errors_Check();
-        }
-
-        private void error5_CheckedChanged(object sender, EventArgs e)
-        {
-            errors_Check();
-        }
-
-        private void error6_CheckedChanged(object sender, EventArgs e)
-        {
-            if (error6.Checked) { otherError.Visible = labelError.Visible = true; }
-            else
-            {
-                otherError.Visible = labelError.Visible = false;
-                texterror.Text = "";
-            }
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-            errors_Check();
-        }
+        
+        
 
 
 
@@ -5162,16 +5288,16 @@ namespace PersAhwal
 
         private void txtReview_TextChanged(object sender, EventArgs e)
         {
-            if (!checkAutoUpdate.Checked)
-            {
-                if (oldText != txtReview.Text)
-                {
-                    editsMade[0] = true;
-                    error2.Checked = true;
-                    error2.Enabled = false;
-                }
-            }
-            //txtReview.Text = removeSpace(txtReview.Text,false);
+            //if (!checkAutoUpdate.Checked)
+            //{
+            //    if (oldText != txtReview.Text)
+            //    {
+            //        editsMade[0] = true;
+            //        error2.Checked = true;
+            //        error2.Enabled = false;
+            //    }
+            //}
+            ////txtReview.Text = removeSpace(txtReview.Text,false);
         }
 
         private void allowedEdit_SelectedIndexChanged(object sender, EventArgs e)
@@ -5186,40 +5312,6 @@ namespace PersAhwal
             //sqlCon.Close();
         }
 
-        private void error4_CheckedChanged_1(object sender, EventArgs e)
-        {
-            if (error4.Checked)
-                texterror.Text = error1.Checked.ToString() + "_" + error2.Checked.ToString() + "_" + error3.Checked.ToString() + "_" + error4.Checked.ToString() + "_" + error5.Checked.ToString() + "_" + otherError.Text;
-            else texterror.Text = error1.Checked.ToString() + "_" + error2.Checked.ToString() + "_" + error3.Checked.ToString() + "_" + error4.Checked.ToString() + "_" + error5.Checked.ToString() + "_" + error6.Checked.ToString(); ;
-
-        }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-            updateerrorList(texterror.Text, "errorList");
-            changeDetected = true;
-            panellError.Visible = false;
-        }
-
-        private void btnRemove_Click(object sender, EventArgs e)
-        {
-            foreach (Control control in panelAuthOptions.Controls)
-            {
-                if (control is CheckBox)
-                {
-                    if (((CheckBox)control).TabIndex == LastTabIndex)
-                    {
-                        ((CheckBox)control).Text = ((CheckBox)control).Text + " (نص ملغي)";
-                        //txtAddRight.Text = "";
-                        //btnRemove.Enabled = false;
-                    }
-                }
-            }
-            editsMade[1] = true;
-            error4.Checked = true;
-            error4.Enabled = false;
-            //btnAddRight.Text = "إضافة";
-        }
 
         private void التاريخ_الميلادي_TextChanged(object sender, EventArgs e)
         {
@@ -6749,6 +6841,11 @@ namespace PersAhwal
         private void رقم_المرجع_المرتبط_TextChanged(object sender, EventArgs e)
         {
             
+        }
+
+        private void button1_Click_2(object sender, EventArgs e)
+        {
+            FinalPrint("pdf");
         }
 
         private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)

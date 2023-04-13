@@ -262,6 +262,11 @@ namespace PersAhwal
 
                     break;
                 case 2:
+
+
+                    التاريخ_الميلادي.Text = GregorianDate;
+                    التاريخ_الهجري.Text = HijriDate;
+
                     updateGenName(مقدم_الطلب.Text, رقم_المعاملة.Text);
                     relatedProUpdate();
                     صفة_مقدم_الطلب_off.SelectedIndex = Appcases(النوع, addNameIndex);
@@ -2798,19 +2803,17 @@ namespace PersAhwal
                     تفيد_تشهد_off.Text = "فيد";
                     عنوان_المكاتبة.Items.Add("إفادة");
                 }
-                
-                if (نوع_المعاملة.Text == "مذكرة لسفارة عربية")
-                {
-                    autoCompleteTextBox(Vitext1, DataSource, "ArabCountries", "TableListCombo");
-                    autoCompleteTextBox(Vitext1, DataSource, "ForiegnCountries", "TableListCombo");
-                }
                 else if (نوع_المعاملة.Text == "شهادة لمن يهمه الأمر")
                 {
                     تفيد_تشهد_off.Text = "شهد";
                     عنوان_المكاتبة.Items.Add("شهادة");
                 }
-                else
-                    تفيد_تشهد_off.Text = "";
+                if (نوع_المعاملة.Text == "مذكرة لسفارة عربية")
+                {
+                    autoCompleteTextBox(Vitext1, DataSource, "ArabCountries", "TableListCombo");
+                    autoCompleteTextBox(Vitext1, DataSource, "ForiegnCountries", "TableListCombo");
+                }
+                
 
                 عنوان_المكاتبة.Text = نوع_المعاملة.Text;
 
@@ -2959,7 +2962,7 @@ namespace PersAhwal
             }
             else
             {
-                MessageBox.Show("تم استنفاد طلبات التعديل على المعاملات");
+                MessageBox.Show("تم استنفاد طلبات التعديل على المعاملات سيتم الطباعة بصيغة pdf");
                 FinalPrint("pdf");
             }
            
@@ -2986,7 +2989,7 @@ namespace PersAhwal
 
         private int getTodaDocxPdf()
         {
-            string query = "select الإجراء_الأخير from TableCollection where التاريخ_الميلادي = N'" + التاريخ_الميلادي.Text + "' and الإجراء_الأخير = N'docx'";
+            string query = "select الإجراء_الأخير from TableCollection where التاريخ_الميلادي = N'" + GregorianDate + "' and الإجراء_الأخير = N'docx'";
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
@@ -4064,12 +4067,13 @@ namespace PersAhwal
                 txtReviewList = txtReviewList.Replace(رقم_الهوية.Text, "tP");
             if (txtReviewList.Contains(مكان_الإصدار.Text))
                 txtReviewList = txtReviewList.Replace(مكان_الإصدار.Text, "tS");
-            if (txtReviewList.Contains(تاريخ_الميلاد.Text))
+            try
+            {
+                if (txtReviewList.Contains(تاريخ_الميلاد.Text))
                 txtReviewList = txtReviewList.Replace(تاريخ_الميلاد.Text, "tB");
             if (txtReviewList.Contains(نوع_الهوية.Text))
                 txtReviewList = txtReviewList.Replace(نوع_الهوية.Text, "tD");
-            try
-            {
+            
                 if (txtReviewList.Contains(title.Text))
                     txtReviewList = txtReviewList.Replace(title.Text, "tT");
             }
@@ -4117,19 +4121,11 @@ namespace PersAhwal
                     textModel = dr["TextModel"].ToString().Split(':')[0] + ":"+Environment.NewLine;
                     ProTitle = dr["titleDefault"].ToString();
 
-                    if (starText == "")
-                    {
+                    
                         btnPrevious.Visible = true;
                         StrSpecPur = dr["TextModel"].ToString().Split(':')[0] + ":" + Environment.NewLine;
-                    }
-                    else
-                    {
-                        btnPrevious.Visible = false;
-                        StrSpecPur = checkStarTextExist(DataSource, نوع_المعاملة.Text.Replace(" ", "_") + "_" + نوع_الإجراء.Text.Replace(" ", "_"), starText.Split('_')[0]).Split(':')[0] + ":" + Environment.NewLine;
-                    }
-
-                    if (StrSpecPur == "")
-                        StrSpecPur = dr["TextModel"].ToString().Split(':')[0] + ":" + Environment.NewLine;
+                    
+                    StrSpecPur = dr["TextModel"].ToString().Split(':')[0] + ":" + Environment.NewLine;
                     Console.WriteLine(StrSpecPur);
                     //MessageBox.Show(StrSpecPur);
                     
@@ -4235,7 +4231,11 @@ namespace PersAhwal
             DataTable dtbl = new DataTable();
             Console.WriteLine(query);
             //MessageBox.Show(col);
-            sqlDa.Fill(dtbl);
+            try
+            {
+                sqlDa.Fill(dtbl);
+            }
+            catch (Exception ex) { return ""; }
             sqlCon.Close();
             foreach (DataRow dr in dtbl.Rows)
             {
@@ -5360,9 +5360,6 @@ namespace PersAhwal
                 else التوثيق.Text = SuffReplacements(التوثيق.Text, 1);
             }
 
-
-
-            
             
             fillDocFileAppInfo(panelapplicationInfo);
 

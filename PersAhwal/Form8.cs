@@ -900,6 +900,17 @@ namespace PersAhwal
                         }
                         catch (Exception ex) { 
                         }
+                        if (control.Name.Contains("نص") && control.Name.Contains("comb"))
+                        {
+                            //MessageBox.Show(control.Name.Replace("نص_", "Option"));
+                            try
+                            {
+                                control.Text = dr[control.Name.Replace("نص_", "") + "Option"].ToString();
+                            }
+                            catch (Exception ex)
+                            {
+                            }
+                        }
                     }
                 }
         }

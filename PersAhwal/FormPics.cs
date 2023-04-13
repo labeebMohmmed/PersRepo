@@ -154,7 +154,6 @@ namespace PersAhwal
             Combo1Index = index;
             JobPosition = jobPosition;            
             genPreparation(strData, strSubData, index);
-            CombAuthType_Selected();
             updateNames();
             correctNo();
             //MessageBox.Show(Combo1Index.ToString());
@@ -222,7 +221,7 @@ namespace PersAhwal
                 if (strSubData.Length > 0 && strSubData[0] != "")
                 {
                     Combo2.Visible = true;
-                    //Combo2.Items.Clear();
+                    Combo2.Items.Clear();
                     if (!checkColumnName(Combo1.Text.Replace(" ", "_")))
                     {
                         CreateColumn(Combo1.Text.Replace(" ", "_"));
@@ -1417,7 +1416,7 @@ namespace PersAhwal
         private void fileComboBox(ComboBox combbox, string source, string comlumnName, string tableName)
         {
             combbox.Visible = true;
-            //combbox.Items.Clear();            
+            combbox.Items.Clear();            
             using (SqlConnection saConn = new SqlConnection(source))
             {
                 saConn.Open();
@@ -3012,7 +3011,7 @@ namespace PersAhwal
 
             //}
 
-            //this.Close();
+            this.Close();
             if (ArchiveState && relatedPro != "")
             {
                 var selectedOption = MessageBox.Show("تم رصد " + relatedPro.Split('-')[0] +" بشأن " + relatedPro.Split('-')[1] + " يتم عادة إجراءه مع المعاملة المشار التي تم إجراءها", "هل ترغب في إجراءها؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -3224,88 +3223,89 @@ namespace PersAhwal
         {
             //if (checkColumnName(Combo1.Text.Replace(" ", "_")))
             //{
-            //    reqFile = "";
-            //    string[] data = new string[2];
+                reqFile = "";
+                string[] data = new string[2];
 
-            //    data[0] = noForm;
-                
-            //    Combo2.Items.Clear();
-            //    fileComboBox(Combo2, DataSource, Combo1.Text.Replace(" ", "_"), "TableListCombo");
-            //    if (ArchiveState) DocIDGenerator(FormType);
-            //    if (Combo2.Visible)
-            //    {
-            //        for (int x = 0; x < Combo2.Items.Count; x++)
-            //        {
-                        
-            //            string formNo = Combo1.Text.Trim();
-            //            data[1] = Combo2.Items[x].ToString().Trim() +"-"+ Combo1.SelectedIndex.ToString();
-            //            //MessageBox.Show(data[1]);
-            //            if (PreReqFound(formNo))
-            //            {
-            //                loadPreReq(noForm, Combo1.Text, ArchiveState);
-            //                //MessageBox.Show(formNo); 
-            //                //fillFormDocx(formNo, Combo2.Items[x].ToString().Trim() + "-" + Combo1.SelectedIndex.ToString())
-            //            }
-            //            else 
-            //                insertRow(data);
-            //        }
-            //    }
-            //    else {
-            //        string formNo = Combo1.Text;
-            //        data[1] = formNo;
-            //        if (PreReqFound(formNo))
-            //            fillFormDocx(formNo, formNo);
-            //        else if (!Combo1.Text.Contains("صيغة غير")) insertRow(data);
-            //    }
-                
-            //    //requiredDocText();
-            //    return;
-            ////}
-            // if (checkaltColName(Combo1.Text))
-            //{
-            //    reqFile = "";
-            //    string[] data = new string[2];
+                data[0] = noForm;
 
-            //    data[0] = noForm;
-                
-            //    //Combo2.Items.Clear();
-            //    fileComboBoxSub(Combo2, DataSource, "altColName", "altSubColName");
-            //    if (ArchiveState) DocIDGenerator(FormType);
-            //    loadPreReq(noForm, Combo1.Text, ArchiveState);
-            //    //if (Combo2.Visible)
-            //    //{
-            //    //    for (int x = 0; x < Combo2.Items.Count; x++)
-            //    //    {
+                Combo2.Items.Clear();
+                fileComboBox(Combo2, DataSource, Combo1.Text.Replace(" ", "_"), "TableListCombo");
+                if (ArchiveState) DocIDGenerator(FormType);
+                if (Combo2.Visible)
+                {
+                    for (int x = 0; x < Combo2.Items.Count; x++)
+                    {
 
-            //    //        string formNo = Combo1.Text.Trim();
-            //    //        data[1] = Combo2.Items[x].ToString().Trim() +"-"+ Combo1.SelectedIndex.ToString();
-            //    //        //MessageBox.Show(data[1]);
-            //    //        if (PreReqFound(formNo))
-            //    //        {
-            //    //            loadPreReq(noForm, Combo1.Text, ArchiveState);
-            //    //            //MessageBox.Show(formNo); 
-            //    //            //fillFormDocx(formNo, Combo2.Items[x].ToString().Trim() + "-" + Combo1.SelectedIndex.ToString())
-            //    //        }
-            //    //        else 
-            //    //            insertRow(data);
-            //    //    }
-            //    //}
-            //    //else {
-            //    //    string formNo = Combo1.Text;
-            //    //    data[1] = formNo;
-            //    //    if (PreReqFound(formNo))
-            //    //        fillFormDocx(formNo, formNo);
-            //    //    else if (!Combo1.Text.Contains("صيغة غير")) insertRow(data);
-            //    //}
+                        string formNo = Combo1.Text.Trim();
+                        data[1] = Combo2.Items[x].ToString().Trim() + "-" + Combo1.SelectedIndex.ToString();
+                        //MessageBox.Show(data[1]);
+                        if (PreReqFound(formNo))
+                        {
+                            loadPreReq(noForm, Combo1.Text, ArchiveState);
+                            //MessageBox.Show(formNo); 
+                            //fillFormDocx(formNo, Combo2.Items[x].ToString().Trim() + "-" + Combo1.SelectedIndex.ToString())
+                        }
+                        else
+                            insertRow(data);
+                    }
+                }
+                else
+                {
+                    string formNo = Combo1.Text;
+                    data[1] = formNo;
+                    if (PreReqFound(formNo))
+                        fillFormDocx(formNo, formNo);
+                    else if (!Combo1.Text.Contains("صيغة غير")) insertRow(data);
+                }
 
-            //    //requiredDocText();
-            //    return;
-            //}
-        }
+                //requiredDocText();
+                return;
+                //}
+                // if (checkaltColName(Combo1.Text))
+                //{
+                //    reqFile = "";
+                //    string[] data = new string[2];
 
-        private void fileComboBoxSub(ComboBox combbox, string source, string comlumnName, string SubComlumnName)
+                //    data[0] = noForm;
+
+                //    //Combo2.Items.Clear();
+                //    fileComboBoxSub(Combo2, DataSource, "altColName", "altSubColName");
+                //    if (ArchiveState) DocIDGenerator(FormType);
+                //    loadPreReq(noForm, Combo1.Text, ArchiveState);
+                //    //if (Combo2.Visible)
+                //    //{
+                //    //    for (int x = 0; x < Combo2.Items.Count; x++)
+                //    //    {
+
+                //    //        string formNo = Combo1.Text.Trim();
+                //    //        data[1] = Combo2.Items[x].ToString().Trim() +"-"+ Combo1.SelectedIndex.ToString();
+                //    //        //MessageBox.Show(data[1]);
+                //    //        if (PreReqFound(formNo))
+                //    //        {
+                //    //            loadPreReq(noForm, Combo1.Text, ArchiveState);
+                //    //            //MessageBox.Show(formNo); 
+                //    //            //fillFormDocx(formNo, Combo2.Items[x].ToString().Trim() + "-" + Combo1.SelectedIndex.ToString())
+                //    //        }
+                //    //        else 
+                //    //            insertRow(data);
+                //    //    }
+                //    //}
+                //    //else {
+                //    //    string formNo = Combo1.Text;
+                //    //    data[1] = formNo;
+                //    //    if (PreReqFound(formNo))
+                //    //        fillFormDocx(formNo, formNo);
+                //    //    else if (!Combo1.Text.Contains("صيغة غير")) insertRow(data);
+                //    //}
+
+                //    //requiredDocText();
+                //    return;
+                //}
+            }
+
+            private void fileComboBoxSub(ComboBox combbox, string source, string comlumnName, string SubComlumnName)
         {
-            //combbox.Items.Clear();
+            combbox.Items.Clear();
             using (SqlConnection saConn = new SqlConnection(source))
             {
                 saConn.Open();
@@ -3539,66 +3539,7 @@ namespace PersAhwal
             return formtype;
         }
 
-        private void CombAuthType_Selected()
-        {
-           // requiredDocText();
-           
-            if (checkColumnName(Combo1.Text.Replace(" ", "_")))
-            {
-                //Combo2.Items.Clear();
-                fileComboBox(Combo2, DataSource, Combo1.Text.Replace(" ", "_"), "TableListCombo");
-                
-                
-                return;
-            }
-            if (FormType == 12)
-            {
-                if (Combo1.SelectedIndex >= 1 && Combo1.SelectedIndex <= 4)
-                {
-                    fileComboBox(Combo2, DataSource, "Row1Attach", "TableListCombo");
-                }
-                if (Combo1.SelectedIndex == 5)
-                {
-                    fileComboBox(Combo2, DataSource, "Row1Attach", "TableListCombo");
-                }
-                if (Combo1.Text.Contains("زواج"))
-                {
-
-                    fileComboBox(Combo2, DataSource, "RowMerrageAttach", "TableListCombo");
-                }
-                if (Combo1.Text.Contains("ورثة"))
-                {
-
-                    fileComboBox(Combo2, DataSource, "RowLegacyAttach", "TableListCombo");
-                }
-                if (Combo1.Text.Contains("سيارة"))
-                {
-
-                    fileComboBox(Combo2, DataSource, "RowCarAttach", "TableListCombo");
-                }
-                if (Combo1.Text.Contains("طلاق"))
-                {
-
-                    fileComboBox(Combo2, DataSource, "RowDeforceAttach", "TableListCombo");
-                }
-                if (Combo1.Text.Contains("جامعية"))
-                {
-
-                    fileComboBox(Combo2, DataSource, "RowUniversityAttach", "TableListCombo");
-                }
-                if (Combo1.Text.Contains("ميلاد"))
-                {
-                    Combo2.Visible = false;
-                }
-                if (Combo1.Text.Contains("بالتنازل"))
-                {
-                    fileComboBox(Combo2, DataSource, "GiveAway", "TableListCombo");
-                }
-                //if(Combo2.Items.Count > 0)Combo2.SelectedIndex = 0;
-            }
-        }
-
-
+        
         private void timer1_Tick(object sender, EventArgs e)
         {
             bool view = true;

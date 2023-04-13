@@ -217,7 +217,10 @@ namespace PersAhwal
             HijriDate = hijriDate;
             Console.WriteLine(1);
 
-            
+            //if (HijriDate.Split('-')[0] == "30" || HijriDate.Split('-')[0] == "29" || HijriDate.Split('-')[0] == "01" || HijriDate.Split('-')[0] == "02")
+            //    if (getHijriVerification() != GregorianDate)
+            //    { MessageBox.Show("يرجى مراجعة التاريخ الهجري للتأكيد");
+            //HijriVerified(); }
 
             if (Server == "57")
             {
@@ -972,6 +975,52 @@ namespace PersAhwal
             sqlCon.Close();
         }
 
+        private string getHijriVerification()
+        {
+            string ver = "";
+            SqlConnection sqlCon = new SqlConnection(DataSource56);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    try
+                    {
+                        sqlCon.Open();
+                    }
+                    catch (Exception ex) { return ""; }
+                string settingData = "select hijriVerified from TableSettings where ID='1'";
+                SqlDataAdapter sqlDa = new SqlDataAdapter(settingData, sqlCon);
+                sqlDa.SelectCommand.CommandType = CommandType.Text;
+                DataTable dtbl = new DataTable();
+                sqlDa.Fill(dtbl);
+
+
+                foreach (DataRow dataRow in dtbl.Rows)
+                {
+                    ver = dataRow["hijriVerified"].ToString();
+
+                }
+            }
+            catch (Exception ex) { }
+            return ver;
+        }
+
+
+        private void HijriVerified()
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource56);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+            SqlCommand sqlCmd = new SqlCommand("update TableSettings set hijriVerified=@hijriVerified where ID='1'", sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.Parameters.AddWithValue("@hijriVerified", HijriDate);
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
+        }
+
         private string getIqrarType()
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
@@ -1024,7 +1073,8 @@ namespace PersAhwal
             catch (Exception ex) { }
             return ver;
         }
-
+        
+        
 
         private string getAppFolder()
         {

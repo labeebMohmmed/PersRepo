@@ -53,6 +53,7 @@ namespace PersAhwal
     {
         string DataSource = "";
         int Messid = 0;
+        string appSex = "سوداني";
         int handIndex = 0;
         string رقم_معاملة_القسم = "";
         string[] PathImages = new string[100];
@@ -273,8 +274,8 @@ namespace PersAhwal
                     sqlCon.Open();
                 }
                 catch (Exception ex) { return 0; }
-            SqlCommand sqlCmd = new SqlCommand("INSERT INTO TableHandAuth ( نوع_المكاتبة,اسم_موقع_المكاتبة,جنسية_الدبلوماسي,تاريخ_الأرشفة,تاريخ_توقيع_المكاتبة,العدد,تعليق,مدير_القسم,حالة_الارشفة,اسم_الجهة,رقم_الشهادة,اسم_صاحب_الشهادة,رقم_معاملة_القسم,الحالة) values (@نوع_المكاتبة,@اسم_موقع_المكاتبة,@جنسية_الدبلوماسي,@تاريخ_الأرشفة,@تاريخ_توقيع_المكاتبة,@العدد,@تعليق,@مدير_القسم,@حالة_الارشفة,@اسم_الجهة,@رقم_الشهادة,@اسم_صاحب_الشهادة,@رقم_معاملة_القسم,@الحالة);SELECT @@IDENTITY as lastid", sqlCon);
-            if (id != 1) sqlCmd = new SqlCommand("UPDATE TableHandAuth SET نوع_المكاتبة=@نوع_المكاتبة,اسم_موقع_المكاتبة=@اسم_موقع_المكاتبة,جنسية_الدبلوماسي=@جنسية_الدبلوماسي,تاريخ_الأرشفة=@تاريخ_الأرشفة,تاريخ_توقيع_المكاتبة=@تاريخ_توقيع_المكاتبة,العدد=@العدد,تعليق=@تعليق,مدير_القسم=@مدير_القسم,حالة_الارشفة=@حالة_الارشفة,اسم_الجهة=@اسم_الجهة,اسم_صاحب_الشهادة=@اسم_صاحب_الشهادة,رقم_الشهادة=@رقم_الشهادة,الحالة=@الحالة where ID=@ID", sqlCon);
+            SqlCommand sqlCmd = new SqlCommand("INSERT INTO TableHandAuth ( نوع_المكاتبة,اسم_موقع_المكاتبة,جنسية_الدبلوماسي,تاريخ_الأرشفة,تاريخ_توقيع_المكاتبة,العدد,تعليق,مدير_القسم,حالة_الارشفة,اسم_الجهة,رقم_الشهادة,اسم_صاحب_الشهادة,رقم_معاملة_القسم,الحالة,الجنسية) values (@نوع_المكاتبة,@اسم_موقع_المكاتبة,@جنسية_الدبلوماسي,@تاريخ_الأرشفة,@تاريخ_توقيع_المكاتبة,@العدد,@تعليق,@مدير_القسم,@حالة_الارشفة,@اسم_الجهة,@رقم_الشهادة,@اسم_صاحب_الشهادة,@رقم_معاملة_القسم,@الحالة,@الجنسية);SELECT @@IDENTITY as lastid", sqlCon);
+            if (id != 1) sqlCmd = new SqlCommand("UPDATE TableHandAuth SET الجنسية=@الجنسية, نوع_المكاتبة=@نوع_المكاتبة,اسم_موقع_المكاتبة=@اسم_موقع_المكاتبة,جنسية_الدبلوماسي=@جنسية_الدبلوماسي,تاريخ_الأرشفة=@تاريخ_الأرشفة,تاريخ_توقيع_المكاتبة=@تاريخ_توقيع_المكاتبة,العدد=@العدد,تعليق=@تعليق,مدير_القسم=@مدير_القسم,حالة_الارشفة=@حالة_الارشفة,اسم_الجهة=@اسم_الجهة,اسم_صاحب_الشهادة=@اسم_صاحب_الشهادة,رقم_الشهادة=@رقم_الشهادة,الحالة=@الحالة where ID=@ID", sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.Parameters.AddWithValue("@ID", id);
             sqlCmd.Parameters.AddWithValue("@نوع_المكاتبة", نوع_المكاتبة);
@@ -282,6 +283,7 @@ namespace PersAhwal
             sqlCmd.Parameters.AddWithValue("@جنسية_الدبلوماسي", جنسية_الدبلوماسي);
             sqlCmd.Parameters.AddWithValue("@تاريخ_توقيع_المكاتبة", تاريخ_توقيع_المكاتبة);
             sqlCmd.Parameters.AddWithValue("@العدد", العدد);
+            sqlCmd.Parameters.AddWithValue("@الجنسية", appSex);
             sqlCmd.Parameters.AddWithValue("@الحالة", docStatus);
             sqlCmd.Parameters.AddWithValue("@رقم_معاملة_القسم", رقم_معاملة_القسم);
             sqlCmd.Parameters.AddWithValue("@اسم_الجهة", اسم_الجهة.Text);
@@ -404,6 +406,14 @@ namespace PersAhwal
                 else if (selectedOption == DialogResult.No)
                     docStatus = "مستند غير صحيح"; 
             }
+            
+            var selectedOption1 = MessageBox.Show("", "صاحب الشهادة سوداني الجنسية؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (selectedOption1 == DialogResult.No)
+                appSex = "أجنبي"; 
+            else 
+            if (selectedOption1 == DialogResult.Yes)
+                appSex = "سوداني"; 
+            
             if (اسم_الجهة.Text != "" && اسم_صاحب_الشهادة.Text != "" && رقم_الشهادة.Text != "")
             {
                 CreateMessageAuthentication(تاريخ_الأرشفة.Text, HijriDate, مدير_القسم.Text);
