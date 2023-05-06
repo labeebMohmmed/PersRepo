@@ -212,7 +212,7 @@ namespace PersAhwal
                     if (age <= 18)
                     {
                         textBox.BackColor = System.Drawing.Color.MistyRose;
-                        MessageBox.Show("عمر حرج ويحتاج إلى موافق صريحة من المأذون");
+                        //MessageBox.Show("عمر حرج ويحتاج إلى موافق صريحة من المأذون");
 
                         return true;
                     }

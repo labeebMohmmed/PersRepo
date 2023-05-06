@@ -229,13 +229,14 @@ namespace PersAhwal
                 panel2.BackColor = label2.BackColor = ConsulateEmployee.BackColor = System.Drawing.SystemColors.ButtonShadow;
                 Affbtn1.Visible = false;
                 ReportType.Items.Add("تقرير المأذونية الشهري");
-
+                Affbtn0.Visible = false;
             }
             else if (Server == "56")
             {
                 label2.BackColor = ConsulateEmployee.BackColor = System.Drawing.SystemColors.ActiveCaption;
                 DataSource = dataSource56;
-                Affbtn1.Visible = true;    
+                Affbtn1.Visible = true;
+                Affbtn0.Visible = true;
                 this.Name = "القائمة الرئيسة نافذة قسم شؤون الرعايا";
                 //label2.Text = "نافذة قسم شؤون الرعايا";
             }
@@ -266,7 +267,7 @@ namespace PersAhwal
             columnNames();
             Console.WriteLine(4);
             GregorianDate = gregorianDate;
-            Affbtn0.Visible = !pers_Peope;
+            
             //com247, 37 aff
             //com 429, 459 pers
             if (pers_Peope)
@@ -285,7 +286,7 @@ namespace PersAhwal
                         control.SendToBack();
                     }
                 }
-                Affbtn3.Visible = Affbtn0.Visible = Affbtn5.Visible = false;
+                Affbtn3.Visible = Affbtn5.Visible = false;
 
 
             }
@@ -355,11 +356,11 @@ namespace PersAhwal
             
             Console.WriteLine(6);
             perbtn1.Visible = false;
-            persbtn2.Visible = false;
-            persbtn2.SendToBack();
+            //persbtn2.Visible = false;
+            //persbtn2.SendToBack();
             if (UserJobposition.Contains("قنصل"))
             {
-                picSettings.Visible = Affbtn0.Visible = true;
+                picSettings.Visible = true;
                 
                 picVersio.BringToFront();
                 //if (Server == "57")
@@ -432,6 +433,9 @@ namespace PersAhwal
             //}
 
             getTitle(DataSource, EmployeeName);
+
+
+
         }
         private void getTitle(string source, string empName)
         {
@@ -449,7 +453,31 @@ namespace PersAhwal
                 AuthTitle = dataRow["AuthenticType"].ToString();
             }
         }
-        private void backgroundWorker1_DoWork_1(object sender, DoWorkEventArgs e)
+        private void deleteOldFiles()
+        {
+            CultureInfo arSA = new CultureInfo("ar-SA");
+            arSA.DateTimeFormat.Calendar = new GregorianCalendar();
+            Thread.CurrentThread.CurrentCulture = arSA;
+            new System.Globalization.GregorianCalendar();
+            string date = DateTime.Now.ToString("dd/MM/yyyy");
+            //MessageBox.Show()
+            string[] archFiles = Directory.GetFiles(FilespathOut);
+            foreach (string str in archFiles)
+            {
+                FileInfo fileInfo = new FileInfo(str);
+                DateTime dt = fileInfo.LastWriteTime.Date;
+
+                Console.WriteLine(date + " - " + str + " date is " + dt.ToString().Split(' ')[0]);
+                try
+                {
+                    if (date != dt.ToString().Split(' ')[0])
+                        //File.Delete(str);
+                        Console.WriteLine(str);
+                }
+                catch (Exception ex) { }
+            }
+        }
+            private void backgroundWorker1_DoWork_1(object sender, DoWorkEventArgs e)
         {
             return;
             CultureInfo arSA = new CultureInfo("ar-SA");
@@ -1352,7 +1380,7 @@ namespace PersAhwal
             queryDateList[1] = "select AppName,ProType,DocID,ArchivedState,DataInterType,GriDate from TableTravIqrar where GriDate=@GriDate and ArchivedState=N'مؤرشف نهائي'";
             queryDateList[2] = "select AppName,IqrarPurpose,DocID,ArchivedState,DataInterType,GriDate from TableMultiIqrar where GriDate=@GriDate and ArchivedState=N'مؤرشف نهائي'";
             queryDateList[3] = "select AppName,IqrarType,DocID,ArchivedState,DataInterType,GriDate from TableTRName where GriDate=@GriDate and ArchivedState=N'مؤرشف نهائي'";
-            queryDateList[4] = "select مقدم_الطلب,نوع_الإجراء,رقم_المعاملة,حالة_الارشفة,طريقة_الطلب,التاريخ_الميلادي from TableCollection where التاريخ_الميلادي=@التاريخ_الميلادي and حالة_الارشفة=N'مؤرشف نهائي'";
+            queryDateList[4] = "select مقدم_الطلب,نوع_الإجراء,رقم_المعاملة,حالة_الارشفة,طريقة_الطلب,التاريخ_الميلادي,نوع_المعاملة from TableCollection where التاريخ_الميلادي=@التاريخ_الميلادي and حالة_الارشفة=N'مؤرشف نهائي'";
             queryDateList[5] = "select AppName,ProCase,DocID,ArchivedState,DataInterType,GriDate from TableFamilySponApp where GriDate=@GriDate and ArchivedState=N'مؤرشف نهائي'";
             queryDateList[6] = "select مقدم_الطلب,إجراء_التوكيل,نوع_التوكيل,رقم_التوكيل,الموكَّل,حالة_الارشفة,طريقة_الطلب,نوع_التوكيل ,التاريخ_الميلادي from TableAuth where التاريخ_الميلادي=@التاريخ_الميلادي and حالة_الارشفة=N'مؤرشف نهائي'";
             queryDateList[7] = "select AppName,DocID,ArchivedState,DataInterType,GriDate from TableForensicApp where GriDate=@GriDate and ArchivedState=N'مؤرشف نهائي'";
@@ -1450,26 +1478,12 @@ namespace PersAhwal
         
         void DailyList(string dateFrom)
         {
-            /*
-             queryDateList[0] = "select AppName from TableDocIqrar,GriDate where GriDate=@GriDate";
-            queryDateList[1] = "select AppName,ProType,DocID,ArchivedState,DataInterType,GriDate from TableTravIqrar where GriDate=@GriDate";
-            queryDateList[2] = "select AppName,IqrarPurpose,DocID,ArchivedState,DataInterType,GriDate from TableMultiIqrar where GriDate=@GriDate";
-            queryDateList[3] = "select AppName,IqrarType,DocID,ArchivedState,DataInterType,GriDate from TableTRName where GriDate=@GriDate";
-            queryDateList[4] = "select مقدم_الطلب,نوع_الإجراء,رقم_المعاملة,حالة_الارشفة,طريقة_الطلب,التاريخ_الميلادي from TableCollection where التاريخ_الميلادي=@التاريخ_الميلادي";
-            queryDateList[5] = "select AppName,ProCase,DocID,ArchivedState,DataInterType,GriDate from TableFamilySponApp where GriDate=@GriDate";
-            queryDateList[6] = "select مقدم_الطلب,إجراء_التوكيل,نوع_التوكيل,رقم_التوكيل,الموكَّل,حالة_الارشفة,طريقة_الطلب,نوع_التوكيل ,التاريخ_الميلادي from TableAuth where التاريخ_الميلادي=@التاريخ_الميلادي";
-            queryDateList[7] = "select AppName,DocID,ArchivedState,DataInterType,GriDate from TableForensicApp where GriDate=@GriDate";
-            queryDateList[8] = "select AppName,DocID,ArchivedState,DataInterType,GriDate from TableMarriage where GriDate=@GriDate";
-            queryDateList[9] = "select AppName,DocID,ArchivedState,DataInterType,GriDate from TableStudent where GriDate=@GriDate";
-            queryDateList[10] = "select AppName,DocID,ArchivedState,DataInterType,GriDate from TableVisaApp where GriDate=@GriDate";
-            queryDateList[11] = "select DocNo,GriDate from TableHandAuth where GriDate=@GriDate";
-            queryDateList[12] = "select رقم_اذن_الدفن,التاريخ_الميلادي from TablePassAway where التاريخ_الميلادي=@التاريخ_الميلادي";
-            queryDateList[13] = "select رقم_المعاملة,التاريخ_الميلادي from TableMerrageDoc where التاريخ_الميلادي=@التاريخ_الميلادي";
-            queryDateList[14] = "select رقم_المعاملة,التاريخ_الميلادي from TableDivorce  where التاريخ_الميلادي=@التاريخ_الميلادي";
-             * 
-             */
-            totalrowsAuth = 0;
-
+            string[] querys = new string[2];
+            querys[0] = "select مقدم_الطلب,نوع_الإجراء,رقم_المعاملة,حالة_الارشفة,طريقة_الطلب,التاريخ_الميلادي,نوع_المعاملة from TableCollection where التاريخ_الميلادي=@التاريخ_الميلادي and حالة_الارشفة=N'مؤرشف نهائي'";
+            querys[1] = "select مقدم_الطلب,إجراء_التوكيل,نوع_التوكيل,رقم_التوكيل,الموكَّل,حالة_الارشفة,طريقة_الطلب,نوع_التوكيل ,التاريخ_الميلادي from TableAuth where التاريخ_الميلادي=@التاريخ_الميلادي and حالة_الارشفة=N'مؤرشف نهائي'";
+            
+           totalrowsAuth = 0;
+            string[] arrangeData = new string[5];
             totalrowsAffadivit = 0;
             int y = 0;
             SqlConnection sqlCon = new SqlConnection(DataSource);
@@ -1477,186 +1491,262 @@ namespace PersAhwal
             DataTable dtbl1 = new DataTable();
             if (sqlCon.State == ConnectionState.Closed)
             {
-                //label1.Text = "";
                 if (sqlCon.State == ConnectionState.Closed)
                     try
                     {
                         sqlCon.Open();
                     }
                     catch (Exception ex) { return; }
-                for (TableIndex = 1; TableIndex <= 6; TableIndex++)
+                for (TableIndex = 0; TableIndex < 2; TableIndex++)
                 {
-                    int x = 0;
-
-                    if (TableIndex == 6)
+                    if (TableIndex == 1)
                     {
-                        SqlDataAdapter sqlDa1 = new SqlDataAdapter(queryDateList[TableIndex], sqlCon);
+                        SqlDataAdapter sqlDa1 = new SqlDataAdapter(querys[TableIndex], sqlCon);
                         sqlDa1.SelectCommand.CommandType = CommandType.Text;
-                        //MessageBox.Show(dateFrom.Split('-')[1] +"-"+ dateFrom.Split('-')[0]+"-"+ dateFrom.Split('-')[2]);
                         sqlDa1.SelectCommand.Parameters.AddWithValue("@التاريخ_الميلادي", dateFrom);
                         sqlDa1.Fill(dtbl1);
                         dataGridView2.DataSource = dtbl1;
                         totalrowsAuth = dtbl1.Rows.Count;
-
-
                     }
-                    else
+                    else if (TableIndex == 0)
                     {
-                        SqlDataAdapter sqlDa = new SqlDataAdapter(queryDateList[TableIndex], sqlCon);
+                        SqlDataAdapter sqlDa = new SqlDataAdapter(querys[TableIndex], sqlCon);
                         sqlDa.SelectCommand.CommandType = CommandType.Text;
-                        if (TableIndex == 4)
-                            sqlDa.SelectCommand.Parameters.AddWithValue("@التاريخ_الميلادي", dateFrom);
-                        else
-                            sqlDa.SelectCommand.Parameters.AddWithValue("@GriDate", dateFrom);
-
+                        sqlDa.SelectCommand.Parameters.AddWithValue("@التاريخ_الميلادي", dateFrom);
                         sqlDa.Fill(dtbl);
-                        string[] arrangeData = new string[5];
+                        //MessageBox.Show(dtbl.c);
                         foreach (DataRow row in dtbl.Rows)
                         {
-                            //try
-                            //{
-                            //    MessageBox.Show(dateFrom + " - " + row["AppName"].ToString());
-                            //}
-                            //catch (Exception ex) {
-                            //    MessageBox.Show(dateFrom + " - " + row["مقدم_الطلب"].ToString());
-                            //}
-                            if (!(row["ArchivedState"].ToString().Contains("-") && row["DataInterType"].ToString() != "حضور مباشرة إلى القنصلية"))
-                            {
-
-                                switch (TableIndex)
-                                {
-                                    case 1:
-                                        RetrievedNameAffadivit[totalrowsAffadivit] = row["AppName"].ToString();
-                                        switch (row["ProType"].ToString()) {
-                                            case "0":
-                                                RetrievedTypeAffadivit[totalrowsAffadivit] = "استخراج وثائق للابناء";
-                                                break;
-                                            case "1":
-                                                RetrievedTypeAffadivit[totalrowsAffadivit] = "عدم ممانعة سفر الابناء";
-                                                break;
-                                            case "2":
-                                                RetrievedTypeAffadivit[totalrowsAffadivit] = "استخراج وثائق وعدم ممانعة سفر الابناء";
-                                                break;
-                                            case "3":
-                                                RetrievedTypeAffadivit[totalrowsAffadivit] = "استخراج وثائق وعدم ممانعة سفر الابناء والزوجة";
-                                                break;
-                                            case "4":
-                                                RetrievedTypeAffadivit[totalrowsAffadivit] = "استخراج وثائق وعدم ممانعة سفر الابناء بصحبة مرافق غير الزوجة";
-                                                break;
-                                            case "5":
-                                                RetrievedTypeAffadivit[totalrowsAffadivit] = "عدم ممانعة سفر الابناء والزوجة";
-                                                break;
-                                            case "6":
-                                                RetrievedTypeAffadivit[totalrowsAffadivit] = "عدم ممانعة سفر الزوجة";
-                                                break;
-                                        }
-
-                                        arrangeData = row["DocID"].ToString().Split('/');
-                                        if (arrangeData.Length != 4)
-                                            //MessageBox.Show(TableIndex.ToString());
-                                            if (arrangeData.Length == 4)
-                                                RetrievedNoAffadivit[totalrowsAffadivit] = arrangeData[3] + "/" + arrangeData[2] + "/" + arrangeData[1] + "/" + arrangeData[0];
-                                            else if (arrangeData.Length == 5)
-                                                RetrievedNoAffadivit[totalrowsAffadivit] = arrangeData[4] + "/" + arrangeData[3] + "/" + arrangeData[2] + "/" + arrangeData[1] + "/" + arrangeData[0];
-                                        if (!string.IsNullOrEmpty(row["ProType"].ToString()))
-                                        {
-                                            iqrarType = Convert.ToInt16(row["ProType"].ToString());
-                                            switch (iqrarType)
-                                            {
-                                                case 0:
-                                                    RetrievedTypeAffadivit[totalrowsAffadivit] = travType[0];
-                                                    break;
-                                                case 1:
-                                                    RetrievedTypeAffadivit[totalrowsAffadivit] = travType[1];
-                                                    break;
-                                                case 2:
-                                                    RetrievedTypeAffadivit[totalrowsAffadivit] = travType[0] + " و" + travType[1];
-                                                    arrangeData = row["DocID"].ToString().Split('/');
-                                                    if (arrangeData.Length == 4)
-                                                        RetrievedNoAffadivit[totalrowsAffadivit] = arrangeData[3] + "/" + arrangeData[2] + "/" + arrangeData[1] + "/" + arrangeData[0];
-                                                    else if (arrangeData.Length == 5)
-                                                        RetrievedNoAffadivit[totalrowsAffadivit] = arrangeData[4] + "/" + arrangeData[3] + "/" + arrangeData[2] + "/" + arrangeData[1] + "/" + arrangeData[0];
-                                                    break;
-                                            }
-                                        }
-                                        break;
-                                    case 2:
-
-
-                                        RetrievedNameAffadivit[totalrowsAffadivit] = row["AppName"].ToString();
-                                        RetrievedTypeAffadivit[totalrowsAffadivit] = "إقرار مشفوع باليمين";
-
-                                        arrangeData = row["DocID"].ToString().Split('/');
-                                        if (arrangeData.Length == 4)
-                                            RetrievedNoAffadivit[totalrowsAffadivit] = arrangeData[3] + "/" + arrangeData[2] + "/" + arrangeData[1] + "/" + arrangeData[0];
-                                        else if (arrangeData.Length == 5)
-                                            RetrievedNoAffadivit[totalrowsAffadivit] = arrangeData[4] + "/" + arrangeData[3] + "/" + arrangeData[2] + "/" + arrangeData[1] + "/" + arrangeData[0];
-
-                                        break;
-                                    case 3:
-                                        RetrievedNameAffadivit[totalrowsAffadivit] = row["AppName"].ToString();
-                                        RetrievedTypeAffadivit[totalrowsAffadivit] = row["IqrarType"].ToString();
-                                        arrangeData = row["DocID"].ToString().Split('/');
-                                        if (arrangeData.Length == 4)
-                                            RetrievedNoAffadivit[totalrowsAffadivit] = arrangeData[3] + "/" + arrangeData[2] + "/" + arrangeData[1] + "/" + arrangeData[0];
-                                        else if (arrangeData.Length == 5)
-                                            RetrievedNoAffadivit[totalrowsAffadivit] = arrangeData[4] + "/" + arrangeData[3] + "/" + arrangeData[2] + "/" + arrangeData[1] + "/" + arrangeData[0];
-
-                                        break;
-                                    case 4:
-                                        RetrievedNameAffadivit[totalrowsAffadivit] = row["مقدم_الطلب"].ToString();
-                                        RetrievedTypeAffadivit[totalrowsAffadivit] = row["نوع_الإجراء"].ToString();
-                                        arrangeData = row["رقم_المعاملة"].ToString().Split('/');
-                                        if (arrangeData.Length == 4)
-                                            RetrievedNoAffadivit[totalrowsAffadivit] = arrangeData[3] + "/" + arrangeData[2] + "/" + arrangeData[1] + "/" + arrangeData[0];
-                                        else if (arrangeData.Length == 5)
-                                            RetrievedNoAffadivit[totalrowsAffadivit] = arrangeData[4] + "/" + arrangeData[3] + "/" + arrangeData[2] + "/" + arrangeData[1] + "/" + arrangeData[0];
-
-                                        break;
-                                    case 5:
-                                        RetrievedNameAffadivit[totalrowsAffadivit] = row["AppName"].ToString();
-                                        if (!string.IsNullOrEmpty(row["ProCase"].ToString()))
-                                        {
-                                            iqrarType = Convert.ToInt32(row["ProCase"].ToString());
-                                            switch (iqrarType)
-                                            {
-                                                case 1:
-                                                    RetrievedTypeAffadivit[totalrowsAffadivit] = travType1[1];
-                                                    break;
-                                                case 2:
-                                                    RetrievedTypeAffadivit[totalrowsAffadivit] = travType1[2];
-                                                    break;
-                                                case 3:
-                                                    RetrievedTypeAffadivit[totalrowsAffadivit] = travType1[3];
-                                                    break;
-                                                case 4:
-                                                    RetrievedTypeAffadivit[totalrowsAffadivit] = travType1[4];
-                                                    break;
-                                            }
-                                        }
-                                        arrangeData = row["DocID"].ToString().Split('/');
-                                        if (arrangeData.Length == 4)
-                                            RetrievedNoAffadivit[totalrowsAffadivit] = arrangeData[3] + "/" + arrangeData[2] + "/" + arrangeData[1] + "/" + arrangeData[0];
-                                        else if (arrangeData.Length == 5)
-                                            RetrievedNoAffadivit[totalrowsAffadivit] = arrangeData[4] + "/" + arrangeData[3] + "/" + arrangeData[2] + "/" + arrangeData[1] + "/" + arrangeData[0];
-                                        break;
-                                }
-                                totalrowsAffadivit++;
-                            }
+                            if (row["نوع_المعاملة"].ToString().Contains("مذكرة")) 
+                                continue;
+                            RetrievedNameAffadivit[totalrowsAffadivit] = row["مقدم_الطلب"].ToString();
+                            RetrievedTypeAffadivit[totalrowsAffadivit] = row["نوع_المعاملة"].ToString();
+                            arrangeData = row["رقم_المعاملة"].ToString().Split('/');
+                            if (arrangeData.Length == 4)
+                                RetrievedNoAffadivit[totalrowsAffadivit] = arrangeData[3] + "/" + arrangeData[2] + "/" + arrangeData[1] + "/" + arrangeData[0];
+                            else if (arrangeData.Length == 5)
+                                RetrievedNoAffadivit[totalrowsAffadivit] = arrangeData[4] + "/" + arrangeData[3] + "/" + arrangeData[2] + "/" + arrangeData[1] + "/" + arrangeData[0];
+                            totalrowsAffadivit++;
                         }
-
-                        dtbl.Clear();
+                        
                     }
-
-
-
-
-
-
                 }
+
+                dtbl.Clear();
             }
             sqlCon.Close();
         }
+        // void DailyList(string dateFrom)
+        //{
+        //    /*
+        //      queryDateList[0] = "select AppName from TableDocIqrar,GriDate where GriDate=@GriDate and ArchivedState=N'مؤرشف نهائي'";
+        //    queryDateList[1] = "select AppName,ProType,DocID,ArchivedState,DataInterType,GriDate from TableTravIqrar where GriDate=@GriDate and ArchivedState=N'مؤرشف نهائي'";
+        //    queryDateList[2] = "select AppName,IqrarPurpose,DocID,ArchivedState,DataInterType,GriDate from TableMultiIqrar where GriDate=@GriDate and ArchivedState=N'مؤرشف نهائي'";
+        //    queryDateList[3] = "select AppName,IqrarType,DocID,ArchivedState,DataInterType,GriDate from TableTRName where GriDate=@GriDate and ArchivedState=N'مؤرشف نهائي'";
+        //    queryDateList[4] = "select مقدم_الطلب,نوع_الإجراء,رقم_المعاملة,حالة_الارشفة,طريقة_الطلب,التاريخ_الميلادي,نوع_المعاملة from TableCollection where التاريخ_الميلادي=@التاريخ_الميلادي and حالة_الارشفة=N'مؤرشف نهائي'";
+        //    queryDateList[5] = "select AppName,ProCase,DocID,ArchivedState,DataInterType,GriDate from TableFamilySponApp where GriDate=@GriDate and ArchivedState=N'مؤرشف نهائي'";
+        //    queryDateList[6] = "select مقدم_الطلب,إجراء_التوكيل,نوع_التوكيل,رقم_التوكيل,الموكَّل,حالة_الارشفة,طريقة_الطلب,نوع_التوكيل ,التاريخ_الميلادي from TableAuth where التاريخ_الميلادي=@التاريخ_الميلادي and حالة_الارشفة=N'مؤرشف نهائي'";
+        //    queryDateList[7] = "select AppName,DocID,ArchivedState,DataInterType,GriDate from TableForensicApp where GriDate=@GriDate and ArchivedState=N'مؤرشف نهائي'";
+        //    queryDateList[8] = "select AppName,DocID,ArchivedState,DataInterType,GriDate from TableMarriage where GriDate=@GriDate and ArchivedState=N'مؤرشف نهائي'";
+        //    queryDateList[9] = "select AppName,DocID,ArchivedState,DataInterType,GriDate from TableStudent where GriDate=@GriDate and ArchivedState=N'مؤرشف نهائي'";
+        //    queryDateList[10] = "select AppName,DocID,ArchivedState,DataInterType,GriDate from TableVisaApp where GriDate=@GriDate and ArchivedState=N'مؤرشف نهائي'";
+        //    queryDateList[11] = "select رقم_معاملة_القسم,تاريخ_الأرشفة,العدد from TableHandAuth where تاريخ_الأرشفة=@تاريخ_الأرشفة";
+        //    queryDateList[12] = "select رقم_اذن_الدفن,التاريخ_الميلادي from TablePassAway where التاريخ_الميلادي=@التاريخ_الميلادي and حالة_الارشفة=N'مؤرشف نهائي'";
+        //    queryDateList[13] = "select رقم_المعاملة,التاريخ_الميلادي from TableMerrageDoc where التاريخ_الميلادي=@التاريخ_الميلادي and حالة_الارشفة=N'مؤرشف نهائي'";
+        //    queryDateList[14] = "select رقم_المعاملة,التاريخ_الميلادي from TableDivorce  where التاريخ_الميلادي=@التاريخ_الميلادي and حالة_الارشفة=N'مؤرشف نهائي'";
+
+
+        //     * 
+        //     */
+        //    totalrowsAuth = 0;
+
+        //    totalrowsAffadivit = 0;
+        //    int y = 0;
+        //    SqlConnection sqlCon = new SqlConnection(DataSource);
+        //    DataTable dtbl = new DataTable();
+        //    DataTable dtbl1 = new DataTable();
+        //    if (sqlCon.State == ConnectionState.Closed)
+        //    {
+        //        //label1.Text = "";
+        //        if (sqlCon.State == ConnectionState.Closed)
+        //            try
+        //            {
+        //                sqlCon.Open();
+        //            }
+        //            catch (Exception ex) { return; }
+        //        for (TableIndex = 1; TableIndex <= 6; TableIndex++)
+        //        {
+        //            int x = 0;
+
+        //            if (TableIndex == 6)
+        //            {
+        //                SqlDataAdapter sqlDa1 = new SqlDataAdapter(queryDateList[TableIndex], sqlCon);
+        //                sqlDa1.SelectCommand.CommandType = CommandType.Text;
+        //                //MessageBox.Show(dateFrom.Split('-')[1] +"-"+ dateFrom.Split('-')[0]+"-"+ dateFrom.Split('-')[2]);
+        //                sqlDa1.SelectCommand.Parameters.AddWithValue("@التاريخ_الميلادي", dateFrom);
+        //                sqlDa1.Fill(dtbl1);
+        //                dataGridView2.DataSource = dtbl1;
+        //                totalrowsAuth = dtbl1.Rows.Count;
+
+
+        //            }
+        //            else
+        //            {
+        //                SqlDataAdapter sqlDa = new SqlDataAdapter(queryDateList[TableIndex], sqlCon);
+        //                sqlDa.SelectCommand.CommandType = CommandType.Text;
+        //                if (TableIndex == 4)
+        //                    sqlDa.SelectCommand.Parameters.AddWithValue("@التاريخ_الميلادي", dateFrom);
+        //                else
+        //                    sqlDa.SelectCommand.Parameters.AddWithValue("@GriDate", dateFrom);
+
+        //                sqlDa.Fill(dtbl);
+        //                string[] arrangeData = new string[5];
+        //                foreach (DataRow row in dtbl.Rows)
+        //                {
+        //                    //try
+        //                    //{
+        //                    //    MessageBox.Show(dateFrom + " - " + row["AppName"].ToString());
+        //                    //}
+        //                    //catch (Exception ex) {
+        //                    //    MessageBox.Show(dateFrom + " - " + row["مقدم_الطلب"].ToString());
+        //                    //}
+        //                    if (!(row["ArchivedState"].ToString().Contains("-") && row["DataInterType"].ToString() != "حضور مباشرة إلى القنصلية"))
+        //                    {
+
+        //                        switch (TableIndex)
+        //                        {
+        //                            case 1:
+        //                                RetrievedNameAffadivit[totalrowsAffadivit] = row["AppName"].ToString();
+        //                                switch (row["ProType"].ToString()) {
+        //                                    case "0":
+        //                                        RetrievedTypeAffadivit[totalrowsAffadivit] = "استخراج وثائق للابناء";
+        //                                        break;
+        //                                    case "1":
+        //                                        RetrievedTypeAffadivit[totalrowsAffadivit] = "عدم ممانعة سفر الابناء";
+        //                                        break;
+        //                                    case "2":
+        //                                        RetrievedTypeAffadivit[totalrowsAffadivit] = "استخراج وثائق وعدم ممانعة سفر الابناء";
+        //                                        break;
+        //                                    case "3":
+        //                                        RetrievedTypeAffadivit[totalrowsAffadivit] = "استخراج وثائق وعدم ممانعة سفر الابناء والزوجة";
+        //                                        break;
+        //                                    case "4":
+        //                                        RetrievedTypeAffadivit[totalrowsAffadivit] = "استخراج وثائق وعدم ممانعة سفر الابناء بصحبة مرافق غير الزوجة";
+        //                                        break;
+        //                                    case "5":
+        //                                        RetrievedTypeAffadivit[totalrowsAffadivit] = "عدم ممانعة سفر الابناء والزوجة";
+        //                                        break;
+        //                                    case "6":
+        //                                        RetrievedTypeAffadivit[totalrowsAffadivit] = "عدم ممانعة سفر الزوجة";
+        //                                        break;
+        //                                }
+
+        //                                arrangeData = row["DocID"].ToString().Split('/');
+        //                                if (arrangeData.Length != 4)
+        //                                    //MessageBox.Show(TableIndex.ToString());
+        //                                    if (arrangeData.Length == 4)
+        //                                        RetrievedNoAffadivit[totalrowsAffadivit] = arrangeData[3] + "/" + arrangeData[2] + "/" + arrangeData[1] + "/" + arrangeData[0];
+        //                                    else if (arrangeData.Length == 5)
+        //                                        RetrievedNoAffadivit[totalrowsAffadivit] = arrangeData[4] + "/" + arrangeData[3] + "/" + arrangeData[2] + "/" + arrangeData[1] + "/" + arrangeData[0];
+        //                                if (!string.IsNullOrEmpty(row["ProType"].ToString()))
+        //                                {
+        //                                    iqrarType = Convert.ToInt16(row["ProType"].ToString());
+        //                                    switch (iqrarType)
+        //                                    {
+        //                                        case 0:
+        //                                            RetrievedTypeAffadivit[totalrowsAffadivit] = travType[0];
+        //                                            break;
+        //                                        case 1:
+        //                                            RetrievedTypeAffadivit[totalrowsAffadivit] = travType[1];
+        //                                            break;
+        //                                        case 2:
+        //                                            RetrievedTypeAffadivit[totalrowsAffadivit] = travType[0] + " و" + travType[1];
+        //                                            arrangeData = row["DocID"].ToString().Split('/');
+        //                                            if (arrangeData.Length == 4)
+        //                                                RetrievedNoAffadivit[totalrowsAffadivit] = arrangeData[3] + "/" + arrangeData[2] + "/" + arrangeData[1] + "/" + arrangeData[0];
+        //                                            else if (arrangeData.Length == 5)
+        //                                                RetrievedNoAffadivit[totalrowsAffadivit] = arrangeData[4] + "/" + arrangeData[3] + "/" + arrangeData[2] + "/" + arrangeData[1] + "/" + arrangeData[0];
+        //                                            break;
+        //                                    }
+        //                                }
+        //                                break;
+        //                            case 2:
+
+
+        //                                RetrievedNameAffadivit[totalrowsAffadivit] = row["AppName"].ToString();
+        //                                RetrievedTypeAffadivit[totalrowsAffadivit] = "إقرار مشفوع باليمين";
+
+        //                                arrangeData = row["DocID"].ToString().Split('/');
+        //                                if (arrangeData.Length == 4)
+        //                                    RetrievedNoAffadivit[totalrowsAffadivit] = arrangeData[3] + "/" + arrangeData[2] + "/" + arrangeData[1] + "/" + arrangeData[0];
+        //                                else if (arrangeData.Length == 5)
+        //                                    RetrievedNoAffadivit[totalrowsAffadivit] = arrangeData[4] + "/" + arrangeData[3] + "/" + arrangeData[2] + "/" + arrangeData[1] + "/" + arrangeData[0];
+
+        //                                break;
+        //                            case 3:
+        //                                RetrievedNameAffadivit[totalrowsAffadivit] = row["AppName"].ToString();
+        //                                RetrievedTypeAffadivit[totalrowsAffadivit] = row["IqrarType"].ToString();
+        //                                arrangeData = row["DocID"].ToString().Split('/');
+        //                                if (arrangeData.Length == 4)
+        //                                    RetrievedNoAffadivit[totalrowsAffadivit] = arrangeData[3] + "/" + arrangeData[2] + "/" + arrangeData[1] + "/" + arrangeData[0];
+        //                                else if (arrangeData.Length == 5)
+        //                                    RetrievedNoAffadivit[totalrowsAffadivit] = arrangeData[4] + "/" + arrangeData[3] + "/" + arrangeData[2] + "/" + arrangeData[1] + "/" + arrangeData[0];
+
+        //                                break;
+        //                            case 4:
+        //                                RetrievedNameAffadivit[totalrowsAffadivit] = row["مقدم_الطلب"].ToString();
+        //                                RetrievedTypeAffadivit[totalrowsAffadivit] = row["نوع_الإجراء"].ToString();
+        //                                arrangeData = row["رقم_المعاملة"].ToString().Split('/');
+        //                                if (arrangeData.Length == 4)
+        //                                    RetrievedNoAffadivit[totalrowsAffadivit] = arrangeData[3] + "/" + arrangeData[2] + "/" + arrangeData[1] + "/" + arrangeData[0];
+        //                                else if (arrangeData.Length == 5)
+        //                                    RetrievedNoAffadivit[totalrowsAffadivit] = arrangeData[4] + "/" + arrangeData[3] + "/" + arrangeData[2] + "/" + arrangeData[1] + "/" + arrangeData[0];
+
+        //                                break;
+        //                            case 5:
+        //                                RetrievedNameAffadivit[totalrowsAffadivit] = row["AppName"].ToString();
+        //                                if (!string.IsNullOrEmpty(row["ProCase"].ToString()))
+        //                                {
+        //                                    iqrarType = Convert.ToInt32(row["ProCase"].ToString());
+        //                                    switch (iqrarType)
+        //                                    {
+        //                                        case 1:
+        //                                            RetrievedTypeAffadivit[totalrowsAffadivit] = travType1[1];
+        //                                            break;
+        //                                        case 2:
+        //                                            RetrievedTypeAffadivit[totalrowsAffadivit] = travType1[2];
+        //                                            break;
+        //                                        case 3:
+        //                                            RetrievedTypeAffadivit[totalrowsAffadivit] = travType1[3];
+        //                                            break;
+        //                                        case 4:
+        //                                            RetrievedTypeAffadivit[totalrowsAffadivit] = travType1[4];
+        //                                            break;
+        //                                    }
+        //                                }
+        //                                arrangeData = row["DocID"].ToString().Split('/');
+        //                                if (arrangeData.Length == 4)
+        //                                    RetrievedNoAffadivit[totalrowsAffadivit] = arrangeData[3] + "/" + arrangeData[2] + "/" + arrangeData[1] + "/" + arrangeData[0];
+        //                                else if (arrangeData.Length == 5)
+        //                                    RetrievedNoAffadivit[totalrowsAffadivit] = arrangeData[4] + "/" + arrangeData[3] + "/" + arrangeData[2] + "/" + arrangeData[1] + "/" + arrangeData[0];
+        //                                break;
+        //                        }
+        //                        totalrowsAffadivit++;
+        //                    }
+        //                }
+
+        //                dtbl.Clear();
+        //            }
+
+
+
+
+
+
+        //        }
+        //    }
+        //    sqlCon.Close();
+        //}
 
         int DailyList(string dateFrom, string dateTo)
         {
@@ -2875,7 +2965,9 @@ namespace PersAhwal
             //}
             route = FilespathIn + @"\DailyReportCopy.docx";
             string ActiveCopy = FilespathOut + reportName;
-            
+            int totColCount = 7 + docCollectCombo.Items.Count;
+            monthSumV = new int[totColCount];
+            monthSumH = new int[totColCount];
 
             System.IO.File.Copy(route, ActiveCopy);
             using (DocX document = DocX.Load(ActiveCopy))
@@ -2888,10 +2980,14 @@ namespace PersAhwal
                 .Font(new Xceed.Document.NET.Font("Arabic Typesetting"))
                 .FontSize(18d).Bold(true)   
                 .Alignment = Alignment.center;
-                int col = tablesCount + 1; 
+                int col = tablesCount + 1;
+
                 
-                //MessageBox.Show(tablesCount.ToString() );
-                var t = document.AddTable(2 + preInfo.Items.Count, col);
+                //for (int ind = 0; ind < docCollectCombo.Items.Count; ind++)
+                
+                //MessageBox.Show((2 + preInfo.Items.Count).ToString());
+                
+                var t = document.AddTable(2 + preInfo.Items.Count, totColCount);
                 if (Server == "56")
                 {
                     t = document.AddTable(2+ preInfo.Items.Count, col);
@@ -2900,71 +2996,68 @@ namespace PersAhwal
                     
                     t.Design = TableDesign.TableGrid;
                     t.Alignment = Alignment.center;
-                    t.SetColumnWidth(14, 90);
-                    t.SetColumnWidth(13, 50);
-                    t.SetColumnWidth(12, 50);
-                    t.SetColumnWidth(11, 50);
-                    t.SetColumnWidth(10, 50);
-                    t.SetColumnWidth(9, 50);
-                    t.SetColumnWidth(8, 50);
-                    t.SetColumnWidth(7, 50);
-                    t.SetColumnWidth(6, 50);
-                    t.SetColumnWidth(5, 50);
-                    t.SetColumnWidth(4, 50);
-                    t.SetColumnWidth(3, 50);
-                    t.SetColumnWidth(2, 50);
-                    t.SetColumnWidth(1, 50);
-                    t.SetColumnWidth(0, 50);
-
-                    reportItems[0] = "اقرار استخراج أوراق ثبوتية موافقة بالسفر";//0+1
-                    reportItems[1] = "إقرار لاغراض مختلفة";//2+4
-                    reportItems[2] = "إقرار لاثبات صحة إسمين";
-                    reportItems[3] = "إقرارات عامة";//2+4
-                    reportItems[4] = "إقرار كفالة أفراد أسرة";
-                    reportItems[5] = "توكيل";
-                    reportItems[6] = "إفادة للادلة الجنائية";
-                    reportItems[7] = "إفادة عدم ممانعة زواج";                    
-                    reportItems[8] = "مذكرة لمنح تأشيرة";
-                    reportItems[9] = "التوثيق";
-                    reportItems[10] = "إذن دفن";
-                    reportItems[11] = "وثيقة زواج";
-                    reportItems[12] = "وثيقة طلاق";
-                    reportItems[13] = "مجموع المعاملات";
+                    t.SetColumnWidth(totColCount-1, 90);
+                    int ind = 0; 
+                    for (; ind < totColCount-1; ind++)
+                        t.SetColumnWidth(ind, 50);
+                    ind = 0;
+                    int cellCount = totColCount - 1;
+                    t.Rows[0].Cells[totColCount-1].Paragraphs[0].Append(CountName).FontSize(12d).Bold().Alignment = Alignment.center;//14
+                    for (; ind < docCollectCombo.Items.Count; ind++)
+                    {
+                        reportItems[ind] = docCollectCombo.Items[ind].ToString();
+                        t.Rows[0].Cells[cellCount-1].Paragraphs[0].Append(reportItems[ind]).FontSize(12d).Bold().Alignment = Alignment.center;
+                        cellCount--;
+                    }
                     
-                    t.Rows[0].Cells[0].Paragraphs[0].Append(reportItems[13]).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[0].Cells[1].Paragraphs[0].Append(reportItems[12]).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[0].Cells[2].Paragraphs[0].Append(reportItems[11]).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[0].Cells[3].Paragraphs[0].Append(reportItems[10]).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[0].Cells[4].Paragraphs[0].Append(reportItems[9]).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[0].Cells[5].Paragraphs[0].Append(reportItems[8]).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[0].Cells[6].Paragraphs[0].Append(reportItems[7]).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[0].Cells[7].Paragraphs[0].Append(reportItems[6]).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[0].Cells[8].Paragraphs[0].Append(reportItems[5]).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[0].Cells[9].Paragraphs[0].Append(reportItems[4]).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[0].Cells[10].Paragraphs[0].Append(reportItems[3]).FontSize(12d).Bold().Alignment = Alignment.center; //7 8
-                    t.Rows[0].Cells[11].Paragraphs[0].Append(reportItems[2]).FontSize(12d).Bold().Alignment = Alignment.center;//5
-                    t.Rows[0].Cells[12].Paragraphs[0].Append(reportItems[1]).FontSize(12d).Bold().Alignment = Alignment.center; //3
-                    t.Rows[0].Cells[13].Paragraphs[0].Append(reportItems[0]).FontSize(12d).Bold().Alignment = Alignment.center;//0 1 2 4 6 9
-                    t.Rows[0].Cells[14].Paragraphs[0].Append(CountName).FontSize(12d).Bold().Alignment = Alignment.center;
+                    reportItems[ind] = "توكيل";
+                    t.Rows[0].Cells[cellCount-1].Paragraphs[0].Append(reportItems[ind]).FontSize(12d).Bold().Alignment = Alignment.center;
+                    reportItems[ind + 1] = "التوثيق";
+                    t.Rows[0].Cells[cellCount - 2].Paragraphs[0].Append(reportItems[ind + 1]).FontSize(12d).Bold().Alignment = Alignment.center;
+                    reportItems[ind + 2] = "إذن دفن";
+                    t.Rows[0].Cells[cellCount - 3].Paragraphs[0].Append(reportItems[ind + 2]).FontSize(12d).Bold().Alignment = Alignment.center;
+                    reportItems[ind + 3] = "وثيقة زواج";
+                    t.Rows[0].Cells[cellCount - 4].Paragraphs[0].Append(reportItems[ind + 3]).FontSize(12d).Bold().Alignment = Alignment.center;
+                    reportItems[ind + 4] = "وثيقة طلاق";
+                    t.Rows[0].Cells[cellCount - 5].Paragraphs[0].Append(reportItems[ind + 4]).FontSize(12d).Bold().Alignment = Alignment.center;
+                    reportItems[ind + 5] = "مجموع المعاملات";//13 cells [0]
+                    t.Rows[0].Cells[cellCount - 6].Paragraphs[0].Append(reportItems[ind + 5]).FontSize(12d).Bold().Alignment = Alignment.center;
+
+                    //t.Rows[0].Cells[0].Paragraphs[0].Append(reportItems[13]).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[0].Cells[1].Paragraphs[0].Append(reportItems[12]).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[0].Cells[2].Paragraphs[0].Append(reportItems[11]).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[0].Cells[3].Paragraphs[0].Append(reportItems[10]).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[0].Cells[4].Paragraphs[0].Append(reportItems[9]).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[0].Cells[5].Paragraphs[0].Append(reportItems[8]).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[0].Cells[6].Paragraphs[0].Append(reportItems[7]).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[0].Cells[7].Paragraphs[0].Append(reportItems[6]).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[0].Cells[8].Paragraphs[0].Append(reportItems[5]).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[0].Cells[9].Paragraphs[0].Append(reportItems[4]).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[0].Cells[10].Paragraphs[0].Append(reportItems[3]).FontSize(12d).Bold().Alignment = Alignment.center; //7 8
+                    //t.Rows[0].Cells[11].Paragraphs[0].Append(reportItems[2]).FontSize(12d).Bold().Alignment = Alignment.center;//5
+                    //t.Rows[0].Cells[12].Paragraphs[0].Append(reportItems[1]).FontSize(12d).Bold().Alignment = Alignment.center; //3
+                    //t.Rows[0].Cells[13].Paragraphs[0].Append(reportItems[0]).FontSize(12d).Bold().Alignment = Alignment.center;//0 1 2 4 6 9
+                    //t.Rows[0].Cells[14].Paragraphs[0].Append(CountName).FontSize(12d).Bold().Alignment = Alignment.center;
 
                     int AllSum = 0;
-                    for (int c = 1; c < 15; c++)
+                    for (int c = 1; c < totColCount; c++)
                     {
                         AllSum = 0;
                         for (int r = 0; r < preInfo.Items.Count; r++)
                         {
                             AllSum = AllSum + rep1[r, c];
+                            Console.WriteLine("rep1[r, c] " +r.ToString() + " - "+c.ToString() +" = "+ rep1[r, c].ToString());
                         }
 
                         monthSumH[c] = AllSum;
-                        Console.WriteLine("AllSum " + AllSum);
+                        
                     }
 
 
                     for (int r = 0; r < preInfo.Items.Count; r++)
                     {
                         AllSum = 0;
-                        for (int c = 1; c < 15; c++)
+                        for (int c = 1; c < totColCount; c++)
                         {                            
                             AllSum = AllSum + rep1[r, c];
                             
@@ -2975,50 +3068,92 @@ namespace PersAhwal
                     }
 
                     AllSum = 0;
-                    for (int c = 0; c < preInfo.Items.Count; c++)
+                    for (int c = 0; c < totColCount; c++)
                     {
                         AllSum = AllSum + monthSumV[c];
+                        monthSumV[totColCount - 1] = AllSum;
+                        Console.WriteLine(monthSumV[totColCount - 1].ToString() + " = " +monthSumV.Length.ToString() + " = " + monthSumV[c] + " = " + c.ToString() + " - " + AllSum.ToString());
+                        
                     }
 
 
-                    int x = 0;
+                    int w = 0;
                     //for (int x = 0; x < 7; x++)
                     subInfoName[preInfo.Items.Count] = totalCount;
-                    monthSumV[preInfo.Items.Count] = AllSum;
-                    for (int w = 0; w < preInfo.Items.Count; w++)
+                    Console.WriteLine(monthSumV.Length.ToString() + " = " + (totColCount - 1).ToString() + " - " + AllSum.ToString());
+                    monthSumV[totColCount - 1] = AllSum;
+                    int FinalSum = 0;
+                    for (; w < preInfo.Items.Count; w++)
                     {
-                        t.Rows[w + 1].Cells[0].Paragraphs[0].Append(monthSumV[w].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;                        
-                        t.Rows[w + 1].Cells[1].Paragraphs[0].Append(rep1[w, 13].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                        t.Rows[w + 1].Cells[2].Paragraphs[0].Append(rep1[w, 12].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                        t.Rows[w + 1].Cells[3].Paragraphs[0].Append(rep1[w, 11].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                        t.Rows[w + 1].Cells[4].Paragraphs[0].Append(rep1[w, 10].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                        t.Rows[w + 1].Cells[5].Paragraphs[0].Append(rep1[w, 9].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                        t.Rows[w + 1].Cells[6].Paragraphs[0].Append(rep1[w, 8].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                        t.Rows[w + 1].Cells[7].Paragraphs[0].Append(rep1[w, 7].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                        t.Rows[w + 1].Cells[8].Paragraphs[0].Append(rep1[w, 6].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                        t.Rows[w + 1].Cells[9].Paragraphs[0].Append(rep1[w, 5].ToString()).FontSize(12d).Bold().Alignment = Alignment.center; //7 8
-                        t.Rows[w + 1].Cells[10].Paragraphs[0].Append(rep1[w, 4].ToString()).FontSize(12d).Bold().Alignment = Alignment.center; //7 8
-                        t.Rows[w + 1].Cells[11].Paragraphs[0].Append(rep1[w, 3].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;//5
-                        t.Rows[w + 1].Cells[12].Paragraphs[0].Append(rep1[w, 2].ToString()).FontSize(12d).Bold().Alignment = Alignment.center; //3
-                        t.Rows[w + 1].Cells[13].Paragraphs[0].Append(rep1[w, 1].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;//0 1 2 4 6 9
-                        t.Rows[w + 1].Cells[14].Paragraphs[0].Append(subInfoName[w].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                        //t.Rows[w + 1].Cells[0].Paragraphs[0].Append(monthSumV[w].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;                        
+                        //t.Rows[w + 1].Cells[1].Paragraphs[0].Append(rep1[w, 13].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                        //t.Rows[w + 1].Cells[2].Paragraphs[0].Append(rep1[w, 12].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                        //t.Rows[w + 1].Cells[3].Paragraphs[0].Append(rep1[w, 11].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                        //t.Rows[w + 1].Cells[4].Paragraphs[0].Append(rep1[w, 10].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                        //t.Rows[w + 1].Cells[5].Paragraphs[0].Append(rep1[w, 9].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                        //t.Rows[w + 1].Cells[6].Paragraphs[0].Append(rep1[w, 8].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                        //t.Rows[w + 1].Cells[7].Paragraphs[0].Append(rep1[w, 7].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                        //t.Rows[w + 1].Cells[8].Paragraphs[0].Append(rep1[w, 6].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                        //t.Rows[w + 1].Cells[9].Paragraphs[0].Append(rep1[w, 5].ToString()).FontSize(12d).Bold().Alignment = Alignment.center; //7 8
+                        //t.Rows[w + 1].Cells[10].Paragraphs[0].Append(rep1[w, 4].ToString()).FontSize(12d).Bold().Alignment = Alignment.center; //7 8
+                        //t.Rows[w + 1].Cells[11].Paragraphs[0].Append(rep1[w, 3].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;//5
+                        //t.Rows[w + 1].Cells[12].Paragraphs[0].Append(rep1[w, 2].ToString()).FontSize(12d).Bold().Alignment = Alignment.center; //3
+                        //t.Rows[w + 1].Cells[13].Paragraphs[0].Append(rep1[w, 1].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;//0 1 2 4 6 9
+                        //t.Rows[w + 1].Cells[14].Paragraphs[0].Append(subInfoName[w].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+
+                        cellCount = totColCount - 1;
+                        ind = 0;
+                        t.Rows[w+1].Cells[cellCount].Paragraphs[0].Append(subInfoName[w].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;//14
+                        t.Rows[w + 1].Cells[0].Paragraphs[0].Append(monthSumV[w].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                        FinalSum = FinalSum + monthSumV[w];
+                        for (; ind < docCollectCombo.Items.Count; ind++)
+                        {                            
+                            t.Rows[w+1].Cells[cellCount].Paragraphs[0].Append(rep1[w, ind].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                            cellCount--;
+                        }
+
+                        t.Rows[w+1].Cells[cellCount].Paragraphs[0].Append(rep1[w, ind].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                        t.Rows[w+1].Cells[cellCount - 1].Paragraphs[0].Append(rep1[w, ind+1].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                        t.Rows[w+1].Cells[cellCount - 2].Paragraphs[0].Append(rep1[w, ind+2].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                        t.Rows[w+1].Cells[cellCount - 3].Paragraphs[0].Append(rep1[w, ind+3].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                        t.Rows[w+1].Cells[cellCount - 4].Paragraphs[0].Append(rep1[w, ind+4].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                        t.Rows[w+1].Cells[cellCount - 5].Paragraphs[0].Append(rep1[w, ind+5].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
                     }
 
-                    t.Rows[preInfo.Items.Count + 1].Cells[0].Paragraphs[0].Append(monthSumV[preInfo.Items.Count].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[preInfo.Items.Count + 1].Cells[1].Paragraphs[0].Append(monthSumH[13].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[preInfo.Items.Count + 1].Cells[2].Paragraphs[0].Append(monthSumH[12].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[preInfo.Items.Count + 1].Cells[3].Paragraphs[0].Append(monthSumH[11].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[preInfo.Items.Count + 1].Cells[4].Paragraphs[0].Append(monthSumH[10].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[preInfo.Items.Count + 1].Cells[5].Paragraphs[0].Append(monthSumH[9].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[preInfo.Items.Count + 1].Cells[6].Paragraphs[0].Append(monthSumH[8].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[preInfo.Items.Count + 1].Cells[7].Paragraphs[0].Append(monthSumH[7].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[preInfo.Items.Count + 1].Cells[8].Paragraphs[0].Append(monthSumH[6].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                    t.Rows[preInfo.Items.Count + 1].Cells[9].Paragraphs[0].Append(monthSumH[5].ToString()).FontSize(12d).Bold().Alignment = Alignment.center; //7 8
-                    t.Rows[preInfo.Items.Count + 1].Cells[10].Paragraphs[0].Append(monthSumH[4].ToString()).FontSize(12d).Bold().Alignment = Alignment.center; //7 8
-                    t.Rows[preInfo.Items.Count + 1].Cells[11].Paragraphs[0].Append(monthSumH[3].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;//5
-                    t.Rows[preInfo.Items.Count + 1].Cells[12].Paragraphs[0].Append(monthSumH[2].ToString()).FontSize(12d).Bold().Alignment = Alignment.center; //3
-                    t.Rows[preInfo.Items.Count + 1].Cells[13].Paragraphs[0].Append(monthSumH[1].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;//0 1 2 4 6 9
-                    t.Rows[preInfo.Items.Count + 1].Cells[14].Paragraphs[0].Append(subInfoName[preInfo.Items.Count].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    cellCount = totColCount - 1;
+                    ind = 1;
+                    t.Rows[preInfo.Items.Count+1].Cells[0].Paragraphs[0].Append(FinalSum.ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[preInfo.Items.Count+1].Cells[cellCount].Paragraphs[0].Append(subInfoName[preInfo.Items.Count].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;//14
+                    for (; ind < docCollectCombo.Items.Count; ind++)
+                    {
+                        reportItems[ind] = docCollectCombo.Items[ind].ToString();
+                        t.Rows[preInfo.Items.Count+1].Cells[cellCount-1].Paragraphs[0].Append(monthSumH[ind].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                        cellCount--;
+                    }
+
+                    t.Rows[preInfo.Items.Count+1].Cells[cellCount - 1].Paragraphs[0].Append(monthSumH[ind].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[preInfo.Items.Count+1].Cells[cellCount - 2].Paragraphs[0].Append(monthSumH[ind + 1].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[preInfo.Items.Count+1].Cells[cellCount - 3].Paragraphs[0].Append(monthSumH[ind + 2].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[preInfo.Items.Count+1].Cells[cellCount - 4].Paragraphs[0].Append(monthSumH[ind + 3].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[preInfo.Items.Count+1].Cells[cellCount - 5].Paragraphs[0].Append(monthSumH[ind + 4].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    t.Rows[preInfo.Items.Count+1].Cells[cellCount - 6].Paragraphs[0].Append(monthSumH[ind + 5].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+
+
+                    //t.Rows[preInfo.Items.Count + 1].Cells[0].Paragraphs[0].Append(monthSumV[preInfo.Items.Count].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[preInfo.Items.Count + 1].Cells[1].Paragraphs[0].Append(monthSumH[13].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[preInfo.Items.Count + 1].Cells[2].Paragraphs[0].Append(monthSumH[12].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[preInfo.Items.Count + 1].Cells[3].Paragraphs[0].Append(monthSumH[11].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[preInfo.Items.Count + 1].Cells[4].Paragraphs[0].Append(monthSumH[10].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[preInfo.Items.Count + 1].Cells[5].Paragraphs[0].Append(monthSumH[9].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[preInfo.Items.Count + 1].Cells[6].Paragraphs[0].Append(monthSumH[8].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[preInfo.Items.Count + 1].Cells[7].Paragraphs[0].Append(monthSumH[7].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[preInfo.Items.Count + 1].Cells[8].Paragraphs[0].Append(monthSumH[6].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                    //t.Rows[preInfo.Items.Count + 1].Cells[9].Paragraphs[0].Append(monthSumH[5].ToString()).FontSize(12d).Bold().Alignment = Alignment.center; //7 8
+                    //t.Rows[preInfo.Items.Count + 1].Cells[10].Paragraphs[0].Append(monthSumH[4].ToString()).FontSize(12d).Bold().Alignment = Alignment.center; //7 8
+                    //t.Rows[preInfo.Items.Count + 1].Cells[11].Paragraphs[0].Append(monthSumH[3].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;//5
+                    //t.Rows[preInfo.Items.Count + 1].Cells[12].Paragraphs[0].Append(monthSumH[2].ToString()).FontSize(12d).Bold().Alignment = Alignment.center; //3
+                    //t.Rows[preInfo.Items.Count + 1].Cells[13].Paragraphs[0].Append(monthSumH[1].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;//0 1 2 4 6 9
+                    //t.Rows[preInfo.Items.Count + 1].Cells[14].Paragraphs[0].Append(subInfoName[preInfo.Items.Count].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
                 }
                 else if (Server == "56")
                 {
@@ -4357,8 +4492,12 @@ namespace PersAhwal
                     monthReport.Enabled = false;
                     break;
                 case "تقرير جميع الأعوام":
-                    if (Server == "57") 
-                        getReportsCalcs57(DataSource);
+                    if (Server == "57")
+                    {
+                        if (Convert.ToInt32(yearReport.Text) > 2022)
+                            getReportsCalcsNew(DataSource);
+                        else getReportsCalcs57(DataSource);
+                    }
                     else getReportsCalcs56(DataSource);
                     break;
             }
@@ -4889,7 +5028,9 @@ namespace PersAhwal
 
         private void button3_Click_1(object sender, EventArgs e)
         {
-            if (ReportPanel.Visible == false)
+            tablesCount = 1;
+                
+                if (ReportPanel.Visible == false)
             {
                 ReportPanel.BringToFront();
                 flowLayoutPanel1.Visible = ReportPanel.Visible = true;
@@ -4898,6 +5039,10 @@ namespace PersAhwal
                 fillYears(yearReport);
             }
             else ReportPanel.Visible = false;
+            //ReportType.SelectedIndex = 4;
+            //yearReport.SelectedIndex = 0;
+            //monthReport.SelectedIndex = 0;
+            //PrintReport.PerformClick();
         }
 
         private void ViewArchShow(int Buttons, string Doc, string ID, string date, string AppName, string oldNew, int size)
@@ -5374,20 +5519,46 @@ namespace PersAhwal
             //checkYear(DataSource);
 
             autoCompleteTextBox(applicant, DataSource.Replace("AhwalDataBase", "ArchFilesDB"), "الاسم", "TableGeneralArch");
-            fileComboBox(AttendViceConsul, DataSource, "ArabicAttendVC", "TableListCombo", true);
-            fileComboBox(perbtn1, DataSource, "AuthTypes", "TableListCombo", true);
+           
+            diplomats(AttendViceConsul, DataSource);
             diplomats(attendedVC, DataSource);
             getHeadTitle(DataSource);
-            if (attendedVC.Items.Count >= VCIndexData()) attendedVC.SelectedIndex = VCIndexData();
+            if (attendedVC.Items.Count >= VCIndexData()) attendedVC.SelectedIndex = AttendViceConsul.SelectedIndex = VCIndexData();
             if (AttendViceConsul.Items.Count >= VCIndexData()) AttendViceConsul.SelectedIndex = VCIndexData();
-            fileComboBox(docCollectCombo, DataSource, "ArabicGenIgrar", "TableListCombo", true);
-            fileComboBox(docCollectCombo, DataSource, "EnglishGenIgrar", "TableListCombo", false);
-            
+            fileColComboBox(perbtn1, DataSource, "altColName", "<> ''");
+            fileColComboBox(docCollectCombo, DataSource, "altColName", "= ''");
             VCIndexLoad = true; loadScanner();
             updataArchData1();
             
         }
+        private void fileColComboBox(ComboBox combbox, string source, string comlumnName, string colRight)
+        {
+            combbox.Items.Clear();
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                saConn.Open();
 
+                string query = "select distinct " + comlumnName + " from TableAddContext where " + comlumnName + " is not null and ColRight "+colRight+" order by " + comlumnName + " asc";
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.CommandType = CommandType.Text;
+
+                Console.WriteLine(query);
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    DataTable table = new DataTable();
+                    SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                    dataAdapter.Fill(table);
+
+                    foreach (DataRow dataRow in table.Rows)
+                    {
+                        combbox.Items.Add(dataRow[comlumnName].ToString());
+                    }
+                }
+                catch (Exception ex) { }
+                saConn.Close();
+            }
+        }
         private void diplomats(ComboBox combbox, string source)
         {
             combbox.Items.Clear();
@@ -5603,7 +5774,7 @@ namespace PersAhwal
             if (mangerArch.CheckState == CheckState.Checked)
             {
                 mangerArch.Text = "الارشفة الأولية";
-                persbtn2.Visible = persbtn10.Visible = false;
+                persbtn10.Visible = false;
                 perbtn1.Visible = docCollectCombo.Visible = true;
                 docCollectCombo.BringToFront();
             }
@@ -5611,7 +5782,7 @@ namespace PersAhwal
             {
                 docCollectCombo.SendToBack();
                 mangerArch.Text = "ادخال البيانات";
-                persbtn2.Visible = persbtn10.Visible = true;
+                persbtn10.Visible = true;
                 perbtn1.Visible = docCollectCombo.Visible = false;
                 
             }
@@ -6709,7 +6880,12 @@ namespace PersAhwal
                 //MessageBox.Show(ReportType.Text);
                 fillDuration(monthReport, yearReport.Text, "MONTH");
                 if (Server == "57")
-                    getReportsCalcs57(DataSource);
+                {
+                    if (Convert.ToInt32(yearReport.Text) > 2022)
+                        getReportsCalcsNew(DataSource);
+                    else 
+                        getReportsCalcs57(DataSource);
+                }
                 else getReportsCalcs56(DataSource);
                 return;
             }
@@ -7509,7 +7685,12 @@ namespace PersAhwal
             
             if (ReportType.Text != "تقرير المأذونية الشهري") {
                 if (Server == "57")
-                    getReportsCalcs57(DataSource);
+                {
+                    
+                    if (Convert.ToInt32(yearReport.Text) > 2022)
+                        getReportsCalcsNew(DataSource);
+                    else getReportsCalcs57(DataSource);
+                }
                 else getReportsCalcs56(DataSource);                
             } else {
                 string ReportName1 = "Report1" + DateTime.Now.ToString("mmss") + ".docx";
@@ -7520,7 +7701,7 @@ namespace PersAhwal
         }
         private void getReportsCalcs57(string dataSource)
         {
-            string query = "select TableName,DateName,ArchName from ReportsCalcs";
+            string query = "select TableName,DateName,ArchName,IDNoName from ReportsCalcs";
             SqlConnection sqlCon = new SqlConnection(dataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
@@ -7529,14 +7710,24 @@ namespace PersAhwal
             DataTable table = new DataTable();
             sqlDa.Fill(table);
             sqlCon.Close();
-            //MessageBox.Show(dataSource);
             dataSource = dataSource.Replace("AhwalDataBase", "ArchFilesDB");
-            string subInfo = "";
+            
             foreach (DataRow dataRow in table.Rows)
             {
+                string subInfo = "";
                 TableName = dataRow["TableName"].ToString();
                 DateName = dataRow["DateName"].ToString();
-                ArchName = dataRow["ArchName"].ToString();                
+                ArchName = dataRow["ArchName"].ToString();
+                string getCount = "";
+                string countDocs = dataRow["IDNoName"].ToString();
+                if (countDocs == "العدد")
+                {
+                    getCount = " العدد as countNo ";
+                }
+                else 
+                {
+                    getCount = " count(ID) as countNo ";
+                }
                 if (TableName != "")
                 {
                     rowFound = true;
@@ -7545,7 +7736,6 @@ namespace PersAhwal
                     {
                         totalCount = "إجمالي السنوات";
                         CountName = "السنة";
-                        //تحديد عدد الايام بالاسبوع
                         if (tablesCount == 1)
                         {
                             subInfo = "select distinct DATEPART(year,التاريخ) as subInfo,التاريخ from TableGeneralArch order by DATEPART(year,التاريخ) ";
@@ -7556,12 +7746,12 @@ namespace PersAhwal
                         for (int index = 0; index < preInfo.Items.Count; index++)
                         {
                             dateInfo = " and DATEPART(year," + DateName + ") = " + preInfo.Items[index].ToString();
-                            query = "select count(ID) as count from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
+                            query = "select  " + getCount +  " from " +TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + getCount+ dateInfo;
                             rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
                             Console.WriteLine(tablesCount.ToString() + "/" + index.ToString() + "-" + preInfo.Items[index].ToString() + "----------------perday-----------------" + rep1[index, tablesCount].ToString());
                         }
                         dateInfo = "";
-                        query = "select count(ID) as count from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
+                        query = "select  " + getCount + " from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
 
                         dateInfo = " and DATEPART(year," + DateName + ") = " + yearReport.Text;
                     }
@@ -7569,7 +7759,6 @@ namespace PersAhwal
                     {
                         totalCount = "إجمالي الشهور";
                         CountName = "الشهر";
-                        //تحديد عدد الايام بالاسبوع
                         if (tablesCount == 1)
                         {
                             subInfo = "select distinct DATEPART(month,التاريخ) as subInfo,التاريخ from TableGeneralArch where DATEPART(year,التاريخ) = " + yearReport.Text + " order by DATEPART(month,التاريخ) ";
@@ -7580,7 +7769,7 @@ namespace PersAhwal
                         for (int index = 0; index < preInfo.Items.Count; index++)
                         {
                             dateInfo = " and DATEPART(month," + DateName + ") = " + preInfo.Items[index].ToString() + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
-                            query = "select count(ID) as count from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
+                            query = "select  " + getCount + " from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
                             rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
                             try
                             {
@@ -7589,7 +7778,7 @@ namespace PersAhwal
                             catch (Exception ex) { }
                         }
                         dateInfo = " and DATEPART(year," + DateName + ") = " + yearReport.Text;
-                        query = "select count(ID) as count from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
+                        query = "select  " + getCount + " from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
 
                         dateInfo = " and DATEPART(year," + DateName + ") = " + yearReport.Text;
                     }
@@ -7607,12 +7796,12 @@ namespace PersAhwal
                         for (int index = 0; index < preInfo.Items.Count; index++)
                         {
                             dateInfo = " and DATEPART(month," + DateName + ") = " + preInfo.Items[index].ToString() + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
-                            query = "select count(ID) as count from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
+                            query = "select  " + getCount + " from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
                             rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
                             Console.WriteLine(tablesCount.ToString() + "/" + index.ToString() + "-" + preInfo.Items[index].ToString() + "----------------perday-----------------" + rep1[index, tablesCount].ToString());
                         }
                         dateInfo = " and DATEPART(QUARTER," + DateName + ") = " + (monthReport.SelectedIndex + 1).ToString() + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
-                        query = "select count(ID) as count from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
+                        query = "select  " + getCount + " from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
 
                     }
                     else if (ReportType.Text == "تقرير شهري")
@@ -7629,12 +7818,12 @@ namespace PersAhwal
                         for (int index = 0; index < preInfo.Items.Count; index++)
                         {
                             dateInfo = " and DATEPART(week," + DateName + ") = " + preInfo.Items[index].ToString() + " and DATEPART(month," + DateName + ") = " + monthReport.Text + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
-                            query = "select count(ID) as count from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
+                            query = "select  " + getCount + " from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
                             rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
                             Console.WriteLine(tablesCount.ToString() + "/"+ index.ToString()+"-" + preInfo.Items[index].ToString() + "----------------perday-----------------" + rep1[index, tablesCount].ToString());
                         }                        
                         dateInfo = " and DATEPART(MONTH," + DateName + ") = " + (monthReport.SelectedIndex + 1).ToString() + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
-                        query = "select count(ID) as count from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
+                        query = "select  " + getCount + " from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
                     }
                     else if (ReportType.Text == "التقرير الاسبوعي")
                     {
@@ -7650,13 +7839,13 @@ namespace PersAhwal
                         for (int index = 0; index < preInfo.Items.Count; index++)
                         {
                             dateInfo = " and DATEPART(day," + DateName + ") = " + preInfo.Items[index].ToString() + " and DATEPART(WEEK," + DateName + ") = " + monthReport.Text + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
-                            query = "select count(ID) as count from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
+                            query = "select  " + getCount + " from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
                             rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
                             Console.WriteLine(preInfo.Items[index].ToString() + "----------------perday-----------------" + rep1[index, tablesCount].ToString());
                         }
                         dateInfo = " and DATEPART(WEEK," + DateName + ") = " + monthReport.Text + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
                     }
-                    query = "select count(ID) as count from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
+                    query = "select  " + getCount + " from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
                     
                     try
                     {
@@ -7687,6 +7876,321 @@ namespace PersAhwal
             }
         }
         
+        private void getReportsCalcsNew(string dataSource)
+        {
+            string query = "select TableName,DateName,ArchName,IDNoName,count from ReportsCalcs";
+            SqlConnection sqlCon = new SqlConnection(dataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable table = new DataTable();
+            sqlDa.Fill(table);
+            sqlCon.Close();
+            dataSource = dataSource.Replace("AhwalDataBase", "ArchFilesDB");
+            tablesCount = 1;
+            foreach (DataRow dataRow in table.Rows)
+            {
+                string subInfo = "";
+                if (dataRow["count"].ToString() != "get") continue;
+                TableName = dataRow["TableName"].ToString();
+                DateName = dataRow["DateName"].ToString();
+                ArchName = dataRow["ArchName"].ToString();
+                string getCount = "";
+                string countDocs = dataRow["IDNoName"].ToString();
+                if (countDocs == "العدد")
+                {
+                    getCount = " العدد as countNo ";
+                }
+                else 
+                {
+                    getCount = " count(ID) as countNo ";
+                }
+                if(TableName == "TableCollection")
+                    countFunctionCollection(TableName, DateName, ArchName, "", getCount, dataSource);
+                else
+                    countFunction(TableName, DateName, ArchName, "", getCount, dataSource);
+            }
+            if (tablesCount>1)
+            {
+
+                PrintReport.Enabled = true;
+                PrintReport.Visible = true;
+                ReportPanel.Height = 205;
+
+            }
+            else
+            {
+                PrintReport.Enabled = false;
+                PrintReport.Visible = false;
+                ReportPanel.Height = 42;
+                MessageBox.Show("لا يوجد قائمة بالتاريخ المحدد");
+            }
+        }
+
+
+        private void countFunction(string TableName,string DateName, string ArchName, string subInfo, string getCount, string dataSource)
+        {
+            rowFound = true;
+            string dateInfo = "";
+            string query = "";
+            if (ReportType.Text == "تقرير جميع الأعوام")
+            {
+                totalCount = "إجمالي السنوات";
+                CountName = "السنة";
+                if (tablesCount == 1)
+                {
+                    subInfo = "select distinct DATEPART(year,التاريخ) as subInfo,التاريخ from TableGeneralArch order by DATEPART(year,التاريخ) ";
+                    getsubReportsAllYears(dataSource, subInfo);
+                    titleReport = "تقرير المعاملات خلال الفترة من العام " + preInfo.Items[0].ToString() + " وحتى العام " + preInfo.Items[preInfo.Items.Count - 1].ToString();
+
+                }
+                for (int index = 0; index < preInfo.Items.Count; index++)
+                {
+                    dateInfo = " and DATEPART(year," + DateName + ") = " + preInfo.Items[index].ToString();
+                    query = "select  " + getCount + " from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + getCount + dateInfo;
+                    rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
+                    Console.WriteLine(tablesCount.ToString() + "/" + index.ToString() + "-" + preInfo.Items[index].ToString() + "----------------perday-----------------" + rep1[index, tablesCount].ToString());
+                }
+                dateInfo = "";
+                query = "select  " + getCount + " from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
+
+                dateInfo = " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+            }
+            if (ReportType.Text == "التقرير السنوي")
+            {
+                totalCount = "إجمالي الشهور";
+                CountName = "الشهر";
+                if (tablesCount == 1)
+                {
+                    subInfo = "select distinct DATEPART(month,التاريخ) as subInfo,التاريخ from TableGeneralArch where DATEPART(year,التاريخ) = " + yearReport.Text + " order by DATEPART(month,التاريخ) ";
+                    getsubReportsYear(dataSource, subInfo);
+                    titleReport = "تقرير المعاملات للعام ) " + yearReport.Text + "( خلال الفترة من شهر " + Monthorder(Convert.ToInt32(preInfo.Items[0].ToString())) + " وحتى " + Monthorder(Convert.ToInt32(preInfo.Items[preInfo.Items.Count - 1].ToString()));
+
+                }
+                for (int index = 0; index < preInfo.Items.Count; index++)
+                {
+                    dateInfo = " and DATEPART(month," + DateName + ") = " + preInfo.Items[index].ToString() + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                    query = "select  " + getCount + " from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
+                    rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
+                    try
+                    {
+                        Console.WriteLine(tablesCount.ToString() + "/" + index.ToString() + "-" + preInfo.Items[index].ToString() + "----------------perday-----------------" + rep1[index, tablesCount].ToString());
+                    }
+                    catch (Exception ex) { }
+                }
+                dateInfo = " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                query = "select  " + getCount + " from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
+
+                dateInfo = " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+            }
+            else if (ReportType.Text == "تقرير ربع سنوي")
+            {
+                totalCount = "إجمالي الشهور";
+                CountName = "الشهر";
+                //تحديد عدد الايام بالاسبوع
+                if (tablesCount == 1)
+                {
+                    subInfo = "select distinct DATEPART(month,التاريخ) as subInfo,التاريخ from TableGeneralArch where DATEPART(QUARTER,التاريخ) = " + monthReport.Text + " and DATEPART(year,التاريخ) = " + yearReport.Text + " order by DATEPART(month,التاريخ) ";
+                    getsubReportsYear(dataSource, subInfo);
+
+                }
+                for (int index = 0; index < preInfo.Items.Count; index++)
+                {
+                    dateInfo = " and DATEPART(month," + DateName + ") = " + preInfo.Items[index].ToString() + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                    query = "select  " + getCount + " from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
+                    rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
+                    Console.WriteLine(tablesCount.ToString() + "/" + index.ToString() + "-" + preInfo.Items[index].ToString() + "----------------perday-----------------" + rep1[index, tablesCount].ToString());
+                }
+                dateInfo = " and DATEPART(QUARTER," + DateName + ") = " + (monthReport.SelectedIndex + 1).ToString() + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                query = "select  " + getCount + " from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
+
+            }
+            else if (ReportType.Text == "تقرير شهري")
+            {
+                totalCount = "إجمالي الاسايبع";
+                CountName = "الاسبوع";
+                //تحديد عدد الايام بالاسبوع
+                if (tablesCount == 1)
+                {
+                    subInfo = "select distinct DATEPART(week,التاريخ) as subInfo,التاريخ from TableGeneralArch where DATEPART(month,التاريخ) = " + monthReport.Text + " and DATEPART(year,التاريخ) = " + yearReport.Text + " order by DATEPART(week,التاريخ) ";
+                    getsubReportsMonth(dataSource, subInfo);
+
+                }
+                for (int index = 0; index < preInfo.Items.Count; index++)
+                {
+                    dateInfo = " and DATEPART(week," + DateName + ") = " + preInfo.Items[index].ToString() + " and DATEPART(month," + DateName + ") = " + monthReport.Text + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                    query = "select  " + getCount + " from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
+                    rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
+                    Console.WriteLine(tablesCount.ToString() + "/" + index.ToString() + "-" + preInfo.Items[index].ToString() + "----------------perday-----------------" + rep1[index, tablesCount].ToString());
+                }
+                dateInfo = " and DATEPART(MONTH," + DateName + ") = " + (monthReport.SelectedIndex + 1).ToString() + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                query = "select  " + getCount + " from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
+            }
+            else if (ReportType.Text == "التقرير الاسبوعي")
+            {
+                totalCount = "إجمالي الايام";
+                CountName = "اليوم";
+                //تحديد عدد الايام بالاسبوع
+                if (tablesCount == 1)
+                {
+                    subInfo = "select distinct DATEPART(day,التاريخ) as subInfo,التاريخ from TableGeneralArch where DATEPART(WEEK,التاريخ) = " + monthReport.Text + " and DATEPART(year,التاريخ) = " + yearReport.Text + " order by DATEPART(day,التاريخ) ";
+                    getsubReportWeek(dataSource, subInfo);
+
+                }
+                for (int index = 0; index < preInfo.Items.Count; index++)
+                {
+                    dateInfo = " and DATEPART(day," + DateName + ") = " + preInfo.Items[index].ToString() + " and DATEPART(WEEK," + DateName + ") = " + monthReport.Text + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                    query = "select  " + getCount + " from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
+                    rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
+                    Console.WriteLine(preInfo.Items[index].ToString() + "----------------perday-----------------" + rep1[index, tablesCount].ToString());
+                }
+                dateInfo = " and DATEPART(WEEK," + DateName + ") = " + monthReport.Text + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+            }
+            query = "select  " + getCount + " from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo;
+
+            try
+            {
+                rep1[preInfo.Items.Count, tablesCount] = getcountReportsCalcs(dataSource, query);
+                Console.WriteLine(preInfo.Items[preInfo.Items.Count].ToString() + "----------------total-----------------" + rep1[preInfo.Items.Count - 1, tablesCount].ToString());
+            }
+            catch (Exception ex) { }
+            tablesCount++;
+            //MessageBox.Show(tablesCount.ToString());
+
+        } 
+        private void countFunctionCollection(string TableName,string DateName, string ArchName, string subInfo, string getCount, string dataSource)
+        {
+            rowFound = true;
+            string dateInfo = "";
+            string query = "";
+            for (int ind = 0; ind < docCollectCombo.Items.Count; ind++)
+            {
+                if (ReportType.Text == "تقرير جميع الأعوام")
+                {
+                    totalCount = "إجمالي السنوات";
+                    CountName = "السنة";
+                    if (tablesCount == 1)
+                    {
+                        subInfo = "select distinct DATEPART(year,التاريخ) as subInfo,التاريخ from TableGeneralArch order by DATEPART(year,التاريخ) ";
+                        getsubReportsAllYears(dataSource, subInfo);
+                        titleReport = "تقرير المعاملات خلال الفترة من العام " + preInfo.Items[0].ToString() + " وحتى العام " + preInfo.Items[preInfo.Items.Count - 1].ToString();
+
+                    }
+                    for (int index = 0; index < preInfo.Items.Count; index++)
+                    {
+                        dateInfo = " and DATEPART(year," + DateName + ") = " + preInfo.Items[index].ToString();
+                        query = "select  " + getCount + " from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + getCount + dateInfo + " and نوع_المعاملة = N'"+ docCollectCombo.Items[ind].ToString() + "'";
+                        rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
+                        Console.WriteLine(tablesCount.ToString() + "/" + index.ToString() + "-" + preInfo.Items[index].ToString() + "----------------perday-----------------" + rep1[index, tablesCount].ToString());
+                    }
+                    dateInfo = "";
+                    query = "select  " + getCount + " from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo+ " and نوع_المعاملة = N'"+ docCollectCombo.Items[ind].ToString() + "'";
+
+                    dateInfo = " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                }
+                if (ReportType.Text == "التقرير السنوي")
+                {
+                    totalCount = "إجمالي الشهور";
+                    CountName = "الشهر";
+                    if (tablesCount == 1)
+                    {
+                        subInfo = "select distinct DATEPART(month,التاريخ) as subInfo,التاريخ from TableGeneralArch where DATEPART(year,التاريخ) = " + yearReport.Text + " order by DATEPART(month,التاريخ) ";
+                        getsubReportsYear(dataSource, subInfo);
+                        titleReport = "تقرير المعاملات للعام ) " + yearReport.Text + "( خلال الفترة من شهر " + Monthorder(Convert.ToInt32(preInfo.Items[0].ToString())) + " وحتى " + Monthorder(Convert.ToInt32(preInfo.Items[preInfo.Items.Count - 1].ToString()));
+
+                    }
+                    for (int index = 0; index < preInfo.Items.Count; index++)
+                    {
+                        dateInfo = " and DATEPART(month," + DateName + ") = " + preInfo.Items[index].ToString() + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                        query = "select  " + getCount + " from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo+ " and نوع_المعاملة = N'"+ docCollectCombo.Items[ind].ToString() + "'";
+                        rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
+                        try
+                        {
+                            Console.WriteLine(tablesCount.ToString() + "/" + index.ToString() + "-" + preInfo.Items[index].ToString() + "----------------perday-----------------" + rep1[index, tablesCount].ToString());
+                        }
+                        catch (Exception ex) { }
+                    }
+                    dateInfo = " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                    query = "select  " + getCount + " from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo+ " and نوع_المعاملة = N'"+ docCollectCombo.Items[ind].ToString() + "'";
+                }
+                else if (ReportType.Text == "تقرير ربع سنوي")
+                {
+                    totalCount = "إجمالي الشهور";
+                    CountName = "الشهر";
+                    //تحديد عدد الايام بالاسبوع
+                    if (tablesCount == 1)
+                    {
+                        subInfo = "select distinct DATEPART(month,التاريخ) as subInfo,التاريخ from TableGeneralArch where DATEPART(QUARTER,التاريخ) = " + monthReport.Text + " and DATEPART(year,التاريخ) = " + yearReport.Text + " order by DATEPART(month,التاريخ) ";
+                        getsubReportsYear(dataSource, subInfo);
+                        titleReport = "تقرير المعاملات للربع ) " + monthReport.Text + "( خلال الفترة من شهر " + Monthorder(Convert.ToInt32(preInfo.Items[0].ToString())) + " وحتى " + Monthorder(Convert.ToInt32(preInfo.Items[preInfo.Items.Count - 1].ToString()));
+                    }
+                    for (int index = 0; index < preInfo.Items.Count; index++)
+                    {
+                        dateInfo = " and DATEPART(month," + DateName + ") = " + preInfo.Items[index].ToString() + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                        query = "select  " + getCount + " from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo+ " and نوع_المعاملة = N'"+ docCollectCombo.Items[ind].ToString() + "'";
+                        rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
+                        Console.WriteLine(tablesCount.ToString() + "/" + index.ToString() + "-" + preInfo.Items[index].ToString() + "----------------perday-----------------" + rep1[index, tablesCount].ToString());
+                    }
+                    dateInfo = " and DATEPART(QUARTER," + DateName + ") = " + (monthReport.SelectedIndex + 1).ToString() + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                    query = "select  " + getCount + " from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo+ " and نوع_المعاملة = N'"+ docCollectCombo.Items[ind].ToString() + "'";
+
+                }
+                else if (ReportType.Text == "تقرير شهري")
+                {
+                    totalCount = "إجمالي الاسايبع";
+                    CountName = "الاسبوع";
+                    //تحديد عدد الايام بالاسبوع
+                    if (tablesCount == 1)
+                    {
+                        subInfo = "select distinct DATEPART(week,التاريخ) as subInfo,التاريخ from TableGeneralArch where DATEPART(month,التاريخ) = " + monthReport.Text + " and DATEPART(year,التاريخ) = " + yearReport.Text + " order by DATEPART(week,التاريخ) ";
+                        getsubReportsMonth(dataSource, subInfo);
+                        titleReport = "تقرير المعاملات لشهر ) " + monthReport.Text + "( خلال الفترة من يوم " + Monthorder(Convert.ToInt32(preInfo.Items[0].ToString())) + " وحتى " + Monthorder(Convert.ToInt32(preInfo.Items[preInfo.Items.Count - 1].ToString()));
+                    }
+                    for (int index = 0; index < preInfo.Items.Count; index++)
+                    {
+                        dateInfo = " and DATEPART(week," + DateName + ") = " + preInfo.Items[index].ToString() + " and DATEPART(month," + DateName + ") = " + monthReport.Text + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                        query = "select  " + getCount + " from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo+ " and نوع_المعاملة = N'"+ docCollectCombo.Items[ind].ToString() + "'";
+                        rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
+                        Console.WriteLine(tablesCount.ToString() + "/" + index.ToString() + "-" + preInfo.Items[index].ToString() + "----------------perday-----------------" + rep1[index, tablesCount].ToString());
+                    }
+                    dateInfo = " and DATEPART(MONTH," + DateName + ") = " + (monthReport.SelectedIndex + 1).ToString() + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                    query = "select  " + getCount + " from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo+ " and نوع_المعاملة = N'"+ docCollectCombo.Items[ind].ToString() + "'";
+                }
+                else if (ReportType.Text == "التقرير الاسبوعي")
+                {
+                    totalCount = "إجمالي الايام";
+                    CountName = "اليوم";
+                    //تحديد عدد الايام بالاسبوع
+                    if (tablesCount == 1)
+                    {
+                        subInfo = "select distinct DATEPART(day,التاريخ) as subInfo,التاريخ from TableGeneralArch where DATEPART(WEEK,التاريخ) = " + monthReport.Text + " and DATEPART(year,التاريخ) = " + yearReport.Text + " order by DATEPART(day,التاريخ) ";
+                        getsubReportWeek(dataSource, subInfo);
+
+                    }
+                    for (int index = 0; index < preInfo.Items.Count; index++)
+                    {
+                        dateInfo = " and DATEPART(day," + DateName + ") = " + preInfo.Items[index].ToString() + " and DATEPART(WEEK," + DateName + ") = " + monthReport.Text + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                        query = "select  " + getCount + " from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo+ " and نوع_المعاملة = N'"+ docCollectCombo.Items[ind].ToString() + "'";
+                        rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
+                        Console.WriteLine("rep1[index, tablesCount] " + preInfo.Items[index].ToString() + "----------------perday-----------------" + rep1[index, tablesCount].ToString());
+                    }
+                    dateInfo = " and DATEPART(WEEK," + DateName + ") = " + monthReport.Text + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
+                    query = "select  " + getCount + " from " + TableName + " where " + ArchName + " = N'مؤرشف نهائي'" + dateInfo+ " and نوع_المعاملة = N'"+ docCollectCombo.Items[ind].ToString() + "'";
+                }
+                
+
+                try
+                {
+                    rep1[preInfo.Items.Count, tablesCount] = getcountReportsCalcs(dataSource, query);
+                    //Console.WriteLine(preInfo.Items[preInfo.Items.Count].ToString() + "----------------total-----------------" + rep1[preInfo.Items.Count - 1, tablesCount].ToString());
+                }
+                catch (Exception ex) { }
+                tablesCount++;
+                //MessageBox.Show(tablesCount.ToString());
+            }
+        }
+
         private void getReportsCalcs56(string dataSource)
         {
             string query = "select TableName,DateName,ProTypeName from ReportsCalcs";
@@ -7725,12 +8229,12 @@ namespace PersAhwal
                         for (int index = 0; index < preInfo.Items.Count; index++)
                         {
                             dateInfo = " and DATEPART(year," + DateName + ") = " + preInfo.Items[index].ToString();
-                            query = "select count(ID) as count from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
+                            query = "select  from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
                             rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
                             Console.WriteLine(tablesCount.ToString() + "/" + index.ToString() + "-" + preInfo.Items[index].ToString() + "----------------perday-----------------" + rep1[index, tablesCount].ToString());
                         }
                         dateInfo = "";
-                        query = "select count(ID) as count from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
+                        query = "select  from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
 
                         dateInfo = " and DATEPART(year," + DateName + ") = " + yearReport.Text;
                     }
@@ -7749,7 +8253,7 @@ namespace PersAhwal
                         for (int index = 0; index < preInfo.Items.Count; index++)
                         {
                             dateInfo = " and DATEPART(month," + DateName + ") = " + preInfo.Items[index].ToString() + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
-                            query = "select count(ID) as count from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
+                            query = "select  from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
                             rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
                             try
                             {
@@ -7758,7 +8262,7 @@ namespace PersAhwal
                             catch (Exception ex) { }
                         }
                         dateInfo = " and DATEPART(year," + DateName + ") = " + yearReport.Text;
-                        query = "select count(ID) as count from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
+                        query = "select  from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
 
                         dateInfo = " and DATEPART(year," + DateName + ") = " + yearReport.Text;
                     }
@@ -7776,12 +8280,12 @@ namespace PersAhwal
                         for (int index = 0; index < preInfo.Items.Count; index++)
                         {
                             dateInfo = " and DATEPART(month," + DateName + ") = " + preInfo.Items[index].ToString() + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
-                            query = "select count(ID) as count from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
+                            query = "select  from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
                             rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
                             Console.WriteLine(tablesCount.ToString() + "/" + index.ToString() + "-" + preInfo.Items[index].ToString() + "----------------perday-----------------" + rep1[index, tablesCount].ToString());
                         }
                         dateInfo = " and DATEPART(QUARTER," + DateName + ") = " + (monthReport.SelectedIndex + 1).ToString() + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
-                        query = "select count(ID) as count from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
+                        query = "select  from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
 
                     }
                     else if (ReportType.Text == "تقرير شهري")
@@ -7798,12 +8302,12 @@ namespace PersAhwal
                         for (int index = 0; index < preInfo.Items.Count; index++)
                         {
                             dateInfo = " and DATEPART(week," + DateName + ") = " + preInfo.Items[index].ToString() + " and DATEPART(month," + DateName + ") = " + monthReport.Text + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
-                            query = "select count(ID) as count from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
+                            query = "select  from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
                             rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
                             Console.WriteLine(tablesCount.ToString() + "/"+ index.ToString()+"-" + preInfo.Items[index].ToString() + "----------------perday-----------------" + rep1[index, tablesCount].ToString());
                         }                        
                         dateInfo = " and DATEPART(MONTH," + DateName + ") = " + (monthReport.SelectedIndex + 1).ToString() + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
-                        query = "select count(ID) as count from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
+                        query = "select  from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
                     }
                     else if (ReportType.Text == "التقرير الاسبوعي")
                     {
@@ -7819,13 +8323,13 @@ namespace PersAhwal
                         for (int index = 0; index < preInfo.Items.Count; index++)
                         {
                             dateInfo = " and DATEPART(day," + DateName + ") = " + preInfo.Items[index].ToString() + " and DATEPART(WEEK," + DateName + ") = " + monthReport.Text + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
-                            query = "select count(ID) as count from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
+                            query = "select  from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
                             rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
                             Console.WriteLine(preInfo.Items[index].ToString() + "----------------perday-----------------" + rep1[index, tablesCount].ToString());
                         }
                         dateInfo = " and DATEPART(WEEK," + DateName + ") = " + monthReport.Text + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
                     }
-                    query = "select count(ID) as count from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
+                    query = "select  from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
                     
                     try
                     {
@@ -7871,7 +8375,8 @@ namespace PersAhwal
             preInfo.Items.Clear();
             string start = "";
             string end = "";
-            subInfoName = new string[table.Rows.Count+1];
+            //MessageBox.Show((table.Rows.Count + 1).ToString());
+            subInfoName = new string[7 + docCollectCombo.Items.Count];
             foreach (DataRow dataRow in table.Rows)
             {
                 bool found = false;
@@ -7910,7 +8415,7 @@ namespace PersAhwal
             preInfo.Items.Clear();
             string start = "";
             string end = "";
-            subInfoName = new string[table.Rows.Count];
+            subInfoName = new string[7 + docCollectCombo.Items.Count];
             foreach (DataRow dataRow in table.Rows)
             {
                 bool found = false;
@@ -7948,7 +8453,7 @@ namespace PersAhwal
             preInfo.Items.Clear();
             string start = "";
             string end = "";
-            subInfoName = new string[table.Rows.Count];
+            subInfoName = new string[7 + docCollectCombo.Items.Count];
             foreach (DataRow dataRow in table.Rows)
             {
                 bool found = false;
@@ -7989,7 +8494,7 @@ namespace PersAhwal
             preInfo.Items.Clear();
             string start = "";
             string end = "";
-            subInfoName = new string[table.Rows.Count];
+            subInfoName = new string[7 + docCollectCombo.Items.Count];
             foreach (DataRow dataRow in table.Rows)
             {
                 bool found = false;
@@ -8057,14 +8562,15 @@ namespace PersAhwal
             SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable table = new DataTable();
+            //Console.WriteLine(query); 
             sqlDa.Fill(table);
             sqlCon.Close();
+            int count = 0;
             foreach (DataRow dataRow in table.Rows)
             {
-                Console.WriteLine(dataRow["count"].ToString());
-                return Convert.ToInt32( dataRow["count"].ToString());
+                count = count + Convert.ToInt32(dataRow["countNo"].ToString());
             }
-            return 0;
+            return count;
         }
         
         
@@ -8282,7 +8788,7 @@ namespace PersAhwal
                 labelM.BackColor = Color.Green;
 
             deleteEmptyRows = false;
-            if (!Showed && Career != "موظف ارشفة")
+            if (!Showed && Career != "موظف ارشفة"&& Career != "مدير نظام")
             {
                 Showed = true;
                 string ReportName1 = "Report1" + DateTime.Now.ToString("mmss") + ".docx";
@@ -9391,9 +9897,9 @@ namespace PersAhwal
         private void backgroundWorker3_DoWork(object sender, DoWorkEventArgs e)
         {
             fillSamplesCodes(Database);
-            return;
+            //return;
             //calcStarTextCollection(DataSource, "نوع_الإجراء", "نوع_المعاملة", "TableCollection", "TableCollectStarText");
-            //calcStarTextAuth(DataSource, "إجراء_التوكيل", "نوع_التوكيل", "TableAuth", "TableAuthStarText");
+            //calcAuthSub(DataSource, "إجراء_التوكيل", "نوع_التوكيل", "TableAuth", "TableAuthsub");
             //calcStarTextAuthRight(DataSource, "إجراء_التوكيل", "نوع_التوكيل", "TableAuth", "TableAuthRightStarText");
         }
 
@@ -9456,7 +9962,7 @@ namespace PersAhwal
         }
         
         
-        private void calcStarTextAuth(string dataSource, string col,string colMain, string table, string genTable)
+        private void calcAuthSub(string dataSource, string col,string colMain, string table, string genTable)
         {
             string[] ColLists = getMainCol(dataSource, colMain, table);
             foreach (string colList in ColLists)
@@ -9472,8 +9978,10 @@ namespace PersAhwal
                 foreach (DataRow row in dtbl.Rows)
                 {
                     if (colList == "" || row[col].ToString() == "") continue;
-                    string column = colList.Replace(" ", "_") + "_" + row[col].ToString().Replace(" ", "_"); 
-                    
+
+                    string column = colList.Replace(" ", "_") + "_" + row[col].ToString().Replace(" ", "_");
+                    Console.WriteLine(column);
+                    //MessageBox.Show(column);
                     if (!checkColExist(genTable, column))
                     {
                         CreateColumn(column, genTable);
@@ -9667,21 +10175,40 @@ namespace PersAhwal
                     txtReviewList = txtReviewList.Replace(dataRow["ibtnAdd1"].ToString(), "a1");
                 if (dataRow["itxtDate1"].ToString() != "" && txtReviewList.Contains(dataRow["itxtDate1"].ToString()))
                     txtReviewList = txtReviewList.Replace(dataRow["itxtDate1"].ToString(), "n1");
+                try
+                {
+                    if (txtReviewList.Contains(dataRow["الموكَّل"].ToString()))
+                        txtReviewList = txtReviewList.Replace(dataRow["الموكَّل"].ToString(), "AuthName");
+                }
+                catch (Exception ex1) { }
+                try
+                {
+                    if (txtReviewList.Contains(dataRow["جنسية_الموكل"].ToString()))
+                        txtReviewList = txtReviewList.Replace(dataRow["جنسية_الموكل"].ToString(), "AuthNatio");
+                }
+                catch (Exception ex1) { }
+                try
+                {
+                    if (txtReviewList.Contains(dataRow["هوية_الموكل"].ToString()))
+                        txtReviewList = txtReviewList.Replace(dataRow["هوية_الموكل"].ToString(), "AuthDoc");
+                }
+                catch (Exception ex1) { }
+
 
                 txtReviewList = SuffOrigConvertments(txtReviewList);
 
-                int TotalRows = checkTotalRows(dataSource, "TableAuthStarText");
-                int TotalcolRows = checkTotalcolRows(dataSource, "TableAuthStarText",نوع_التوكيل.Replace(" ", "_") +"_"+إجراء_التوكيل.Replace(" ", "_"));
+                int TotalRows = checkTotalRows(dataSource, "TableAuthsub");
+                int TotalcolRows = checkTotalcolRows(dataSource, "TableAuthsub", نوع_التوكيل.Replace(" ", "_") +"_"+إجراء_التوكيل.Replace(" ", "_"));
 
 
                 Console.WriteLine("checkTotalRowsSub = " + TotalRows);
                 Console.WriteLine("checkTotalcolRowsSub = " + TotalcolRows);
 
 
-                if (TotalRows == TotalcolRows && !checkStarTextExist(dataSource,نوع_التوكيل.Replace(" ", "_") +"_"+إجراء_التوكيل.Replace(" ", "_"), txtReviewList, "TableAuthStarText"))
-                    insertNewText(dataSource, نوع_التوكيل.Replace(" ", "_") +"_"+إجراء_التوكيل.Replace(" ", "_"), txtReviewList, "TableAuthStarText");
-                else if (TotalRows != TotalcolRows && !checkStarTextExist(dataSource,نوع_التوكيل.Replace(" ", "_") +"_"+إجراء_التوكيل.Replace(" ", "_"), txtReviewList, "TableAuthStarText"))
-                    updateNewText(dataSource,نوع_التوكيل.Replace(" ", "_") +"_"+إجراء_التوكيل.Replace(" ", "_"), txtReviewList, "TableAuthStarText", (TotalcolRows + 1).ToString());
+                if (TotalRows == TotalcolRows && !checkStarTextExist(dataSource,نوع_التوكيل.Replace(" ", "_") +"_"+إجراء_التوكيل.Replace(" ", "_"), txtReviewList, "TableAuthsub"))
+                    insertNewText(dataSource, نوع_التوكيل.Replace(" ", "_") +"_"+إجراء_التوكيل.Replace(" ", "_"), txtReviewList, "TableAuthsub");
+                else if (TotalRows != TotalcolRows && !checkStarTextExist(dataSource,نوع_التوكيل.Replace(" ", "_") +"_"+إجراء_التوكيل.Replace(" ", "_"), txtReviewList, "TableAuthsub"))
+                    updateNewText(dataSource,نوع_التوكيل.Replace(" ", "_") +"_"+إجراء_التوكيل.Replace(" ", "_"), txtReviewList, "TableAuthsub", (TotalcolRows + 1).ToString());
 
                 Console.WriteLine(txtReviewList);
                 index++;

@@ -73,6 +73,7 @@ namespace PersAhwal
         string AuthNoPart2;
         int MandoubDoc = 0;
         string TableList;//= new string[20];
+        string ColNumList;//= new string[20];
         string columnList;// = new string[20];
         string archCol;// = new string[20];
         string GenQuery;// = new string[20];
@@ -154,6 +155,7 @@ namespace PersAhwal
             Combo1Index = index;
             JobPosition = jobPosition;            
             genPreparation(strData, strSubData, index);
+            Combo1.SelectedIndex = Combo1Index;
             updateNames();
             correctNo();
             //MessageBox.Show(Combo1Index.ToString());
@@ -164,6 +166,35 @@ namespace PersAhwal
             //qrCode.SaveAsPng(FilespathOut + "ScanImg" + rowCount + imagecount.ToString() + ".png");
             //MessageBox.Show(FilespathOut + "ScanImg" + rowCount + imagecount.ToString() + ".png");            
             //pictureBox1.ImageLocation = PathImage[imagecount];
+        }
+
+        private void fileColComboBox(ComboBox combbox, string source, string comlumnName, string colRight)
+        {
+            combbox.Items.Clear();
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                saConn.Open();
+
+                string query = "select distinct " + comlumnName + " from TableAddContext where " + comlumnName + " is not null and ColRight " + colRight + " order by " + comlumnName + " asc";
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.CommandType = CommandType.Text;
+
+                Console.WriteLine(query);
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    DataTable table = new DataTable();
+                    SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                    dataAdapter.Fill(table);
+
+                    foreach (DataRow dataRow in table.Rows)
+                    {
+                        combbox.Items.Add(dataRow[comlumnName].ToString());
+                    }
+                }
+                catch (Exception ex) { }
+                saConn.Close();
+            }
         }
 
         private void genPreparation(string[] strData, string[] strSubData,int index)
@@ -198,9 +229,20 @@ namespace PersAhwal
                 //panelFinalArch.Visible = false;
                 DocType.Visible = button4.Visible = false;
             }
-            //المعاملات الأخرى
-            if (FormType != 10)
+            if (FormType == 12)
             {
+                fileColComboBox(Combo1, DataSource, "altColName", "<> ''");
+
+            }
+            else if (FormType == 10)
+            {
+                fileColComboBox(Combo1, DataSource, "altColName", "= ''");
+            }
+            else
+            {
+                //المعاملات الأخرى
+                //if (FormType != 10)
+                //{
                 for (int x = 0; x < strData.Length; x++)
                 {
                     if (strData[0] == "")
@@ -238,24 +280,25 @@ namespace PersAhwal
                     }
                 }
 
-            }
-            else if (FormType == 10) {
-                try
-                {
-                    //Combo1.Enabled = false;
-                    Combo1.Text = strData[index];
-                    reqFile = "";
-                    string[] data = new string[2];
+                //}
+                //else if (FormType == 10) {
+                //    try
+                //    {
+                //        //Combo1.Enabled = false;
+                //        Combo1.Text = strData[index];
+                //        reqFile = "";
+                //        string[] data = new string[2];
 
-                    data[0] = noForm;
+                //        data[0] = noForm;
 
-                    //Combo2.Items.Clear();
-                    fileComboBoxSub(Combo2, DataSource, "altColName", "altSubColName");
-                    if (ArchiveState) DocIDGenerator(FormType);
-                    loadPreReq(noForm, Combo1.Text, ArchiveState);
-                }
-                catch(Exception ex) { }
+                //        //Combo2.Items.Clear();
+                //        fileComboBoxSub(Combo2, DataSource, "altColName", "altSubColName");
+                //        if (ArchiveState) DocIDGenerator(FormType);
+                //        loadPreReq(noForm, Combo1.Text, ArchiveState);
+                //    }
+                //    catch(Exception ex) { }
 
+                //}
             }
             if (ArchiveState)
             {
@@ -861,6 +904,7 @@ namespace PersAhwal
             foreach (DataRow row in dtbl.Rows)
             {                
                 TableList = row["TableList"].ToString();
+                ColNumList = row["insert2"].ToString();
                 getComment = row["getComment"].ToString();
                 columnList = row["columnList"].ToString();
                 archCol = row["ArchCol"].ToString();
@@ -1136,6 +1180,7 @@ namespace PersAhwal
             paraValues[0] = "";
             paraValues[1] = GregorianDate;
             noForm = DocIDGenerator(form);
+            //if(AuthNoPart1)
             //MessageBox.Show(AuthNoPart1);
             paraValues[2] = AuthNoPart1;
             paraValues[3] = com1;
@@ -1582,7 +1627,7 @@ namespace PersAhwal
                     var device = AvailableScanner.Connect(); //Connect to the available scanner.
                     var ScanerItem = device.Items[1]; // select the scanner.
                     var imgFile = (ImageFile)ScanerItem.Transfer(FormatID.wiaFormatJPEG);
-                    PathImage[imagecount] = FilespathIn + btnName + "_" + rowCount + imagecount.ToString() + ".jpg";
+                    PathImage[imagecount] = FilespathOut + btnName + "_" + rowCount + imagecount.ToString() + ".jpg";
                     
                     if (File.Exists(PathImage[imagecount]))
                     {
@@ -1675,7 +1720,7 @@ namespace PersAhwal
             if (fileName != "")
             {
                 //fileName = fileName.Replace(extn, btnName) + extn; ;
-                PathImage[imagecount] = FilespathIn + btnName + "_" + rowCount + imagecount.ToString();
+                PathImage[imagecount] = FilespathOut + btnName + "_" + rowCount + imagecount.ToString();
                 PathImage[imagecount] = fileName;
                 drawTempPics(PathImage[imagecount]);
                 imagecount++;
@@ -2313,7 +2358,10 @@ namespace PersAhwal
             if (ArchiveState && newEntry)
             {
                 int docid = NewReportEntry(DataSource, GenQuery, FormType, Combo1.Text.Trim(), Combo2.Text.Trim());
-                if (docid == 0) { MessageBox.Show("عملية غير صالحة .. تعذر المتابعة، في حالة تكرار الرسالة يرجى إخطار مشغل البرنامج"); return; }
+                if (docid == 0) {
+                    MessageBox.Show("عملية غير صالحة .. تعذر المتابعة، في حالة تكرار الرسالة يرجى إخطار مشغل البرنامج"); 
+                    return; 
+                }
                 //Console.WriteLine(-1);
                 for (int x = 0; x < imagecount; x++)
                 {
@@ -3012,41 +3060,42 @@ namespace PersAhwal
             //}
 
             this.Close();
-            if (ArchiveState && relatedPro != "")
-            {
-                var selectedOption = MessageBox.Show("تم رصد " + relatedPro.Split('-')[0] +" بشأن " + relatedPro.Split('-')[1] + " يتم عادة إجراءه مع المعاملة المشار التي تم إجراءها", "هل ترغب في إجراءها؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (selectedOption == DialogResult.No)
-                {
-                    this.Close();
-                }
-                else if (selectedOption == DialogResult.Yes)
-                {
-                    mainProNo = AuthNoPart1;
-                    FormType = 10;
+            //if (ArchiveState && relatedPro != "")
+            //{
+            //    var selectedOption = MessageBox.Show("تم رصد " + relatedPro.Split('-')[0] +" بشأن " + relatedPro.Split('-')[1] + " يتم عادة إجراءه مع المعاملة المشار التي تم إجراءها", "هل ترغب في إجراءها؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            //    if (selectedOption == DialogResult.No)
+            //    {
+            //        this.Close();
+            //    }
+            //    else if (selectedOption == DialogResult.Yes)
+            //    {
+            //        mainProNo = AuthNoPart1;
+            //        FormType = 10;
 
-                    string mainTable = TableList;
-                    string mainCol = allInsertNamesList[2];
+            //        string mainTable = TableList;
+            //        string mainCol = allInsertNamesList[2];
 
 
-                    getColList("10", true, "-1");
-                    int docid = NewReportEntry(DataSource, GenQuery, 10, relatedPro.Split('-')[0], relatedPro.Split('-')[1]);
+            //        getColList("10", true, "-1");
+            //        int docid = NewReportEntry(DataSource, GenQuery, 10, relatedPro.Split('-')[0], relatedPro.Split('-')[1]);
 
-                    if (docid == 0)
-                    {
-                        MessageBox.Show("عملية غير صالحة .. تعذر المتابعة، في حالة تكرار الرسالة يرجى إخطار مشغل البرنامج");
-                        this.Close();
-                    }
-                    addRelatedInfo(DataSource, mainTable, AuthNoPart1, mainProNo, mainCol);
-                    //insertDocMand(DataSource, AuthNoPart1);
-                    addRelatedArch(DataSource, AuthNoPart1, mainProNo);
-                    OpenFile(relatedPro, false);
-                    if (File.Exists(reqFile))
-                    {
-                        string wordOutFile = FilespathOut + Combo1.Text.Trim() + DateTime.Now.ToString("ssmm") + "معاملة مرتبة.docx";
-                        CreateAuth(date.Split('-')[2].Replace("20", "") + "10" + rowCount + Environment.NewLine + date, reqFile, wordOutFile);
-                    }
-                }
-            }
+            //        if (docid == 0)
+            //        {
+            //            MessageBox.Show("عملية غير صالحة .. تعذر المتابعة، في حالة تكرار الرسالة يرجى إخطار مشغل البرنامج");
+            //            this.Close();
+            //        }
+            //        addRelatedInfo(DataSource, mainTable, AuthNoPart1, mainProNo, mainCol);
+            //        //insertDocMand(DataSource, AuthNoPart1);
+            //        addRelatedArch(DataSource, AuthNoPart1, mainProNo);
+            //        OpenFile(relatedPro, false);
+            //        if (File.Exists(reqFile))
+            //        {
+            //            string wordOutFile = FilespathOut + Combo1.Text.Trim() + DateTime.Now.ToString("ssmm") + "معاملة مرتبة.docx";
+            //            CreateAuth(date.Split('-')[2].Replace("20", "") + "10" + rowCount + Environment.NewLine + date, reqFile, wordOutFile);
+            //        }
+            //    }
+            //}
+
             if (AppNameText != "" && AppNameText != "اكتب اسم مقدم الطلب")
                 updateAppName(AppNameText, refNo, TableList);
 
@@ -3221,89 +3270,104 @@ namespace PersAhwal
 
         private void CombAuthType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //if (checkColumnName(Combo1.Text.Replace(" ", "_")))
+            reqFile = "";
+            string[] data = new string[2];
+            data[0] = noForm;
+            fileComboBoxSubContext(Combo2, DataSource, "altColName", "altSubColName");
+            if (ArchiveState) DocIDGenerator(FormType);
+            
+            //string formNo = Combo1.Text.Trim();
+            //data[1] = Combo2.Items[x].ToString().Trim() + "-" + Combo1.SelectedIndex.ToString();
+
+            //if (PreReqFound(formNo))
             //{
-                reqFile = "";
-                string[] data = new string[2];
+            //    loadPreReq(noForm, Combo1.Text, ArchiveState);
+            //}
+            //else
+            //    insertRow(data);
 
-                data[0] = noForm;
+            //if (!Combo2.Visible)
+            //{
+            //    string formNo = Combo1.Text;
+            //    data[1] = formNo;
+            //    if (PreReqFound(formNo))
+            //        fillFormDocx(formNo, formNo);
+            //    else if (!Combo1.Text.Contains("صيغة غير")) insertRow(data);
+            //}
 
-                Combo2.Items.Clear();
-                fileComboBox(Combo2, DataSource, Combo1.Text.Replace(" ", "_"), "TableListCombo");
-                if (ArchiveState) DocIDGenerator(FormType);
-                if (Combo2.Visible)
+            //requiredDocText();
+            return;
+            //}
+            // if (checkaltColName(Combo1.Text))
+            //{
+            //    reqFile = "";
+            //    string[] data = new string[2];
+
+            //    data[0] = noForm;
+
+            //    //Combo2.Items.Clear();
+            //    fileComboBoxSub(Combo2, DataSource, "altColName", "altSubColName");
+            //    if (ArchiveState) DocIDGenerator(FormType);
+            //    loadPreReq(noForm, Combo1.Text, ArchiveState);
+            //    //if (Combo2.Visible)
+            //    //{
+            //    //    for (int x = 0; x < Combo2.Items.Count; x++)
+            //    //    {
+
+            //    //        string formNo = Combo1.Text.Trim();
+            //    //        data[1] = Combo2.Items[x].ToString().Trim() +"-"+ Combo1.SelectedIndex.ToString();
+            //    //        //MessageBox.Show(data[1]);
+            //    //        if (PreReqFound(formNo))
+            //    //        {
+            //    //            loadPreReq(noForm, Combo1.Text, ArchiveState);
+            //    //            //MessageBox.Show(formNo); 
+            //    //            //fillFormDocx(formNo, Combo2.Items[x].ToString().Trim() + "-" + Combo1.SelectedIndex.ToString())
+            //    //        }
+            //    //        else 
+            //    //            insertRow(data);
+            //    //    }
+            //    //}
+            //    //else {
+            //    //    string formNo = Combo1.Text;
+            //    //    data[1] = formNo;
+            //    //    if (PreReqFound(formNo))
+            //    //        fillFormDocx(formNo, formNo);
+            //    //    else if (!Combo1.Text.Contains("صيغة غير")) insertRow(data);
+            //    //}
+
+            //    //requiredDocText();
+            //    return;
+            //}
+        }
+        private void fileComboBoxSubContext(ComboBox combbox, string source, string comlumnName, string SubComlumnName)
+        {
+            combbox.Items.Clear();
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                saConn.Open();
+
+                string query = "select distinct " + SubComlumnName + " from TableAddContext where " + SubComlumnName + " is not null and " + comlumnName + " =N'" + Combo1.Text + "' order by " + SubComlumnName + " asc";
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.CommandType = CommandType.Text;
+
+                Console.WriteLine(query);
+                try
                 {
-                    for (int x = 0; x < Combo2.Items.Count; x++)
-                    {
+                    cmd.ExecuteNonQuery();
+                    DataTable table = new DataTable();
+                    SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                    dataAdapter.Fill(table);
 
-                        string formNo = Combo1.Text.Trim();
-                        data[1] = Combo2.Items[x].ToString().Trim() + "-" + Combo1.SelectedIndex.ToString();
-                        //MessageBox.Show(data[1]);
-                        if (PreReqFound(formNo))
-                        {
-                            loadPreReq(noForm, Combo1.Text, ArchiveState);
-                            //MessageBox.Show(formNo); 
-                            //fillFormDocx(formNo, Combo2.Items[x].ToString().Trim() + "-" + Combo1.SelectedIndex.ToString())
-                        }
-                        else
-                            insertRow(data);
+                    foreach (DataRow dataRow in table.Rows)
+                    {
+                        combbox.Items.Add(dataRow[SubComlumnName].ToString());
                     }
                 }
-                else
-                {
-                    string formNo = Combo1.Text;
-                    data[1] = formNo;
-                    if (PreReqFound(formNo))
-                        fillFormDocx(formNo, formNo);
-                    else if (!Combo1.Text.Contains("صيغة غير")) insertRow(data);
-                }
-
-                //requiredDocText();
-                return;
-                //}
-                // if (checkaltColName(Combo1.Text))
-                //{
-                //    reqFile = "";
-                //    string[] data = new string[2];
-
-                //    data[0] = noForm;
-
-                //    //Combo2.Items.Clear();
-                //    fileComboBoxSub(Combo2, DataSource, "altColName", "altSubColName");
-                //    if (ArchiveState) DocIDGenerator(FormType);
-                //    loadPreReq(noForm, Combo1.Text, ArchiveState);
-                //    //if (Combo2.Visible)
-                //    //{
-                //    //    for (int x = 0; x < Combo2.Items.Count; x++)
-                //    //    {
-
-                //    //        string formNo = Combo1.Text.Trim();
-                //    //        data[1] = Combo2.Items[x].ToString().Trim() +"-"+ Combo1.SelectedIndex.ToString();
-                //    //        //MessageBox.Show(data[1]);
-                //    //        if (PreReqFound(formNo))
-                //    //        {
-                //    //            loadPreReq(noForm, Combo1.Text, ArchiveState);
-                //    //            //MessageBox.Show(formNo); 
-                //    //            //fillFormDocx(formNo, Combo2.Items[x].ToString().Trim() + "-" + Combo1.SelectedIndex.ToString())
-                //    //        }
-                //    //        else 
-                //    //            insertRow(data);
-                //    //    }
-                //    //}
-                //    //else {
-                //    //    string formNo = Combo1.Text;
-                //    //    data[1] = formNo;
-                //    //    if (PreReqFound(formNo))
-                //    //        fillFormDocx(formNo, formNo);
-                //    //    else if (!Combo1.Text.Contains("صيغة غير")) insertRow(data);
-                //    //}
-
-                //    //requiredDocText();
-                //    return;
-                //}
+                catch (Exception ex) { }
+                saConn.Close();
             }
-
-            private void fileComboBoxSub(ComboBox combbox, string source, string comlumnName, string SubComlumnName)
+        }
+        private void fileComboBoxSub(ComboBox combbox, string source, string comlumnName, string SubComlumnName)
         {
             combbox.Items.Clear();
             using (SqlConnection saConn = new SqlConnection(source))
@@ -3522,14 +3586,21 @@ namespace PersAhwal
         }
         private string DocIDGenerator(int formT)
         {
+            string col = "";
+            //MessageBox.Show(ColNumList);
             string formtype = "0" + formT.ToString();
             if (formT > 9 && formT < 100)
                 formtype = FormType.ToString();
             if (ServerType == "56") formtype = formT + Combo1Index.ToString();
             
             string year = DateTime.Now.Year.ToString().Replace("20", "");
-            string query = "select max(cast (right(رقم_معاملة_القسم,LEN(رقم_معاملة_القسم) - 15) as int)) as newDocID from TableGeneralArch where رقم_معاملة_القسم like N'ق س ج/80/" + year + "/" + formtype + "%'";  
-            if(ServerType == "56") query = "select max(cast (right(رقم_معاملة_القسم,LEN(رقم_معاملة_القسم) -16) as int)) as newDocID from TableGeneralArch where رقم_معاملة_القسم like N'ق س ج/80/" + year + "/" + formtype + "%'";
+            
+            string query = "select max(cast (right("+ ColNumList + ",LEN("+ ColNumList + ") - 15) as int)) as newDocID from "+ TableList+" where " + ColNumList + " like N'ق س ج/80/" + year + "/" + formtype + "%'";  
+            if(ServerType == "56") 
+                query = "select max(cast (right("+ ColNumList + ",LEN("+ ColNumList + ") -16) as int)) as newDocID from "+ TableList + " where "+ ColNumList + " like N'ق س ج/80/" + year + "/" + formtype + "%'";
+            //string query = "select max(cast (right(رقم_معاملة_القسم,LEN(رقم_معاملة_القسم) - 15) as int)) as newDocID from TableGeneralArch where رقم_معاملة_القسم like N'ق س ج/80/" + year + "/" + formtype + "%'";  
+            //if(ServerType == "56") query = "select max(cast (right(رقم_معاملة_القسم,LEN(رقم_معاملة_القسم) -16) as int)) as newDocID from TableGeneralArch where رقم_معاملة_القسم like N'ق س ج/80/" + year + "/" + formtype + "%'";
+            
             Console.WriteLine(query);   
             //MessageBox.Show(formtype);
             rowCount = getUniqueID(query);
@@ -4512,14 +4583,15 @@ namespace PersAhwal
         
         private string getUniqueID(string query)
         {
-            string dataSource = DataSource.Replace("AhwalDataBase", "ArchFilesDB");
-            dataSource = dataSource.Replace("SudaneseAffairs", "ArchFilesDB");
-            SqlConnection sqlCon = new SqlConnection(dataSource);
+            //string dataSource = DataSource.Replace("AhwalDataBase", "ArchFilesDB");
+            //dataSource = dataSource.Replace("SudaneseAffairs", "ArchFilesDB");
+            SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
+            Console.WriteLine(query);
             sqlDa.Fill(dtbl);
             sqlCon.Close();
             string maxID = "1";
