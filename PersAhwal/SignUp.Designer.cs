@@ -54,6 +54,11 @@ namespace PersAhwal
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.التعليقات_السابقة_Off = new System.Windows.Forms.TextBox();
             this.panelEmployee = new System.Windows.Forms.Panel();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.headOfMission = new System.Windows.Forms.CheckBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.EngEmployeeName = new System.Windows.Forms.TextBox();
             this.panelMandoub = new System.Windows.Forms.Panel();
             this.رقم_الهاتف = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -70,11 +75,7 @@ namespace PersAhwal
             this.label10 = new System.Windows.Forms.Label();
             this.btnDeActiveteM = new System.Windows.Forms.Button();
             this.btnActiveteM = new System.Windows.Forms.Button();
-            this.EngEmployeeName = new System.Windows.Forms.TextBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.headOfMission = new System.Windows.Forms.CheckBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.label13 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -226,7 +227,7 @@ namespace PersAhwal
             // 
             this.Register.Location = new System.Drawing.Point(12, 149);
             this.Register.Name = "Register";
-            this.Register.Size = new System.Drawing.Size(256, 45);
+            this.Register.Size = new System.Drawing.Size(117, 45);
             this.Register.TabIndex = 333;
             this.Register.Text = "تسجيل";
             this.Register.UseVisualStyleBackColor = true;
@@ -358,6 +359,7 @@ namespace PersAhwal
             // 
             // panelEmployee
             // 
+            this.panelEmployee.Controls.Add(this.button1);
             this.panelEmployee.Controls.Add(this.textBox2);
             this.panelEmployee.Controls.Add(this.label13);
             this.panelEmployee.Controls.Add(this.headOfMission);
@@ -380,6 +382,59 @@ namespace PersAhwal
             this.panelEmployee.Name = "panelEmployee";
             this.panelEmployee.Size = new System.Drawing.Size(803, 207);
             this.panelEmployee.TabIndex = 671;
+            // 
+            // textBox2
+            // 
+            this.textBox2.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox2.Location = new System.Drawing.Point(12, 6);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.textBox2.Size = new System.Drawing.Size(256, 35);
+            this.textBox2.TabIndex = 340;
+            this.textBox2.UseSystemPasswordChar = true;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Location = new System.Drawing.Point(277, 9);
+            this.label13.Name = "label13";
+            this.label13.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.label13.Size = new System.Drawing.Size(113, 27);
+            this.label13.TabIndex = 341;
+            this.label13.Text = "كلمة المرور السابقة:";
+            // 
+            // headOfMission
+            // 
+            this.headOfMission.AutoSize = true;
+            this.headOfMission.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.headOfMission.Location = new System.Drawing.Point(416, 86);
+            this.headOfMission.Name = "headOfMission";
+            this.headOfMission.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.headOfMission.Size = new System.Drawing.Size(91, 31);
+            this.headOfMission.TabIndex = 339;
+            this.headOfMission.Text = "رئيس البعثة";
+            this.headOfMission.UseVisualStyleBackColor = true;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.Location = new System.Drawing.Point(686, 162);
+            this.label11.Name = "label11";
+            this.label11.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.label11.Size = new System.Drawing.Size(98, 27);
+            this.label11.TabIndex = 337;
+            this.label11.Text = "الاسم بالانجليزية:";
+            // 
+            // EngEmployeeName
+            // 
+            this.EngEmployeeName.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.EngEmployeeName.Location = new System.Drawing.Point(413, 159);
+            this.EngEmployeeName.Name = "EngEmployeeName";
+            this.EngEmployeeName.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.EngEmployeeName.Size = new System.Drawing.Size(256, 35);
+            this.EngEmployeeName.TabIndex = 336;
             // 
             // panelMandoub
             // 
@@ -579,58 +634,15 @@ namespace PersAhwal
             this.btnActiveteM.Visible = false;
             this.btnActiveteM.Click += new System.EventHandler(this.btnActiveteM_Click);
             // 
-            // EngEmployeeName
+            // button1
             // 
-            this.EngEmployeeName.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EngEmployeeName.Location = new System.Drawing.Point(413, 159);
-            this.EngEmployeeName.Name = "EngEmployeeName";
-            this.EngEmployeeName.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.EngEmployeeName.Size = new System.Drawing.Size(256, 35);
-            this.EngEmployeeName.TabIndex = 336;
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(686, 162);
-            this.label11.Name = "label11";
-            this.label11.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label11.Size = new System.Drawing.Size(98, 27);
-            this.label11.TabIndex = 337;
-            this.label11.Text = "الاسم بالانجليزية:";
-            // 
-            // headOfMission
-            // 
-            this.headOfMission.AutoSize = true;
-            this.headOfMission.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.headOfMission.Location = new System.Drawing.Point(416, 86);
-            this.headOfMission.Name = "headOfMission";
-            this.headOfMission.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.headOfMission.Size = new System.Drawing.Size(91, 31);
-            this.headOfMission.TabIndex = 339;
-            this.headOfMission.Text = "رئيس البعثة";
-            this.headOfMission.UseVisualStyleBackColor = true;
-            // 
-            // textBox2
-            // 
-            this.textBox2.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox2.Location = new System.Drawing.Point(12, 6);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.textBox2.Size = new System.Drawing.Size(256, 35);
-            this.textBox2.TabIndex = 340;
-            this.textBox2.UseSystemPasswordChar = true;
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(277, 9);
-            this.label13.Name = "label13";
-            this.label13.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label13.Size = new System.Drawing.Size(113, 27);
-            this.label13.TabIndex = 341;
-            this.label13.Text = "كلمة المرور السابقة:";
+            this.button1.Location = new System.Drawing.Point(151, 149);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(117, 45);
+            this.button1.TabIndex = 342;
+            this.button1.Text = "التوقيع";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_2);
             // 
             // SignUp
             // 
@@ -711,5 +723,6 @@ namespace PersAhwal
         private System.Windows.Forms.CheckBox headOfMission;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox EngEmployeeName;
+        private System.Windows.Forms.Button button1;
     }
 }

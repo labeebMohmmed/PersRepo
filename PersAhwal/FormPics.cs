@@ -156,10 +156,11 @@ namespace PersAhwal
             JobPosition = jobPosition;            
             genPreparation(strData, strSubData, index);
             Combo1.SelectedIndex = Combo1Index;
+            //OpenFile(Combo1.Text, false);            
             updateNames();
-            correctNo();
+            correctNo(); 
             //MessageBox.Show(Combo1Index.ToString());
-            
+
             //int docid = NewReportEntry(DataSource, GenQuery, 10, relatedPro.Split('-')[0], relatedPro.Split('-')[1]);
 
             //var qrCode = QRCodeWriter.CreateQrCode(" ق س ج/80/23/12/5412");
@@ -279,37 +280,12 @@ namespace PersAhwal
                         Combo2.Items.Add(strSubData[x]);
                     }
                 }
-
-                //}
-                //else if (FormType == 10) {
-                //    try
-                //    {
-                //        //Combo1.Enabled = false;
-                //        Combo1.Text = strData[index];
-                //        reqFile = "";
-                //        string[] data = new string[2];
-
-                //        data[0] = noForm;
-
-                //        //Combo2.Items.Clear();
-                //        fileComboBoxSub(Combo2, DataSource, "altColName", "altSubColName");
-                //        if (ArchiveState) DocIDGenerator(FormType);
-                //        loadPreReq(noForm, Combo1.Text, ArchiveState);
-                //    }
-                //    catch(Exception ex) { }
-
-                //}
             }
             if (ArchiveState)
             {
                 label5.Visible = تاريخ_الميلاد.Visible = true;
                 txtIDNo.Visible = false;
-                //panelFinalArch.Visible = true;
-                noForm = DocIDGenerator(FormType);
-                //if (noForm != "" && strSubData.Length == 1)
-                //{
-                //    loadPreReq(noForm, Combo1.Text, ArchiveState);
-                //}
+                noForm = DocIDGenerator(FormType);                
             }            
         }
 
@@ -1038,6 +1014,7 @@ namespace PersAhwal
             paraValues[0] = archstat;
             paraValues[1] = GregorianDate;
             paraValues[3] = تاريخ_الميلاد.Text;
+            paraValues[4] = DateTime.Now.ToString("hh:mm:ss");
             sqlCmd.Parameters.AddWithValue("@id", FileIDNo);
             for (int rows = 0; rows < allUpdateNamesList.Length; rows++)
             {
@@ -1195,11 +1172,12 @@ namespace PersAhwal
                 paraValues[8] = "1";
             else paraValues[8] = Combo2.SelectedIndex.ToString();
             paraValues[9] = تاريخ_الميلاد.Text;
+            paraValues[10] = DateTime.Now.ToString("hh:mm:ss");
             for (int rows = 0; rows < allInsertNamesList.Length; rows++)
             {
                 if (allInsertNamesList[rows] != "")
                 {
-                    //MessageBox.Show(allInsertNamesList[rows] +" - "+paraValues[rows]);
+                    Console.WriteLine(allInsertNamesList[rows] +" - "+paraValues[rows]);
                     sqlCmd.Parameters.AddWithValue("@" + allInsertNamesList[rows], paraValues[rows]); 
                 }
             }
@@ -1486,8 +1464,9 @@ namespace PersAhwal
                 }
                 saConn.Close();
             }
-            if (combbox.Items.Count > 0) 
-                combbox.SelectedIndex = 0;
+            //if (combbox.Items.Count > 0) 
+            //    combbox.SelectedIndex = 0;
+            //MessageBox.Show(combbox.Text);
         }
 
         private void fileComboBoxMan(ComboBox combbox, string source, string comlumnName, string tableName)
@@ -1538,7 +1517,7 @@ namespace PersAhwal
                     var imgFile = (ImageFile)ScanerItem.Transfer(FormatID.wiaFormatJPEG);
 
                     PathImage[imagecount] = FilespathOut + "ScanImg" + rowCount + imagecount.ToString() + ".jpg";
-                    MessageBox.Show (PathImage[imagecount]);
+                    //MessageBox.Show (PathImage[imagecount]);
                     if (File.Exists(PathImage[imagecount]))
                     {
                         File.Delete(PathImage[imagecount]);
@@ -3586,8 +3565,6 @@ namespace PersAhwal
         }
         private string DocIDGenerator(int formT)
         {
-            string col = "";
-            //MessageBox.Show(ColNumList);
             string formtype = "0" + formT.ToString();
             if (formT > 9 && formT < 100)
                 formtype = FormType.ToString();
@@ -3598,11 +3575,8 @@ namespace PersAhwal
             string query = "select max(cast (right("+ ColNumList + ",LEN("+ ColNumList + ") - 15) as int)) as newDocID from "+ TableList+" where " + ColNumList + " like N'ق س ج/80/" + year + "/" + formtype + "%'";  
             if(ServerType == "56") 
                 query = "select max(cast (right("+ ColNumList + ",LEN("+ ColNumList + ") -16) as int)) as newDocID from "+ TableList + " where "+ ColNumList + " like N'ق س ج/80/" + year + "/" + formtype + "%'";
-            //string query = "select max(cast (right(رقم_معاملة_القسم,LEN(رقم_معاملة_القسم) - 15) as int)) as newDocID from TableGeneralArch where رقم_معاملة_القسم like N'ق س ج/80/" + year + "/" + formtype + "%'";  
-            //if(ServerType == "56") query = "select max(cast (right(رقم_معاملة_القسم,LEN(رقم_معاملة_القسم) -16) as int)) as newDocID from TableGeneralArch where رقم_معاملة_القسم like N'ق س ج/80/" + year + "/" + formtype + "%'";
-            
-            Console.WriteLine(query);   
-            //MessageBox.Show(formtype);
+            Console.WriteLine(query);
+            //MessageBox.Show(query);
             rowCount = getUniqueID(query);
             docId.Text = "ق س ج" + "/" + rowCount + "/" + formtype + "/" + year + "/80";
             AuthNoPart1 = "ق س ج/80/" + year + "/" + formtype + "/" + rowCount;

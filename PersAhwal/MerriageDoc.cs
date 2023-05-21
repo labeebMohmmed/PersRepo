@@ -52,9 +52,13 @@ namespace PersAhwal
         string FilespathOut = "";
         Word.Document oBDoc;
         object oBMiss;
+        Word.Document oBDoc1;
+        object oBMiss1;
         Word.Application oBMicroWord;
+        Word.Application oBMicroWord1;
         bool button1Enabel = false;
         string localCopy_off = "";
+        string localCopy_off1 = "";
         public MerriageDoc(string dataSource, bool addEdit, string empName, int atVCIndex, string gregorianDate, string hijriDate, string filespathIn, string filespathOut)
         {
             InitializeComponent();
@@ -64,7 +68,7 @@ namespace PersAhwal
             allList = getColList("TableMerrageDoc");
             FilespathIn = filespathIn;
             FilespathOut = filespathOut;
-            التاريخ_الهجري.Text = HijriDate = hijriDate;
+            التاريخ_الهجري.Text =  HijriDate = hijriDate;
             التاريخ_الميلادي.Text = GregorianDate = gregorianDate;
             fillFileBox(DataSource);
             if (AddEdit) {
@@ -340,6 +344,12 @@ namespace PersAhwal
                             MessageBox.Show("عمر أحد الزوجين أقل من العمر الذي نص عليه القانون " + control.Name);
                             return false;
                         }
+
+                        if (control.Name == "رقم_الوثيقة" && control.Text.Length > 5)
+                        {
+                            MessageBox.Show(" رقم الوثيقة غير صالح");
+                            return false;
+                        }
                     }
                 }
             }
@@ -439,6 +449,7 @@ namespace PersAhwal
                 colIDs[7] = "new";
                 addarchives(colIDs);
             }
+
             fillPreDoc();
             fillDocFileAppInfo();
             fillPrintDocx();
@@ -582,28 +593,51 @@ namespace PersAhwal
             System.Runtime.InteropServices.Marshal.ReleaseComObject(oBMicroWord);
             System.Diagnostics.Process.Start(pdfFile);
             File.Delete(localCopy_off);            
-            object doNotSaveChanges = Word.WdSaveOptions.wdSaveChanges;
-
+            
+            string pdfFile1 = localCopy_off1.Replace("docx", "pdf");
+            oBDoc1.SaveAs2(localCopy_off1);
+            oBDoc1.ExportAsFixedFormat(pdfFile1, Word.WdExportFormat.wdExportFormatPDF);
+            oBDoc1.Close(false, oBMiss1);
+            oBMicroWord1.Quit(false, false);
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(oBMicroWord1);
+            System.Diagnostics.Process.Start(pdfFile1);
+            //File.Delete(localCopy_off1);  
         }
 
         private void chooseDocxFile(string docId, string name)
         {
             string RouteFile = FilespathIn + "TableMerrageDoc.docx";
+            string RouteFile1 = FilespathIn + "merriageDocs.docx";
             if (name != "")
-                localCopy_off = FilespathOut + name + DateTime.Now.ToString("ddmmss") + ".docx";
-            else localCopy_off = FilespathOut + docId.Replace("/", "_") + DateTime.Now.ToString("ddmmss") + ".docx";
+                localCopy_off = FilespathOut +@"\"+ name + DateTime.Now.ToString("ddmmss") + ".docx";
+            else localCopy_off = FilespathOut + @"\" + docId.Replace("/", "_") + DateTime.Now.ToString("ddmmss") + ".docx";
             while (File.Exists(localCopy_off))
             {
                 if (name != "")
-                    localCopy_off = FilespathOut + name + DateTime.Now.ToString("ddmmss") + ".docx";
-                else localCopy_off = FilespathOut + docId.Replace("/", "_") + DateTime.Now.ToString("ddmmss") + ".docx";
+                    localCopy_off = FilespathOut + @"\" + name + DateTime.Now.ToString("ddmmss") + ".docx";
+                else localCopy_off = FilespathOut + @"\" + docId.Replace("/", "_") + DateTime.Now.ToString("ddmmss") + ".docx";
             }
             //
             System.IO.File.Copy(RouteFile, localCopy_off);
             FileInfo fileInfo = new FileInfo(localCopy_off);
             if (fileInfo.IsReadOnly) fileInfo.IsReadOnly = false;
+            
+            if (name != "")
+                localCopy_off1 = FilespathOut + @"\" + name + DateTime.Now.ToString("ddmmss") + "1.docx";
+            else localCopy_off1 = FilespathOut + @"\" + docId.Replace("/", "_") + DateTime.Now.ToString("ddmmss") + "1.docx";
+            while (File.Exists(localCopy_off1))
+            {
+                if (name != "")
+                    localCopy_off1 = FilespathOut + @"\" + name + DateTime.Now.ToString("ddmmss") + "1.docx";
+                else localCopy_off1 = FilespathOut + @"\" + docId.Replace("/", "_") + DateTime.Now.ToString("ddmmss") + "1.docx";
+            }
+            //
+            System.IO.File.Copy(RouteFile1, localCopy_off1);
+            FileInfo fileInfo1 = new FileInfo(localCopy_off1);
+            if (fileInfo1.IsReadOnly) fileInfo1.IsReadOnly = false;
 
             //MessageBox.Show(localCopy_off );
+            //MessageBox.Show(localCopy_off1 );
         }
 
         private void updateGenName(string name, string idDoc)
@@ -1028,6 +1062,13 @@ namespace PersAhwal
             oBDoc = oBMicroWord.Documents.Open(objCurrentCopy, oBMiss);
             oBMicroWord.Selection.Find.ClearFormatting();
             oBMicroWord.Selection.Find.Replacement.ClearFormatting();
+            
+            oBMiss1 = System.Reflection.Missing.Value;
+            oBMicroWord1 = new Word.Application();
+            object objCurrentCopy1 = localCopy_off1;
+            oBDoc1 = oBMicroWord1.Documents.Open(objCurrentCopy1, oBMiss1);
+            oBMicroWord1.Selection.Find.ClearFormatting();
+            oBMicroWord1.Selection.Find.Replacement.ClearFormatting();
 
         }
         private void fillPreDoc()
@@ -1055,7 +1096,7 @@ namespace PersAhwal
                 وكيل_الزوج1_off.Text = وكيل_الزوج.Text;
             }
         }
-            private void fillDocFileAppInfo()
+        private void fillDocFileAppInfo()
         {
             foreach (Control control in PanelMain.Controls)
             {
@@ -1077,8 +1118,23 @@ namespace PersAhwal
                     {
                         //    MessageBox.Show(control.Name); 
                     }
+                    
+                    try
+                    {
+                        object ParaAuthIDNo = control.Name;
+                        Word.Range BookAuthIDNo1 = oBDoc1.Bookmarks.get_Item(ref ParaAuthIDNo).Range;
+                        BookAuthIDNo1.Text = control.Text;
+                        object rangeAuthIDNo1 = BookAuthIDNo1;
+                        oBDoc1.Bookmarks.Add(control.Name, ref rangeAuthIDNo1);
+
+                        //MessageBox.Show(control.Text);
+                    }
+                    catch (Exception ex)
+                    {
+                        //    MessageBox.Show(control.Name); 
+                    }
                 }
-            }            
+            }
         }
 
         private void ListSearch_TextChanged(object sender, EventArgs e)
@@ -1273,6 +1329,29 @@ namespace PersAhwal
             if (تاريخ_الايصال.Text.Length == 4) تاريخ_الايصال.Text = "-" + تاريخ_الايصال.Text;
             else if (تاريخ_الايصال.Text.Length == 7) تاريخ_الايصال.Text = "-" + تاريخ_الايصال.Text;
             lastInput3 = تاريخ_الايصال.Text;
+        }
+
+        private void التاريخ_الميلادي_TextChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void تاريخ_الاجراء_TextChanged(object sender, EventArgs e)
+        {
+
+            try
+            {
+                اليوم_off.Text = تاريخ_الاجراء.Text.Split('-')[1];
+                الشهر_off.Text = تاريخ_الاجراء.Text.Split('-')[0];
+                السنة_off.Text = تاريخ_الاجراء.Text.Split('-')[2];
+            }
+            catch (Exception ex) { }
+            //MessageBox.Show(اليوم.Text);
+        }
+
+        private void اليوم_TextChanged(object sender, EventArgs e)
+        {
+            //MessageBox.Show(اليوم_off.Text);
         }
     }
 }

@@ -445,6 +445,8 @@ namespace PersAhwal
 
             sqlCon.Close();
         }
+        
+        
         private void dataGridView1_RowIndex(int ID)
         {
             if (dataGridView1.Rows.Count > 1)
@@ -754,6 +756,49 @@ namespace PersAhwal
             {
             }
             this.Close();
+        }
+
+        private void button1_Click_2(object sender, EventArgs e)
+        {
+            string Search = "";
+            //MessageBox.Show(Employeename);
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.ShowDialog();
+            try
+            {
+                Search = dlg.FileName;
+            } catch (Exception ex) { Search = ""; }
+            if (Search != "")
+            {
+                string query = "update TableUser set Data1=@Data1 where EmployeeName=@EmployeeName";
+                
+                SqlConnection sqlCon = new SqlConnection(DataSource);
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+                SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+                //try
+                //{
+                    sqlCmd.CommandType = CommandType.Text;
+                    sqlCmd.Parameters.AddWithValue("@EmployeeName", Employeename);
+                    using (Stream stream = File.OpenRead(Search))
+                    {
+                        byte[] buffer1 = new byte[stream.Length];
+                        stream.Read(buffer1, 0, buffer1.Length);
+                        sqlCmd.Parameters.AddWithValue("@Data1", buffer1);
+                    }
+                    //try
+                    //{
+                        sqlCmd.ExecuteNonQuery();
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    MessageBox.Show("خطأ في البيانات");
+                    //}
+                //}
+                //catch (Exception ex)
+                //{
+                //}
+            }
         }
     }
 }
