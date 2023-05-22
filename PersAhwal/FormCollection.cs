@@ -271,10 +271,10 @@ namespace PersAhwal
                     btnDelete.Visible = btnFile1.Visible = btnFile2.Visible = btnFile3.Visible = Panelapp.Visible = true;
                     break;
                 case 2:
-                    if (نوع_الإجراء.Text.Contains("عامة"))
+                    if (نوع_الإجراء.Text.Contains("عامة")||نوع_الإجراء.Text.Contains("توكيل"))
                     {
                         نوع_الإجراء.BackColor = System.Drawing.Color.MistyRose;
-                        MessageBox.Show("يرجى اقتراح اسم للمعاملة");
+                        MessageBox.Show("يرجى اقتراح أو ختيار من القائمة اسم للمعاملة");
                         نوع_الإجراء.Enabled = true;
                         currentPanelIndex--; return;
                     }
@@ -722,13 +722,18 @@ namespace PersAhwal
                 catch (Exception ex) { return 0; }
             SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
             sqlCmd.CommandType = CommandType.Text;
-            var reader = sqlCmd.ExecuteReader();
+            try
+            {
+                var reader = sqlCmd.ExecuteReader();
+            
             Console.WriteLine(query);
             //MessageBox.Show(query);
             if (reader.Read())
             {
                 return Convert.ToInt32(reader["lastid"].ToString());
             }
+            }
+            catch (Exception ex) { return 0; }
             return 0;
         }
 
@@ -1743,6 +1748,7 @@ namespace PersAhwal
                 checkSexType.Checked = true;
             else checkSexType.Checked = false;
             checkSexType.UseVisualStyleBackColor = true;
+            checkSexType.TextChanged += new System.EventHandler(this.checkSexType_TextChanged); 
             checkSexType.CheckedChanged += new System.EventHandler(this.sexCheckedChanged);
             // 
             // combTitle1
@@ -2244,7 +2250,7 @@ namespace PersAhwal
                     Console.WriteLine(textNo);
                     Console.WriteLine(textNo.Split('_')[2]);
                     index = Convert.ToInt32(textNo.Split('_')[2]);
-
+                    index++;
                 }
             }
 
@@ -2252,8 +2258,12 @@ namespace PersAhwal
             string[] text = getID(textBox);
 
             //Console.WriteLine("text[4] " + text[4]);
-            if (text[4] == "")
-                text[4] = ageDetected.Split('_')[index];
+            try
+            {
+                if (text[4] == "")
+                    text[4] = ageDetected.Split('_')[index];
+            }
+            catch (Exception ex) { }
             // Console.WriteLine("text[4] " + text[4]);
 
             fillFirstInfo("", text[5], text[1], text[0], text[2], اللغة.Text, text[3], text[4], TextID);
@@ -2314,6 +2324,18 @@ namespace PersAhwal
             CheckBox checkBox = (CheckBox)sender;
             if (checkBox.CheckState == CheckState.Unchecked) checkBox.Text = "أنثى";
             else checkBox.Text = "ذكر";
+            checkChanged(النوع, Panelapp);
+        }
+        
+        private void checkSexType_TextChanged(object sender, EventArgs e)
+        {
+
+            CheckBox checkBox = (CheckBox)sender;
+            if (checkBox.Text == "")
+            {
+                checkBox.Text = "ذكر";
+                checkBox.Checked = true;
+            }
             checkChanged(النوع, Panelapp);
         }
 
@@ -2915,6 +2937,33 @@ namespace PersAhwal
         }
 
         private void autoCompleteBulk(TextBox textbox, string source, string col, string table)
+        {
+
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                saConn.Open();
+
+                string query = "select distinct " + col + " from " + table + " where " + col + " is not null";
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.ExecuteNonQuery();
+                DataTable Textboxtable = new DataTable();
+                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                dataAdapter.Fill(Textboxtable);
+                AutoCompleteStringCollection autoComplete = new AutoCompleteStringCollection();
+                bool newSrt = true;
+                textbox.AutoCompleteCustomSource.Clear();
+
+                foreach (DataRow dataRow in Textboxtable.Rows)
+                {
+                    autoComplete.Add(dataRow[col].ToString());
+                }
+                textbox.AutoCompleteMode = AutoCompleteMode.Suggest;
+                textbox.AutoCompleteSource = AutoCompleteSource.CustomSource;
+                textbox.AutoCompleteCustomSource = autoComplete;
+                saConn.Close();
+            }
+        }
+        private void autoCompleteBulk(ComboBox textbox, string source, string col, string table)
         {
 
             using (SqlConnection saConn = new SqlConnection(source))
@@ -4115,7 +4164,8 @@ namespace PersAhwal
             reversTextPurpose(); 
             flllPanelItemsboxes("ColName", نوع_الإجراء.Text + "-" + نوع_المعاملة.SelectedIndex.ToString());
             fillInfo(PanelItemsboxes, false);
-            
+            autoCompleteBulk(عنوان_المكاتبة, DataSource, "عنوان_المكاتبة", "TableCollection");
+
         }
         private void reversTextReview()
         {
@@ -4159,7 +4209,10 @@ namespace PersAhwal
                     
                 }
             }
-            catch (Exception ex) { }
+            catch (Exception ex) {
+                txtReviewListStar = new string[1];
+                txtReviewListStar[0] = "";
+            }
         }
         
         private void reversTextPurpose()
@@ -4361,8 +4414,14 @@ namespace PersAhwal
                         textModel = dr["TextModel"].ToString().Split(':')[0] + ":"+Environment.NewLine;
                     else 
                         textModel = dr["TextModel"].ToString();
-                    txtReviewListStar[0] = textModel;
-                    ProTitle = dr["titleDefault"].ToString();                    
+                    
+                    ProTitle = dr["titleDefault"].ToString();
+                    //MessageBox.Show(dr["titleDefault"].ToString());
+                    try
+                    {
+                        txtReviewListStar[0] = textModel;
+                    }
+                    catch (Exception ex) { }
                     if (lang == "الانجليزية")
                         اللغة.Checked = true;
                     else اللغة.Checked = false;
@@ -5734,7 +5793,7 @@ namespace PersAhwal
         }
         private bool checkTextExist(string table, string colName, string text)
         {
-            string query = "SELECT " + colName + " FROM " + table + " where " + colName + "=N'" + text + "'";
+            string query = "SELECT " + colName + " FROM " + table + " where " + colName + "=N'" + text.Replace("'","~") + "'";
             Console.WriteLine("checkTextExist " + query);
             SqlConnection sqlCon = new SqlConnection(DataSource);
             try
@@ -5746,7 +5805,10 @@ namespace PersAhwal
             SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
-            sqlDa.Fill(dtbl);
+            try
+            {
+                sqlDa.Fill(dtbl);
+            }catch (Exception ex) { return false; }
             sqlCon.Close();
 
             if (dtbl.Rows.Count > 0)
