@@ -87,7 +87,7 @@ namespace PersAhwal
                 المأذون.SelectedIndex = AtVCIndex;
             else المأذون.SelectedIndex = 0;
             
-            طريقة_الإجراء.SelectedIndex = 0;
+            طريقة_الإجراء.SelectedIndex = 1;
             
             definColumn(DataSource);
         }
@@ -171,7 +171,7 @@ namespace PersAhwal
             foreach (DataRow row in dtbl.Rows)
             {
                 
-                if (row["name"].ToString() != "ID" && row["name"].ToString() != "تاريخ_الارشفة1"&& row["name"].ToString() != "تاريخ_الاجراء" && row["name"].ToString() != "تاريخ_الارشفة2" && row["name"].ToString() != "حالة_الارشفة"&& row["name"].ToString() != "sms")
+                if (row["name"].ToString() != "ID" && row["name"].ToString() != "تاريخ_الارشفة1" && row["name"].ToString() != "تاريخ_الارشفة2" && row["name"].ToString() != "حالة_الارشفة"&& row["name"].ToString() != "sms")
                 {
                     allList[i] = row["name"].ToString();
                     //MessageBox.Show(row["name"].ToString());
@@ -427,7 +427,8 @@ namespace PersAhwal
                     foreach (Control control in PanelMain.Controls)
                     {
                         if (control.Name == allList[i])
-                        {                            
+                        {
+                            Console.WriteLine(allList[i]+" - "+ control.Text);
                             sqlCommand.Parameters.AddWithValue("@" + allList[i], control.Text);
                             break;
                         }
@@ -449,7 +450,13 @@ namespace PersAhwal
                 colIDs[7] = "new";
                 addarchives(colIDs);
             }
-
+            try
+            {
+                اليوم_off.Text = تاريخ_الاجراء.Text.Split('-')[1];
+                الشهر_off.Text = تاريخ_الاجراء.Text.Split('-')[0];
+                السنة_off.Text = تاريخ_الاجراء.Text.Split('-')[2];
+            }
+            catch (Exception ex) { }
             fillPreDoc();
             fillDocFileAppInfo();
             fillPrintDocx();

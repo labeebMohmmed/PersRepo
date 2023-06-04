@@ -49,6 +49,7 @@ using DocumentFormat.OpenXml.Vml;
 using ImageFile = WIA.ImageFile;
 using SixLabors.ImageSharp.Memory;
 using SautinSoft.Document;
+using SixLabors.ImageSharp;
 
 namespace PersAhwal
 {
@@ -60,6 +61,7 @@ namespace PersAhwal
         DeviceInfo AvailableScanner = null;
         string relatedPro = "";
         string[] PathImage = new string[100];
+        string[] ImageName = new string[100];
         string rowCount = "";
         int imagecount = 0;
         string DataSource = "";
@@ -133,6 +135,8 @@ namespace PersAhwal
         string getComment = "";
         string getProcedName= "";
         string mainProNo= "";
+        string altColName = "";
+        string altSubColName = "";
         public FormPics( string serverType, string empName, string aVcName,string jobPosition,string dataSource, int index, string filespathIn, string filespathOut, int formType, string[] strData, string[] strSubData, bool archiveState, string[] mandounList, string[] griDate)
         {
             InitializeComponent();
@@ -260,7 +264,7 @@ namespace PersAhwal
                     Combo1.SelectedIndex = index;
 
                 for (int x = 0; x < 100; x++)
-                    PathImage[x] = "";
+                    PathImage[x] = ImageName[x] = "";
                 if (strSubData.Length > 0 && strSubData[0] != "")
                 {
                     Combo2.Visible = true;
@@ -671,14 +675,14 @@ namespace PersAhwal
                 }
                 return;
             }
-            else if (ArchiveState){
-                //return;
-                btnAuth.Visible = loadPic.Visible = reLoadPic.Visible = button2.Visible = true;
-                btnSaveEnd.Location = new System.Drawing.Point(1061, 545);
+            //else if (ArchiveState){
+            //    //return;
+            //    btnAuth.Visible = loadPic.Visible = reLoadPic.Visible = button2.Visible = true;
+            //    btnSaveEnd.Location = new System.Drawing.Point(1061, 545);
                 
-                insertReqRow(DataSource, proName, formNo);
-                MessageBox.Show(" المعاملة " + proName + " غير موجودة، يرجى إخطار مدير النظام لإضافتها");
-            }
+            //    insertReqRow(DataSource, proName, formNo);
+            //    MessageBox.Show(" المعاملة " + proName + " غير موجودة، يرجى إخطار مدير النظام لإضافتها")
+            //}
         }
         
         private int lastValidID(string colName)
@@ -880,6 +884,8 @@ namespace PersAhwal
             foreach (DataRow row in dtbl.Rows)
             {                
                 TableList = row["TableList"].ToString();
+                altColName = row["insert3"].ToString();
+                altSubColName = row["insert4"].ToString();
                 ColNumList = row["insert2"].ToString();
                 getComment = row["getComment"].ToString();
                 columnList = row["columnList"].ToString();
@@ -1517,6 +1523,8 @@ namespace PersAhwal
                     var imgFile = (ImageFile)ScanerItem.Transfer(FormatID.wiaFormatJPEG);
 
                     PathImage[imagecount] = FilespathOut + "ScanImg" + rowCount + imagecount.ToString() + ".jpg";
+                    ImageName[imagecount]= "ScanImg" + rowCount + imagecount.ToString();
+                    Console.WriteLine(imagecount.ToString() + " = "+PathImage[imagecount]);
                     //MessageBox.Show (PathImage[imagecount]);
                     if (File.Exists(PathImage[imagecount]))
                     {
@@ -1571,7 +1579,8 @@ namespace PersAhwal
             if (selectedOption == DialogResult.Yes)
             {
                 pictureBox.Visible = false;
-                PathImage[Convert.ToInt32( pictureBox.Name.Split('_')[1])] = "";
+                ImageName[Convert.ToInt32(pictureBox.Name.Split('_')[1])] = PathImage[Convert.ToInt32( pictureBox.Name.Split('_')[1])] = "";
+                
             }
         }
         private void scanPic(object sender, EventArgs e)
@@ -1607,6 +1616,7 @@ namespace PersAhwal
                     var ScanerItem = device.Items[1]; // select the scanner.
                     var imgFile = (ImageFile)ScanerItem.Transfer(FormatID.wiaFormatJPEG);
                     PathImage[imagecount] = FilespathOut + btnName + "_" + rowCount + imagecount.ToString() + ".jpg";
+                    ImageName[imagecount] = btnName + "_" + rowCount + imagecount.ToString();
                     
                     if (File.Exists(PathImage[imagecount]))
                     {
@@ -1667,7 +1677,7 @@ namespace PersAhwal
             }
             loadPic.Enabled = btnSaveEnd.Visible = btnAuth.Enabled = false;
             pictureBox1.Image = PersAhwal.Properties.Resources.noImage;
-            PathImage[picIndex] = "";            
+            PathImage[picIndex] = ImageName[picIndex] = "";            
         }
         
         private void uploadFile(object sender, EventArgs e)
@@ -1701,6 +1711,7 @@ namespace PersAhwal
                 //fileName = fileName.Replace(extn, btnName) + extn; ;
                 PathImage[imagecount] = FilespathOut + btnName + "_" + rowCount + imagecount.ToString();
                 PathImage[imagecount] = fileName;
+                ImageName[imagecount] = button.Name;
                 drawTempPics(PathImage[imagecount]);
                 imagecount++;
                 if (reqFile == "")
@@ -2309,7 +2320,7 @@ namespace PersAhwal
 
 
         bool printOut = true;
-        private void CreatePic(string[] location)
+        private void CreatePic(string[] location,string[] name)
         {
             printOut = true;
             if (ArchMandoubID != "")
@@ -2327,7 +2338,7 @@ namespace PersAhwal
                             string extn1 = fileinfo1.Extension;
                             string DocName1 = fileinfo1.Name;
 
-                            insertDocMand(ArchMandoubID, GregorianDate, EmpName, DataSource, extn1, DocName1, "data2", buffer1);
+                            insertDocMand(ArchMandoubID, GregorianDate, EmpName, DataSource, extn1, name[x], "data2", buffer1);
                             //Console.WriteLine(docid);
                         }
                     }
@@ -2355,7 +2366,7 @@ namespace PersAhwal
                             string extn1 = fileinfo1.Extension;
                             string DocName1 = fileinfo1.Name;
                             
-                            insertDoc("", docid.ToString(), GregorianDate, EmpName, DataSource, extn1, DocName1, AuthNoPart1, "data1", buffer1);
+                            insertDoc("", docid.ToString(), GregorianDate, EmpName, DataSource, extn1, name[x], AuthNoPart1, "data1", buffer1);
                             //Console.WriteLine(docid);
                         }
                     }
@@ -2382,7 +2393,7 @@ namespace PersAhwal
                             var fileinfo1 = new FileInfo(location[x]);
                             string extn1 = fileinfo1.Extension;
                             string DocName1 = fileinfo1.Name;
-                            insertDoc("",FileIDNo, GregorianDate, EmpName, DataSource, extn1, DocName1, docIDNumber, "data1", buffer1);
+                            insertDoc("",FileIDNo, GregorianDate, EmpName, DataSource, extn1, name[x], docIDNumber, "data1", buffer1);
                             //Console.WriteLine(docIDNumber);
                         }
                     }
@@ -2414,7 +2425,7 @@ namespace PersAhwal
                             var fileinfo1 = new FileInfo(location[x]);
                             string extn1 = fileinfo1.Extension;
                             string DocName1 = fileinfo1.Name;
-                            insertDoc(relatedRefNo,getProcedName, FileIDNo, GregorianDate, EmpName, DataSource, extn1, DocName1, docIDNumber, "data2", buffer1);
+                            insertDoc(relatedRefNo,getProcedName, FileIDNo, GregorianDate, EmpName, DataSource, extn1, name[x], docIDNumber, "data2", buffer1);
                         }
                     }
                 }
@@ -2458,7 +2469,7 @@ namespace PersAhwal
                             var fileinfo1 = new FileInfo(location[x]);
                             string extn1 = fileinfo1.Extension;
                             string DocName1 = fileinfo1.Name;
-                            insertDoc(relatedRefNo,getProcedName, FileIDNo, GregorianDate, EmpName, DataSource, extn1, DocName1, docIDNumber, "data2", buffer1);
+                            insertDoc(relatedRefNo,getProcedName, FileIDNo, GregorianDate, EmpName, DataSource, extn1, name[x], docIDNumber, "data2", buffer1);
                         }
                     }
                 }
@@ -2565,7 +2576,7 @@ namespace PersAhwal
                 else
                         drawBoxes("المكاتبة النهائية ", true, "");
                 if (noForm == "15" || noForm == "17")
-                    drawBoxes("الإيصال المالي", true, "");
+                    drawBoxes("الإيصال المالي (أخرى)", true, "");
                 drawBoxes("أرشفة مستندات أخرى", true, "");
             }
             else if (name == "" && data3check)
@@ -2976,7 +2987,7 @@ namespace PersAhwal
         {
             //tnSaveEnd.Enabled = false;
             string date = DateTime.Now.Day.ToString() + "-" + DateTime.Now.Month.ToString() + "-" + DateTime.Now.Year.ToString();
-            CreatePic(PathImage);
+            CreatePic(PathImage, ImageName);
             if (!printOut)return;
             if (ArchiveState)
             {
@@ -3254,7 +3265,11 @@ namespace PersAhwal
             data[0] = noForm;
             fileComboBoxSubContext(Combo2, DataSource, "altColName", "altSubColName");
             if (ArchiveState) DocIDGenerator(FormType);
-            
+            if (FormType == 10)
+                autoCompleteTextBox(Combo2, DataSource, "نوع_الإجراء", "TableCollection");
+            else if (FormType == 12)
+                autoCompleteTextBox(Combo2, DataSource, "إجراء_التوكيل", "TableAuth");
+
             //string formNo = Combo1.Text.Trim();
             //data[1] = Combo2.Items[x].ToString().Trim() + "-" + Combo1.SelectedIndex.ToString();
 
@@ -3400,6 +3415,7 @@ namespace PersAhwal
             string query = "SELECT ID, proForm1,توضيح_المعاملة,Data1, Extension1,المعاملات_المرتبطة from TableProcReq where المعاملة=N'" + documenNo + "'";
             reqFile = "";
             Console.WriteLine(query);
+            //MessageBox.Show(query);
             SqlConnection Con = new SqlConnection(DataSource);
             SqlCommand sqlCmd1 = new SqlCommand(query, Con);
 
@@ -3410,6 +3426,7 @@ namespace PersAhwal
             if (reader.Read())
             {
                 string str = reader["proForm1"].ToString();
+                //MessageBox.Show(str);
                 توضيح_المعاملة.Text = reader["توضيح_المعاملة"].ToString();
                 relatedPro = reader["المعاملات_المرتبطة"].ToString();
                 توضيح_المعاملة.Visible = true;
@@ -3643,11 +3660,27 @@ namespace PersAhwal
             Word.Document oBDoc = oBMicroWord.Documents.Open(objCurrentCopy, oBMiss);
             oBMicroWord.Selection.Find.ClearFormatting();
             oBMicroWord.Selection.Find.Replacement.ClearFormatting();           
+            
             object ParaAuthIDNo = "MarkAuthIDNo";
             Word.Range BookAuthIDNo = oBDoc.Bookmarks.get_Item(ref ParaAuthIDNo).Range;
             BookAuthIDNo.Text = AuthID;
             object rangeAuthIDNo = BookAuthIDNo;
             oBDoc.Bookmarks.Add("AuthAuthIDNo", ref rangeAuthIDNo);
+
+            string proName = Combo1.Text + " بصيغة عامة";
+            if(Combo2.Text != "")
+                proName = Combo1.Text + " - " + Combo2.Text;
+
+            try
+            {
+                object ParaProType = "نوع_الإجراء";
+                Word.Range BookProType = oBDoc.Bookmarks.get_Item(ref ParaProType).Range;
+                BookProType.Text = proName;
+                object rangeProType = BookProType;
+                oBDoc.Bookmarks.Add("نوع_الإجراء", ref rangeProType);
+            }
+            catch (Exception ex) { }
+            
             oBDoc.SaveAs2(DocxOutFile);
             oBDoc.Close(false, oBMiss);
             oBMicroWord.Quit(false, false);
@@ -3695,6 +3728,7 @@ namespace PersAhwal
                     var imgFile = (ImageFile)ScanerItem.Transfer(FormatID.wiaFormatJPEG);
 
                     PathImage[imagecount-1] = PrimariFiles + "ScanImg" + rowCount + (imagecount-1).ToString() + ".jpg";
+                    ImageName[imagecount-1] = "ScanImg" + rowCount + (imagecount-1).ToString();
 
 
                     if (File.Exists(PathImage[imagecount-1]))
@@ -3737,9 +3771,9 @@ namespace PersAhwal
                 {
                     //MessageBox.Show(button.Name);
                     reqFile = "";
-                    OpenFile(Combo1.Text, false);
+                    OpenFile(Combo1.Text + "-" + Combo2.Text, false); 
                     if (reqFile == "")
-                        OpenFile(Combo1.Text+"-"+ Combo2.Text, false);
+                        OpenFile(Combo1.Text, false);
 
                     string wordOutFile = FilespathOut + Combo1.Text.Trim() + DateTime.Now.ToString("ssmm") + ".docx";
                     string date = DateTime.Now.Day.ToString() + "-" + DateTime.Now.Month.ToString() + "-" + DateTime.Now.Year.ToString();
@@ -3765,7 +3799,12 @@ namespace PersAhwal
             {
                 //MessageBox.Show("noForm= " + noForm + "_" + Combo2.SelectedIndex.ToString());
                 loadPreReq(noForm, Combo1.Text + "-" + Combo2.Text, ArchiveState);
+                reqFile = "";
+                OpenFile(Combo1.Text + "-" + Combo2.Text, false); 
+                if (reqFile == "")
+                    OpenFile(Combo1.Text, false);
             }
+
         }
        
 
@@ -4045,23 +4084,40 @@ namespace PersAhwal
                 index = SpecificDigit(noForm, 3, 3);
             
             getColList(noForm, ArchiveState, index);
-            if (FormType == 12)
-                getComboText(docIDNumber, comboCol[0], comboCol[1]);
-            else
-            {
-                Combo1.Text = comboCol[0];
-
-                Combo2.Text = comboCol[1];
+            if (noForm == "10" || noForm == "12")
+                getComboText(docIDNumber);
+            else if (noForm == "15"){
+                Combo1.Text = "وثيقة زواج";
+                Combo2.Text = "";
             }
+            else if (noForm == "17"){
+                Combo2.Text = "";
+                Combo1.Text = "وثيقة طلاق";
+            }
+
+
+            //if (FormType == 12)
+            //    getComboText(docIDNumber, comboCol[0], comboCol[1]);
+            //else
+            //{
+            //    Combo1.Text = comboCol[0];
+
+            //    Combo2.Text = comboCol[1];
+            //}
+            //MessageBox.Show(comboCol[0] +" - "+ comboCol[1]);
             string formName = Combo1.Text+"-"+ Combo2.Text;
-            if (Combo2.Text == "")
-                formName = Combo1.Text;
-            
+            //if (Combo2.Text == "")
+            //    formName = Combo1.Text;
+
+            //drawBoxesTitle("المستندات المطلوبة للإجراء", 60);
+            //drawBoxes(formName, false, reqFile);
+
             getTableList(noForm);
             string wordInFile = Combo1.Text.Trim() + "-" + Combo2.Text;
+            //MessageBox.Show(wordInFile);
             if (Combo1.Text != "")
             {
-                drawBoxesTitle("استمارة الطلب", 80);
+                drawBoxesTitle("استمارة الطلب الأولية", 80);
                 drawBoxes(formName, false, wordInFile);
             }
             getProcedName = checkBasicInfo(docIDNumber);
@@ -4086,7 +4142,7 @@ namespace PersAhwal
                 label5.Location = new System.Drawing.Point(1141, 288);
                 تاريخ_الميلاد.Text = getProDate(txtIDNo.Text, getTableList(noForm));
                 if (تاريخ_الميلاد.Text == "")
-                    تاريخ_الميلاد.Text = "عام-يوم-شهر";
+                    تاريخ_الميلاد.Text = "عام-شهر-يوم";
             }
             else
                 تاريخ_الميلاد.Visible = label5.Visible = false;
@@ -4145,27 +4201,45 @@ namespace PersAhwal
             }
             return "-1";
         }
-        
-        private string getComboText(string docIDNum, string col1, string col2)
+
+        private string getComboText(string docIDNum)
         {
-            string query = "SELECT " + col1 + "," + col2 + " FROM " + TableList + " WHERE " + allUpdateNamesList[2] + "=N'" + docIDNum + "'";
+            string query = "SELECT " + altColName + "," + altSubColName + " FROM " + TableList + " WHERE " + allUpdateNamesList[2] + "=N'" + docIDNum + "'";
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            Console.WriteLine(query);
             //MessageBox.Show(query);
+
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
             sqlDa.Fill(dtbl);
             sqlCon.Close();
+            string fileN = "";
             foreach (DataRow row in dtbl.Rows)
             {
-                Combo1.Text = row[col1].ToString();
-                //MessageBox.Show(row[col1].ToString());
-                Combo2.Text = row[col2].ToString();
-                //MessageBox.Show(row[col2].ToString());
+
+                Combo1.Text = row[altColName].ToString();
+                //MessageBox.Show(row[altColName].ToString());
+                Combo2.Text = row[altSubColName].ToString();
+                //MessageBox.Show(row[altSubColName].ToString());
+                reqFile = "";
+                comboCol[0] = Combo1.Text;
+                comboCol[1] = Combo2.Text;
+                //string formName = Combo1.Text + "-" + Combo2.Text;
+                //fileN = OpenFile(formName, false);
+                //MessageBox.Show(formName + "  "+ fileN);
+                //if (reqFile == "")
+                //{
+                //    formName = Combo1.Text;
+                //    fileN = OpenFile(formName, false);
+                //    MessageBox.Show(formName + "  " + fileN);
+                //}
+
+
             }
-            return TableList;
+            return fileN;
         }
 
         private void docId_KeyPress(object sender, KeyPressEventArgs e)
@@ -4633,12 +4707,12 @@ namespace PersAhwal
         {
             if (تاريخ_الميلاد.Text.Length  == 10)
             {
-                int month = Convert.ToInt32(SpecificDigit(تاريخ_الميلاد.Text, 1, 2));
+                int month = Convert.ToInt32(SpecificDigit(تاريخ_الميلاد.Text, 4, 5));
                 if (month > 12)
                 {
                     MessageBox.Show("الشهر يحب أن يكون أقل من 12");
                     //تاريخ_الميلاد.Text = "";
-                    تاريخ_الميلاد.Text = SpecificDigit(تاريخ_الميلاد.Text, 3, 10);
+                    تاريخ_الميلاد.Text = SpecificDigit(تاريخ_الميلاد.Text, 7, 10);
                     return;
                 }
             }
@@ -4666,10 +4740,48 @@ namespace PersAhwal
             if (FormType == 10 ) {
                 fileComboBox(Combo2, DataSource, Combo1.Text.Replace(" ","_"), "TableListCombo");
             }
-            
-            
+            if (FormType == 10)
+                autoCompleteTextBox(Combo2, DataSource, "نوع_الإجراء", "TableCollection");
+            else if (FormType == 12)
+                autoCompleteTextBox(Combo2, DataSource, "إجراء_التوكيل", "TableAuth");
+
         }
 
+        private void autoCompleteTextBox(ComboBox textbox, string source, string comlumnName, string tableName)
+        {
+
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                saConn.Open();
+
+                string query = "select " + comlumnName + " from " + tableName;
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.ExecuteNonQuery();
+                DataTable Textboxtable = new DataTable();
+                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                dataAdapter.Fill(Textboxtable);
+                AutoCompleteStringCollection autoComplete = new AutoCompleteStringCollection();
+                bool newSrt = true;
+                textbox.AutoCompleteCustomSource.Clear();
+
+                foreach (DataRow dataRow in Textboxtable.Rows)
+                {
+                    if (!string.IsNullOrEmpty(dataRow[comlumnName].ToString()))
+                    {
+                        for (int x = 0; x < Textboxtable.Rows.Count; x++)
+                            if (dataRow[comlumnName].ToString().Equals(Textboxtable.Rows[x]))
+                                newSrt = false;
+
+                        if (newSrt)
+                            autoComplete.Add(dataRow[comlumnName].ToString());
+                    }
+                }
+                textbox.AutoCompleteMode = AutoCompleteMode.Suggest;
+                textbox.AutoCompleteSource = AutoCompleteSource.CustomSource;
+                textbox.AutoCompleteCustomSource = autoComplete;
+                saConn.Close();
+            }
+        }
         public static bool IsRtl(string input)
         {
             return Regex.IsMatch(input, @"\p{IsArabic}");
@@ -4691,6 +4803,11 @@ namespace PersAhwal
                 loadPreReq(noForm, Combo1.Text + "-" + Combo2.Text, ArchiveState);
             }
             if(Combo2.Enabled) reqFile = "";
+            reqFile = "";
+            OpenFile(Combo1.Text, false);
+            if (reqFile == "")
+                OpenFile(Combo1.Text + "-" + Combo2.Text, false);
+
             //MessageBox.Show("noForm= " +noForm +"_"+index.ToString());
             //1if (noForm != "" && Combo2.Visible)
             //{
@@ -4736,7 +4853,7 @@ namespace PersAhwal
 
         private void تاريخ_الميلاد_Click(object sender, EventArgs e)
         {
-            if (تاريخ_الميلاد.Text == "عام-يوم-شهر")
+            if (تاريخ_الميلاد.Text == "عام-شهر-يوم")
                 تاريخ_الميلاد.Text = "";
         }
 
@@ -4760,10 +4877,14 @@ namespace PersAhwal
 
                 data[0] = noForm;
 
-                //Combo2.Items.Clear();
                 fileComboBoxSub(Combo2, DataSource, "altColName", "altSubColName");
                 if (ArchiveState) DocIDGenerator(FormType);
                 loadPreReq(noForm, Combo1.Text, ArchiveState);
+
+                if (FormType == 10)
+                    autoCompleteTextBox(Combo2, DataSource, "نوع_الإجراء", "TableCollection");
+                else if (FormType == 12)
+                    autoCompleteTextBox(Combo2, DataSource, "إجراء_التوكيل", "TableAuth");
 
                 //reqFile = "";
                 //string[] data = new string[2];

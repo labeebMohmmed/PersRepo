@@ -81,6 +81,35 @@ namespace PersAhwal
             updateDocIDs(891);
         }
 
+        private void diplomats(ComboBox combbox, string source)
+        {
+            combbox.Items.Clear();
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                saConn.Open();
+
+                string query = "select distinct EmployeeName from TableUser where EmployeeName is not null and الدبلوماسيون = N'yes' and Aproved like N'%أكده%' order by EmployeeName asc";
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.CommandType = CommandType.Text;
+
+                Console.WriteLine(query);
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    DataTable table = new DataTable();
+                    SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                    dataAdapter.Fill(table);
+
+                    foreach (DataRow dataRow in table.Rows)
+                    {
+                        combbox.Items.Add(dataRow["EmployeeName"].ToString());
+                    }
+                }
+                catch (Exception ex) { }
+                saConn.Close();
+            }
+        }
+
         private string[] getColList(string table)
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
@@ -678,9 +707,7 @@ namespace PersAhwal
                 fileComboTask(DataSource, اسم_الموظف.Text);
                 اسم_المشرف_المناوب.Visible = true;
                 btnChangeEmp.Visible = false;
-
-                fileVCComboBox(المشرف_المناوب, DataSource, "ArabicAttendVC", "TableListCombo");
-                
+                diplomats(المشرف_المناوب, DataSource);                
                 المشرف_المناوب.Text = اسم_الموظف.Text;                                
                 المشرف_المناوب.SelectedIndex = AttendVC;
                 
@@ -1995,9 +2022,10 @@ namespace PersAhwal
             button2.Visible = true;
             button2.Enabled= true;
             string currentDate = dateTimeTo.Text.Split(' ')[0].Replace("/", "-");
-
+            currentDate = currentDate.Split('-')[1]+"-"+currentDate.Split('-')[0]+"-"+currentDate.Split('-')[2];
 
             string query = "select * from TableTasks where تاريخ_التكليف='" + currentDate + "'";
+            Console.WriteLine(query);
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();

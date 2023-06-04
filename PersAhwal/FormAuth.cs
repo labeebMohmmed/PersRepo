@@ -180,6 +180,14 @@ namespace PersAhwal
         int starTextIndex = 0;
         int starRightIndex = 0;
         int starRightIndexStar = 0;
+        string appName = "";
+        string sex = "";
+        string docType = "";
+        string docNo = "";
+        string docIsuue = "";
+        string appJob = "";
+        string appBirth = "";
+
         public FormAuth(int allowedTimes, int atvc, int rowid, string AuthNo, string datasource, string filespathIn, string filespathOut, string empName, string jobposition, string greDate, string hijriDate, bool testItems)
         {
             InitializeComponent();
@@ -188,7 +196,7 @@ namespace PersAhwal
             test = testItems;
             Atvc = atvc;
             AllowedTimes = allowedTimes;
-            MessageBox.Show(Atvc.ToString());
+            //MessageBox.Show(Atvc.ToString());
             DataSource = datasource;
             fillSamplesCodes(DataSource);
             EmpName = empName;
@@ -1569,7 +1577,27 @@ namespace PersAhwal
             if (gridFill) return;
             TextBox textBox = (TextBox)sender;
             string TextID = textBox.Name.Split('_')[2].Replace(".", "");
-            string[] text = getID(textBox);
+            int id = Convert.ToInt32(TextID);
+            string[] text = new string[6];
+            if (textBox.Text == "")
+            {
+                text[0] = docNo.Split('_')[id];
+                text[1] = docType.Split('_')[id];
+                if (text[1] == "")
+                    text[1] = "جواز سفر";
+                text[2] = docIsuue.Split('_')[id];
+                text[3] = appJob.Split('_')[id];
+                text[4] = appBirth.Split('_')[id];
+                text[5] = sex.Split('_')[id];
+                if (text[5] == "")
+                    text[5] = "ذكر";
+
+                // fillFirstInfo("", text[5], text[1], text[0], text[2], اللغة.Text, text[3], text[4], TextID);
+
+            }
+            else {
+                text = getID(textBox);
+            }
             fillFirstInfo(Panelapp, "", text[5], text[1], text[0], text[2], "العربية", text[3], text[4], TextID);
         }
 
@@ -1588,15 +1616,7 @@ namespace PersAhwal
                     control.Text = sex;
                     if (control.Text == "ذكر")
                         ((CheckBox)control).Checked = true;
-                    else ((CheckBox)control).Checked = false;
-                    if (language == "العربية")
-                    {
-                        control.Visible = true;
-                    }
-                    else
-                    {
-                        control.Visible = false;
-                    }
+                    else ((CheckBox)control).Checked = false;                    
                 }
 
                 if (control.Name == "جنس_الموكَّل" + ID + ".")
@@ -1635,6 +1655,50 @@ namespace PersAhwal
         public string[] getID(TextBox text)
         {
             string[] returnedText = new string[6] { "P0", "جواز سفر", "", "", "", "ذكر" };
+
+
+            string query = "SELECT * FROM TableGenNames where الاسم like N'" + text.Text + "%'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            foreach (DataRow row in dtbl.Rows)
+            {
+                returnedText[0] = row["رقم_الهوية"].ToString();
+                returnedText[1] = row["نوع_الهوية"].ToString();
+                returnedText[2] = row["مكان_الإصدار"].ToString();
+                returnedText[3] = row["المهنة"].ToString();
+                returnedText[4] = row["تاريخ_الميلاد"].ToString();
+                returnedText[5] = row["النوع"].ToString();
+            }
+            return returnedText;
+        }
+        public string[] getID(TextBox text, int textID)
+        {
+            string[] returnedText = new string[6];
+
+            try
+            {
+                returnedText[0] = docNo.Split('_')[textID];
+                returnedText[1] = docType.Split('_')[textID];
+                if (returnedText[1] == "")
+                    returnedText[1] = "جواز سفر";
+                returnedText[2] = docIsuue.Split('_')[textID];
+                returnedText[3] = appJob.Split('_')[textID];
+                returnedText[4] = appBirth.Split('_')[textID];
+                returnedText[5] = sex.Split('_')[textID];
+                if (returnedText[5] == "")
+                    returnedText[5] = "ذكر";
+            }
+            catch (Exception ex)
+            {
+                returnedText = new string[6] { "P0", "جواز سفر", "", "", "", "ذكر" };
+            }
+
+
             string query = "SELECT * FROM TableGenNames where الاسم like N'" + text.Text + "%'";
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
@@ -2262,9 +2326,20 @@ namespace PersAhwal
             //Panel app
             //
             gridFill = false;
+            infoCapture();
             return;
         }
 
+        private void infoCapture()
+        {
+            appName = مقدم_الطلب.Text;
+            sex = النوع.Text;
+            docType = نوع_الهوية.Text;
+            docNo = رقم_الهوية.Text;
+            docIsuue = مكان_الإصدار.Text;
+            appJob = المهنة.Text;
+            appBirth = تاريخ_الميلاد.Text;
+        }
         private void prepareDocxfile()
         {
 
@@ -4096,21 +4171,7 @@ namespace PersAhwal
 
         private void إجراء_التوكيل_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Pro();
-            //if (نوع_التوكيل.Text == "شهادة ميلاد" && Vitext1.Text != "")
-            //{
-            //    BirthName = Vitext1.Text.Split('_');
-            //    BirthPlace = Vitext2.Text.Split('_');
-            //    BirthDate = Vitext3.Text.Split('_');
-            //    BirthMother = Vitext4.Text.Split('_');
-            //    //MessageBox.Show(Vitext1.Text);
-
-            //    ButtonInfoIndex = Vitext1.Text.Split('_').Length;
-
-            //    //MessageBox.Show(Vitext1.Text +" __ "+LibtnAdd1.Text);
-            //    Vitext1.Text = Vitext2.Text = Vitext3.Text = Vitext4.Text = "";
-
-            //}
+            Pro();            
         }
 
         private void Pro() {
@@ -4119,8 +4180,23 @@ namespace PersAhwal
 
             checkBoxesJob();
             fillInfo(PanelItemsboxes, false);
+            updateProType("TableAuth", نوع_التوكيل, إجراء_التوكيل, "رقم_التوكيل", رقم_التوكيل.Text);
         }
-            private void checkBoxesJob()
+
+        private void updateProType(string table, ComboBox altColName, ComboBox altSubColName, string proName, string proID)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            string query = "update " + table + " set " + altColName.Name + " =N'" + altColName.Text + "', " + altSubColName.Name + " = N'" + altSubColName.Text + "' where " + proName + " = N'" + proID + "'";
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
+        }
+        private void checkBoxesJob()
         {
 
             resetBoxes(true);
@@ -4618,7 +4694,7 @@ namespace PersAhwal
             sqlCmd.CommandType = CommandType.Text;
             var reader = sqlCmd.ExecuteReader();
             Console.WriteLine(query);
-            MessageBox.Show(query);
+            //MessageBox.Show(query);
             if (reader.Read())
             {
                 return Convert.ToInt32(reader["lastid"].ToString());
@@ -5789,9 +5865,13 @@ namespace PersAhwal
                 foreach (DataRow dataRow in Textboxtable.Rows)
                 {
                     string text = dataRow[comlumnName].ToString().Trim();
-                    text = SuffReplacements(text, صفة_مقدم_الطلب_off.SelectedIndex, صفة_الموكل_off.SelectedIndex);
+                    try
+                    {
+                        //text = SuffReplacements(text, صفة_مقدم_الطلب_off.SelectedIndex, صفة_الموكل_off.SelectedIndex);
                     Console.WriteLine("autoCompleteTextBox " + text);
                     autoComplete.Add(text);
+                    }
+                    catch (Exception ex) { }
                 }
                 textbox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
                 textbox.AutoCompleteSource = AutoCompleteSource.CustomSource;

@@ -276,11 +276,11 @@ namespace PersAhwal
                         control.BringToFront();
                     }
                 }
-                persbtn6.Visible = persbtn9.Visible = docCollectCombo.Visible = false;
-                Combtn0.Location = new System.Drawing.Point(427, 402);
-                Combtn1.Location = new System.Drawing.Point(428, 385);
-                Combtn2.Location = new System.Drawing.Point(428, 427);
-                button2.Visible = false;
+                persbtn6.Visible = persbtn9.Visible = docCollectCombo.Visible = persbtn52.Visible = persbtn51.Visible = false;
+                Combtn0.Location = new System.Drawing.Point(428, 388); 
+                Combtn1.Location = new System.Drawing.Point(428, 432);                 
+                Combtn2.Location = new System.Drawing.Point(428, 476);
+                button2.Visible = عدد_الفرص.Visible = false;
                 //label2.Text = "نافذة قسم شؤون الرعايا";
             }
             perbtn1.Visible = false;
@@ -398,8 +398,8 @@ namespace PersAhwal
                     NewFileName = FilespathOut + @"\توقيع" + DateTime.Now.ToString("mmss") + ext;
                     File.WriteAllBytes(NewFileName, Data);
                         Console.WriteLine(NewFileName);
-                    System.Diagnostics.Process.Start(NewFileName);
-                        MessageBox.Show(NewFileName);
+                    //System.Diagnostics.Process.Start(NewFileName);
+                      //  MessageBox.Show(NewFileName);
                     }
                     catch (Exception rx) { return ""; }
                 }
@@ -1508,6 +1508,7 @@ namespace PersAhwal
                             if (row["نوع_المعاملة"].ToString().Contains("مذكرة")) 
                                 continue;
                             RetrievedNameAffadivit[totalrowsAffadivit] = row["مقدم_الطلب"].ToString();
+                            Console.WriteLine(RetrievedNameAffadivit[totalrowsAffadivit]);
                             RetrievedTypeAffadivit[totalrowsAffadivit] = row["نوع_المعاملة"].ToString();
                             arrangeData = row["رقم_المعاملة"].ToString().Split('/');
                             if (arrangeData.Length == 4)
@@ -2442,7 +2443,7 @@ namespace PersAhwal
 
             Microsoft.Office.Interop.Word.Table table1 = oBDoc.Tables[1];
 
-            for (int x = 1; x < rows; x++)
+            for (int x = 1; x <= rows; x++)
             {
                 if (RetrievedNameAffadivit[x-1] != "")
                 {
@@ -2502,13 +2503,14 @@ namespace PersAhwal
                 wordDoc.ExportAsFixedFormat(pdfCopy, Word.WdExportFormat.wdExportFormatPDF);
                 wordDoc.Close();
                 wordApp.Quit();
+
+                System.Diagnostics.Process.Start(pdfCopy);
                 try
                 {
                     File.Delete(wordCopy);
                 }
                 catch (Exception ex) { }
                 //MessageBox.Show(pdfCopy);
-                System.Diagnostics.Process.Start(pdfCopy);
             }
             else
             {
@@ -2562,7 +2564,7 @@ namespace PersAhwal
 
             Microsoft.Office.Interop.Word.Table table1 = oBDoc.Tables[1];
 
-            for (int x = 1; x < rows; x++)
+            for (int x = 1; x <= rows; x++)
             {
                 if (RetrievedNameAuth[x-1] != "")
                 {
@@ -2571,7 +2573,7 @@ namespace PersAhwal
                     
                     table1.Rows[x + 1].Cells[4].Range.Text = (x).ToString();
                     table1.Rows[x + 1].Cells[3].Range.Text = RetrievedNameAuth[x - 1];
-                    table1.Rows[x + 1].Cells[2].Range.Text = RetrievedAuthPers[x - 1];
+                    table1.Rows[x + 1].Cells[2].Range.Text = RetrievedAuthPers[x - 1].Replace("،","");
                     string[] orderNo = RetrievedNoAuth[x - 1].Split('/');
                     table1.Rows[x + 1].Cells[1].Range.Text = RetrievedNoAuth[x - 1]; //orderNo[4] + "/" + orderNo[3] + "/" + orderNo[2] + "/" + orderNo[1] + "/" + orderNo[0];
                 }
@@ -2622,12 +2624,13 @@ namespace PersAhwal
                 wordDoc.ExportAsFixedFormat(pdfCopy, Word.WdExportFormat.wdExportFormatPDF);
                 wordDoc.Close();
                 wordApp.Quit();
+                System.Diagnostics.Process.Start(pdfCopy);
                 try
                 {
                     File.Delete(wordCopy);
                 }
                 catch (Exception ex) { }
-                System.Diagnostics.Process.Start(pdfCopy);
+                
             }
             else {
                 System.Diagnostics.Process.Start(wordCopy);
@@ -7302,7 +7305,7 @@ namespace PersAhwal
                     Himonth = Convert.ToInt32(reader["hijrimonth"].ToString());
                     FileArch = reader["FileArchive"].ToString();
                     AllowedTimes = Convert.ToInt32(reader["allowedEdit"].ToString());
-                    comboBox1.Text = getTimes(AllowedTimes);
+                    عدد_الفرص.Text = getTimes(AllowedTimes);
                     if (daychange)
                     {
                         if (day) Hiday++;
@@ -10079,7 +10082,7 @@ namespace PersAhwal
         }
         private void comboBox1_SelectedIndexChanged_3(object sender, EventArgs e)
         {
-            switch (comboBox1.SelectedIndex) {
+            switch (عدد_الفرص.SelectedIndex) {
                 case 0:
                     AllowedTimes = 1;
                     break;
