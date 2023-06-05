@@ -50,6 +50,8 @@ using ImageFile = WIA.ImageFile;
 using SixLabors.ImageSharp.Memory;
 using SautinSoft.Document;
 using SixLabors.ImageSharp;
+using Rectangle = System.Drawing.Rectangle;
+using Color = System.Drawing.Color;
 
 namespace PersAhwal
 {
@@ -1624,6 +1626,27 @@ namespace PersAhwal
                     }
                     imgFile.SaveFile(PathImage[imagecount]);
                     pictureBox1.ImageLocation = PathImage[imagecount];
+
+
+                    //Bitmap bmp2 = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+                    //pictureBox1.DrawToBitmap(bmp2, pictureBox1.ClientRectangle);
+                    //int rectW = 370, rectH = 307;
+                    //int crpX = 370, crpY = 307;
+                    //Bitmap crpImg = new Bitmap(rectW, rectH);
+
+                    //for (int i = 0; i < rectW; i++)
+                    //{
+                    //    for (int y = 0; y < rectH; y++)
+                    //    {
+                    //        Color pxlclr = bmp2.GetPixel(crpX + i, crpY + y);
+                    //        crpImg.SetPixel(i, y, pxlclr);
+                    //    }
+                    //}
+
+                    //pictureBox2.Image = (Image)crpImg;
+                    //pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
+
+
                     drawTempPics(PathImage[imagecount]);
                     imagecount++;
                     try
@@ -1658,7 +1681,16 @@ namespace PersAhwal
                 MessageBox.Show(ex.Message);
             }
         }
-        
+
+
+        private static Image cropImage(Image img, Rectangle cropArea)
+        {
+            Bitmap bmpImage = new Bitmap(img);
+            Bitmap bmpCrop = bmpImage.Clone(cropArea,
+            bmpImage.PixelFormat);
+            return (Image)(bmpCrop);
+        }
+
         private void removeFile(object sender, EventArgs e)
         {
             dataGridView2.Visible = false;
@@ -3040,6 +3072,7 @@ namespace PersAhwal
                         updatetproFormRow(proID, DataSource, wordInFile);
                         CreateAuth(date.Split('-')[2].Replace("20", "") + SubNo + rowCount + Environment.NewLine + date, wordInFile, wordOutFile);
                     }
+                    
                 }
 
             }
@@ -3685,7 +3718,33 @@ namespace PersAhwal
             oBDoc.Close(false, oBMiss);
             oBMicroWord.Quit(false, false);
             System.Runtime.InteropServices.Marshal.ReleaseComObject(oBMicroWord);
-            System.Diagnostics.Process.Start(DocxOutFile);            
+
+            var selectedOption = MessageBox.Show("تضمين الملفات المؤرشفة بالاستمارة؟", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (selectedOption == DialogResult.Yes)
+            {
+                using (DocX document = DocX.Load(DocxOutFile))
+                {
+                    Paragraph p1 = document.InsertParagraph();
+                    
+                    // Append content to the Paragraph
+                    for (int x = 0; x < imagecount; x++)
+                    {
+                        if (PathImage[x] == "") continue;
+                        try
+                        {
+                            Console.WriteLine (x.ToString() + " - "+PathImage[x]);
+                            var image = document.AddImage(PathImage[x]);
+
+                            // Set Picture Height and Width.
+                            var picture = image.CreatePicture(600, 500);//ratio 0.615
+                            
+                            p1.AppendPicture(picture);
+                        }catch (Exception ex) {  }
+                    }
+                    document.Save();
+                }
+            }
+            System.Diagnostics.Process.Start(DocxOutFile);
         }
         
 

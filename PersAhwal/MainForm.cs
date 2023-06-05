@@ -2478,34 +2478,33 @@ namespace PersAhwal
             if (final)
             {
                 Word._Application wordApp = new Word.Application();
-                wordApp.Visible = true;
+                //wordApp.Visible = true;
                 Word._Document wordDoc = wordApp.Documents.Open(wordCopy, ReadOnly: false, Visible: true);
-
+                try { 
                 int count = wordDoc.Bookmarks.Count;
                 for (int i = 1; i < count + 1; i++)
                 {
-                    //MessageBox.Show(wordDoc.Bookmarks[i].Name.ToString());
-                    try
-                    {
-                        if (wordDoc.Bookmarks[i].Name.ToString() == items[0])
-                        {
-                            object oRange = wordDoc.Bookmarks[i].Range;
-                            object saveWithDocument = true;
-                            object missing = Type.Missing;
-                            wordDoc.InlineShapes.AddPicture(pictureName, ref missing, ref saveWithDocument, ref oRange);
-                            break;
-                        }
-                    }
-                    catch (Exception ex) { }
+                        //MessageBox.Show(wordDoc.Bookmarks[i].Name.ToString());
+                        
+                            if (wordDoc.Bookmarks[i].Name.ToString() == items[0])
+                            {
+                                object oRange = wordDoc.Bookmarks[i].Range;
+                                object saveWithDocument = true;
+                                object missing = Type.Missing;
+                                wordDoc.InlineShapes.AddPicture(pictureName, ref missing, ref saveWithDocument, ref oRange);
+                                break;
+                            }
+                        
                 }
 
                 wordDoc.Save();
                 wordDoc.ExportAsFixedFormat(pdfCopy, Word.WdExportFormat.wdExportFormatPDF);
                 wordDoc.Close();
                 wordApp.Quit();
-
                 System.Diagnostics.Process.Start(pdfCopy);
-                try
+                }
+                catch (Exception ex) { }
+            try
                 {
                     File.Delete(wordCopy);
                 }
@@ -2600,30 +2599,35 @@ namespace PersAhwal
             oBMicroWord.Quit(false, false);
 
             Word._Application wordApp = new Word.Application();
-            wordApp.Visible = true;
+            //wordApp.Visible = true;
             Word._Document wordDoc = wordApp.Documents.Open(wordCopy, ReadOnly: false, Visible: true);
+            
             if (final)
             {
-                int count = wordDoc.Bookmarks.Count;
-                for (int i = 1; i < count + 1; i++)
+                try
                 {
-                    try
+                    int count = wordDoc.Bookmarks.Count;
+                    for (int i = 1; i < count + 1; i++)
                     {
-                        if (wordDoc.Bookmarks[i].Name.ToString() == items[0])
+                        try
                         {
-                            object oRange = wordDoc.Bookmarks[i].Range;
-                            object saveWithDocument = true;
-                            object missing = Type.Missing;
-                            wordDoc.InlineShapes.AddPicture(pictureName, ref missing, ref saveWithDocument, ref oRange);
-                            break;
+                            if (wordDoc.Bookmarks[i].Name.ToString() == items[0])
+                            {
+                                object oRange = wordDoc.Bookmarks[i].Range;
+                                object saveWithDocument = true;
+                                object missing = Type.Missing;
+                                wordDoc.InlineShapes.AddPicture(pictureName, ref missing, ref saveWithDocument, ref oRange);
+                                break;
+                            }
                         }
+                        catch (Exception ex) { }
                     }
-                    catch (Exception ex) { }
+                    wordDoc.Save();
+                    wordDoc.ExportAsFixedFormat(pdfCopy, Word.WdExportFormat.wdExportFormatPDF);
+                    wordDoc.Close();
+                    wordApp.Quit();
                 }
-                wordDoc.Save();
-                wordDoc.ExportAsFixedFormat(pdfCopy, Word.WdExportFormat.wdExportFormatPDF);
-                wordDoc.Close();
-                wordApp.Quit();
+                catch (Exception ex) { }
                 System.Diagnostics.Process.Start(pdfCopy);
                 try
                 {
