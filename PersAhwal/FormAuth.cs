@@ -475,11 +475,11 @@ namespace PersAhwal
             if (Jobposition.Contains("قنصل"))
             {
                 btnDelete.Visible = true;
-                نوع_التوكيل.Enabled = إجراء_التوكيل.Enabled = true;
+                نوع_التوكيل.Enabled = إجراء_التوكيل.Enabled = طريقة_الطلب.Enabled = اسم_المندوب.Enabled = true;
                 //allowedEdit.Enabled = true;
             }
             else {
-                نوع_التوكيل.Enabled = إجراء_التوكيل.Enabled = false;
+                نوع_التوكيل.Enabled = إجراء_التوكيل.Enabled = طريقة_الطلب.Enabled = اسم_المندوب.Enabled = false;
             }
             اسم_المندوب.Text = "";
         }
@@ -4609,7 +4609,7 @@ namespace PersAhwal
             التاريخ_الهجري.Text = HijriDate;
 
             //MessageBox.Show(قائمة_الحقوق.Text);
-
+            
             fillDocFileInfo(panelapplicationInfo);
             fillDocFileAppInfo(Panelapp);
             fillDocFileInfo(panelAuthRights);
@@ -5251,18 +5251,11 @@ namespace PersAhwal
 
         private void وجهة_التوكيل_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (وجهة_التوكيل.SelectedIndex == 0)
-            {
-                if (إجراء_التوكيل.Text.Contains("تنازل"))
-                    مدة_الاعتماد.Text = "لا يعتمد هذا الاقرار ما لم يتم توثيقه خلال عام من تاريخ إصدارة من وزارة خارجية جمهورية السودان";
-                else
-                    مدة_الاعتماد.Text = "لا يعتمد هذا التوكيل ما لم يتم توثيقه خلال عام من تاريخ إصدارة من وزارة خارجية جمهورية السودان";
-            }
-            else مدة_الاعتماد.Text = "";
+            footers();
         }
         private void footers()
         {
-            if (وجهة_التوكيل.SelectedIndex == 0)
+            if (وجهة_التوكيل.Text == "الخرطوم")
             {
                 if (إجراء_التوكيل.Text.Contains("إقرار"))
                 {
@@ -5882,7 +5875,9 @@ namespace PersAhwal
 
         private void طريقة_الطلب_TextChanged(object sender, EventArgs e)
         {
-
+            if (طريقة_الطلب.Text == "حضور مباشرة إلى القنصلية")
+                طريقة_الطلب.Checked = الشاهد_الأول.Enabled = هوية_الأول.Enabled = true;
+            else طريقة_الطلب.Checked = الشاهد_الأول.Enabled = هوية_الأول.Enabled = false;
         }
 
         private void txtAddRight_TextChanged(object sender, EventArgs e)
@@ -6144,7 +6139,7 @@ namespace PersAhwal
         private void اسم_المندوب_TextChanged(object sender, EventArgs e)
         {
             
-            if (اسم_المندوب.Text != "" && اسم_المندوب.Text != "حضور مباشرة إلى القنصلية" && اسم_المندوب.Text != "إختر اسم المندوب" && طريقة_الطلب.Checked)
+            if (اسم_المندوب.Text != "" && اسم_المندوب.Text != "حضور مباشرة إلى القنصلية" && اسم_المندوب.Text != "إختر اسم المندوب")
             {
                 //MessageBox.Show("change");
 
@@ -6257,7 +6252,15 @@ namespace PersAhwal
 
         private void اسم_المندوب_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            if (اسم_المندوب.SelectedIndex > 1 || اسم_المندوب.Text != "حضور مباشرة إلى القنصلية") 
+            {
+                الشاهد_الأول.Enabled = هوية_الأول.Enabled = false;
+                الشاهد_الأول.Text = اسم_المندوب.Text.Split('-')[0].Trim();
+                هوية_الأول.Text = getMandoubPass(DataSource, اسم_المندوب.Text.Split('-')[0].Trim());
+            }
+            else
+                الشاهد_الأول.Enabled = هوية_الأول.Enabled = true;
+        
         }
 
         private void توكيل_الغير_CheckedChanged(object sender, EventArgs e)

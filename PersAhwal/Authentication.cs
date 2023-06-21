@@ -435,22 +435,27 @@ namespace PersAhwal
                 return;
             }
             int iD = 1;
+            string PaperiD = "";
             if (حفظ_وإنهاء_الارشفة.Text == "حفظ وإنهاء الارشفة")
             {
                 // Console.WriteLine("حفظ وتأكيد");
                 رقم_معاملة_القسم = DocIDGenerator();
+                PaperiD = رقم_معاملة_القسم.Split('/')[4];
                 iD = SubAuthData(1, نوع_المكاتبة.Text, اسم_موقع_المكاتبة.Text, جنسية_الدبلوماسي.Text, تاريخ_الأرشفة.Text, تاريخ_توقيع_المكاتبة.Text, العدد.Text, مدير_القسم.Text, comment);
-                if (iD != 0) CreatePic(PathImages, iD.ToString(), رقم_معاملة_القسم);
+                if (iD != 0) CreatePic(PathImages, iD.ToString(), رقم_معاملة_القسم);                
+                MessageBox.Show("الرقم المرجعي " + PaperiD); 
+                this.Close();
             }
             else if (حفظ_وإنهاء_الارشفة.Text == "تعديل وإنهاء الارشفة")
             {
                 iD = Messid;
+                PaperiD = رقم_معاملة_القسم.Split('/')[4];
                 SubAuthData(iD, نوع_المكاتبة.Text, اسم_موقع_المكاتبة.Text, جنسية_الدبلوماسي.Text, تاريخ_الأرشفة.Text, تاريخ_توقيع_المكاتبة.Text, العدد.Text, مدير_القسم.Text, comment);
                 CreatePic(PathImages, Messid.ToString(), رقم_معاملة_القسم);
-            }
-            string PaperiD = رقم_معاملة_القسم.Split('/')[4]; ;
-            MessageBox.Show("الرقم المرجعي " + PaperiD);
-            this.Close();
+                MessageBox.Show("الرقم المرجعي " + PaperiD);
+            }            
+            
+            
         }
         private void CreateMessageAuthentication(string gregorianDate, string gijriDate, string ViseConsul) {
 
@@ -571,10 +576,13 @@ namespace PersAhwal
 
         private void اسم_موقع_المكاتبة_TextChanged(object sender, EventArgs e)
         {
-            BindingSource bs = new BindingSource();
-            bs.DataSource = dataGridView1.DataSource;
-            bs.Filter = dataGridView1.Columns["اسم_موقع_المكاتبة"].HeaderText.ToString() + " LIKE '%" + اسم_موقع_المكاتبة.Text + "%'";
-            dataGridView1.DataSource = dataGridView1.DataSource = bs;
+            if (!نوع_المكاتبة_check)
+            {
+                BindingSource bs = new BindingSource();
+                bs.DataSource = dataGridView1.DataSource;
+                bs.Filter = dataGridView1.Columns["اسم_موقع_المكاتبة"].HeaderText.ToString() + " LIKE '%" + اسم_موقع_المكاتبة.Text + "%'";
+                dataGridView1.DataSource = dataGridView1.DataSource = bs;
+            }
         }
 
         string lastInput2 = "";
@@ -1195,7 +1203,7 @@ namespace PersAhwal
             {
                 BindingSource bs = new BindingSource();
                 bs.DataSource = dataGridView1.DataSource;
-                bs.Filter = dataGridView1.Columns["نوع_المكاتبة"].HeaderText.ToString() + " LIKE '%" + نوع_المكاتبة.Text + "%'";
+                bs.Filter = dataGridView1.Columns["نوع_المكاتبة"].HeaderText.ToString() + " LIKE '" + نوع_المكاتبة.Text + "'";
                 dataGridView1.DataSource = dataGridView1.DataSource = bs;
                 
             }
@@ -1213,6 +1221,11 @@ namespace PersAhwal
                 System.Diagnostics.Process.Start(pictureBox1.ImageLocation);
             }
             catch (Exception ex) { }
+        }
+
+        private void button17_Click(object sender, EventArgs e)
+        {
+            نوع_المكاتبة_check = false;
         }
     }
 }

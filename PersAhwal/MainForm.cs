@@ -213,7 +213,6 @@ namespace PersAhwal
             UserJobposition = jobposition;            
             sqlCon = new SqlConnection(DataSource);
             Realwork = realwork;
-            GregorianDate = gregorianDate;
             HijriDate = hijriDate;
             GregorianDate = gregorianDate;
             uploadDocx = true;
@@ -6881,6 +6880,9 @@ namespace PersAhwal
                 else
                 {
                     VersionUpdate(str + ".O");
+                    File.Delete(primeryLink + "fileUpdate.txt");
+                    System.Diagnostics.Process.Start(getAppFolder() + @"\setup.exe");
+                    this.Close();
                 }
                 timer4Update();
             } else {

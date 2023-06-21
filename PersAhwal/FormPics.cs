@@ -2600,7 +2600,7 @@ namespace PersAhwal
                 btnSaveEnd.Visible = panelFinalArch.Visible = false;
                 btnSaveEnd.Location = new System.Drawing.Point(736, 668);
                 drawBoxesTitle("أرشفة المكاتبات النهائية", 20);
-                drawBoxes("استمارة الطلب بعد البصمة", true, "");
+                drawBoxes("استمارة الطلب بعد البصمة (أخرى)", true, "");
                 if(noForm == "15")
                         drawBoxes("وثيقة عقد النكاح", true, "");
                 if(noForm == "17")
@@ -3736,7 +3736,7 @@ namespace PersAhwal
                             var image = document.AddImage(PathImage[x]);
 
                             // Set Picture Height and Width.
-                            var picture = image.CreatePicture(600, 500);//ratio 0.615
+                            var picture = image.CreatePicture(610, 510);//ratio 0.615
                             
                             p1.AppendPicture(picture);
                         }catch (Exception ex) {  }
@@ -4766,7 +4766,10 @@ namespace PersAhwal
         {
             if (تاريخ_الميلاد.Text.Length  == 10)
             {
-                int month = Convert.ToInt32(SpecificDigit(تاريخ_الميلاد.Text, 4, 5));
+                try
+                {
+                    int month = Convert.ToInt32(SpecificDigit(تاريخ_الميلاد.Text, 4, 5));
+                
                 if (month > 12)
                 {
                     MessageBox.Show("الشهر يحب أن يكون أقل من 12");
@@ -4774,6 +4777,8 @@ namespace PersAhwal
                     تاريخ_الميلاد.Text = SpecificDigit(تاريخ_الميلاد.Text, 7, 10);
                     return;
                 }
+                }
+                catch (Exception ex) { return; }
             }
             if (تاريخ_الميلاد.Text.Length == 11)
             {

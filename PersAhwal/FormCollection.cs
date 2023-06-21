@@ -247,10 +247,10 @@ namespace PersAhwal
             if (Jobposition.Contains("قنصل"))
             {
                 btnDelete.Visible = true;
-                نوع_المعاملة.Enabled = نوع_الإجراء.Enabled = true;
+                نوع_المعاملة.Enabled = نوع_الإجراء.Enabled = طريقة_الطلب.Enabled = اسم_المندوب.Enabled = true;
             }
             else {
-                نوع_المعاملة.Enabled = نوع_الإجراء.Enabled = false;
+                نوع_المعاملة.Enabled = نوع_الإجراء.Enabled = طريقة_الطلب.Enabled = اسم_المندوب.Enabled = false;
             }
 
         }
@@ -462,6 +462,15 @@ namespace PersAhwal
                         if (selectedOption == DialogResult.Yes)
                         {
                             عنوان_المكاتبة.Text = "إفادة";                            
+                        }
+                    }
+                    else if (عنوان_المكاتبة.Text == "TO WHOM IT MAY CONCERN")
+                    {
+                        var selectedOption = MessageBox.Show("هل تود تعديل العنوان إلى Certificate (", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                        if (selectedOption == DialogResult.Yes)
+                        {
+                            عنوان_المكاتبة.Text = "Certificate";                            
                         }
                     }
                     break;
@@ -4173,8 +4182,9 @@ namespace PersAhwal
                 text = text.Replace("tS", مكان_الإصدار.Text);
             if (text.Contains("tX"))
                 text = text.Replace("tX", str);
-            if (text.Contains("tT"))
-                text = text.Replace("tT", title.Text);
+            //if (text.Contains("tT"))
+            //    text = text.Replace("tT", title.Text);
+            //    text = text.Replace("tT", title.Text);إفادة
             if (text.Contains("tB"))
                 text = text.Replace("tB", تاريخ_الميلاد.Text);
             if (text.Contains("tD"))
@@ -4785,8 +4795,9 @@ namespace PersAhwal
         private void طريقة_الطلب_TextChanged(object sender, EventArgs e)
         {
             if (طريقة_الطلب.Text == "حضور مباشرة إلى القنصلية")
-                طريقة_الطلب.Checked = true;
-            else طريقة_الطلب.Checked = false;
+                طريقة_الطلب.Checked = الشاهد_الأول.Enabled = هوية_الأول.Enabled = true;
+            else طريقة_الطلب.Checked = الشاهد_الأول.Enabled = هوية_الأول.Enabled = false;
+
         }
 
         private void LibtnAdd1_Click(object sender, EventArgs e)
@@ -5773,7 +5784,7 @@ namespace PersAhwal
 
         private void اسم_المندوب_TextChanged(object sender, EventArgs e)
         {
-            if (اسم_المندوب.Text != "" && اسم_المندوب.Text != "إختر اسم المندوب" && طريقة_الطلب.Checked && اسم_المندوب.Text != "حضور مباشرة إلى القنصلية")
+            if (اسم_المندوب.Text != "" && اسم_المندوب.Text != "إختر اسم المندوب" && اسم_المندوب.Text != "حضور مباشرة إلى القنصلية")
             {
                 //MessageBox.Show("change");
                 الشاهد_الأول.Enabled = هوية_الأول.Enabled = false;
@@ -6015,6 +6026,16 @@ namespace PersAhwal
         private void pictureBox5_MouseEnter(object sender, EventArgs e)
         {
             label6.Text = "قائمة الأغراض (" + txtPurposeListIndex.ToString() + "/" + txtPurIndex.ToString() + ")";
+        }
+
+        private void اسم_المندوب_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (اسم_المندوب.SelectedIndex > 1 || اسم_المندوب.Text == "حضور مباشرة إلى القنصلية")
+            {
+                الشاهد_الأول.Enabled = هوية_الأول.Enabled = false;
+            }
+            else
+                الشاهد_الأول.Enabled = هوية_الأول.Enabled = true;
         }
     }
 }
