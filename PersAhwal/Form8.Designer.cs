@@ -1175,7 +1175,7 @@ namespace PersAhwal
             this.panel_المستندات.Controls.Add(this.btnUploadFroms);
             this.panel_المستندات.Controls.Add(this.button25);
             this.panel_المستندات.Controls.Add(this.button15);
-            this.panel_المستندات.Location = new System.Drawing.Point(10, 50);
+            this.panel_المستندات.Location = new System.Drawing.Point(11, 47);
             this.panel_المستندات.Name = "panel_المستندات";
             this.panel_المستندات.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.panel_المستندات.Size = new System.Drawing.Size(658, 444);
@@ -2170,7 +2170,6 @@ namespace PersAhwal
             this.Controls.Add(this.flowLayoutPanel2);
             this.Controls.Add(this.titleDefault);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.Panel_الرموز);
             this.Controls.Add(this.labID);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.اللغة);
@@ -2202,6 +2201,7 @@ namespace PersAhwal
             this.Controls.Add(this.panel_الحقوق);
             this.Controls.Add(this.panel_نهائي);
             this.Controls.Add(this.panel_شرح);
+            this.Controls.Add(this.Panel_الرموز);
             this.Name = "Form8";
             this.Text = "المساعد النصي";
             this.Load += new System.EventHandler(this.Form8_Load);

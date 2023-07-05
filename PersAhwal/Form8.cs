@@ -1949,6 +1949,13 @@ namespace PersAhwal
         private void otherPro_SelectedIndexChanged(object sender, EventArgs e)
         {
             معاملات_السابق.Visible = معاملات_التالي.Visible = جميع_المعاملات.Visible = false;
+            panel_النص.Visible = false;
+            panel_الحقوق.Visible = false;
+            panel_المستندات.Visible = false;
+            panel_نهائي.Visible = false;
+            dataGridView2.Visible = false;
+            dataGridView4.Visible = false;
+            Panel_الرموز.Visible = false;
             if (otherPro.Text == "النص")
             {
                 panel_النص.Visible = true;
@@ -1958,6 +1965,7 @@ namespace PersAhwal
             }
             else if (otherPro.Text == "قوائم الحقوق")
             {
+                
                 panel_الحقوق.Visible = true;
                 panel_الحقوق.Size = new System.Drawing.Size(667, 478);
                 panel_الحقوق.BringToFront();
@@ -1965,6 +1973,8 @@ namespace PersAhwal
             }
             else if (otherPro.Text == "المستندات المطلوبة للإجراء")
             {
+                
+
                 panel_المستندات.Visible = true;
                 panel_المستندات.Size = new System.Drawing.Size(667, 478);
                 panel_المستندات.BringToFront();

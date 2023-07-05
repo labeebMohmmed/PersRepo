@@ -5876,7 +5876,7 @@ namespace PersAhwal
                 direction_off.Text = "";
             }
             else 
-                direction_off.Text = "- لا يعتمد هذا الإقرار ما لم يتم توثيقه من وزارة خارجية جمهورية السودان";
+                direction_off.Text = "- لا يعتمد هذا الإقرار بجمهورية السودان ما لم يتم توثيقه من وزارة خارجية جمهورية السودان";
             التاريخ_الميلادي.Text = GregorianDate;
             التاريخ_الهجري.Text = HijriDate;
             

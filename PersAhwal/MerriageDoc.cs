@@ -944,12 +944,12 @@ namespace PersAhwal
         {
             if (تاريخ_الميلاد.Text.Length == 10)
             {
-                int month = Convert.ToInt32(SpecificDigit(تاريخ_الميلاد.Text, 1, 2));
+                int month = Convert.ToInt32(SpecificDigit(تاريخ_الميلاد.Text, 4, 5));
                 if (month > 12)
                 {
                     MessageBox.Show("الشهر يحب أن يكون أقل من 12");
                     //VitxtDate1.Text = "";
-                    تاريخ_الميلاد.Text = SpecificDigit(تاريخ_الميلاد.Text, 3, 10);
+                    تاريخ_الميلاد.Text = SpecificDigit(تاريخ_الميلاد.Text, 6, 10);
                     return;
                 }
                 عمر_الزوج_الحرج = getDate( تاريخ_الميلاد);
@@ -1009,12 +1009,12 @@ namespace PersAhwal
         {
             if (ميلاد_الزوجة.Text.Length == 10)
             {
-                int month = Convert.ToInt32(SpecificDigit(ميلاد_الزوجة.Text, 1, 2));
+                int month = Convert.ToInt32(SpecificDigit(ميلاد_الزوجة.Text, 4, 5));
                 if (month > 12)
                 {
                     MessageBox.Show("الشهر يحب أن يكون أقل من 12");
                     //VitxtDate1.Text = "";
-                    ميلاد_الزوجة.Text = SpecificDigit(ميلاد_الزوجة.Text, 3, 10);
+                    ميلاد_الزوجة.Text = SpecificDigit(ميلاد_الزوجة.Text, 6, 10);
                     return;
                 }
                 عمر_الزوجة_الحرج = getDate(ميلاد_الزوجة);
@@ -1318,12 +1318,12 @@ namespace PersAhwal
         {
             if (تاريخ_الايصال.Text.Length == 10)
             {
-                int month = Convert.ToInt32(SpecificDigit(تاريخ_الايصال.Text, 1, 2));
+                int month = Convert.ToInt32(SpecificDigit(تاريخ_الايصال.Text, 4, 5));
                 if (month > 12)
                 {
                     MessageBox.Show("الشهر يحب أن يكون أقل من 12");
                     //VitxtDate1.Text = "";
-                    تاريخ_الايصال.Text = SpecificDigit(تاريخ_الايصال.Text, 3, 10);
+                    تاريخ_الايصال.Text = SpecificDigit(تاريخ_الايصال.Text, 6, 10);
                     return;
                 }
             }
@@ -1345,14 +1345,39 @@ namespace PersAhwal
 
         private void تاريخ_الاجراء_TextChanged(object sender, EventArgs e)
         {
-
-            try
+            if (تاريخ_الاجراء.Text.Length == 10)
             {
-                اليوم_off.Text = تاريخ_الاجراء.Text.Split('-')[1];
-                الشهر_off.Text = تاريخ_الاجراء.Text.Split('-')[0];
-                السنة_off.Text = تاريخ_الاجراء.Text.Split('-')[2];
+                int month = Convert.ToInt32(SpecificDigit(تاريخ_الاجراء.Text, 4, 5));
+                if (month > 12)
+                {
+                    MessageBox.Show("الشهر يحب أن يكون أقل من 12");
+                    //VitxtDate1.Text = "";
+                    تاريخ_الاجراء.Text = SpecificDigit(تاريخ_الاجراء.Text, 6, 10);
+                    return;
+                }
             }
-            catch (Exception ex) { }
+
+            if (تاريخ_الاجراء.Text.Length == 11)
+            {
+                تاريخ_الاجراء.Text = lastInput3; return;
+            }
+            if (تاريخ_الاجراء.Text.Length == 10)
+            {
+                try
+                {
+                    اليوم_off.Text = تاريخ_الاجراء.Text.Split('-')[0];
+                    الشهر_off.Text = تاريخ_الاجراء.Text.Split('-')[1];
+                    السنة_off.Text = تاريخ_الاجراء.Text.Split('-')[2];
+                }
+                catch (Exception ex) { }
+
+                return;
+            }
+            if (تاريخ_الاجراء.Text.Length == 4) تاريخ_الاجراء.Text = "-" + تاريخ_الاجراء.Text;
+            else if (تاريخ_الاجراء.Text.Length == 7) تاريخ_الاجراء.Text = "-" + تاريخ_الاجراء.Text;
+            lastInput3 = تاريخ_الاجراء.Text;
+
+            
             //MessageBox.Show(اليوم.Text);
         }
 

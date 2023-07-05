@@ -1240,37 +1240,7 @@ namespace PersAhwal
             else checkSexType.Checked = false;
             checkSexType.UseVisualStyleBackColor = true;
             checkSexType.CheckedChanged += new System.EventHandler(this.sexCheckedChanged);
-            // 
-            // combTitle1
-            // 
-            //ComboBox combTitle = new ComboBox();
-            //combTitle.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            //combTitle.FormattingEnabled = true;
-            //combTitle.Items.AddRange(new object[] {
-            //"Mr",
-            //"Mrs",
-            //"Miss",
-            //"Madam"});
-            //combTitle.Location = new System.Drawing.Point(291, 3);
-            //combTitle.Name = "النوع_الانجليزية_" + addNameIndex + ".";
-            //combTitle.Size = new System.Drawing.Size(15, 35);
-            //combTitle.TabIndex = 189;
-            //combTitle.Visible = false;
-            //combTitle.Text = sex;
-            //if (language == "العربية")
-            //{
-            //    checkSexType.Visible = true;
-            //    combTitle.Visible = false;
-            //}
-            //else
-            //{
-            //    checkSexType.Visible = false;
-            //    combTitle.Visible = true;
-            //}
-
-            // 
-            // label4
-            // 
+            
             Label labeldocType = new Label();
             labeldocType.AutoSize = true;
             labeldocType.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1448,6 +1418,25 @@ namespace PersAhwal
             Console.WriteLine(addNameIndex + صفة_مقدم_الطلب_off.SelectedIndex + addAuthticIndex + صفة_الموكل_off.SelectedIndex);
             //Panelapp.Height = 130 * (addNameIndex);
         }
+        string lastInput = "";
+        private void textAge_TextChanged(object sender, EventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+
+            checkChanged(تاريخ_الميلاد, Panelapp);
+            Console.WriteLine(تاريخ_الميلاد.Text);
+            if (textBox.Text.Length == 11)
+            {
+                textBox.Text = lastInput; return;
+            }
+            if (textBox.Text.Length == 10) return;
+            if (textBox.Text.Length == 4) textBox.Text = "-" + textBox.Text;
+            else if (textBox.Text.Length == 7) textBox.Text = "-" + textBox.Text;
+            lastInput = textBox.Text;
+
+
+        }
+
         private void autoCompleteBulk(TextBox textbox, string source, string col, string table)
         {
 
@@ -1539,33 +1528,69 @@ namespace PersAhwal
             }
             return 5;//المقيمون
         }
-        string lastInput = "";
-        private void textAge_TextChanged(object sender, EventArgs e)
+        //string lastInput = "";
+        //private void textAge_TextChanged(object sender, EventArgs e)
+        //{
+        //    TextBox textBox = (TextBox)sender;
+
+        //    if (textBox.Text.Length == 10)
+        //    {
+        //        int month = Convert.ToInt32(SpecificDigit(textBox.Text, 1, 2));
+        //        if (month > 12)
+        //        {
+        //            MessageBox.Show("الشهر يحب أن يكون أقل من 12");
+        //            //textBox.Text = "";
+        //            textBox.Text = SpecificDigit(textBox.Text, 3, 10);
+        //            return;
+        //        }
+        //        else checkChanged(textBox, Panelapp);
+        //    }
+        //    if (textBox.Text.Length == 11)
+        //    {
+        //        textBox.Text = lastInput; return;
+        //    }
+        //    if (textBox.Text.Length == 10) return;
+        //    if (textBox.Text.Length == 4) textBox.Text = "-" + textBox.Text;
+        //    else if (textBox.Text.Length == 7) textBox.Text = "-" + textBox.Text;
+        //    lastInput = textBox.Text;
+
+
+        //}
+
+        private bool checkDate()
         {
-            TextBox textBox = (TextBox)sender;
-
-            if (textBox.Text.Length == 10)
+            foreach (Control control in Panelapp.Controls)
             {
-                int month = Convert.ToInt32(SpecificDigit(textBox.Text, 1, 2));
-                if (month > 12)
+                
+                if (control is TextBox || control is ComboBox)
                 {
-                    MessageBox.Show("الشهر يحب أن يكون أقل من 12");
-                    //textBox.Text = "";
-                    textBox.Text = SpecificDigit(textBox.Text, 3, 10);
-                    return;
+                    if (control.Name.Contains("انتهاء_الصلاحية") || (control.Name.Contains("تاريخ_الميلاد") && control.Name != "تاريخ_الميلاد"))
+                    {
+                        Console.WriteLine(control.Name + " - " + control.Text+ " - " + control.Text.Length.ToString());
+                        if (control.Text.Length != 10)
+                        {
+                            MessageBox.Show("لا يمكن المتابعة يرجى كتابة تاريخ " + control.Name.Replace("_", " ") + " بشكل صحيح");
+                            control.BackColor = System.Drawing.Color.MistyRose;
+                            return false;
+                        }
+                        else
+                        {
+                            int month = Convert.ToInt32(SpecificDigit(control.Text, 4, 5));
+                            if (month > 12)
+                            {
+                                MessageBox.Show("الشهر يحب أن يكون أقل من 12");
+                                //textBox.Text = "";
+                                control.Text = SpecificDigit(control.Text, 7, 10);
+                                control.BackColor = System.Drawing.Color.MistyRose;
+                                return false;
+                            }
+
+                        }
+                        Panelapp.Height = 130 * addNameIndex; 
+                    }
                 }
-                else checkChanged(textBox, Panelapp);
             }
-            if (textBox.Text.Length == 11)
-            {
-                textBox.Text = lastInput; return;
-            }
-            if (textBox.Text.Length == 10) return;
-            if (textBox.Text.Length == 4) textBox.Text = "-" + textBox.Text;
-            else if (textBox.Text.Length == 7) textBox.Text = "-" + textBox.Text;
-            lastInput = textBox.Text;
-
-
+            return true;
         }
         private void textJob_TextChanged(object sender, EventArgs e)
         {
@@ -3489,9 +3514,10 @@ namespace PersAhwal
 
                     break;
                 case 2:
+                    
 
                     //MessageBox.Show(نوع_هوية.Text);
-            التاريخ_الميلادي.Text = GreDate;
+                    التاريخ_الميلادي.Text = GreDate;
             التاريخ_الهجري.Text = HijriDate;
             
                     updateGenName(مقدم_الطلب.Text, رقم_التوكيل.Text);
@@ -3535,7 +3561,10 @@ namespace PersAhwal
                     }
                     save2DataBase(PanelAuthPers);
 
-
+                    if (!checkDate())
+                    {
+                        currentPanelIndex--; return;
+                    }
                     اسم_الموظف.Text = EmpName;
 
                     string gender = getGender(الشاهد_الأول.Text.Split(' ')[0]);
@@ -5260,12 +5289,12 @@ namespace PersAhwal
                 if (إجراء_التوكيل.Text.Contains("إقرار"))
                 {
                     نوع_المعاملة.Text = إجراء_التوكيل.Text;
-                    مدة_الاعتماد.Text = "لا يعتمد هذا الاقرار ما لم يتم توثيقه خلال عام من تاريخ إصدارة من وزارة خارجية جمهورية السودان";
+                    مدة_الاعتماد.Text = "لا يعتمد هذا الاقرار بجمهورية السودان ما لم يتم توثيقه خلال عام من تاريخ إصدارة من وزارة خارجية جمهورية السودان";
                 }
                 else
                 {
                     نوع_المعاملة.Text = "توكيل";
-                    مدة_الاعتماد.Text = "لا يعتمد هذا التوكيل ما لم يتم توثيقه خلال عام من تاريخ إصدارة من وزارة خارجية جمهورية السودان";
+                    مدة_الاعتماد.Text = "لا يعتمد هذا التوكيل بجمهورية السودان ما لم يتم توثيقه خلال عام من تاريخ إصدارة من وزارة خارجية جمهورية السودان";
                 }
             }
             else مدة_الاعتماد.Text = "";
