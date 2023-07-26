@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormAuth));
             this.labDescribed = new System.Windows.Forms.Button();
             this.btnNext = new System.Windows.Forms.Button();
@@ -65,7 +65,9 @@
             this.مكان_الإصدار = new System.Windows.Forms.TextBox();
             this.تاريخ_الميلاد = new System.Windows.Forms.TextBox();
             this.المهنة = new System.Windows.Forms.TextBox();
+            this.وضع_الإقامة = new System.Windows.Forms.TextBox();
             this.btnPanelapp = new System.Windows.Forms.Button();
+            this.btnSaveApp = new System.Windows.Forms.Button();
             this.PanelAuthPers = new System.Windows.Forms.FlowLayoutPanel();
             this.الموكَّل = new System.Windows.Forms.TextBox();
             this.جنسية_الموكل = new System.Windows.Forms.TextBox();
@@ -73,6 +75,7 @@
             this.هوية_الموكل = new System.Windows.Forms.TextBox();
             this.نوع_هوية = new System.Windows.Forms.TextBox();
             this.btnPanelAuthPers = new System.Windows.Forms.Button();
+            this.btnSaveAuth = new System.Windows.Forms.Button();
             this.label28 = new System.Windows.Forms.Label();
             this.الشاهد_الأول = new System.Windows.Forms.TextBox();
             this.labeltitle12 = new System.Windows.Forms.Label();
@@ -111,6 +114,9 @@
             this.التاريخ_الميلادي_off = new System.Windows.Forms.TextBox();
             this.button22 = new System.Windows.Forms.Button();
             this.رقم_المرجع_المرتبط_off = new System.Windows.Forms.TextBox();
+            this.txtMissionAddress = new System.Windows.Forms.TextBox();
+            this.txtEngName = new System.Windows.Forms.TextBox();
+            this.txtArabName = new System.Windows.Forms.TextBox();
             this.حقوق_التوكيل = new System.Windows.Forms.TextBox();
             this.panelRemove = new System.Windows.Forms.FlowLayoutPanel();
             this.label9 = new System.Windows.Forms.Label();
@@ -214,6 +220,7 @@
             this.texterror = new System.Windows.Forms.TextBox();
             this.حالة_الارشفة = new System.Windows.Forms.TextBox();
             this.تعليق = new System.Windows.Forms.TextBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.panelAuthRights = new System.Windows.Forms.FlowLayoutPanel();
             this.PanelButtonInfo = new System.Windows.Forms.FlowLayoutPanel();
             this.button6 = new System.Windows.Forms.Button();
@@ -256,7 +263,6 @@
             this.timer4 = new System.Windows.Forms.Timer(this.components);
             this.backgroundWorker2 = new System.ComponentModel.BackgroundWorker();
             this.timer5 = new System.Windows.Forms.Timer(this.components);
-            this.textBox1 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.PanelDataGrid.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
@@ -336,23 +342,23 @@
             this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle6;
             this.dataGridView1.Location = new System.Drawing.Point(3, 0);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -531,8 +537,10 @@
             this.panelapplicationInfo.Controls.Add(this.label5);
             this.panelapplicationInfo.Controls.Add(this.Panelapp);
             this.panelapplicationInfo.Controls.Add(this.btnPanelapp);
+            this.panelapplicationInfo.Controls.Add(this.btnSaveApp);
             this.panelapplicationInfo.Controls.Add(this.PanelAuthPers);
             this.panelapplicationInfo.Controls.Add(this.btnPanelAuthPers);
+            this.panelapplicationInfo.Controls.Add(this.btnSaveAuth);
             this.panelapplicationInfo.Controls.Add(this.label28);
             this.panelapplicationInfo.Controls.Add(this.الشاهد_الأول);
             this.panelapplicationInfo.Controls.Add(this.labeltitle12);
@@ -571,10 +579,13 @@
             this.panelapplicationInfo.Controls.Add(this.التاريخ_الميلادي_off);
             this.panelapplicationInfo.Controls.Add(this.button22);
             this.panelapplicationInfo.Controls.Add(this.رقم_المرجع_المرتبط_off);
+            this.panelapplicationInfo.Controls.Add(this.txtMissionAddress);
+            this.panelapplicationInfo.Controls.Add(this.txtEngName);
+            this.panelapplicationInfo.Controls.Add(this.txtArabName);
             this.panelapplicationInfo.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.panelapplicationInfo.Location = new System.Drawing.Point(266, 38);
+            this.panelapplicationInfo.Location = new System.Drawing.Point(214, 38);
             this.panelapplicationInfo.Name = "panelapplicationInfo";
-            this.panelapplicationInfo.Size = new System.Drawing.Size(830, 630);
+            this.panelapplicationInfo.Size = new System.Drawing.Size(896, 630);
             this.panelapplicationInfo.TabIndex = 630;
             this.panelapplicationInfo.Visible = false;
             // 
@@ -582,19 +593,20 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(13, 0);
+            this.label10.Location = new System.Drawing.Point(4, 0);
             this.label10.Name = "label10";
             this.label10.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label10.Size = new System.Drawing.Size(812, 27);
+            this.label10.Size = new System.Drawing.Size(887, 27);
             this.label10.TabIndex = 672;
             this.label10.Text = "---------------------------------------------------------------------------------" +
-    "-------------------------------------------------------------------------------";
+    "--------------------------------------------------------------------------------" +
+    "--------------";
             // 
             // label27
             // 
             this.label27.AutoSize = true;
             this.label27.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label27.Location = new System.Drawing.Point(757, 27);
+            this.label27.Location = new System.Drawing.Point(823, 27);
             this.label27.Name = "label27";
             this.label27.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.label27.Size = new System.Drawing.Size(68, 27);
@@ -605,7 +617,7 @@
             // 
             this.رقم_التوكيل.Enabled = false;
             this.رقم_التوكيل.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.رقم_التوكيل.Location = new System.Drawing.Point(467, 30);
+            this.رقم_التوكيل.Location = new System.Drawing.Point(533, 30);
             this.رقم_التوكيل.Name = "رقم_التوكيل";
             this.رقم_التوكيل.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.رقم_التوكيل.Size = new System.Drawing.Size(284, 35);
@@ -615,7 +627,7 @@
             // 
             this.label23.AutoSize = true;
             this.label23.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label23.Location = new System.Drawing.Point(367, 27);
+            this.label23.Location = new System.Drawing.Point(433, 27);
             this.label23.Name = "label23";
             this.label23.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.label23.Size = new System.Drawing.Size(94, 27);
@@ -626,10 +638,10 @@
             // 
             this.التاريخ_الميلادي.Enabled = false;
             this.التاريخ_الميلادي.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.التاريخ_الميلادي.Location = new System.Drawing.Point(239, 30);
+            this.التاريخ_الميلادي.Location = new System.Drawing.Point(267, 30);
             this.التاريخ_الميلادي.Name = "التاريخ_الميلادي";
             this.التاريخ_الميلادي.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.التاريخ_الميلادي.Size = new System.Drawing.Size(122, 35);
+            this.التاريخ_الميلادي.Size = new System.Drawing.Size(160, 35);
             this.التاريخ_الميلادي.TabIndex = 661;
             this.التاريخ_الميلادي.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.التاريخ_الميلادي.TextChanged += new System.EventHandler(this.التاريخ_الميلادي_TextChanged);
@@ -638,7 +650,7 @@
             // 
             this.label29.AutoSize = true;
             this.label29.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label29.Location = new System.Drawing.Point(143, 27);
+            this.label29.Location = new System.Drawing.Point(171, 27);
             this.label29.Name = "label29";
             this.label29.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.label29.Size = new System.Drawing.Size(90, 27);
@@ -649,23 +661,24 @@
             // 
             this.التاريخ_الهجري.Enabled = false;
             this.التاريخ_الهجري.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.التاريخ_الهجري.Location = new System.Drawing.Point(15, 30);
+            this.التاريخ_الهجري.Location = new System.Drawing.Point(5, 30);
             this.التاريخ_الهجري.Name = "التاريخ_الهجري";
             this.التاريخ_الهجري.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.التاريخ_الهجري.Size = new System.Drawing.Size(122, 35);
+            this.التاريخ_الهجري.Size = new System.Drawing.Size(160, 35);
             this.التاريخ_الهجري.TabIndex = 663;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(13, 68);
+            this.label5.Location = new System.Drawing.Point(4, 68);
             this.label5.Name = "label5";
             this.label5.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label5.Size = new System.Drawing.Size(812, 27);
+            this.label5.Size = new System.Drawing.Size(887, 27);
             this.label5.TabIndex = 664;
             this.label5.Text = "---------------------------------------------------------------------------------" +
-    "-------------------------------------------------------------------------------";
+    "--------------------------------------------------------------------------------" +
+    "--------------";
             // 
             // Panelapp
             // 
@@ -678,8 +691,9 @@
             this.Panelapp.Controls.Add(this.مكان_الإصدار);
             this.Panelapp.Controls.Add(this.تاريخ_الميلاد);
             this.Panelapp.Controls.Add(this.المهنة);
+            this.Panelapp.Controls.Add(this.وضع_الإقامة);
             this.Panelapp.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.Panelapp.Location = new System.Drawing.Point(67, 98);
+            this.Panelapp.Location = new System.Drawing.Point(133, 98);
             this.Panelapp.Name = "Panelapp";
             this.Panelapp.Size = new System.Drawing.Size(758, 130);
             this.Panelapp.TabIndex = 548;
@@ -749,10 +763,19 @@
             this.المهنة.Size = new System.Drawing.Size(260, 35);
             this.المهنة.TabIndex = 439;
             // 
+            // وضع_الإقامة
+            // 
+            this.وضع_الإقامة.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.وضع_الإقامة.Location = new System.Drawing.Point(107, 85);
+            this.وضع_الإقامة.Name = "وضع_الإقامة";
+            this.وضع_الإقامة.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.وضع_الإقامة.Size = new System.Drawing.Size(114, 35);
+            this.وضع_الإقامة.TabIndex = 440;
+            // 
             // btnPanelapp
             // 
             this.btnPanelapp.Font = new System.Drawing.Font("Arabic Typesetting", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnPanelapp.Location = new System.Drawing.Point(14, 98);
+            this.btnPanelapp.Location = new System.Drawing.Point(80, 98);
             this.btnPanelapp.Name = "btnPanelapp";
             this.btnPanelapp.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.btnPanelapp.Size = new System.Drawing.Size(47, 130);
@@ -760,6 +783,18 @@
             this.btnPanelapp.Text = "تصغير";
             this.btnPanelapp.UseVisualStyleBackColor = true;
             this.btnPanelapp.Click += new System.EventHandler(this.btnPanelapp_Click);
+            // 
+            // btnSaveApp
+            // 
+            this.btnSaveApp.Font = new System.Drawing.Font("Arabic Typesetting", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSaveApp.Location = new System.Drawing.Point(27, 98);
+            this.btnSaveApp.Name = "btnSaveApp";
+            this.btnSaveApp.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.btnSaveApp.Size = new System.Drawing.Size(47, 130);
+            this.btnSaveApp.TabIndex = 692;
+            this.btnSaveApp.Text = "حفظ";
+            this.btnSaveApp.UseVisualStyleBackColor = true;
+            this.btnSaveApp.Click += new System.EventHandler(this.btnSaveApp_Click);
             // 
             // PanelAuthPers
             // 
@@ -771,7 +806,7 @@
             this.PanelAuthPers.Controls.Add(this.هوية_الموكل);
             this.PanelAuthPers.Controls.Add(this.نوع_هوية);
             this.PanelAuthPers.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.PanelAuthPers.Location = new System.Drawing.Point(67, 234);
+            this.PanelAuthPers.Location = new System.Drawing.Point(133, 234);
             this.PanelAuthPers.Name = "PanelAuthPers";
             this.PanelAuthPers.Size = new System.Drawing.Size(758, 87);
             this.PanelAuthPers.TabIndex = 551;
@@ -828,7 +863,7 @@
             // btnPanelAuthPers
             // 
             this.btnPanelAuthPers.Font = new System.Drawing.Font("Arabic Typesetting", 15.75F);
-            this.btnPanelAuthPers.Location = new System.Drawing.Point(14, 234);
+            this.btnPanelAuthPers.Location = new System.Drawing.Point(80, 234);
             this.btnPanelAuthPers.Name = "btnPanelAuthPers";
             this.btnPanelAuthPers.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.btnPanelAuthPers.Size = new System.Drawing.Size(47, 86);
@@ -837,11 +872,23 @@
             this.btnPanelAuthPers.UseVisualStyleBackColor = true;
             this.btnPanelAuthPers.Click += new System.EventHandler(this.btnPanelAuthPers_Click);
             // 
+            // btnSaveAuth
+            // 
+            this.btnSaveAuth.Font = new System.Drawing.Font("Arabic Typesetting", 15.75F);
+            this.btnSaveAuth.Location = new System.Drawing.Point(27, 234);
+            this.btnSaveAuth.Name = "btnSaveAuth";
+            this.btnSaveAuth.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.btnSaveAuth.Size = new System.Drawing.Size(47, 86);
+            this.btnSaveAuth.TabIndex = 693;
+            this.btnSaveAuth.Text = "حفظ";
+            this.btnSaveAuth.UseVisualStyleBackColor = true;
+            this.btnSaveAuth.Click += new System.EventHandler(this.btnSaveAuth_Click);
+            // 
             // label28
             // 
             this.label28.AutoSize = true;
             this.label28.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label28.Location = new System.Drawing.Point(719, 324);
+            this.label28.Location = new System.Drawing.Point(785, 324);
             this.label28.Name = "label28";
             this.label28.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.label28.Size = new System.Drawing.Size(106, 27);
@@ -851,7 +898,7 @@
             // الشاهد_الأول
             // 
             this.الشاهد_الأول.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.الشاهد_الأول.Location = new System.Drawing.Point(416, 327);
+            this.الشاهد_الأول.Location = new System.Drawing.Point(482, 327);
             this.الشاهد_الأول.Name = "الشاهد_الأول";
             this.الشاهد_الأول.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.الشاهد_الأول.Size = new System.Drawing.Size(297, 35);
@@ -862,7 +909,7 @@
             // 
             this.labeltitle12.AutoSize = true;
             this.labeltitle12.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labeltitle12.Location = new System.Drawing.Point(370, 324);
+            this.labeltitle12.Location = new System.Drawing.Point(436, 324);
             this.labeltitle12.Name = "labeltitle12";
             this.labeltitle12.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.labeltitle12.Size = new System.Drawing.Size(40, 27);
@@ -879,7 +926,7 @@
             "Mrs",
             "Miss",
             "Madam"});
-            this.combTitle13.Location = new System.Drawing.Point(347, 327);
+            this.combTitle13.Location = new System.Drawing.Point(413, 327);
             this.combTitle13.Name = "combTitle13";
             this.combTitle13.Size = new System.Drawing.Size(17, 35);
             this.combTitle13.TabIndex = 642;
@@ -889,7 +936,7 @@
             // 
             this.label31.AutoSize = true;
             this.label31.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label31.Location = new System.Drawing.Point(217, 324);
+            this.label31.Location = new System.Drawing.Point(283, 324);
             this.label31.Name = "label31";
             this.label31.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.label31.Size = new System.Drawing.Size(124, 27);
@@ -899,7 +946,7 @@
             // هوية_الأول
             // 
             this.هوية_الأول.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.هوية_الأول.Location = new System.Drawing.Point(15, 327);
+            this.هوية_الأول.Location = new System.Drawing.Point(81, 327);
             this.هوية_الأول.Name = "هوية_الأول";
             this.هوية_الأول.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.هوية_الأول.Size = new System.Drawing.Size(196, 35);
@@ -913,7 +960,7 @@
             // 
             this.label32.AutoSize = true;
             this.label32.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label32.Location = new System.Drawing.Point(719, 365);
+            this.label32.Location = new System.Drawing.Point(785, 365);
             this.label32.Name = "label32";
             this.label32.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.label32.Size = new System.Drawing.Size(106, 27);
@@ -923,7 +970,7 @@
             // الشاهد_الثاني
             // 
             this.الشاهد_الثاني.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.الشاهد_الثاني.Location = new System.Drawing.Point(416, 368);
+            this.الشاهد_الثاني.Location = new System.Drawing.Point(482, 368);
             this.الشاهد_الثاني.Name = "الشاهد_الثاني";
             this.الشاهد_الثاني.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.الشاهد_الثاني.Size = new System.Drawing.Size(297, 35);
@@ -934,7 +981,7 @@
             // 
             this.labeltitle13.AutoSize = true;
             this.labeltitle13.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labeltitle13.Location = new System.Drawing.Point(370, 365);
+            this.labeltitle13.Location = new System.Drawing.Point(436, 365);
             this.labeltitle13.Name = "labeltitle13";
             this.labeltitle13.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.labeltitle13.Size = new System.Drawing.Size(40, 27);
@@ -951,7 +998,7 @@
             "Mrs",
             "Miss",
             "Madam"});
-            this.combTitle14.Location = new System.Drawing.Point(347, 368);
+            this.combTitle14.Location = new System.Drawing.Point(413, 368);
             this.combTitle14.Name = "combTitle14";
             this.combTitle14.Size = new System.Drawing.Size(17, 35);
             this.combTitle14.TabIndex = 644;
@@ -961,7 +1008,7 @@
             // 
             this.label30.AutoSize = true;
             this.label30.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label30.Location = new System.Drawing.Point(217, 365);
+            this.label30.Location = new System.Drawing.Point(283, 365);
             this.label30.Name = "label30";
             this.label30.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.label30.Size = new System.Drawing.Size(124, 27);
@@ -971,7 +1018,7 @@
             // هوية_الثاني
             // 
             this.هوية_الثاني.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.هوية_الثاني.Location = new System.Drawing.Point(15, 368);
+            this.هوية_الثاني.Location = new System.Drawing.Point(81, 368);
             this.هوية_الثاني.Name = "هوية_الثاني";
             this.هوية_الثاني.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.هوية_الثاني.Size = new System.Drawing.Size(196, 35);
@@ -983,19 +1030,20 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(13, 406);
+            this.label1.Location = new System.Drawing.Point(4, 406);
             this.label1.Name = "label1";
             this.label1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label1.Size = new System.Drawing.Size(812, 27);
+            this.label1.Size = new System.Drawing.Size(887, 27);
             this.label1.TabIndex = 649;
             this.label1.Text = "---------------------------------------------------------------------------------" +
-    "-------------------------------------------------------------------------------";
+    "--------------------------------------------------------------------------------" +
+    "--------------";
             // 
             // label25
             // 
             this.label25.AutoSize = true;
             this.label25.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label25.Location = new System.Drawing.Point(740, 433);
+            this.label25.Location = new System.Drawing.Point(806, 433);
             this.label25.Name = "label25";
             this.label25.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.label25.Size = new System.Drawing.Size(85, 27);
@@ -1009,7 +1057,7 @@
             this.طريقة_الطلب.CheckState = System.Windows.Forms.CheckState.Checked;
             this.طريقة_الطلب.Enabled = false;
             this.طريقة_الطلب.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.طريقة_الطلب.Location = new System.Drawing.Point(564, 436);
+            this.طريقة_الطلب.Location = new System.Drawing.Point(630, 436);
             this.طريقة_الطلب.Name = "طريقة_الطلب";
             this.طريقة_الطلب.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.طريقة_الطلب.Size = new System.Drawing.Size(170, 31);
@@ -1023,7 +1071,7 @@
             // 
             this.mandoubLabel.AutoSize = true;
             this.mandoubLabel.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.mandoubLabel.Location = new System.Drawing.Point(502, 433);
+            this.mandoubLabel.Location = new System.Drawing.Point(568, 433);
             this.mandoubLabel.Name = "mandoubLabel";
             this.mandoubLabel.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.mandoubLabel.Size = new System.Drawing.Size(56, 27);
@@ -1036,7 +1084,7 @@
             this.اسم_المندوب.Enabled = false;
             this.اسم_المندوب.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.اسم_المندوب.FormattingEnabled = true;
-            this.اسم_المندوب.Location = new System.Drawing.Point(309, 436);
+            this.اسم_المندوب.Location = new System.Drawing.Point(375, 436);
             this.اسم_المندوب.Name = "اسم_المندوب";
             this.اسم_المندوب.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.اسم_المندوب.Size = new System.Drawing.Size(187, 35);
@@ -1051,7 +1099,7 @@
             // 
             this.label26.AutoSize = true;
             this.label26.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label26.Location = new System.Drawing.Point(228, 433);
+            this.label26.Location = new System.Drawing.Point(294, 433);
             this.label26.Name = "label26";
             this.label26.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.label26.Size = new System.Drawing.Size(75, 27);
@@ -1066,10 +1114,10 @@
             "محمد عثمان عكاشة الحسين",
             "يوسف صديق أبوعاقلة",
             "لبيب محمد أحمد"});
-            this.موقع_التوكيل.Location = new System.Drawing.Point(55, 436);
+            this.موقع_التوكيل.Location = new System.Drawing.Point(23, 436);
             this.موقع_التوكيل.Name = "موقع_التوكيل";
             this.موقع_التوكيل.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.موقع_التوكيل.Size = new System.Drawing.Size(167, 35);
+            this.موقع_التوكيل.Size = new System.Drawing.Size(265, 35);
             this.موقع_التوكيل.TabIndex = 666;
             this.موقع_التوكيل.TextUpdate += new System.EventHandler(this.موقع_التوكيل_TextUpdate);
             // 
@@ -1077,7 +1125,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(49, 433);
+            this.label2.Location = new System.Drawing.Point(17, 433);
             this.label2.Name = "label2";
             this.label2.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.label2.Size = new System.Drawing.Size(0, 27);
@@ -1087,19 +1135,20 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(13, 474);
+            this.label3.Location = new System.Drawing.Point(4, 474);
             this.label3.Name = "label3";
             this.label3.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label3.Size = new System.Drawing.Size(812, 27);
+            this.label3.Size = new System.Drawing.Size(887, 27);
             this.label3.TabIndex = 651;
             this.label3.Text = "---------------------------------------------------------------------------------" +
-    "-------------------------------------------------------------------------------";
+    "--------------------------------------------------------------------------------" +
+    "--------------";
             // 
             // label33
             // 
             this.label33.AutoSize = true;
             this.label33.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label33.Location = new System.Drawing.Point(754, 501);
+            this.label33.Location = new System.Drawing.Point(820, 501);
             this.label33.Name = "label33";
             this.label33.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.label33.Size = new System.Drawing.Size(71, 27);
@@ -1110,7 +1159,7 @@
             // 
             this.نوع_التوكيل.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.نوع_التوكيل.FormattingEnabled = true;
-            this.نوع_التوكيل.Location = new System.Drawing.Point(416, 504);
+            this.نوع_التوكيل.Location = new System.Drawing.Point(482, 504);
             this.نوع_التوكيل.Name = "نوع_التوكيل";
             this.نوع_التوكيل.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.نوع_التوكيل.Size = new System.Drawing.Size(332, 35);
@@ -1123,7 +1172,7 @@
             // 
             this.labelAuthType.AutoSize = true;
             this.labelAuthType.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelAuthType.Location = new System.Drawing.Point(359, 501);
+            this.labelAuthType.Location = new System.Drawing.Point(425, 501);
             this.labelAuthType.Name = "labelAuthType";
             this.labelAuthType.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.labelAuthType.Size = new System.Drawing.Size(51, 27);
@@ -1134,7 +1183,7 @@
             // 
             this.إجراء_التوكيل.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.إجراء_التوكيل.FormattingEnabled = true;
-            this.إجراء_التوكيل.Location = new System.Drawing.Point(24, 504);
+            this.إجراء_التوكيل.Location = new System.Drawing.Point(90, 504);
             this.إجراء_التوكيل.Name = "إجراء_التوكيل";
             this.إجراء_التوكيل.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.إجراء_التوكيل.Size = new System.Drawing.Size(329, 35);
@@ -1147,13 +1196,14 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(13, 542);
+            this.label4.Location = new System.Drawing.Point(4, 542);
             this.label4.Name = "label4";
             this.label4.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label4.Size = new System.Drawing.Size(812, 27);
+            this.label4.Size = new System.Drawing.Size(887, 27);
             this.label4.TabIndex = 656;
             this.label4.Text = "---------------------------------------------------------------------------------" +
-    "-------------------------------------------------------------------------------";
+    "--------------------------------------------------------------------------------" +
+    "--------------";
             // 
             // button9
             // 
@@ -1161,7 +1211,7 @@
             this.button9.FlatAppearance.BorderSize = 0;
             this.button9.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button9.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button9.Location = new System.Drawing.Point(808, 572);
+            this.button9.Location = new System.Drawing.Point(874, 572);
             this.button9.Name = "button9";
             this.button9.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.button9.Size = new System.Drawing.Size(17, 35);
@@ -1172,7 +1222,7 @@
             // 
             this.اسم_الموظف.Enabled = false;
             this.اسم_الموظف.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.اسم_الموظف.Location = new System.Drawing.Point(564, 572);
+            this.اسم_الموظف.Location = new System.Drawing.Point(630, 572);
             this.اسم_الموظف.Name = "اسم_الموظف";
             this.اسم_الموظف.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.اسم_الموظف.Size = new System.Drawing.Size(238, 35);
@@ -1184,7 +1234,7 @@
             // 
             this.localCopy.Enabled = false;
             this.localCopy.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.localCopy.Location = new System.Drawing.Point(537, 572);
+            this.localCopy.Location = new System.Drawing.Point(603, 572);
             this.localCopy.Name = "localCopy";
             this.localCopy.Size = new System.Drawing.Size(21, 35);
             this.localCopy.TabIndex = 657;
@@ -1193,7 +1243,7 @@
             // نص_مقدم_الطلب1
             // 
             this.نص_مقدم_الطلب1.Font = new System.Drawing.Font("Arabic Typesetting", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.نص_مقدم_الطلب1.Location = new System.Drawing.Point(499, 572);
+            this.نص_مقدم_الطلب1.Location = new System.Drawing.Point(565, 572);
             this.نص_مقدم_الطلب1.Multiline = true;
             this.نص_مقدم_الطلب1.Name = "نص_مقدم_الطلب1";
             this.نص_مقدم_الطلب1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -1204,7 +1254,7 @@
             // موقع_التوكيل1
             // 
             this.موقع_التوكيل1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.موقع_التوكيل1.Location = new System.Drawing.Point(472, 572);
+            this.موقع_التوكيل1.Location = new System.Drawing.Point(538, 572);
             this.موقع_التوكيل1.Name = "موقع_التوكيل1";
             this.موقع_التوكيل1.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.موقع_التوكيل1.Size = new System.Drawing.Size(21, 35);
@@ -1214,7 +1264,7 @@
             // نص_مقدم_الطلب0
             // 
             this.نص_مقدم_الطلب0.Font = new System.Drawing.Font("Arabic Typesetting", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.نص_مقدم_الطلب0.Location = new System.Drawing.Point(446, 572);
+            this.نص_مقدم_الطلب0.Location = new System.Drawing.Point(512, 572);
             this.نص_مقدم_الطلب0.Multiline = true;
             this.نص_مقدم_الطلب0.Name = "نص_مقدم_الطلب0";
             this.نص_مقدم_الطلب0.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -1225,7 +1275,7 @@
             // نوع_المعاملة
             // 
             this.نوع_المعاملة.Font = new System.Drawing.Font("Arabic Typesetting", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.نوع_المعاملة.Location = new System.Drawing.Point(419, 572);
+            this.نوع_المعاملة.Location = new System.Drawing.Point(485, 572);
             this.نوع_المعاملة.Multiline = true;
             this.نوع_المعاملة.Name = "نوع_المعاملة";
             this.نوع_المعاملة.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -1237,7 +1287,7 @@
             // txtRev
             // 
             this.txtRev.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtRev.Location = new System.Drawing.Point(395, 572);
+            this.txtRev.Location = new System.Drawing.Point(461, 572);
             this.txtRev.Multiline = true;
             this.txtRev.Name = "txtRev";
             this.txtRev.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -1248,7 +1298,7 @@
             // توقيع_مقدم_الطلب
             // 
             this.توقيع_مقدم_الطلب.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.توقيع_مقدم_الطلب.Location = new System.Drawing.Point(371, 572);
+            this.توقيع_مقدم_الطلب.Location = new System.Drawing.Point(437, 572);
             this.توقيع_مقدم_الطلب.Multiline = true;
             this.توقيع_مقدم_الطلب.Name = "توقيع_مقدم_الطلب";
             this.توقيع_مقدم_الطلب.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -1259,7 +1309,7 @@
             // التاريخ_الميلادي_off
             // 
             this.التاريخ_الميلادي_off.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.التاريخ_الميلادي_off.Location = new System.Drawing.Point(347, 572);
+            this.التاريخ_الميلادي_off.Location = new System.Drawing.Point(413, 572);
             this.التاريخ_الميلادي_off.Multiline = true;
             this.التاريخ_الميلادي_off.Name = "التاريخ_الميلادي_off";
             this.التاريخ_الميلادي_off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -1273,7 +1323,7 @@
             this.button22.FlatAppearance.BorderSize = 0;
             this.button22.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button22.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button22.Location = new System.Drawing.Point(297, 572);
+            this.button22.Location = new System.Drawing.Point(363, 572);
             this.button22.Name = "button22";
             this.button22.Size = new System.Drawing.Size(44, 35);
             this.button22.TabIndex = 690;
@@ -1283,7 +1333,7 @@
             // رقم_المرجع_المرتبط_off
             // 
             this.رقم_المرجع_المرتبط_off.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.رقم_المرجع_المرتبط_off.Location = new System.Drawing.Point(273, 572);
+            this.رقم_المرجع_المرتبط_off.Location = new System.Drawing.Point(339, 572);
             this.رقم_المرجع_المرتبط_off.Multiline = true;
             this.رقم_المرجع_المرتبط_off.Name = "رقم_المرجع_المرتبط_off";
             this.رقم_المرجع_المرتبط_off.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -1291,6 +1341,39 @@
             this.رقم_المرجع_المرتبط_off.TabIndex = 691;
             this.رقم_المرجع_المرتبط_off.Visible = false;
             this.رقم_المرجع_المرتبط_off.TextChanged += new System.EventHandler(this.رقم_المرجع_المرتبط_TextChanged);
+            // 
+            // txtMissionAddress
+            // 
+            this.txtMissionAddress.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtMissionAddress.Location = new System.Drawing.Point(315, 572);
+            this.txtMissionAddress.Multiline = true;
+            this.txtMissionAddress.Name = "txtMissionAddress";
+            this.txtMissionAddress.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.txtMissionAddress.Size = new System.Drawing.Size(18, 39);
+            this.txtMissionAddress.TabIndex = 694;
+            this.txtMissionAddress.Visible = false;
+            // 
+            // txtEngName
+            // 
+            this.txtEngName.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtEngName.Location = new System.Drawing.Point(291, 572);
+            this.txtEngName.Multiline = true;
+            this.txtEngName.Name = "txtEngName";
+            this.txtEngName.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.txtEngName.Size = new System.Drawing.Size(18, 39);
+            this.txtEngName.TabIndex = 695;
+            this.txtEngName.Visible = false;
+            // 
+            // txtArabName
+            // 
+            this.txtArabName.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtArabName.Location = new System.Drawing.Point(267, 572);
+            this.txtArabName.Multiline = true;
+            this.txtArabName.Name = "txtArabName";
+            this.txtArabName.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.txtArabName.Size = new System.Drawing.Size(18, 39);
+            this.txtArabName.TabIndex = 696;
+            this.txtArabName.Visible = false;
             // 
             // حقوق_التوكيل
             // 
@@ -2266,6 +2349,7 @@
             this.وجهة_التوكيل.TabIndex = 675;
             this.وجهة_التوكيل.Text = "إختر نوع الإجراء";
             this.وجهة_التوكيل.SelectedIndexChanged += new System.EventHandler(this.وجهة_التوكيل_SelectedIndexChanged);
+            this.وجهة_التوكيل.TextChanged += new System.EventHandler(this.وجهة_التوكيل_TextChanged);
             // 
             // btnPrint
             // 
@@ -2648,6 +2732,17 @@
             this.تعليق.Size = new System.Drawing.Size(18, 39);
             this.تعليق.TabIndex = 716;
             this.تعليق.Visible = false;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox1.Location = new System.Drawing.Point(825, 593);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.textBox1.Size = new System.Drawing.Size(18, 39);
+            this.textBox1.TabIndex = 718;
+            this.textBox1.Visible = false;
             // 
             // panelAuthRights
             // 
@@ -3172,29 +3267,18 @@
             this.timer5.Interval = 1000;
             this.timer5.Tick += new System.EventHandler(this.timer5_Tick);
             // 
-            // textBox1
-            // 
-            this.textBox1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(825, 593);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.textBox1.Size = new System.Drawing.Size(18, 39);
-            this.textBox1.TabIndex = 718;
-            this.textBox1.Visible = false;
-            // 
             // FormAuth
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1339, 705);
+            this.Controls.Add(this.panelAuthRights);
             this.Controls.Add(this.btnNext);
             this.Controls.Add(this.btnPrevious);
             this.Controls.Add(this.PanelFiles);
             this.Controls.Add(this.labDescribed);
             this.Controls.Add(this.panelapplicationInfo);
             this.Controls.Add(this.finalPanel);
-            this.Controls.Add(this.panelAuthRights);
             this.Controls.Add(this.PanelDataGrid);
             this.Name = "FormAuth";
             this.Text = "توكيلات";
@@ -3471,5 +3555,11 @@
         private System.Windows.Forms.TextBox نوع_هوية;
         private System.Windows.Forms.ComboBox آلية_البحث;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox وضع_الإقامة;
+        private System.Windows.Forms.Button btnSaveApp;
+        private System.Windows.Forms.Button btnSaveAuth;
+        private System.Windows.Forms.TextBox txtMissionAddress;
+        private System.Windows.Forms.TextBox txtEngName;
+        private System.Windows.Forms.TextBox txtArabName;
     }
 }

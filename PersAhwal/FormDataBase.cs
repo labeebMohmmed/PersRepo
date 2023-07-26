@@ -34,7 +34,7 @@ namespace PersAhwal
         string Server = "M";
         string DataSource;
         bool readyToClose = false;
-        string HijriDate = "";
+        
         string file; 
         string IP;
         DataTable userTable;
@@ -44,6 +44,17 @@ namespace PersAhwal
             int currentVersion56 = 0;
         int currentVersion57 = 0;
         string NewFiles = "";
+        string mainWorkingFile = @"D:\";
+        //public static DateTime MaxDate(params DateTime[] dates)
+        //{
+        //    try
+        //    {
+        //        return dates.Max();
+        //    }
+        //    catch (Exception ex) {
+        //        //return null;
+        //    }
+        //} 
 
         public FormDataBase(string server,string dataSource56, string dataSource57, string modelFiles, string filepathOut, string archFile, string modelForms, string newFiles)
         {
@@ -68,8 +79,10 @@ namespace PersAhwal
                 string appFileName = Environment.GetCommandLineArgs()[0];
                 string directory = Path.GetDirectoryName(appFileName);
                 directory = directory + @"\";
+                mainWorkingFile = directory;
                 primeryLink = directory + @"PrimariFiles\";                
             }
+            
             if (Directory.Exists(primeryLink + "New folder"))
             { try{
                     Directory.Delete(primeryLink + "New folder");
@@ -127,9 +140,11 @@ namespace PersAhwal
 
             versionUpdateInfo("SuddaneseAffairs");
             string hostname = Dns.GetHostName();
+            Console.WriteLine(IP);
             IP = Dns.GetHostByName(hostname).AddressList[0].ToString();
-
-            if (Server == "57")
+            
+                //MessageBox.Show(IP);
+                if (Server == "57")
             {
                 btnLog.BackColor = System.Drawing.SystemColors.ButtonShadow;
                 button1.BackColor = System.Drawing.SystemColors.ButtonShadow;
@@ -137,7 +152,8 @@ namespace PersAhwal
             else DataSource = DataSource56;
             userTable = new DataTable();
 
-            
+            //if (IP == "192.168.100.100")
+            //    backup(mainWorkingFile);
 
             Console.WriteLine(Server);
             file = archFile + @"\dataSource.txt";
@@ -152,6 +168,74 @@ namespace PersAhwal
 
             
             
+        }
+        private void backup(string workFile) {
+            //string sqlInfoBackup = "AhwalDataBase_backup_";
+            //string sqlArchBackup = "ArchFilesDB_backup_";
+            ////Console.WriteLine(workFile + "sqlbackup");
+            
+            //string[] backfiles = Directory.GetFiles(workFile + @"sqlbackup\");
+            //DateTime[] datesInfo = new DateTime[backfiles.Length];
+            //DateTime[] datesArch = new DateTime[backfiles.Length];
+           
+            //for (int i = 0; i < backfiles.Length; i++)
+            //{
+            //    if (backfiles[i].Contains(sqlInfoBackup))
+            //    {
+            //        var backfileinfo = new FileInfo(backfiles[i]);
+            //        datesInfo[i] = DateTime.Parse(backfileinfo.LastWriteTime.ToShortDateString());
+            //    }
+            //    else if (backfiles[i].Contains(sqlArchBackup))
+            //    {
+            //        var backfileinfo = new FileInfo(backfiles[i]);
+            //        datesArch[i] = DateTime.Parse(backfileinfo.LastWriteTime.ToShortDateString());
+            //    }
+            //}
+            ////string maxdate = MaxDate(datesInfo).ToString().Split(' ')[0];
+            //string year = maxdate.Split('/')[2];
+            //string month = maxdate.Split('/')[0];
+            //if (month.Length == 1)
+            //    month = "0" + month;
+            //string date = maxdate.Split('/')[1];
+            //if (date.Length == 1)
+            //    date = "0" + date;
+
+            //string newerFile = sqlInfoBackup + year + "_" + month + "_" + date + "_";
+            //for (int i = 0; i < backfiles.Length; i++)
+            //{
+            //    if (backfiles[i].Contains(sqlInfoBackup) && !backfiles[i].Contains(newerFile))
+            //    {
+            //        Console.WriteLine("Files to Delete " + backfiles[i]);
+            //        try
+            //        {
+            //            File.Delete(backfiles[i]);
+            //        }
+            //        catch (Exception ex) { }
+            //    }
+            //}
+
+            //maxdate = MaxDate(datesArch).ToString().Split(' ')[0];
+            //year = maxdate.Split('/')[2];
+            //month = maxdate.Split('/')[0];
+            //if (month.Length == 1)
+            //    month = "0" + month;
+            //date = maxdate.Split('/')[1];
+            //if (date.Length == 1)
+            //    date = "0" + date;
+
+            //newerFile = sqlArchBackup + year + "_" + month + "_" + date + "_";
+            //for (int i = 0; i < backfiles.Length; i++)
+            //{
+            //    if (backfiles[i].Contains(sqlArchBackup) && !backfiles[i].Contains(newerFile))
+            //    {
+            //        Console.WriteLine("Files to Delete " + backfiles[i]);
+            //        try
+            //        {
+            //            File.Delete(backfiles[i]);
+            //        }
+            //        catch (Exception ex) { }
+            //    }
+            //}
         }
 
         public static void Copy(string sourceDirectory, string targetDirectory)
@@ -596,14 +680,11 @@ namespace PersAhwal
                         }
                         else
                         {
-                            MainForm mainForm = new MainForm(career, userID, Server, name, joposition, DataSource56, DataSource57, LocalModelFiles, FilepathOut, ArchFile, localModelForms, Pers_Peope, GregorianDate, HijriDate, ServerModelFiles, ServerModelForms, true);
+                            MainForm mainForm = new MainForm(career, userID, Server, name, joposition, DataSource56, DataSource57, LocalModelFiles, FilepathOut, ArchFile, localModelForms, Pers_Peope, GregorianDate,  ServerModelFiles, ServerModelForms, true);
                             mainForm.ShowDialog();
                         }
                         timer1.Enabled = false;
                         Console.WriteLine("pass login1");
-                        //timer1.Enabled = false;
-                        //timer2.Enabled = false;
-                        //timer3.Enabled = false;
                     }
                 }
                 else MessageBox.Show("خطأ في كلمة مرور");
@@ -763,24 +844,7 @@ namespace PersAhwal
 
         private void timer4_Tick(object sender, EventArgs e)
         {
-            CultureInfo arSA = new CultureInfo("ar-SA");
-            arSA.DateTimeFormat.Calendar = new HijriCalendar();
-            Thread.CurrentThread.CurrentCulture = arSA;
-            int Ddiffer = HijriDateDifferment(DataSource, true);
-            int Mdiffer = HijriDateDifferment(DataSource, false);
-            string Stringdate, Stringmonth, StrHijriDate;
-            StrHijriDate = DateTime.Now.ToString("dd-MM-yyyy");
-            string[] YearMonthDay = StrHijriDate.Split('-');
-            int year, month, date;
-            year = Convert.ToInt16(YearMonthDay[2]);
-            month = Convert.ToInt16(YearMonthDay[1]) + Mdiffer;
-            date = Convert.ToInt16(YearMonthDay[0]) + Ddiffer;
-            if (month < 10) Stringmonth = "0" + month.ToString();
-            else Stringmonth = month.ToString();
-            if (date < 10) Stringdate = "0" + date.ToString();
-            else Stringdate = date.ToString();
-            HijriDate = Stringdate + "-" + Stringmonth + "-" + year.ToString();
-            if (HijriDate.Contains("-")) timer4.Enabled = false;
+           
         }
 
         private int HijriDateDifferment(string source, bool daymonth)
@@ -855,6 +919,7 @@ namespace PersAhwal
             {
                 Password.UseSystemPasswordChar = false;
             }
+            else Password.UseSystemPasswordChar = true;
         }
 
 

@@ -58,6 +58,8 @@ namespace PersAhwal
     public partial class FormPics : Form
     {
         string AppNameText = "";
+        string Combo1Text = "";
+        string Combo2Text = "";
         string refNo = "";
         string relatedRefNo = "";
         DeviceInfo AvailableScanner = null;
@@ -139,6 +141,8 @@ namespace PersAhwal
         string mainProNo= "";
         string altColName = "";
         string altSubColName = "";
+        bool dontCheck = false;
+        string txtMissionCode = "ق س ج/80/";
         public FormPics( string serverType, string empName, string aVcName,string jobPosition,string dataSource, int index, string filespathIn, string filespathOut, int formType, string[] strData, string[] strSubData, bool archiveState, string[] mandounList, string[] griDate)
         {
             InitializeComponent();
@@ -146,6 +150,7 @@ namespace PersAhwal
             DataSource = dataSource;
             FormType = formType;
             // MessageBox.Show(pictureBox1.ImageLocation.ToString());
+            button4.BringToFront();
             button4.BringToFront();
             button3.BringToFront();
             //return;
@@ -164,7 +169,7 @@ namespace PersAhwal
             Combo1.SelectedIndex = Combo1Index;
             //OpenFile(Combo1.Text, false);            
             updateNames();
-            correctNo(); 
+            correctNo();
             //MessageBox.Show(Combo1Index.ToString());
 
             //int docid = NewReportEntry(DataSource, GenQuery, 10, relatedPro.Split('-')[0], relatedPro.Split('-')[1]);
@@ -173,7 +178,57 @@ namespace PersAhwal
             //qrCode.SaveAsPng(FilespathOut + "ScanImg" + rowCount + imagecount.ToString() + ".png");
             //MessageBox.Show(FilespathOut + "ScanImg" + rowCount + imagecount.ToString() + ".png");            
             //pictureBox1.ImageLocation = PathImage[imagecount];
+            try
+            {
+                txtMissionCode = missionBasicInfo().Split('*')[3];
+            }
+            catch (Exception ex)
+            {
+
+            }
+
         }
+        private string missionBasicInfo()
+        {
+            string infoDet = "";
+            string query = "select بيانات_البعثة from TableSettings";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return ""; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            try
+            {
+                sqlDa.Fill(dtbl);
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+
+
+
+            sqlCon.Close();
+
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                try
+                {
+                    infoDet = dataRow["بيانات_البعثة"].ToString();
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+            return infoDet;
+        }
+
 
         private void fileColComboBox(ComboBox combbox, string source, string comlumnName, string colRight)
         {
@@ -469,7 +524,7 @@ namespace PersAhwal
         }
         
         private void drawBoxes(string text,bool hide, string id)
-        {if (text == ""|| text == "غير مدرج") return;
+        {if (text == "" || text == "غير مدرج") return;
             //MessageBox.Show(text.Length % 16);
             PictureBox picAddReq1 = new PictureBox();
             PictureBox picRemReq1 = new PictureBox();
@@ -1140,7 +1195,7 @@ namespace PersAhwal
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
             sqlDa.Fill(dtbl);
-            string ver = "ق س ج/80/22/13/0";
+            string ver = txtMissionCode + "22/13/0";
             foreach (DataRow dataRow in dtbl.Rows)
             {                
                 ver = (Convert.ToInt32(dataRow["SudAffNo"].ToString().Split('/')[4]) + 1).ToString();
@@ -3622,14 +3677,14 @@ namespace PersAhwal
             
             string year = DateTime.Now.Year.ToString().Replace("20", "");
             
-            string query = "select max(cast (right("+ ColNumList + ",LEN("+ ColNumList + ") - 15) as int)) as newDocID from "+ TableList+" where " + ColNumList + " like N'ق س ج/80/" + year + "/" + formtype + "%'";  
+            string query = "select max(cast (right("+ ColNumList + ",LEN("+ ColNumList + ") - 15) as int)) as newDocID from "+ TableList+" where " + ColNumList + " like N'"+ txtMissionCode + year + "/" + formtype + "%'";  
             if(ServerType == "56") 
-                query = "select max(cast (right("+ ColNumList + ",LEN("+ ColNumList + ") -16) as int)) as newDocID from "+ TableList + " where "+ ColNumList + " like N'ق س ج/80/" + year + "/" + formtype + "%'";
+                query = "select max(cast (right("+ ColNumList + ",LEN("+ ColNumList + ") -16) as int)) as newDocID from "+ TableList + " where "+ ColNumList + " like N'"+ txtMissionCode + year + "/" + formtype + "%'";
             Console.WriteLine(query);
             //MessageBox.Show(query);
             rowCount = getUniqueID(query);
             docId.Text = "ق س ج" + "/" + rowCount + "/" + formtype + "/" + year + "/80";
-            AuthNoPart1 = "ق س ج/80/" + year + "/" + formtype + "/" + rowCount;
+            AuthNoPart1 = txtMissionCode  + year + "/" + formtype + "/" + rowCount;
             AuthNoPart2 = year + formtype + rowCount;            
             return formtype;
         }
@@ -3830,9 +3885,9 @@ namespace PersAhwal
                 {
                     //MessageBox.Show(button.Name);
                     reqFile = "";
-                    OpenFile(Combo1.Text + "-" + Combo2.Text, false); 
+                    OpenFile(Combo1Text + "-" + Combo2Text, false); 
                     if (reqFile == "")
-                        OpenFile(Combo1.Text, false);
+                        OpenFile(Combo1Text, false);
 
                     string wordOutFile = FilespathOut + Combo1.Text.Trim() + DateTime.Now.ToString("ssmm") + ".docx";
                     string date = DateTime.Now.Day.ToString() + "-" + DateTime.Now.Month.ToString() + "-" + DateTime.Now.Year.ToString();
@@ -4129,62 +4184,53 @@ namespace PersAhwal
                 noForm = SpecificDigit(docId.Text, 3, 4);
                 rowCount = SpecificDigit(docId.Text, 5, docId.Text.Length);
             }
-
-            //MessageBox.Show(SpecificDigit(docId.Text, 1, 2) + " - " + noForm + " - " + rowCount);
-            txtIDNo.Text = docIDNumber = "ق س ج/80/" + year + "/" + noForm + "/" + rowCount;
+            txtIDNo.Text = docIDNumber = txtMissionCode + year + "/" + noForm + "/" + rowCount;
             smsDocIDNumber = "ق س ج/" + rowCount + "/" + noForm + "/" + year;
 
             MerrageAndDivProc();
-            
 
-            
+
+
             string index = "-1";
-            if (ServerType == "56") 
+            if (ServerType == "56")
                 index = SpecificDigit(noForm, 3, 3);
-            
+
             getColList(noForm, ArchiveState, index);
+            //Console.Write("1 " + DateTime.Now.ToString("T"));
             if (noForm == "10" || noForm == "12")
+            {
                 getComboText(docIDNumber);
-            else if (noForm == "15"){
-                Combo1.Text = "وثيقة زواج";
-                Combo2.Text = "";
+              //  Console.Write("2 " + DateTime.Now.ToString("T"));
             }
-            else if (noForm == "17"){
-                Combo2.Text = "";
-                Combo1.Text = "وثيقة طلاق";
+            else if (noForm == "15")
+            {
+                Combo1Text = "وثيقة زواج";
+                Combo2Text = "";
             }
-
-
-            //if (FormType == 12)
-            //    getComboText(docIDNumber, comboCol[0], comboCol[1]);
-            //else
-            //{
-            //    Combo1.Text = comboCol[0];
-
-            //    Combo2.Text = comboCol[1];
-            //}
-            //MessageBox.Show(comboCol[0] +" - "+ comboCol[1]);
-            string formName = Combo1.Text+"-"+ Combo2.Text;
-            //if (Combo2.Text == "")
-            //    formName = Combo1.Text;
-
-            //drawBoxesTitle("المستندات المطلوبة للإجراء", 60);
-            //drawBoxes(formName, false, reqFile);
+            else if (noForm == "17")
+            {
+                Combo2Text = "";
+                Combo1Text = "وثيقة طلاق";
+            }
+            loadPreReq(noForm, Combo1Text + "-" + Combo2Text, ArchiveState);
+            string formName = Combo1Text + "-" + Combo2Text;
 
             getTableList(noForm);
-            string wordInFile = Combo1.Text.Trim() + "-" + Combo2.Text;
-            //MessageBox.Show(wordInFile);
-            if (Combo1.Text != "")
+            string wordInFile = Combo1Text.Trim() + "-" + Combo2Text;
+            if (Combo1Text != "")
             {
                 drawBoxesTitle("استمارة الطلب الأولية", 80);
                 drawBoxes(formName, false, wordInFile);
             }
+            //Console.Write("4 " + DateTime.Now.ToString("T"));
             getProcedName = checkBasicInfo(docIDNumber);
+            //Console.Write("5 " + DateTime.Now.ToString("T"));
             string CheckState = checkArch(docIDNumber, getProcedName);
             requiredDocument.Text = CheckState;
             paraValues[2] = docIDNumber;
             docId.Clear();
             docId.Text = DateTime.Now.Year.ToString().Replace("20", "");
+            //Console.Write("6 " + DateTime.Now.ToString("T"));
         }
 
         private void MerrageAndDivProc()
@@ -4261,44 +4307,40 @@ namespace PersAhwal
             return "-1";
         }
 
-        private string getComboText(string docIDNum)
+        private void getComboText(string docIDNum)
         {
+            dontCheck = true;
             string query = "SELECT " + altColName + "," + altSubColName + " FROM " + TableList + " WHERE " + allUpdateNamesList[2] + "=N'" + docIDNum + "'";
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
-            Console.WriteLine(query);
-            //MessageBox.Show(query);
-
+            
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
             sqlDa.Fill(dtbl);
             sqlCon.Close();
-            string fileN = "";
             foreach (DataRow row in dtbl.Rows)
             {
+                Console.WriteLine(row[altColName].ToString() + " - "+ row[altSubColName].ToString());
+                try
+                {
 
-                Combo1.Text = row[altColName].ToString();
-                //MessageBox.Show(row[altColName].ToString());
-                Combo2.Text = row[altSubColName].ToString();
-                //MessageBox.Show(row[altSubColName].ToString());
-                reqFile = "";
-                comboCol[0] = Combo1.Text;
-                comboCol[1] = Combo2.Text;
-                //string formName = Combo1.Text + "-" + Combo2.Text;
-                //fileN = OpenFile(formName, false);
-                //MessageBox.Show(formName + "  "+ fileN);
-                //if (reqFile == "")
-                //{
-                //    formName = Combo1.Text;
-                //    fileN = OpenFile(formName, false);
-                //    MessageBox.Show(formName + "  " + fileN);
-                //}
-
-
+                    Combo1Text = row[altColName].ToString();
+                    Combo2Text = row[altSubColName].ToString();
+                    reqFile = "";
+                    comboCol[0] = Combo1Text;
+                    comboCol[1] = Combo2Text;
+                }
+                catch (Exception ex) 
+                {
+                    
+                }
             }
-            return fileN;
+            dontCheck = false;
+            Console.WriteLine(query);
+            //MessageBox.Show(query);
+
         }
 
         private void docId_KeyPress(object sender, KeyPressEventArgs e)
@@ -4387,7 +4429,7 @@ namespace PersAhwal
             if(found != 0 && ArchiveState )
             {
                 //btnSaveEnd.Enabled = false;
-                MessageBox.Show("المندوب لدية عدد " + found.ToString() + " مكاتبات غير مكتملة،،، لا يمكن المتابعة");                
+                MessageBox.Show("المندوب لدية عدد " + found.ToString() + " مكاتبات غير مكتملة،،، يرجى الحصول على النسخ الاصلية أو صورها مع البصمة");                
             }
             else
                 btnSaveEnd.Enabled = true;
@@ -4662,7 +4704,7 @@ namespace PersAhwal
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
-            SqlDataAdapter sqlDa = new SqlDataAdapter("select "+ colName+" from "+ table+" where " + colName+" like N'ق س ج/80/" + DateTime.Now.Year.ToString().Replace("20", "") + "/%'", sqlCon);
+            SqlDataAdapter sqlDa = new SqlDataAdapter("select "+ colName+" from "+ table+" where " + colName+" like N'"+ txtMissionCode + DateTime.Now.Year.ToString().Replace("20", "") + "/%'", sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             sqlDa.SelectCommand.Parameters.AddWithValue("@" + colName, docid);
             DataTable dtbl = new DataTable();
@@ -4799,6 +4841,7 @@ namespace PersAhwal
 
         private void Combo1_TextChanged(object sender, EventArgs e)
         {
+            if (dontCheck) return; 
             loadPreReq(noForm, Combo1.Text, ArchiveState); 
             
             if (FormType == 10 ) {
@@ -4853,8 +4896,9 @@ namespace PersAhwal
 
         private void Combo2_TextChanged(object sender, EventArgs e)
         {
+            if (dontCheck) return;
             //MessageBox.Show(Combo2.Text);
-            int index = 0;
+                int index = 0;
             for (; index < Combo2.Items.Count; index++) {
                 if (Combo2.Text != Combo2.Items[index].ToString()) continue;
                 else break;
@@ -4934,6 +4978,7 @@ namespace PersAhwal
 
         private void Combo1_TextUpdate(object sender, EventArgs e)
         {
+            if (dontCheck) return;
             if (checkaltColName(Combo1.Text))
             {
                 reqFile = "";

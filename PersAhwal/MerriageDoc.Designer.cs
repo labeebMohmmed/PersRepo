@@ -44,6 +44,8 @@
             this.btnFileUpload = new System.Windows.Forms.Button();
             this.btnFileDownload = new System.Windows.Forms.Button();
             this.PanelMain = new System.Windows.Forms.Panel();
+            this.label22 = new System.Windows.Forms.Label();
+            this.إجمالي_الصداق = new System.Windows.Forms.TextBox();
             this.تاريخ_الاجراء = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.اليوم_off = new System.Windows.Forms.TextBox();
@@ -124,8 +126,6 @@
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.labDescribed = new System.Windows.Forms.Button();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
-            this.label22 = new System.Windows.Forms.Label();
-            this.إجمالي_الصداق = new System.Windows.Forms.TextBox();
             this.PanelFiles.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView6)).BeginInit();
             this.PanelMain.SuspendLayout();
@@ -363,6 +363,27 @@
             this.PanelMain.Size = new System.Drawing.Size(1351, 679);
             this.PanelMain.TabIndex = 692;
             this.PanelMain.Visible = false;
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label22.Location = new System.Drawing.Point(282, 134);
+            this.label22.Name = "label22";
+            this.label22.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.label22.Size = new System.Drawing.Size(91, 27);
+            this.label22.TabIndex = 984;
+            this.label22.Text = "إجمالي الصداق:";
+            // 
+            // إجمالي_الصداق
+            // 
+            this.إجمالي_الصداق.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.إجمالي_الصداق.Location = new System.Drawing.Point(8, 131);
+            this.إجمالي_الصداق.Name = "إجمالي_الصداق";
+            this.إجمالي_الصداق.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.إجمالي_الصداق.Size = new System.Drawing.Size(257, 35);
+            this.إجمالي_الصداق.TabIndex = 983;
+            this.إجمالي_الصداق.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // تاريخ_الاجراء
             // 
@@ -1242,36 +1263,15 @@
             this.timer2.Interval = 1000;
             this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
             // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label22.Location = new System.Drawing.Point(282, 134);
-            this.label22.Name = "label22";
-            this.label22.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label22.Size = new System.Drawing.Size(91, 27);
-            this.label22.TabIndex = 984;
-            this.label22.Text = "إجمالي الصداق:";
-            // 
-            // إجمالي_الصداق
-            // 
-            this.إجمالي_الصداق.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.إجمالي_الصداق.Location = new System.Drawing.Point(8, 131);
-            this.إجمالي_الصداق.Name = "إجمالي_الصداق";
-            this.إجمالي_الصداق.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.إجمالي_الصداق.Size = new System.Drawing.Size(257, 35);
-            this.إجمالي_الصداق.TabIndex = 983;
-            this.إجمالي_الصداق.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
             // MerriageDoc
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1370, 741);
             this.Controls.Add(this.PanelFiles);
-            this.Controls.Add(this.labDescribed);
             this.Controls.Add(this.PanelMain);
             this.Controls.Add(this.dataGridView1);
+            this.Controls.Add(this.labDescribed);
             this.Name = "MerriageDoc";
             this.Text = "MerriageDoc";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MerriageDoc_FormClosed);

@@ -202,7 +202,8 @@ namespace PersAhwal
         string[] subInfoName;
         int tablesCount = 1;
         int AllowedTimes = 5;
-        public MainForm(string career, int id, string server, string Employee, string jobposition, string dataSource56, string dataSource57, string filepathIn, string filepathOut, string archFile, string formDataFile, bool pers_Peope, string gregorianDate, string hijriDate, string modelFiles, string modelForms, bool realwork)
+        bool Hchecked = false;
+        public MainForm(string career, int id, string server, string Employee, string jobposition, string dataSource56, string dataSource57, string filepathIn, string filepathOut, string archFile, string formDataFile, bool pers_Peope, string gregorianDate, string modelFiles, string modelForms, bool realwork)
         {
             InitializeComponent();
             userId = id;
@@ -213,7 +214,6 @@ namespace PersAhwal
             UserJobposition = jobposition;            
             sqlCon = new SqlConnection(DataSource);
             Realwork = realwork;
-            HijriDate = hijriDate;
             GregorianDate = gregorianDate;
             uploadDocx = true;
             EmployeeName = Employee;
@@ -222,6 +222,8 @@ namespace PersAhwal
             infoPreparation(dataSource56, pers_Peope);
             TablesList();            
             ClearFileds();
+            getPro1(DataSource);
+            getPro2(DataSource);
             loadSettings(DataSource, false, false, false, false);
             
             columnNames();
@@ -314,6 +316,12 @@ namespace PersAhwal
             FilespathIn = filepathIn;
             ArchFile = archFile;
             FilespathOut = filepathOut;
+            if (!File.Exists(filepathOut + @"\HijriCheck.txt")) 
+            {
+                Console.WriteLine(filepathOut + @"\HijriCheck.txt");
+                dataSourceWrite(filepathOut + @"\HijriCheck.txt", GregorianDate);
+            }
+            
             if (!File.Exists(filepathOut + @"\autoDocs.txt"))
             {
                 Console.WriteLine(filepathOut + @"\autoDocs.txt");
@@ -3472,7 +3480,13 @@ namespace PersAhwal
                             AllSum = AllSum + rep1[r, c];
                         }
 
-                        monthSumH[c] = AllSum;
+                        try
+                        {
+                            monthSumH[c] = AllSum;
+                        }
+                        catch (Exception ex) {
+                            break;
+                        }
                         Console.WriteLine("AllSum " + AllSum);
                     }
 
@@ -5811,7 +5825,7 @@ namespace PersAhwal
             if (attendedVC.Items.Count >= VCIndexData()) attendedVC.SelectedIndex = AttendViceConsul.SelectedIndex = VCIndexData();
             if (AttendViceConsul.Items.Count >= VCIndexData()) AttendViceConsul.SelectedIndex = VCIndexData();
             fileColComboBox(perbtn1, DataSource, "altColName", "<> ''");
-            fileColComboBox(docCollectCombo, DataSource, "altColName", "= ''");
+            fileColComboBox(docCollectCombo, DataSource, "altColName", "= ''"); 
             VCIndexLoad = true; loadScanner();
             updataArchData1();
             
@@ -5910,7 +5924,11 @@ namespace PersAhwal
 
                 string query = "select " + comlumnName + " from " + tableName;
                 SqlCommand cmd = new SqlCommand(query, saConn);
-                cmd.ExecuteNonQuery();
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex) { return; }
                 DataTable Textboxtable = new DataTable();
                 SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
                 dataAdapter.Fill(Textboxtable);
@@ -7287,6 +7305,108 @@ namespace PersAhwal
                 }
             }
         }
+        private void getPro1(string dataSource)
+        {
+            string query = "select مقدم_الطلب ,رقم_المعاملة,نوع_المعاملة from TableCollection where ID >= 37590 and مقدم_الطلب <> '' and نوع_المعاملة <> N'مذكرة لسفارة أجنبية' and نوع_المعاملة <> N'مذكرة لسفارة عربية'";
+            Console.WriteLine(query);
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            try
+            {
+                sqlDa.Fill(dtbl);
+            }
+            catch (Exception ex) { return; }
+            sqlCon.Close();
+            if (dtbl.Rows.Count > 0)
+            {
+                foreach (DataRow reader in dtbl.Rows)
+                {
+                    try
+                    {
+                        string name = reader["مقدم_الطلب"].ToString();
+                        Console.WriteLine(name );
+                    }
+                    catch (Exception rx) {  }
+                }
+            
+                foreach (DataRow reader in dtbl.Rows)
+                {
+                    try
+                    {
+                        string proNo = reader["رقم_المعاملة"].ToString();
+                        Console.WriteLine(proNo.Split('/')[4]+"/ق س ج/80/23/10");
+                    }
+                    catch (Exception rx) {  }
+                }
+                
+                foreach (DataRow reader in dtbl.Rows)
+                {
+                    try
+                    {
+                        string proType = reader["نوع_المعاملة"].ToString();
+                        Console.WriteLine(proType);
+                    }
+                    catch (Exception rx) {  }
+                }
+            }
+            sqlCon.Close();
+
+        } 
+        private void getPro2(string dataSource)
+        {
+            string query = "select مقدم_الطلب ,رقم_التوكيل,الموكَّل from TableAuth where ID >= 36540 and مقدم_الطلب <> ''";
+            Console.WriteLine(query);
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            try
+            {
+                sqlDa.Fill(dtbl);
+            }
+            catch (Exception ex) { return; }
+            sqlCon.Close();
+            if (dtbl.Rows.Count > 0)
+            {
+                foreach (DataRow reader in dtbl.Rows)
+                {
+                    try
+                    {
+                        string name = reader["مقدم_الطلب"].ToString();
+                        Console.WriteLine(name );
+                    }
+                    catch (Exception rx) {  }
+                }
+            
+                foreach (DataRow reader in dtbl.Rows)
+                {
+                    try
+                    {
+                        string proNo = reader["رقم_التوكيل"].ToString();
+                        Console.WriteLine(proNo.Split('/')[4]+"/ق س ج/80/23/10");
+                    }
+                    catch (Exception rx) {  }
+                }
+                
+                foreach (DataRow reader in dtbl.Rows)
+                {
+                    try
+                    {
+                        string proType = reader["الموكَّل"].ToString();
+                        Console.WriteLine(proType);
+                    }
+                    catch (Exception rx) {  }
+                }
+            }
+            sqlCon.Close();
+
+        } 
         private void loadSettings(string dataSource, bool day, bool daychange, bool month, bool monthchange)
         {
             SqlConnection Con = new SqlConnection(dataSource);
@@ -8514,12 +8634,12 @@ namespace PersAhwal
                         for (int index = 0; index < preInfo.Items.Count; index++)
                         {
                             dateInfo = " and DATEPART(year," + DateName + ") = " + preInfo.Items[index].ToString();
-                            query = "select  from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
+                            query = "select  count(ID) as countNo  from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
                             rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
                             Console.WriteLine(tablesCount.ToString() + "/" + index.ToString() + "-" + preInfo.Items[index].ToString() + "----------------perday-----------------" + rep1[index, tablesCount].ToString());
                         }
                         dateInfo = "";
-                        query = "select  from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
+                        query = "select  count(ID) as countNo  from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
 
                         dateInfo = " and DATEPART(year," + DateName + ") = " + yearReport.Text;
                     }
@@ -8538,7 +8658,7 @@ namespace PersAhwal
                         for (int index = 0; index < preInfo.Items.Count; index++)
                         {
                             dateInfo = " and DATEPART(month," + DateName + ") = " + preInfo.Items[index].ToString() + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
-                            query = "select  from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
+                            query = "select  count(ID) as countNo  from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
                             rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
                             try
                             {
@@ -8547,7 +8667,7 @@ namespace PersAhwal
                             catch (Exception ex) { }
                         }
                         dateInfo = " and DATEPART(year," + DateName + ") = " + yearReport.Text;
-                        query = "select  from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
+                        query = "select  count(ID) as countNo  from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
 
                         dateInfo = " and DATEPART(year," + DateName + ") = " + yearReport.Text;
                     }
@@ -8565,12 +8685,12 @@ namespace PersAhwal
                         for (int index = 0; index < preInfo.Items.Count; index++)
                         {
                             dateInfo = " and DATEPART(month," + DateName + ") = " + preInfo.Items[index].ToString() + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
-                            query = "select  from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
+                            query = "select  count(ID) as countNo  from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
                             rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
                             Console.WriteLine(tablesCount.ToString() + "/" + index.ToString() + "-" + preInfo.Items[index].ToString() + "----------------perday-----------------" + rep1[index, tablesCount].ToString());
                         }
                         dateInfo = " and DATEPART(QUARTER," + DateName + ") = " + (monthReport.SelectedIndex + 1).ToString() + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
-                        query = "select  from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
+                        query = "select  count(ID) as countNo  from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
 
                     }
                     else if (ReportType.Text == "تقرير شهري")
@@ -8587,12 +8707,12 @@ namespace PersAhwal
                         for (int index = 0; index < preInfo.Items.Count; index++)
                         {
                             dateInfo = " and DATEPART(week," + DateName + ") = " + preInfo.Items[index].ToString() + " and DATEPART(month," + DateName + ") = " + monthReport.Text + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
-                            query = "select  from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
+                            query = "select  count(ID) as countNo  from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
                             rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
                             Console.WriteLine(tablesCount.ToString() + "/"+ index.ToString()+"-" + preInfo.Items[index].ToString() + "----------------perday-----------------" + rep1[index, tablesCount].ToString());
                         }                        
                         dateInfo = " and DATEPART(MONTH," + DateName + ") = " + (monthReport.SelectedIndex + 1).ToString() + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
-                        query = "select  from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
+                        query = "select  count(ID) as countNo  from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
                     }
                     else if (ReportType.Text == "التقرير الاسبوعي")
                     {
@@ -8608,13 +8728,13 @@ namespace PersAhwal
                         for (int index = 0; index < preInfo.Items.Count; index++)
                         {
                             dateInfo = " and DATEPART(day," + DateName + ") = " + preInfo.Items[index].ToString() + " and DATEPART(WEEK," + DateName + ") = " + monthReport.Text + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
-                            query = "select  from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
+                            query = "select  count(ID) as countNo  from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
                             rep1[index, tablesCount] = getcountReportsCalcs(dataSource, query);
                             Console.WriteLine(preInfo.Items[index].ToString() + "----------------perday-----------------" + rep1[index, tablesCount].ToString());
                         }
                         dateInfo = " and DATEPART(WEEK," + DateName + ") = " + monthReport.Text + " and DATEPART(year," + DateName + ") = " + yearReport.Text;
                     }
-                    query = "select  from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
+                    query = "select  count(ID) as countNo  from " + TableName + " where " + ProTypeName + " <> ''" + dateInfo;
                     
                     try
                     {
@@ -8847,7 +8967,7 @@ namespace PersAhwal
             SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable table = new DataTable();
-            //Console.WriteLine(query); 
+            Console.WriteLine(query); 
             sqlDa.Fill(table);
             sqlCon.Close();
             int count = 0;
@@ -10126,6 +10246,65 @@ namespace PersAhwal
             {
             }
         }
+
+        private void timer3_Tick(object sender, EventArgs e)
+        {
+            CultureInfo arSA = new CultureInfo("ar-SA");
+            arSA.DateTimeFormat.Calendar = new HijriCalendar();
+            Thread.CurrentThread.CurrentCulture = arSA;
+            int Ddiffer = HijriDateDifferment(DataSource, true);
+            int Mdiffer = HijriDateDifferment(DataSource, false);
+            string Stringdate, Stringmonth, StrHijriDate;
+            StrHijriDate = DateTime.Now.ToString("dd-MM-yyyy");
+            string[] YearMonthDay = StrHijriDate.Split('-');
+            int year, month, date;
+            year = Convert.ToInt16(YearMonthDay[2]);
+            month = Convert.ToInt16(YearMonthDay[1]) + Mdiffer;
+            date = Convert.ToInt16(YearMonthDay[0]) + Ddiffer;
+            if (month < 10) Stringmonth = "0" + month.ToString();
+            else Stringmonth = month.ToString();
+            if (date < 10) Stringdate = "0" + date.ToString();
+            else Stringdate = date.ToString();
+            HijriDate = Stringdate + "-" + Stringmonth + "-" + year.ToString();
+            //if (HijriDate.Contains("-")) timer4.Enabled = false;
+            
+            if (!Hchecked && (Stringdate == "02" || Stringdate == "30") && File.ReadAllText(FilespathOut + @"\HijriCheck.txt") != GregorianDate)
+            {
+                Hchecked = true;
+                MessageBox.Show("هل التاريخ الهجري مطابق للواقع: " + HijriDate +" ؟");
+                dataSourceWrite(FilespathOut + @"\HijriCheck.txt", GregorianDate);
+            }
+        }
+
+        private int HijriDateDifferment(string source, bool daymonth)
+        {
+            int differment = 0;
+            string query;
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+
+                try
+                {
+                    saConn.Open();
+                }
+                catch (Exception ex) { return differment; }
+                if (daymonth) query = "select hijriday from TableSettings";
+                else query = "select hijrimonth from TableSettings";
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.ExecuteNonQuery();
+                var reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    if (daymonth) differment = Convert.ToInt32(reader["hijriday"].ToString());
+                    else differment = Convert.ToInt32(reader["hijrimonth"].ToString());
+                }
+
+                saConn.Close();
+
+            }
+            return differment;
+        }
+
 
         private void GoToForm(int indexNo, int locaIDNo)
         {

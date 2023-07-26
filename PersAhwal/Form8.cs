@@ -1521,6 +1521,8 @@ namespace PersAhwal
         private void button3_Click(object sender, EventArgs e)
         {
             insert = true;
+            if (النص.Text != "")
+                checlList[1] = "";
             string RevText = SuffReversReplacements(النص.Text, 0, 0);
             if (!checkRowExist(DataSource, قائمة_النصوص_العامة.Text, قائمة_النصوص_الفرعية.Text))
             {
@@ -1554,7 +1556,7 @@ namespace PersAhwal
                 SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
                 sqlCmd.CommandType = CommandType.Text;
                 sqlCmd.ExecuteNonQuery();
-                النص.Text = "";
+                
                 
             }
             else {
@@ -1562,9 +1564,30 @@ namespace PersAhwal
                     updateAllFields(RevText);                
                 updateText();                                
             }
-            for(int i=0;i<6;i++)
-                if(checlList[i] != "")
-                    MessageBox.Show(checlList[i]);
+            for (int i = 0; i < 6; i++)
+                if (checlList[i] != "")
+                {
+                    if (i == 3 || i == 4)
+                    {
+                        otherPro.SelectedIndex = 1;
+                        MessageBox.Show(checlList[i]);
+                        return;
+                    }
+                    else if (i == 5)
+                    {
+                        otherPro.SelectedIndex = 2;
+                        MessageBox.Show(checlList[i]);
+                        return;
+                    }
+                    else if (i == 6)
+                    {
+                        otherPro.SelectedIndex = 4;
+                        MessageBox.Show(checlList[i]);
+                        return;
+                    }
+                    
+                }
+            النص.Text = "";
         }
 
         private string checkStarTextExist(string dataSource, string col, string text, string genTable)
@@ -2272,13 +2295,38 @@ namespace PersAhwal
 
             foreach (Control control in panel_المستندات.Controls)
             {
-                if (control.Name.Contains("المطلوب_رقم") || control.Name.Contains("btnReq"))
+                if (control is Button && (control.Name.Contains("المطلوب_رقم") || control.Name.Contains("btnReq")))
                 {
                     control.Text = "";
                 }
             }
             if (معاملات_التالي.Visible)
                 معاملات_التالي.PerformClick();
+
+            for (int i = 0; i < 6; i++)
+                if (checlList[i] != "")
+                {
+                    if (i == 3 || i == 4)
+                    {
+                        otherPro.SelectedIndex = 1;
+                        MessageBox.Show(checlList[i]);
+                        return;
+                    }
+                    else if (i == 5)
+                    {
+                        otherPro.SelectedIndex = 2;
+                        MessageBox.Show(checlList[i]);
+                        return;
+                    }
+                    else if (i == 6)
+                    {
+                        otherPro.SelectedIndex = 4;
+                        MessageBox.Show(checlList[i]);
+                        return;
+                    }
+
+                }
+            النص.Text = "";
         }
 
         private void insertRow(string source, string[] data)
@@ -2343,6 +2391,32 @@ namespace PersAhwal
                 CurrentFile = @dlg.FileName;                
                 uploadFormsReq(CurrentFile);
             }
+
+            for (int i = 0; i < 6; i++)
+                if (checlList[i] != "")
+                {
+                    if (i == 3 || i == 4)
+                    {
+                        otherPro.SelectedIndex = 1;
+                        MessageBox.Show(checlList[i]);
+                        return;
+                    }
+                    else if (i == 5)
+                    {
+                        otherPro.SelectedIndex = 2;
+                        MessageBox.Show(checlList[i]);
+                        return;
+                    }
+                    
+                    else if (i == 6)
+                    {
+                        otherPro.SelectedIndex = 4;
+                        MessageBox.Show(checlList[i]);
+                        return;
+                    }
+
+                }
+            النص.Text = "";
         }
 
         private void uploadFormsReq(string location)
@@ -2446,6 +2520,31 @@ namespace PersAhwal
             if (معاملات_التالي.Visible)
                 معاملات_التالي.PerformClick();
             //button2.PerformClick();
+
+            for (int i = 0; i < 6; i++)
+                if (checlList[i] != "")
+                {
+                    if (i == 3 || i == 4)
+                    {
+                        otherPro.SelectedIndex = 1;
+                        MessageBox.Show(checlList[i]);
+                        return;
+                    }
+                    else if (i == 5)
+                    {
+                        otherPro.SelectedIndex = 2;
+                        MessageBox.Show(checlList[i]);
+                        return;
+                    }
+                    else if (i == 6)
+                    {
+                        otherPro.SelectedIndex = 4;
+                        MessageBox.Show(checlList[i]);
+                        return;
+                    }
+
+                }
+            النص.Text = "";
         }
 
         private void button15_Click(object sender, EventArgs e)
@@ -2482,7 +2581,30 @@ namespace PersAhwal
 
         private void button17_Click(object sender, EventArgs e)
         {
+            for (int i = 0; i < 6; i++)
+                if (checlList[i] != "")
+                {
+                    if (i == 3 || i == 4)
+                    {
+                        otherPro.SelectedIndex = 1;
+                        MessageBox.Show(checlList[i]);
+                        return;
+                    }
+                    else if (i == 5)
+                    {
+                        otherPro.SelectedIndex = 2;
+                        MessageBox.Show(checlList[i]);
+                        return;
+                    }
+                    else if (i == 6)
+                    {
+                        otherPro.SelectedIndex = 4;
+                        MessageBox.Show(checlList[i]);
+                        return;
+                    }
 
+                }
+            النص.Text = "";
         }
 
         private void معاملات_الجميع_Click(object sender, EventArgs e)

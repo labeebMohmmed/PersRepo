@@ -30,6 +30,7 @@ using DocumentFormat.OpenXml.Office2010.Excel;
 using Color = System.Drawing.Color;
 using System.Data.SqlTypes;
 using System.Xml.Linq;
+using System.Security.Cryptography.Xml;
 
 namespace PersAhwal
 {
@@ -59,6 +60,7 @@ namespace PersAhwal
         bool button1Enabel = false;
         string localCopy_off = "";
         string localCopy_off1 = "";
+        bool newInfo = true;
         public MerriageDoc(string dataSource, bool addEdit, string empName, int atVCIndex, string gregorianDate, string hijriDate, string filespathIn, string filespathOut)
         {
             InitializeComponent();
@@ -82,10 +84,10 @@ namespace PersAhwal
 
             colIDs[4] = موظف_الإدخال .Text = الموظف.Text = empName;
             موظف_الإدخال.Text = الموظف.Text = empName;
-            fileComboBox(المأذون, DataSource, "ArabicAttendVC", "TableListCombo");
-            if(المأذون.Items.Count> AtVCIndex)
-                المأذون.SelectedIndex = AtVCIndex;
-            else المأذون.SelectedIndex = 0;
+            //fileComboBox(المأذون, DataSource, "ArabicAttendVC", "TableListCombo");
+            //if(المأذون.Items.Count> AtVCIndex)
+            //    المأذون.SelectedIndex = AtVCIndex;
+            //else المأذون.SelectedIndex = 0;
             
             طريقة_الإجراء.SelectedIndex = 1;
             
@@ -199,10 +201,19 @@ namespace PersAhwal
         
         private bool getDate(TextBox textBox)
         {
+            string query = "";
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
-            SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT DATEDIFF(day, '" + textBox.Text + "', '" + GregorianDate + "')/365 as daysDiff", sqlCon);
+            try
+            {
+                string year = textBox.Text.Split('-')[2];
+                string month = textBox.Text.Split('-')[1];
+                string date = textBox.Text.Split('-')[0];
+                query = "SELECT DATEDIFF(day, '" + month + "-" + date + "-" + year + "', '" + GregorianDate + "')/365 as daysDiff";
+            }
+            catch (Exception ex) { return false; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
             try
@@ -284,6 +295,11 @@ namespace PersAhwal
             if (dataGridView1.CurrentRow.Index != -1)
             {
                 genIDNo = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value.ToString());
+                اسم_الزوج.Text = dataGridView1.CurrentRow.Cells[اسم_الزوج.Name].Value.ToString();
+                if (اسم_الزوج.Text == "")
+                    newInfo = true;
+                else
+                    newInfo = false;
                 foreach (Control control in PanelMain.Controls)
                 {
                     if ((control is TextBox || control is ComboBox || control is CheckBox) && !control.Name.Contains("Off"))
@@ -299,13 +315,15 @@ namespace PersAhwal
                 }
                 gridFill = false;
                 التعليقات_السابقة_Off.Text = dataGridView1.CurrentRow.Cells["تعليق"].Value.ToString();
-                if (dataGridView1.CurrentRow.Cells["اسم_الزوج"].Value.ToString() == "")
+                if (dataGridView1.CurrentRow.Cells["اسم_الزوج"].Value.ToString() == "" && File.ReadAllText(FilespathOut + @"\autoDocs.txt") == "Yes")
                 {
                     newData = true;
                     FillDatafromGenArch("data1", genIDNo.ToString(), "TableMerrageDoc");
                 }
                 
                 AddEdit = false;
+                
+
                 labDescribed.Visible = dataGridView1.Visible = false;
                 PanelMain.Visible = true;
                 backgroundWorker1.RunWorkerAsync();
@@ -313,11 +331,13 @@ namespace PersAhwal
             //if (رقم_الوثيقة.Text != "" && رقم_الوثيقة.Text != "بدون") 
             //    رقم_الوثيقة.Enabled = false;
             //else رقم_الوثيقة.Enabled = true;
-            
+            newInfo = true;
         }
 
         private bool ready()
         {
+            عمر_الزوج_الحرج = getDate(تاريخ_الميلاد);
+            عمر_الزوجة_الحرج = getDate(ميلاد_الزوجة);
             for (int i = 0; i < allList.Length; i++)
             {
                 foreach (Control control in PanelMain.Controls)
@@ -339,7 +359,7 @@ namespace PersAhwal
                             MessageBox.Show("يرجى إضافة رقم الجواز بصورة صحيحة لخانة " + control.Name); return false;
                         }
                         
-                        if (عمر_الزوج_الحرج)
+                        if (عمر_الزوج_الحرج || عمر_الزوجة_الحرج)
                         {
                             MessageBox.Show("عمر أحد الزوجين أقل من العمر الذي نص عليه القانون " + control.Name);
                             return false;
@@ -353,6 +373,12 @@ namespace PersAhwal
                     }
                 }
             }
+            if (!checkDate(تاريخ_الميلاد) || !checkDate(ميلاد_الزوجة))
+            {
+                return false;
+            }
+            
+
             return true;
         }
 
@@ -402,6 +428,34 @@ namespace PersAhwal
             sqlCon.Close();
         }
 
+        private bool checkDate(TextBox text)
+        {            
+            if (text.Text.Length != 10)
+            {
+                MessageBox.Show("لا يمكن المتابعة يرجى كتابة " + text.Name.Replace("_", " ") + " بشكل صحيح");
+                text.BackColor = System.Drawing.Color.MistyRose;
+                return false;
+            }
+            else
+            {
+                try
+                {
+                    int month = Convert.ToInt32(SpecificDigit(text.Text, 4, 5));
+                    if (month > 12)
+                    {
+                        MessageBox.Show("الشهر يحب أن يكون أقل من 12");
+                        //textBox.Text = "";
+                        text.Text = SpecificDigit(text.Text, 7, 10);
+                        text.BackColor = System.Drawing.Color.MistyRose;
+                        return false;
+                    }
+                }
+                catch (Exception ex) { return false; }
+
+            }
+            return true;
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {            
             string part1to3 = رقم_المعاملة.Text.Split('/')[0] + "/" + رقم_المعاملة.Text.Split('/')[1] + "/" + رقم_المعاملة.Text.Split('/')[2] + "/" + رقم_المعاملة.Text.Split('/')[3] + "/";
@@ -410,6 +464,7 @@ namespace PersAhwal
             addNewAppNameInfo2(اسم_الزوجة);
             addNewAppNameInfo3(الشاهد_الاول, وثيقة_الشاهد_الاول);
             addNewAppNameInfo3(الشاهد_الثاني, وثيقة_الشاهد_الثاني);
+            
             if (!ready()) return;
             SqlConnection sqlConnection = new SqlConnection(DataSource);
             if (sqlConnection.State == ConnectionState.Closed)
@@ -436,11 +491,12 @@ namespace PersAhwal
             }
             sqlCommand.ExecuteNonQuery();
             updateGenName(رقم_المعاملة.Text, genIDNo.ToString());
-            if (!checkSentSMS(genIDNo, "TableMerrageDoc")) 
+            if (!checkSentSMS(genIDNo, "TableMerrageDoc"))
                 SMS(genIDNo, "TableMerrageDoc");
-            
-            if (newData) {
-                colIDs[0] = رقم_المعاملة.Text; 
+
+            if (newData)
+            {
+                colIDs[0] = رقم_المعاملة.Text;
                 colIDs[1] = genIDNo.ToString();
                 colIDs[2] = GregorianDate;
                 colIDs[3] = اسم_الزوج.Text;
@@ -452,15 +508,15 @@ namespace PersAhwal
             }
             try
             {
-                اليوم_off.Text = تاريخ_الاجراء.Text.Split('-')[1];
-                الشهر_off.Text = تاريخ_الاجراء.Text.Split('-')[0];
+                اليوم_off.Text = تاريخ_الاجراء.Text.Split('-')[0];
+                الشهر_off.Text = تاريخ_الاجراء.Text.Split('-')[1];
                 السنة_off.Text = تاريخ_الاجراء.Text.Split('-')[2];
             }
             catch (Exception ex) { }
             fillPreDoc();
             fillDocFileAppInfo();
             fillPrintDocx();
-            
+
             this.Close();
         }
 
@@ -491,15 +547,7 @@ namespace PersAhwal
             {
                 MessageBox.Show(reader["lastid"].ToString());
             }
-            try
-            {
-
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("addNewAppNameInfo");
-            }
+            
         }
 
         private void addNewAppNameInfo2(TextBox textName)
@@ -651,18 +699,18 @@ namespace PersAhwal
         {
             SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (sqlCon.State == ConnectionState.Closed)
-                try
-                {
-                    sqlCon.Open();
-                    string query = "update TableGeneralArch set رقم_معاملة_القسم=N'" + name + "' where رقم_المرجع = '" + idDoc + "' and docTable=N'TableMerrageDoc'";
-                    SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
-                    if (sqlCon.State == ConnectionState.Closed)
-                        sqlCon.Open();
-                    sqlCmd.CommandType = CommandType.Text;
-                    sqlCmd.ExecuteNonQuery();
-                    sqlCon.Close();
-                }
-                catch (Exception ex) { }
+                //try
+                //{
+                sqlCon.Open();
+            string query = "update TableGeneralArch set رقم_معاملة_القسم=N'" + name + "' where رقم_المرجع = '" + idDoc + "' and docTable=N'TableMerrageDoc'";
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
+            //}
+            //catch (Exception ex) { }
         }
 
         private void SMS(int id, string table)
@@ -759,7 +807,63 @@ namespace PersAhwal
             autoCompleteTextBox1(وكيل_الزوج, DataSource, "الاسم", "TableGenNames");
             autoCompleteTextBox1(وكيل_الزوجة, DataSource, "الاسم", "TableGenNames");
             autoCompleteTextBox(المهنة, DataSource, "jobs", "TableListCombo"); autoCompleteTextBox(المهنة, DataSource, "jobs", "TableListCombo");
+            diplomats(المأذون, DataSource);            
+            if (المأذون.Items.Count >= VCIndexData()) المأذون.SelectedIndex = VCIndexData();
         }
+
+        private int VCIndexData()
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return 0; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT VCIndesx,AttendVCAffairs FROM TableSettings", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable table = new DataTable();
+            sqlDa.Fill(table);
+            sqlCon.Close();
+            int index = 0;
+            foreach (DataRow dataRow in table.Rows)
+            {
+                if (!string.IsNullOrEmpty(dataRow["VCIndesx"].ToString()))
+                {
+                    index = Convert.ToInt32(dataRow["VCIndesx"].ToString());
+                }
+            }
+            return index;
+        }
+        private void diplomats(ComboBox combbox, string source)
+        {
+            combbox.Items.Clear();
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                saConn.Open();
+
+                string query = "select distinct EmployeeName from TableUser where EmployeeName is not null and الدبلوماسيون = N'yes' and Aproved like N'%أكده%' order by EmployeeName asc";
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.CommandType = CommandType.Text;
+
+                Console.WriteLine(query);
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    DataTable table = new DataTable();
+                    SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                    dataAdapter.Fill(table);
+
+                    foreach (DataRow dataRow in table.Rows)
+                    {
+                        combbox.Items.Add(dataRow["EmployeeName"].ToString());
+                    }
+                }
+                catch (Exception ex) { }
+                saConn.Close();
+            }
+        }
+
         private void autoCompleteTextBox(TextBox textbox, string source, string comlumnName, string tableName)
         {
 
@@ -883,6 +987,7 @@ namespace PersAhwal
 
         private void حالة_الزوجة_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (!newInfo) return;
             if (حالة_الزوجة.SelectedIndex == 1)
                 MessageBox.Show("يجب التأكد من وجود وثيقة طلاق موثقة من الجهات المعنية");
             else if (حالة_الزوجة.SelectedIndex == 2)
@@ -891,7 +996,9 @@ namespace PersAhwal
 
         private void صلة_الوكيل_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(صلة_الوكيل.SelectedIndex != 0) 
+            if (!newInfo) return; 
+            
+            if (صلة_الوكيل.SelectedIndex != 0) 
                 MessageBox.Show("يجب التأكد من وجود شهادة وفاة للاب وإقرار من ولي الزوجة بأهلية الولاية");
         }
 
@@ -942,18 +1049,18 @@ namespace PersAhwal
         bool عمر_الزوج_الحرج = true;
         private void تاريخ_الميلاد_TextChanged(object sender, EventArgs e)
         {
-            if (تاريخ_الميلاد.Text.Length == 10)
-            {
-                int month = Convert.ToInt32(SpecificDigit(تاريخ_الميلاد.Text, 4, 5));
-                if (month > 12)
-                {
-                    MessageBox.Show("الشهر يحب أن يكون أقل من 12");
-                    //VitxtDate1.Text = "";
-                    تاريخ_الميلاد.Text = SpecificDigit(تاريخ_الميلاد.Text, 6, 10);
-                    return;
-                }
-                عمر_الزوج_الحرج = getDate( تاريخ_الميلاد);
-            }
+            //if (تاريخ_الميلاد.Text.Length == 10)
+            //{
+            //    int month = Convert.ToInt32(SpecificDigit(تاريخ_الميلاد.Text, 4, 5));
+            //    if (month > 12)
+            //    {
+            //        MessageBox.Show("الشهر يحب أن يكون أقل من 12");
+            //        //VitxtDate1.Text = "";
+            //        تاريخ_الميلاد.Text = SpecificDigit(تاريخ_الميلاد.Text, 6, 10);
+            //        return;
+            //    }
+                عمر_الزوج_الحرج = getDate(تاريخ_الميلاد);
+            //}
 
             if (تاريخ_الميلاد.Text.Length == 11)
             {
@@ -964,6 +1071,8 @@ namespace PersAhwal
             else if (تاريخ_الميلاد.Text.Length == 7) تاريخ_الميلاد.Text = "-" + تاريخ_الميلاد.Text;
             lastInput2 = تاريخ_الميلاد.Text;
         }
+        
+        
         private string SpecificDigit(string text, int Firstdigits, int Lastdigits)
         {
             char[] characters = text.ToCharArray();
@@ -1007,18 +1116,18 @@ namespace PersAhwal
         bool عمر_الزوجة_الحرج = true;
         private void ميلاد_الزوجة_TextChanged(object sender, EventArgs e)
         {
-            if (ميلاد_الزوجة.Text.Length == 10)
-            {
-                int month = Convert.ToInt32(SpecificDigit(ميلاد_الزوجة.Text, 4, 5));
-                if (month > 12)
-                {
-                    MessageBox.Show("الشهر يحب أن يكون أقل من 12");
-                    //VitxtDate1.Text = "";
-                    ميلاد_الزوجة.Text = SpecificDigit(ميلاد_الزوجة.Text, 6, 10);
-                    return;
-                }
-                عمر_الزوجة_الحرج = getDate(ميلاد_الزوجة);
-            }
+            //if (ميلاد_الزوجة.Text.Length == 10)
+            //{
+            //    int month = Convert.ToInt32(SpecificDigit(ميلاد_الزوجة.Text, 4, 5));
+            //    if (month > 12)
+            //    {
+            //        MessageBox.Show("الشهر يحب أن يكون أقل من 12");
+            //        //VitxtDate1.Text = "";
+            //        ميلاد_الزوجة.Text = SpecificDigit(ميلاد_الزوجة.Text, 6, 10);
+            //        return;
+            //    }
+            //    عمر_الزوجة_الحرج = getDate(ميلاد_الزوجة);
+            //}
 
             if (ميلاد_الزوجة.Text.Length == 11)
             {
@@ -1200,6 +1309,38 @@ namespace PersAhwal
             }
             //MessageBox.Show(رقم_الهوية_1.Text);
         }
+        
+        public void getID(TextBox رقم_الهوية_1,  string name)
+        {
+            if (gridFill) return;
+            DataTable dtbl = new DataTable();
+            string query = "SELECT * FROM TableGenNames where الاسم = N'" + name + "'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            
+           
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            
+            sqlDa.Fill(dtbl);
+            }
+
+            catch (Exception ex)
+            {
+                رقم_الهوية_1.Text = "P0";
+                return;
+            }
+            رقم_الهوية_1.Text = "P0";
+            foreach (DataRow row in dtbl.Rows)
+            {
+                رقم_الهوية_1.Text = row["رقم_الهوية"].ToString();
+                return;
+            }
+            //MessageBox.Show(رقم_الهوية_1.Text);
+        }
         public void getID(TextBox رقم_الهوية_1,  TextBox تاريخ_الميلاد_1, string name)
         {
             if (gridFill) return;
@@ -1232,35 +1373,35 @@ namespace PersAhwal
             }
             //MessageBox.Show(رقم_الهوية_1.Text);
         }
-        public void getID(TextBox رقم_الهوية_1 , string name)
-        {
-            if (gridFill) return;
-            DataTable dtbl = new DataTable();
-            string query = "SELECT * FROM TableGenNames where الاسم = N'" + name + "'";
-            SqlConnection sqlCon = new SqlConnection(DataSource);
-            try
-            {
-                if (sqlCon.State == ConnectionState.Closed)
-                    sqlCon.Open();
+        //public void getID(TextBox رقم_الهوية_1 , string name)
+        //{
+        //    if (gridFill) return;
+        //    DataTable dtbl = new DataTable();
+        //    string query = "SELECT * FROM TableGenNames where الاسم = N'" + name + "'";
+        //    SqlConnection sqlCon = new SqlConnection(DataSource);
+        //    try
+        //    {
+        //        if (sqlCon.State == ConnectionState.Closed)
+        //            sqlCon.Open();
             
-            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
-            sqlDa.SelectCommand.CommandType = CommandType.Text;
+        //    SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+        //    sqlDa.SelectCommand.CommandType = CommandType.Text;
             
-            sqlDa.Fill(dtbl);
-            }
-            catch (Exception ex)
-            {
-                رقم_الهوية_1.Text = "P0";
-                return;
-            }
-            رقم_الهوية_1.Text = "P0";
-            foreach (DataRow row in dtbl.Rows)
-            {
-                رقم_الهوية_1.Text = row["رقم_الهوية"].ToString();
-                return;
-            }
-            //MessageBox.Show(رقم_الهوية_1.Text);
-        }
+        //    sqlDa.Fill(dtbl);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        رقم_الهوية_1.Text = "P0";
+        //        return;
+        //    }
+        //    رقم_الهوية_1.Text = "P0";
+        //    foreach (DataRow row in dtbl.Rows)
+        //    {
+        //        رقم_الهوية_1.Text = row["رقم_الهوية"].ToString();
+        //        return;
+        //    }
+        //    //MessageBox.Show(رقم_الهوية_1.Text);
+        //}
 
         private void اسم_الزوجة_TextChanged(object sender, EventArgs e)
         {
@@ -1274,12 +1415,13 @@ namespace PersAhwal
 
         private void الشاهد_الاول_TextChanged(object sender, EventArgs e)
         {
-            //getID(وثيقة_الشاهد_الاول, الشاهد_الاول.Text, "رقم_الهوية", "P0");
+            getID(وثيقة_الشاهد_الاول, الشاهد_الاول.Text);
         }
 
         private void الشاهد_الثاني_TextChanged(object sender, EventArgs e)
         {
             //getID(وثيقة_الشاهد_الثاني, الشاهد_الثاني.Text, "رقم_الهوية", "P0");
+            getID(وثيقة_الشاهد_الثاني, الشاهد_الثاني.Text);
         }
 
         private void وكيل_الزوج_TextChanged(object sender, EventArgs e)

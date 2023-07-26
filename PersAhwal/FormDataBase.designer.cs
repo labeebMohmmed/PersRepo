@@ -108,7 +108,6 @@ namespace PersAhwal
             this.Password.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Password.Location = new System.Drawing.Point(357, 129);
             this.Password.Name = "Password";
-            this.Password.PasswordChar = '*';
             this.Password.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.Password.Size = new System.Drawing.Size(252, 35);
             this.Password.TabIndex = 9;
