@@ -7311,7 +7311,11 @@ namespace PersAhwal
             Console.WriteLine(query);
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
             SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();

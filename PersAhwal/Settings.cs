@@ -634,7 +634,7 @@ namespace PersAhwal
 
         private void button3_Click(object sender, EventArgs e)
         {
-            txtApp.Text = getAppFolder();
+            FolderApp.Text = getAppFolder();
             foreach(Control panel in this.Controls)
             {
                 if(panel.Name.Contains("panel"))
@@ -1326,7 +1326,7 @@ namespace PersAhwal
         {
             OpenFileDialog dlg = new OpenFileDialog();
             dlg.ShowDialog();
-            txtApp.Text = dlg.FileName;
+            FolderApp.Text = dlg.FileName;
         }
 
         private void button121_Click(object sender, EventArgs e)
@@ -1336,8 +1336,8 @@ namespace PersAhwal
 
         private void button121_Click_1(object sender, EventArgs e)
         {
-            FolderAppUpdate(txtApp.Text);
-            txtApp.Text = "";
+            FolderAppUpdate(FolderApp.Text);
+            FolderApp.Text = "";
         }
 
         private void pictureBox3_Click(object sender, EventArgs e)
@@ -1710,7 +1710,7 @@ namespace PersAhwal
 
         private void button35_Click_1(object sender, EventArgs e)
         {
-            txtApp.Text = getAppFolder();
+            FolderApp.Text = getAppFolder();
             try
             {
                 string[] info = missionBasicInfo().Split('*');
@@ -1930,7 +1930,7 @@ namespace PersAhwal
 
         private void button6_Click(object sender, EventArgs e)
         {
-            txtApp.Text = getAppFolder();
+            FolderApp.Text = getAppFolder();
             foreach (Control panel in this.Controls)
             {
                 if (panel.Name.Contains("panel"))
@@ -1955,6 +1955,40 @@ namespace PersAhwal
             sqlCmd.Parameters.AddWithValue("@ID", "1");
             sqlCmd.ExecuteNonQuery();
             sqlCon.Close();
+        }
+
+        private void button16_Click(object sender, EventArgs e)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlCommand sqlCmd = new SqlCommand("FilesAddorEdit", sqlCon);
+            sqlCmd.CommandType = CommandType.StoredProcedure;
+            if (SaveSettings.Text == "حفظ")
+            {
+                sqlCmd.Parameters.AddWithValue("@ID", 1);
+                sqlCmd.Parameters.AddWithValue("@mode", "Add");
+                sqlCmd.Parameters.AddWithValue("@FileArchive", FileArchive.Text);
+                sqlCmd.Parameters.AddWithValue("@TempOutput", TempOutput.Text);
+                sqlCmd.Parameters.AddWithValue("@Modelfilespath", Modelfilespath.Text);
+                sqlCmd.Parameters.AddWithValue("@FolderApp", FolderApp.Text);
+                sqlCmd.Parameters.AddWithValue("@archDisk", archDisk.Text);
+                sqlCmd.Parameters.AddWithValue("@workingDisk", workingDisk.Text);
+
+            }
+            else
+            {
+                sqlCmd.Parameters.AddWithValue("@ID", 1);
+                sqlCmd.Parameters.AddWithValue("@mode", "Edit");
+                sqlCmd.Parameters.AddWithValue("@FileArchive", FileArchive.Text);
+                sqlCmd.Parameters.AddWithValue("@TempOutput", TempOutput.Text);
+                sqlCmd.Parameters.AddWithValue("@Modelfilespath", Modelfilespath.Text);
+                sqlCmd.Parameters.AddWithValue("@FolderApp", FolderApp.Text);
+                sqlCmd.Parameters.AddWithValue("@archDisk", archDisk.Text);
+                sqlCmd.Parameters.AddWithValue("@workingDisk", workingDisk.Text);
+
+            }
+            sqlCmd.ExecuteNonQuery();
         }
 
         private void CreateColumns(string Columnname)
@@ -2141,7 +2175,7 @@ namespace PersAhwal
         private void loadSettings()
         {
             SqlConnection Con = new SqlConnection(DataSource);
-            SqlCommand sqlCmd1 = new SqlCommand("select Modelfilespath,TempOutput,ServerName,Serverlogin,ServerPass,serverDatabase,FileArchive  from TableSettings where ID=@id", Con);
+            SqlCommand sqlCmd1 = new SqlCommand("select Modelfilespath,TempOutput,ServerName,Serverlogin,ServerPass,serverDatabase,FileArchive,archDisk,workingDisk  from TableSettings where ID=@id", Con);
             sqlCmd1.Parameters.Add("@id", SqlDbType.Int).Value = 1;
             if (Con.State == ConnectionState.Closed)
                 try
@@ -2153,13 +2187,15 @@ namespace PersAhwal
                     if (reader.Read())
                     {
                         NewSettings = true;
-                        txtModel.Text = reader["Modelfilespath"].ToString();
-                        txtOutput.Text = reader["TempOutput"].ToString();
-                        txtServerIP.Text = reader["ServerName"].ToString();
-                        txtLogin.Text = reader["Serverlogin"].ToString();
-                        txtPass.Text = reader["ServerPass"].ToString();
-                        txtDatabase.Text = reader["serverDatabase"].ToString();
-                        ArchiveFile.Text = reader["FileArchive"].ToString();
+                        Modelfilespath.Text = reader["Modelfilespath"].ToString();
+                        TempOutput.Text = reader["TempOutput"].ToString();
+                        ServerName.Text = reader["ServerName"].ToString();
+                        Serverlogin.Text = reader["Serverlogin"].ToString();
+                        ServerPass.Text = reader["ServerPass"].ToString();
+                        serverDatabase.Text = reader["serverDatabase"].ToString();
+                        FileArchive.Text = reader["FileArchive"].ToString();
+                        archDisk.Text = reader["archDisk"].ToString();
+                        workingDisk.Text = reader["workingDisk"].ToString();
                         if (NewSettings)
                         {
                             SaveSettings.Text = "تعديل";
@@ -2183,41 +2219,35 @@ namespace PersAhwal
         {
             if (NewSettings)
             {
-                DataSource = "Data Source=" + txtServerIP.Text + ";Network Library=DBMSSOCN;Initial Catalog=" + txtDatabase.Text + ";User ID=" + txtLogin.Text + ";Password=" + txtPass.Text;
-                FilepathIn = txtModel.Text;
-                FilepathOut = txtOutput.Text;
+                DataSource = "Data Source=" + ServerName.Text + ";Network Library=DBMSSOCN;Initial Catalog=" + serverDatabase.Text + ";User ID=" + Serverlogin.Text + ";Password=" + ServerPass.Text;
+                FilepathIn = Modelfilespath.Text;
+                FilepathOut = TempOutput.Text;
             }
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 try
                 {
                     sqlCon.Open();
-                    SqlCommand sqlCmd = new SqlCommand("SettingsAddorEdit", sqlCon);
+                    SqlCommand sqlCmd = new SqlCommand("NetConfAddorEdit", sqlCon);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
                     if (SaveSettings.Text == "حفظ")
                     {
                         sqlCmd.Parameters.AddWithValue("@ID", 1);
                         sqlCmd.Parameters.AddWithValue("@mode", "Add");
-                        sqlCmd.Parameters.AddWithValue("@Modelfilespath", txtModel.Text);
-                        sqlCmd.Parameters.AddWithValue("@TempOutput", txtOutput.Text);
-                        sqlCmd.Parameters.AddWithValue("@ServerName", txtServerIP.Text);
-                        sqlCmd.Parameters.AddWithValue("@Serverlogin", txtLogin.Text);
-                        sqlCmd.Parameters.AddWithValue("@ServerPass", txtPass.Text);
-                        sqlCmd.Parameters.AddWithValue("@serverDatabase", txtDatabase.Text);
-                        sqlCmd.Parameters.AddWithValue("@FileArchive", ArchiveFile.Text);
+                        sqlCmd.Parameters.AddWithValue("@ServerName", ServerName.Text);
+                        sqlCmd.Parameters.AddWithValue("@Serverlogin", Serverlogin.Text);
+                        sqlCmd.Parameters.AddWithValue("@ServerPass", ServerPass.Text);
+                        sqlCmd.Parameters.AddWithValue("@serverDatabase", serverDatabase.Text);
                         sqlCmd.ExecuteNonQuery();
                     }
                     else
                     {
                         sqlCmd.Parameters.AddWithValue("@ID", 1);
                         sqlCmd.Parameters.AddWithValue("@mode", "Edit");
-                        sqlCmd.Parameters.AddWithValue("@Modelfilespath", txtModel.Text);
-                        sqlCmd.Parameters.AddWithValue("@TempOutput", txtOutput.Text);
-                        sqlCmd.Parameters.AddWithValue("@ServerName", txtServerIP.Text);
-                        sqlCmd.Parameters.AddWithValue("@Serverlogin", txtLogin.Text);
-                        sqlCmd.Parameters.AddWithValue("@ServerPass", txtPass.Text);
-                        sqlCmd.Parameters.AddWithValue("@serverDatabase", txtDatabase.Text);
-                        sqlCmd.Parameters.AddWithValue("@FileArchive", ArchiveFile.Text);
+                        sqlCmd.Parameters.AddWithValue("@ServerName", ServerName.Text);
+                        sqlCmd.Parameters.AddWithValue("@Serverlogin", Serverlogin.Text);
+                        sqlCmd.Parameters.AddWithValue("@ServerPass", ServerPass.Text);
+                        sqlCmd.Parameters.AddWithValue("@serverDatabase", serverDatabase.Text);
                         sqlCmd.ExecuteNonQuery();
                     }
                     sqlCon.Close();
@@ -2241,7 +2271,7 @@ namespace PersAhwal
 
         private void clear_fields()
         {
-            txtDatabase.Text = txtLogin.Text = txtModel.Text = txtOutput.Text = txtPass.Text = txtServerIP.Text = ArchiveFile.Text = "";
+            serverDatabase.Text = Serverlogin.Text = Modelfilespath.Text = TempOutput.Text = ServerPass.Text = ServerName.Text = FileArchive.Text = "";
         }
     }
 }

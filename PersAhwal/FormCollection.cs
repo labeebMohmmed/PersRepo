@@ -449,6 +449,10 @@ namespace PersAhwal
                         غرض_المعاملة.Text = "The Consulate General of " + Vitext1.Text + " in Jeddah";
 
                     غرض_المعاملة.Text = SuffConvertments(غرض_المعاملة.Text, صفة_مقدم_الطلب_off.SelectedIndex, 0, true);
+
+                    if (اللغة.Checked && (نوع_المعاملة.Text == "إقرار" ||نوع_المعاملة.Text == "إقرار مشفوع باليمين"))
+                        غرض_المعاملة.Text = "";
+
                     if (addInfo && ButtonInfoIndex == 0)
                     {
                         currentPanelIndex--;
@@ -564,11 +568,11 @@ namespace PersAhwal
             switch (نوع_المعاملة.Text) {
                 case "إقرار":
                     wordCheck = SuffConvertments("أقر", صفة_مقدم_الطلب_off.SelectedIndex, 0, true);
-                    checkEnd = SuffConvertments("وهذا اقرار مني بذلك، والله على ما اقول شهيد.", صفة_مقدم_الطلب_off.SelectedIndex, 0, true);
+                    checkEnd = SuffConvertments("وهذا إقرار مني بذلك، والله على ما اقول شهيد.", صفة_مقدم_الطلب_off.SelectedIndex, 0, true);
                     break;
                 case "إقرار مشفوع باليمين":
                     wordCheck = SuffConvertments("أقسم بالله العظيم وأقر", صفة_مقدم_الطلب_off.SelectedIndex, 0, true);
-                    checkEnd = SuffConvertments("وهذا اقرار مني بذلك، والله على ما اقول شهيد.", صفة_مقدم_الطلب_off.SelectedIndex, 0, true);
+                    checkEnd = SuffConvertments("وهذا إقرار مني بذلك، والله على ما اقول شهيد.", صفة_مقدم_الطلب_off.SelectedIndex, 0, true);
                     break;                
             }
             //MessageBox.Show(wordCheck);
@@ -582,10 +586,10 @@ namespace PersAhwal
             
             switch (نوع_المعاملة.Text) {
                 case "إقرار":
-                    checkEnd = SuffConvertments("وهذا اقرار مني بذلك، والله على ما أقول شهيد.", صفة_مقدم_الطلب_off.SelectedIndex, 0, true);
+                    checkEnd = SuffConvertments("وهذا إقرار مني بذلك، والله على ما أقول شهيد.", صفة_مقدم_الطلب_off.SelectedIndex, 0, true);
                     break;
                 case "إقرار مشفوع باليمين":
-                    checkEnd = SuffConvertments("وهذا اقرار مني بذلك، والله على ما أقول شهيد", صفة_مقدم_الطلب_off.SelectedIndex, 0, true);
+                    checkEnd = SuffConvertments("وهذا إقرار مني بذلك، والله على ما أقول شهيد", صفة_مقدم_الطلب_off.SelectedIndex, 0, true);
                     break;                
             }
             if (!txtReview.Text.Contains(checkEnd))
@@ -656,11 +660,6 @@ namespace PersAhwal
                                         
                                             break;
                                         }
-                                    //} else
-                                    //{
-                                    //    text = text.Replace(word, replacemests[person1]);
-                                    //    break;
-                                    //}
                                 }
                                 return text;
                             }
@@ -669,18 +668,13 @@ namespace PersAhwal
                                 if (word != replacemests[person2] && word != replacemests[person2] + "،")
                                 {
                                     var selectedOption = MessageBox.Show("هل تود إجراء التصحيح التلقائي (" + replacemests[person2] + ")", "تم رصد خطاء في الصياغة (" + word + ")", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                                    //if (ask)
-                                    //{
+                                    
                                         if (selectedOption == DialogResult.Yes)
                                         {
                                             text = text.Replace(word, replacemests[person2]);
                                             break;
                                         }
-                                    //}
-                                    //else {
-                                    //    text = text.Replace(word, replacemests[person2]);
-                                    //    break;
-                                    //}
+                                    
                                 }
                             }
                             else if (person == "3")
@@ -2801,13 +2795,13 @@ namespace PersAhwal
         private void addNewAppNameInfo(TextBox textName)
         {
             //MessageBox.Show(addNameIndex.ToString());
-            string query = "insert into TableGenNames ([الاسم], رقم_الهوية,تاريخ_الميلاد,المهنة,النوع,نوع_الهوية,مكان_الإصدار) values (@col1,@col2,@col3,@col4,@col5,@col6,@col7) ;SELECT @@IDENTITY as lastid";
+            string query = "insert into TableGenNames ([الاسم], رقم_الهوية,تاريخ_الميلاد,المهنة,النوع,نوع_الهوية,مكان_الإصدار,انتهاء_الصلاحية) values (@col1,@col2,@col3,@col4,@col5,@col6,@col7,@col8) ;SELECT @@IDENTITY as lastid";
             for (int x = 0; x < addNameIndex; x++)
             {
                 string id = checkExist(textName.Text.Split('_')[x]);
                 if (id != "0")
                 {
-                    query = "update TableGenNames set [الاسم] =  @col1,[رقم_الهوية] = @col2,[تاريخ_الميلاد] = @col3,[المهنة] = @col4,النوع = @col5,نوع_الهوية = @col6,مكان_الإصدار = @col7 where ID = " + id;
+                    query = "update TableGenNames set [الاسم] =  @col1,[رقم_الهوية] = @col2,[تاريخ_الميلاد] = @col3,[المهنة] = @col4,النوع = @col5,نوع_الهوية = @col6,مكان_الإصدار = @col7 ,انتهاء_الصلاحية = @col8 where ID = " + id;
                     //MessageBox.Show(query);
                 }
                 SqlConnection sqlConnection = new SqlConnection(DataSource);
@@ -2829,6 +2823,7 @@ namespace PersAhwal
                 }
                 sqlCommand.Parameters.AddWithValue("@col6", نوع_الهوية.Text.Split('_')[x]);
                 sqlCommand.Parameters.AddWithValue("@col7", مكان_الإصدار.Text.Split('_')[x]);
+                sqlCommand.Parameters.AddWithValue("@col8", انتهاء_الصلاحية.Text.Split('_')[x]);
 
                 var reader = sqlCommand.ExecuteReader();
                 if (reader.Read())
@@ -6169,7 +6164,7 @@ namespace PersAhwal
 
         private void txtReview_MouseEnter(object sender, EventArgs e)
         {
-            MessageBox.Show(txtReview.Height.ToString());
+            //MessageBox.Show(txtReview.Height.ToString());
         }
     }
 }

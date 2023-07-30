@@ -44,42 +44,39 @@ namespace PersAhwal
             int currentVersion56 = 0;
         int currentVersion57 = 0;
         string NewFiles = "";
-        string mainWorkingFile = @"D:\";
-        //public static DateTime MaxDate(params DateTime[] dates)
-        //{
-        //    try
-        //    {
-        //        return dates.Max();
-        //    }
-        //    catch (Exception ex) {
-        //        //return null;
-        //    }
-        //} 
+        string workingDisk = "";
+        string mainWorkingFile = @"E:\";
+        
 
         public FormDataBase(string server,string dataSource56, string dataSource57, string modelFiles, string filepathOut, string archFile, string modelForms, string newFiles)
         {
             InitializeComponent();
             NewFiles = newFiles;
-            FilepathOut = filepathOut;
-            ServerModelFiles = modelFiles;
-            ServerModelForms = modelForms;
-
+            FilepathOut = filepathOut.Replace("D", BackupDisck("workingDisk"));
+            ServerModelFiles = modelFiles.Replace("D", BackupDisck("workingDisk"));
+            ServerModelForms = modelForms.Replace("D", BackupDisck("workingDisk"));
+            mainWorkingFile = BackupDisck("archDisk") + @":\";
+            workingDisk = BackupDisck("workingDisk") + @":\";
             if (!Directory.Exists(archFile + @"\formUpdated"))
             {
                 System.IO.Directory.CreateDirectory(archFile + @"\formUpdated");
             }
-
-            if (Directory.Exists(@"D:\"))
+            
+            if (!Directory.Exists(mainWorkingFile + "sqlbackup"))
             {
-                primeryLink = @"D:\PrimariFiles\";
+                System.IO.Directory.CreateDirectory(mainWorkingFile + "sqlbackup");
+            }
+
+            if (Directory.Exists(workingDisk))
+            {
+                primeryLink = workingDisk + @"PrimariFiles\";
                
             }
             else
             {
                 string appFileName = Environment.GetCommandLineArgs()[0];
                 string directory = Path.GetDirectoryName(appFileName);
-                directory = directory + @"\";
-                mainWorkingFile = directory;
+                directory = directory + @"\";                
                 primeryLink = directory + @"PrimariFiles\";                
             }
             
@@ -152,8 +149,8 @@ namespace PersAhwal
             else DataSource = DataSource56;
             userTable = new DataTable();
 
-            //if (IP == "192.168.100.100")
-            //    backup(mainWorkingFile);
+            if (IP == "192.168.100.100")
+                backup(mainWorkingFile);
 
             Console.WriteLine(Server);
             file = archFile + @"\dataSource.txt";
@@ -169,73 +166,150 @@ namespace PersAhwal
             
             
         }
+
+        private string BackupDisck(string colName)
+        {
+            string infoDet = "";
+            string query = "select "+ colName+" from TableSettings";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return ""; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            try
+            {
+                sqlDa.Fill(dtbl);
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+
+
+
+            sqlCon.Close();
+
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                try
+                {
+                    infoDet = dataRow[colName].ToString();
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+            return infoDet;
+        }
+
+        public static int MaxDate(int[] dates)
+        {
+            int max = 0;
+            for (int y = 0; y < dates.Length; y++)
+            {
+                if (max < dates[y])
+                    max = dates[y];
+            }
+            return max;
+        }
+
         private void backup(string workFile) {
-            //string sqlInfoBackup = "AhwalDataBase_backup_";
-            //string sqlArchBackup = "ArchFilesDB_backup_";
-            ////Console.WriteLine(workFile + "sqlbackup");
+            string sqlInfoBackup = "AhwalDataBase_backup_";
+            string sqlArchBackup = "ArchFilesDB_backup_";
+            //Console.WriteLine(workFile + "sqlbackup");
             
-            //string[] backfiles = Directory.GetFiles(workFile + @"sqlbackup\");
-            //DateTime[] datesInfo = new DateTime[backfiles.Length];
-            //DateTime[] datesArch = new DateTime[backfiles.Length];
-           
-            //for (int i = 0; i < backfiles.Length; i++)
-            //{
-            //    if (backfiles[i].Contains(sqlInfoBackup))
-            //    {
-            //        var backfileinfo = new FileInfo(backfiles[i]);
-            //        datesInfo[i] = DateTime.Parse(backfileinfo.LastWriteTime.ToShortDateString());
-            //    }
-            //    else if (backfiles[i].Contains(sqlArchBackup))
-            //    {
-            //        var backfileinfo = new FileInfo(backfiles[i]);
-            //        datesArch[i] = DateTime.Parse(backfileinfo.LastWriteTime.ToShortDateString());
-            //    }
-            //}
-            ////string maxdate = MaxDate(datesInfo).ToString().Split(' ')[0];
-            //string year = maxdate.Split('/')[2];
-            //string month = maxdate.Split('/')[0];
-            //if (month.Length == 1)
-            //    month = "0" + month;
-            //string date = maxdate.Split('/')[1];
-            //if (date.Length == 1)
-            //    date = "0" + date;
+            string year = "";
+            string month = "";
+            string date = "";
+            
+            string[] backfiles = Directory.GetFiles(workFile + @"sqlbackup\");
+            int[] datesInfo = new int[backfiles.Length];
+            int[] datesArch = new int[backfiles.Length];
 
-            //string newerFile = sqlInfoBackup + year + "_" + month + "_" + date + "_";
-            //for (int i = 0; i < backfiles.Length; i++)
-            //{
-            //    if (backfiles[i].Contains(sqlInfoBackup) && !backfiles[i].Contains(newerFile))
-            //    {
-            //        Console.WriteLine("Files to Delete " + backfiles[i]);
-            //        try
-            //        {
-            //            File.Delete(backfiles[i]);
-            //        }
-            //        catch (Exception ex) { }
-            //    }
-            //}
+            for (int i = 0; i < backfiles.Length; i++)
+            {
+                if (backfiles[i].Contains(sqlInfoBackup))
+                {
+                    var backfileinfo = new FileInfo(backfiles[i]);
+                    year = backfileinfo.LastWriteTime.ToShortDateString().Split('/')[2];
+                    month = backfileinfo.LastWriteTime.ToShortDateString().Split('/')[0];
+                    if (month.Length == 1)
+                        month = "0" + month;
+                    date = backfileinfo.LastWriteTime.ToShortDateString().Split('/')[1];
+                    if (date.Length == 1)
+                        date = "0" + date;
+                    datesInfo[i] = Convert.ToInt32(year + month + date);
+                    //Console.WriteLine("Files to Delete " + datesInfo[i]);
+                }
+                else if (backfiles[i].Contains(sqlArchBackup))
+                {
+                    var backfileinfo = new FileInfo(backfiles[i]);
+                    year = backfileinfo.LastWriteTime.ToShortDateString().Split('/')[2];
+                    month = backfileinfo.LastWriteTime.ToShortDateString().Split('/')[0];
+                    if (month.Length == 1)
+                        month = "0" + month;
+                    date = backfileinfo.LastWriteTime.ToShortDateString().Split('/')[1];
+                    if (date.Length == 1)
+                        date = "0" + date;
+                    datesArch[i] = Convert.ToInt32(year + month + date);
+                }
+            }
+            string maxdate = MaxDate(datesInfo).ToString().Split(' ')[0];
+            year = SpecificDigit(maxdate,1,4);
+            month = SpecificDigit(maxdate, 5, 6);
+            date = SpecificDigit(maxdate, 7, 8);
 
-            //maxdate = MaxDate(datesArch).ToString().Split(' ')[0];
-            //year = maxdate.Split('/')[2];
-            //month = maxdate.Split('/')[0];
-            //if (month.Length == 1)
-            //    month = "0" + month;
-            //date = maxdate.Split('/')[1];
-            //if (date.Length == 1)
-            //    date = "0" + date;
+            string newerFile = sqlInfoBackup + year + "_" + month + "_" + date + "_";
+            for (int i = 0; i < backfiles.Length; i++)
+            {
+                if (backfiles[i].Contains(sqlInfoBackup) && !backfiles[i].Contains(newerFile))
+                {
+                    Console.WriteLine("Files to Delete " + backfiles[i]);
+                    try
+                    {
+                        File.Delete(backfiles[i]);
+                    }
+                    catch (Exception ex) { }
+                }
+            }
+            
+            maxdate = MaxDate(datesArch).ToString().Split(' ')[0];
+            year = SpecificDigit(maxdate, 1, 4);
+            month = SpecificDigit(maxdate, 5, 6);
+            date = SpecificDigit(maxdate, 7, 8);
 
-            //newerFile = sqlArchBackup + year + "_" + month + "_" + date + "_";
-            //for (int i = 0; i < backfiles.Length; i++)
-            //{
-            //    if (backfiles[i].Contains(sqlArchBackup) && !backfiles[i].Contains(newerFile))
-            //    {
-            //        Console.WriteLine("Files to Delete " + backfiles[i]);
-            //        try
-            //        {
-            //            File.Delete(backfiles[i]);
-            //        }
-            //        catch (Exception ex) { }
-            //    }
-            //}
+            newerFile = sqlArchBackup + year + "_" + month + "_" + date + "_";
+            for (int i = 0; i < backfiles.Length; i++)
+            {
+                if (backfiles[i].Contains(sqlArchBackup) && !backfiles[i].Contains(newerFile))
+                {
+                    Console.WriteLine("Files to Delete " + backfiles[i]);
+                    try
+                    {
+                        File.Delete(backfiles[i]);
+                    }
+                    catch (Exception ex) { }
+                }
+            }
+        }
+
+        private string SpecificDigit(string text, int Firstdigits, int Lastdigits)
+        {
+            char[] characters = text.ToCharArray();
+            string firstNchar = "";
+            int z = 0;
+            for (int x = Firstdigits - 1; x < Lastdigits && x < text.Length; x++)
+            {
+                firstNchar = firstNchar + characters[x];
+
+            }
+            return firstNchar;
         }
 
         public static void Copy(string sourceDirectory, string targetDirectory)
