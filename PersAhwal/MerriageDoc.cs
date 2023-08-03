@@ -61,6 +61,7 @@ namespace PersAhwal
         string localCopy_off = "";
         string localCopy_off1 = "";
         bool newInfo = true;
+        bool grid = false;
         public MerriageDoc(string dataSource, bool addEdit, string empName, int atVCIndex, string gregorianDate, string hijriDate, string filespathIn, string filespathOut)
         {
             InitializeComponent();
@@ -245,10 +246,10 @@ namespace PersAhwal
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (طريقة_الإجراء.SelectedIndex == 1) {
-                labhusSideName.Visible = وكيل_الزوج.Visible = labhusSidePass.Visible = جواز_وكيل_الزوج.Visible = true;
+                labhusSideName.Visible = وكيل_الزوج.Visible =  جواز_وكيل_الزوج.Visible = true;
             }
             else 
-                labhusSideName.Visible = وكيل_الزوج.Visible = labhusSidePass.Visible = جواز_وكيل_الزوج.Visible = false;
+                labhusSideName.Visible = وكيل_الزوج.Visible =  جواز_وكيل_الزوج.Visible = false;
         }
 
         private void addarchives(string[] text)
@@ -295,6 +296,7 @@ namespace PersAhwal
             if (dataGridView1.CurrentRow.Index != -1)
             {
                 genIDNo = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value.ToString());
+                grid = true;
                 اسم_الزوج.Text = dataGridView1.CurrentRow.Cells[اسم_الزوج.Name].Value.ToString();
                 if (اسم_الزوج.Text == "")
                     newInfo = true;
@@ -331,6 +333,7 @@ namespace PersAhwal
             //if (رقم_الوثيقة.Text != "" && رقم_الوثيقة.Text != "بدون") 
             //    رقم_الوثيقة.Enabled = false;
             //else رقم_الوثيقة.Enabled = true;
+            grid = false;
             newInfo = true;
         }
 
@@ -354,7 +357,7 @@ namespace PersAhwal
                             MessageBox.Show("يرجى إضافة عام الميلاد لخانة " + control.Name); return false;
                         }
 
-                        if (control.Visible && (control.Name.Contains("جواز") && control.Text.Length != 9))
+                        if (control is TextBox && control.Visible && (control.Name.Contains("جواز") && (control.Text.Length < 9)))
                         {
                             MessageBox.Show("يرجى إضافة رقم الجواز بصورة صحيحة لخانة " + control.Name); return false;
                         }
@@ -506,13 +509,7 @@ namespace PersAhwal
                 colIDs[7] = "new";
                 addarchives(colIDs);
             }
-            try
-            {
-                اليوم_off.Text = تاريخ_الاجراء.Text.Split('-')[0];
-                الشهر_off.Text = تاريخ_الاجراء.Text.Split('-')[1];
-                السنة_off.Text = تاريخ_الاجراء.Text.Split('-')[2];
-            }
-            catch (Exception ex) { }
+            
             fillPreDoc();
             fillDocFileAppInfo();
             fillPrintDocx();
@@ -1059,7 +1056,7 @@ namespace PersAhwal
             //        تاريخ_الميلاد.Text = SpecificDigit(تاريخ_الميلاد.Text, 6, 10);
             //        return;
             //    }
-                عمر_الزوج_الحرج = getDate(تاريخ_الميلاد);
+             //   عمر_الزوج_الحرج = getDate(تاريخ_الميلاد);
             //}
 
             if (تاريخ_الميلاد.Text.Length == 11)
@@ -1336,7 +1333,11 @@ namespace PersAhwal
             رقم_الهوية_1.Text = "P0";
             foreach (DataRow row in dtbl.Rows)
             {
-                رقم_الهوية_1.Text = row["رقم_الهوية"].ToString();
+                try
+                {
+                    رقم_الهوية_1.Text = row["رقم_الهوية"].ToString();
+                }
+                catch (Exception ex) { }
                 return;
             }
             //MessageBox.Show(رقم_الهوية_1.Text);
@@ -1415,13 +1416,13 @@ namespace PersAhwal
 
         private void الشاهد_الاول_TextChanged(object sender, EventArgs e)
         {
-            getID(وثيقة_الشاهد_الاول, الشاهد_الاول.Text);
+            //getID(وثيقة_الشاهد_الاول, الشاهد_الاول.Text);
         }
 
         private void الشاهد_الثاني_TextChanged(object sender, EventArgs e)
         {
             //getID(وثيقة_الشاهد_الثاني, الشاهد_الثاني.Text, "رقم_الهوية", "P0");
-            getID(وثيقة_الشاهد_الثاني, الشاهد_الثاني.Text);
+            //getID(وثيقة_الشاهد_الثاني, الشاهد_الثاني.Text);
         }
 
         private void وكيل_الزوج_TextChanged(object sender, EventArgs e)
@@ -1458,26 +1459,7 @@ namespace PersAhwal
         string lastInput3 = "";
         private void تاريخ_الايصال_TextChanged(object sender, EventArgs e)
         {
-            if (تاريخ_الايصال.Text.Length == 10)
-            {
-                int month = Convert.ToInt32(SpecificDigit(تاريخ_الايصال.Text, 4, 5));
-                if (month > 12)
-                {
-                    MessageBox.Show("الشهر يحب أن يكون أقل من 12");
-                    //VitxtDate1.Text = "";
-                    تاريخ_الايصال.Text = SpecificDigit(تاريخ_الايصال.Text, 6, 10);
-                    return;
-                }
-            }
-
-            if (تاريخ_الايصال.Text.Length == 11)
-            {
-                تاريخ_الايصال.Text = lastInput3; return;
-            }
-            if (تاريخ_الايصال.Text.Length == 10) return;
-            if (تاريخ_الايصال.Text.Length == 4) تاريخ_الايصال.Text = "-" + تاريخ_الايصال.Text;
-            else if (تاريخ_الايصال.Text.Length == 7) تاريخ_الايصال.Text = "-" + تاريخ_الايصال.Text;
-            lastInput3 = تاريخ_الايصال.Text;
+            
         }
 
         private void التاريخ_الميلادي_TextChanged(object sender, EventArgs e)
@@ -1487,45 +1469,92 @@ namespace PersAhwal
 
         private void تاريخ_الاجراء_TextChanged(object sender, EventArgs e)
         {
-            if (تاريخ_الاجراء.Text.Length == 10)
-            {
-                int month = Convert.ToInt32(SpecificDigit(تاريخ_الاجراء.Text, 4, 5));
-                if (month > 12)
-                {
-                    MessageBox.Show("الشهر يحب أن يكون أقل من 12");
-                    //VitxtDate1.Text = "";
-                    تاريخ_الاجراء.Text = SpecificDigit(تاريخ_الاجراء.Text, 6, 10);
-                    return;
-                }
-            }
+            
 
-            if (تاريخ_الاجراء.Text.Length == 11)
-            {
-                تاريخ_الاجراء.Text = lastInput3; return;
-            }
-            if (تاريخ_الاجراء.Text.Length == 10)
+        }
+
+        
+        private void تاريخ_الاجراء_TextChanged_1(object sender, EventArgs e)
+        {
+            if (grid)
             {
                 try
                 {
-                    اليوم_off.Text = تاريخ_الاجراء.Text.Split('-')[0];
-                    الشهر_off.Text = تاريخ_الاجراء.Text.Split('-')[1];
-                    السنة_off.Text = تاريخ_الاجراء.Text.Split('-')[2];
+
+                    اليوم_off.Text = تاريخ_الاجراء.Text.Split('-')[1];
+                    الشهر_off.Text = تاريخ_الاجراء.Text.Split('-')[2];
+                    السنة_off.Text = تاريخ_الاجراء.Text.Split('-')[0];
                 }
                 catch (Exception ex) { }
-
-                return;
             }
-            if (تاريخ_الاجراء.Text.Length == 4) تاريخ_الاجراء.Text = "-" + تاريخ_الاجراء.Text;
-            else if (تاريخ_الاجراء.Text.Length == 7) تاريخ_الاجراء.Text = "-" + تاريخ_الاجراء.Text;
-            lastInput3 = تاريخ_الاجراء.Text;
-
-            
-            //MessageBox.Show(اليوم.Text);
         }
 
+        private void تاريخ_الايصال_TextChanged_1(object sender, EventArgs e)
+        {
+            if (grid)
+            {
+                try
+                {
+
+                    RecDay_off.Text = تاريخ_الايصال.Text.Split('-')[1];
+                    RecMonth_off.Text = تاريخ_الايصال.Text.Split('-')[2];
+                    recYear_off.Text = تاريخ_الايصال.Text.Split('-')[0];
+                }
+                catch (Exception ex) { }
+            }
+        }
+
+        private void وثيق_الزوج_TextChanged(object sender, EventArgs e)
+        {
+            
+        }
         private void اليوم_TextChanged(object sender, EventArgs e)
         {
+            if (grid) return;
+            تاريخ_الاجراء.Text = السنة_off.Text + "-" + اليوم_off.Text + "-" + الشهر_off.Text;
             //MessageBox.Show(اليوم_off.Text);
+        }
+
+
+
+        private void recYear_TextChanged(object sender, EventArgs e)
+        {
+            if (grid) return;
+            تاريخ_الايصال.Text = recYear_off.Text + "-" + RecDay_off.Text + "-" + RecMonth_off.Text;
+            if (recYear_off.Text.Length == 4)
+                RecMonth_off.Select();
+        }
+
+        private void RecMonth_TextChanged(object sender, EventArgs e)
+        {
+            if (grid) return;
+            تاريخ_الايصال.Text = recYear_off.Text + "-" + RecDay_off.Text + "-" + RecMonth_off.Text;
+            if (RecMonth_off.Text.Length == 2)
+                RecDay_off.Select();
+        }
+
+
+
+        private void السنة_off_TextChanged(object sender, EventArgs e)
+        {
+            if (grid) return;
+            تاريخ_الاجراء.Text = السنة_off.Text + "-" + اليوم_off.Text + "-" + الشهر_off.Text;
+            if (السنة_off.Text.Length == 4)
+                الشهر_off.Select();
+        }
+
+        private void الشهر_off_TextChanged(object sender, EventArgs e)
+        {
+            if (grid) return;
+            تاريخ_الاجراء.Text = السنة_off.Text + "-" + اليوم_off.Text + "-" + الشهر_off.Text;
+            if (الشهر_off.Text.Length == 2)
+                اليوم_off.Select();
+        }
+
+        private void RecDay_off_TextChanged(object sender, EventArgs e)
+        {
+            if (grid) return;
+            تاريخ_الايصال.Text = recYear_off.Text + "-" + RecDay_off.Text + "-" + RecMonth_off.Text;
         }
     }
 }

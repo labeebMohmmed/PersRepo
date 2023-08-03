@@ -2891,10 +2891,11 @@ namespace PersAhwal
                         catch (Exception ex) { return; }
                     SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
                     sqlDa.SelectCommand.CommandType = CommandType.Text;
+                    Console.WriteLine(query);
+                    MessageBox.Show(query);
                     sqlDa.Fill(dataRowTable);
                     sqlCon.Close();
-                    Console.WriteLine(query);
-                    //MessageBox.Show(dataRowTable.Rows.Count.ToString());
+                    
                     receipts = new string[dataRowTable.Rows.Count];
                     foreach (DataRow dataRow in dataRowTable.Rows)
                     {

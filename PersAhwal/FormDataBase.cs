@@ -51,20 +51,33 @@ namespace PersAhwal
         public FormDataBase(string server,string dataSource56, string dataSource57, string modelFiles, string filepathOut, string archFile, string modelForms, string newFiles)
         {
             InitializeComponent();
+            string hostname = Dns.GetHostName();
+            Console.WriteLine(IP);
+            IP = Dns.GetHostByName(hostname).AddressList[0].ToString();
+
             NewFiles = newFiles;
+            DataSource56 = dataSource56;
+            DataSource57 = dataSource57;
+            DataSource = DataSource57;
+            //MessageBox.Show("1");
             FilepathOut = filepathOut.Replace("D", BackupDisck("workingDisk"));
             ServerModelFiles = modelFiles.Replace("D", BackupDisck("workingDisk"));
             ServerModelForms = modelForms.Replace("D", BackupDisck("workingDisk"));
             mainWorkingFile = BackupDisck("archDisk") + @":\";
+            //MessageBox.Show(mainWorkingFile);
             workingDisk = BackupDisck("workingDisk") + @":\";
+
             if (!Directory.Exists(archFile + @"\formUpdated"))
             {
                 System.IO.Directory.CreateDirectory(archFile + @"\formUpdated");
             }
-            
-            if (!Directory.Exists(mainWorkingFile + "sqlbackup"))
+            if (IP == "192.168.100.100")
             {
-                System.IO.Directory.CreateDirectory(mainWorkingFile + "sqlbackup");
+                if (!Directory.Exists(mainWorkingFile + "sqlbackup"))
+                {
+                    Console.WriteLine(mainWorkingFile + "sqlbackup");
+                    System.IO.Directory.CreateDirectory(mainWorkingFile + "sqlbackup");
+                }
             }
 
             if (Directory.Exists(workingDisk))
@@ -102,9 +115,7 @@ namespace PersAhwal
             localModelForms = primeryLink + @"FormData\";
 
             Server = server;
-            DataSource56 = dataSource56;
-            DataSource57 = dataSource57;
-            DataSource = DataSource57;
+            
             cVersion56 = getVersio(DataSource56);
            
              if (!File.Exists(primeryLink + @"\Personnel\getVersio.txt"))
@@ -136,9 +147,6 @@ namespace PersAhwal
             
 
             versionUpdateInfo("SuddaneseAffairs");
-            string hostname = Dns.GetHostName();
-            Console.WriteLine(IP);
-            IP = Dns.GetHostByName(hostname).AddressList[0].ToString();
             
                 //MessageBox.Show(IP);
                 if (Server == "57")
@@ -839,8 +847,10 @@ namespace PersAhwal
         {
             if (e.KeyChar == (char)13)
             {
-                //MessageBox.Show("enter");
-                btnLog.PerformClick();
+                if (Password.Text == "")
+                    Password.Select();
+                else
+                    btnLog.PerformClick();
             }
         }
 

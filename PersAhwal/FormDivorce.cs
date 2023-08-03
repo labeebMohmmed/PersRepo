@@ -49,7 +49,7 @@ namespace PersAhwal
         bool newData = false;
         string[] colIDs = new string[100];
         string[] forbidDs = new string[100];
-
+        bool grid = false;
         public FormDivorce(string dataSource, bool addEdit, string empName, int atVCIndex, string gregorianDate, string hijriDate)
         {
             InitializeComponent();
@@ -253,6 +253,7 @@ namespace PersAhwal
         {
             if (dataGridView1.CurrentRow.Index != -1)
             {
+                grid = true;
                 genIDNo = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value.ToString());
                 foreach (Control control in PanelMain.Controls)
                 {
@@ -271,7 +272,7 @@ namespace PersAhwal
                     newData = true;
                     FillDatafromGenArch("data1", genIDNo.ToString(), "TableDivorce");
                 }
-                AddEdit = false;
+                AddEdit = grid = false;
                 dataGridView1.Visible = labDescribed.Visible = false;
                 PanelMain.Visible = true;
             }
@@ -1031,26 +1032,86 @@ namespace PersAhwal
         string lastInput3 = "";
         private void تاريخ_الايصال_TextChanged(object sender, EventArgs e)
         {
-            if (تاريخ_الايصال.Text.Length == 10)
+            //MessageBox.Show(تاريخ_الايصال.Text);
+            if (grid)
             {
-                int month = Convert.ToInt32(SpecificDigit(تاريخ_الايصال.Text, 1, 2));
-                if (month > 12)
+                try
                 {
-                    MessageBox.Show("الشهر يحب أن يكون أقل من 12");
-                    //VitxtDate1.Text = "";
-                    تاريخ_الايصال.Text = SpecificDigit(تاريخ_الايصال.Text, 3, 10);
-                    return;
-                }
-            }
 
-            if (تاريخ_الايصال.Text.Length == 11)
-            {
-                تاريخ_الايصال.Text = lastInput3; return;
+                    RecDay_off.Text = تاريخ_الايصال.Text.Split('-')[1];
+                    RecMonth_off.Text = تاريخ_الايصال.Text.Split('-')[2];
+                    recYear_off.Text = تاريخ_الايصال.Text.Split('-')[0];
+                }
+                catch (Exception ex) { }
             }
-            if (تاريخ_الايصال.Text.Length == 10) return;
-            if (تاريخ_الايصال.Text.Length == 4) تاريخ_الايصال.Text = "-" + تاريخ_الايصال.Text;
-            else if (تاريخ_الايصال.Text.Length == 7) تاريخ_الايصال.Text = "-" + تاريخ_الايصال.Text;
-            lastInput3 = تاريخ_الايصال.Text;
+        }
+        private void اليوم_TextChanged(object sender, EventArgs e)
+        {
+            if (grid) return;
+            //تاريخ_الاجراء.Text = السنة_off.Text + "-" + اليوم_off.Text + "-" + الشهر_off.Text;
+            //MessageBox.Show(اليوم_off.Text);
+        }
+
+
+
+       
+        private void تاريخ_الاجراء_TextChanged(object sender, EventArgs e)
+        {
+            if (grid)
+            {
+                try
+                {
+
+                    اليوم_off.Text = تاريخ_الاجراء.Text.Split('-')[1];
+                    الشهر_off.Text = تاريخ_الاجراء.Text.Split('-')[2];
+                    السنة_off.Text = تاريخ_الاجراء.Text.Split('-')[0];
+                }
+                catch (Exception ex) { }
+            }
+        }
+
+        private void recYear_off_TextChanged(object sender, EventArgs e)
+        {
+            if (grid) return;
+            تاريخ_الاجراء.Text = recYear_off.Text + "-" + RecDay_off.Text + "-" + RecMonth_off.Text;
+            if (recYear_off.Text.Length == 4)
+                RecMonth_off.Select();
+        }
+
+        private void السنة_off_TextChanged_1(object sender, EventArgs e)
+        {
+            if (grid) return;
+            تاريخ_الايصال.Text = السنة_off.Text + "-" + اليوم_off.Text + "-" + الشهر_off.Text;
+            if (السنة_off.Text.Length == 4)
+                الشهر_off.Select();
+        }
+
+        private void RecMonth_off_TextChanged(object sender, EventArgs e)
+        {
+            if (grid) return;
+            تاريخ_الاجراء.Text = recYear_off.Text + "-" + RecDay_off.Text + "-" + RecMonth_off.Text;
+            if (RecMonth_off.Text.Length == 2)
+                RecDay_off.Select();
+        }
+
+        private void الشهر_off_TextChanged_1(object sender, EventArgs e)
+        {
+            if (grid) return;
+            تاريخ_الايصال.Text = السنة_off.Text + "-" + اليوم_off.Text + "-" + الشهر_off.Text;
+            if (الشهر_off.Text.Length == 2)
+                اليوم_off.Select();
+        }
+
+        private void RecDay_off_TextChanged_1(object sender, EventArgs e)
+        {
+            if (grid) return;
+            تاريخ_الاجراء.Text = recYear_off.Text + "-" + RecDay_off.Text + "-" + RecMonth_off.Text;
+        }
+
+        private void اليوم_off_TextChanged(object sender, EventArgs e)
+        {
+            if (grid) return;
+            تاريخ_الايصال.Text = السنة_off.Text + "-" + اليوم_off.Text + "-" + الشهر_off.Text;
         }
     }
 }

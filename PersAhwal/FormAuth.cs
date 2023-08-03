@@ -187,6 +187,7 @@ namespace PersAhwal
         string docIsuue = "";
         string appJob = "";
         string appBirth = "";
+        string appExp = "";
         public FormAuth(int allowedTimes, int atvc, int rowid, string AuthNo, string datasource, string filespathIn, string filespathOut, string empName, string jobposition, string greDate, string hijriDate, bool testItems)
         {
             InitializeComponent();
@@ -732,6 +733,7 @@ namespace PersAhwal
                         {
                             
                             Console.WriteLine(foundList[i] + " - " + control.Text);
+                           // MessageBox.Show(foundList[i] + " - " + control.Text);
                             sqlCommand.Parameters.AddWithValue("@" + foundList[i], control.Text);
                             break;
                         }
@@ -743,6 +745,7 @@ namespace PersAhwal
             }
             catch (Exception ex)
             {
+                Console.WriteLine(query);
                 MessageBox.Show(query);
             }
             return true;
@@ -1191,7 +1194,7 @@ namespace PersAhwal
             TextBox textBox = (TextBox)sender;
             string TextID = textBox.Name.Split('_')[1].Replace(".", "");
             string[] text = getID(textBox);
-            fillFirstInfo(PanelAuthPers, "", text[5], text[1], text[0], text[2], "العربية", text[3], text[4], TextID);
+            fillFirstInfo(PanelAuthPers, "", text[5], text[1], text[0], text[2], "العربية", text[3], text[4], TextID, "");
         }
         private void authIDNo_TextChanged(object sender, EventArgs e)
         {
@@ -1199,6 +1202,12 @@ namespace PersAhwal
         }
         private void addAuthPic_Click(object sender, EventArgs e)
         {
+            if (!checkEmpty(PanelAuthPers))
+            {
+                currentPanelIndex--; return;
+            }
+            save2DataBase(PanelAuthPers);
+
             addAuthenticPerson("", "ذكر", "سوداني الجنسية", "P0", "جواز سفر");
             btnPanelAuthPers.Height = PanelAuthPers.Height = 90 * addAuthticIndex;
             checkChanged(جنس_الموكَّل, PanelAuthPers);
@@ -1669,7 +1678,7 @@ namespace PersAhwal
                 
                 if (control is TextBox || control is ComboBox)
                 {
-                    if (control.Name.Contains("انتهاء_الصلاحية") || (control.Name.Contains("تاريخ_الميلاد") && control.Name != "تاريخ_الميلاد"))
+                    if ((control.Name.Contains("انتهاء_الصلاحية") && control.Name != "انتهاء_الصلاحية") || (control.Name.Contains("تاريخ_الميلاد") && control.Name != "تاريخ_الميلاد"))
                     {
                         Console.WriteLine(control.Name + " - " + control.Text+ " - " + control.Text.Length.ToString());
                         if (control.Text.Length != 10)
@@ -1691,7 +1700,7 @@ namespace PersAhwal
                             }
 
                         }
-                        Panelapp.Height = 130 * addNameIndex; 
+                        btnPanelapp.Height = btnSaveApp.Height = Panelapp.Height = 130 * addNameIndex;
                     }
                 }
             }
@@ -1738,6 +1747,7 @@ namespace PersAhwal
                 text[3] = appJob.Split('_')[id];
                 text[4] = appBirth.Split('_')[id];
                 text[5] = sex.Split('_')[id];
+                text[6] = appExp.Split('_')[id];
                 if (text[5] == "")
                     text[5] = "ذكر";
 
@@ -1747,10 +1757,10 @@ namespace PersAhwal
             else {
                 text = getID(textBox);
             }
-            fillFirstInfo(Panelapp, "", text[5], text[1], text[0], text[2], "العربية", text[3], text[4], TextID);
+            fillFirstInfo(Panelapp, "", text[5], text[1], text[0], text[2], "العربية", text[3], text[4], TextID, text[6]);
         }
 
-        public void fillFirstInfo(FlowLayoutPanel panel, string name, string sex, string docType, string docNo, string docIssue, string language, string job, string age, string ID)
+        public void fillFirstInfo(FlowLayoutPanel panel, string name, string sex, string docType, string docNo, string docIssue, string language, string job, string age, string ID, string exp)
         {
             foreach (Control control in panel.Controls)
             {
@@ -1799,11 +1809,13 @@ namespace PersAhwal
                     control.Text = job;
                 if (control.Name == "تاريخ_الميلاد_" + ID + ".")
                     control.Text = age;
+                if (control.Name == "انتهاء_الصلاحية_" + ID + ".")
+                    control.Text = exp;
             }
         }
         public string[] getID(TextBox text)
         {
-            string[] returnedText = new string[6] { "P0", "جواز سفر", "", "", "", "ذكر" };
+            string[] returnedText = new string[7] { "P0", "جواز سفر", "", "", "", "ذكر" ,""};
 
 
             string query = "SELECT * FROM TableGenNames where الاسم like N'" + text.Text + "%'";
@@ -1822,6 +1834,7 @@ namespace PersAhwal
                 returnedText[3] = row["المهنة"].ToString();
                 returnedText[4] = row["تاريخ_الميلاد"].ToString();
                 returnedText[5] = row["النوع"].ToString();
+                returnedText[6] = row["انتهاء_الصلاحية"].ToString();
             }
             return returnedText;
         }
@@ -1838,6 +1851,7 @@ namespace PersAhwal
                 returnedText[2] = docIsuue.Split('_')[textID];
                 returnedText[3] = appJob.Split('_')[textID];
                 returnedText[4] = appBirth.Split('_')[textID];
+                returnedText[6] = appExp.Split('_')[textID];
                 returnedText[5] = sex.Split('_')[textID];
                 if (returnedText[5] == "")
                     returnedText[5] = "ذكر";
@@ -2293,6 +2307,12 @@ namespace PersAhwal
         }
         private void addName_Click(object sender, EventArgs e)
         {
+            if (!checkEmpty(Panelapp))
+            {
+                currentPanelIndex--; return;
+            }
+            save2DataBase(Panelapp);
+
             addNames("", "ذكر", "جواز سفر", "P0", "", "العربية", "", "", "مقيم","");
             btnPanelapp.Height = btnSaveApp.Height = Panelapp.Height = 130 * addNameIndex;
             checkChanged(مقدم_الطلب, Panelapp);
@@ -2508,6 +2528,7 @@ namespace PersAhwal
             docIsuue = مكان_الإصدار.Text;
             appJob = المهنة.Text;
             appBirth = تاريخ_الميلاد.Text;
+            appExp = انتهاء_الصلاحية.Text;
         }
         private void prepareDocxfile()
         {
@@ -3548,7 +3569,7 @@ namespace PersAhwal
                         text = text.Replace(code, replacemest[intAuthcases]);
                 }
             }
-            text = removeSpace(text, true);
+            //
             return text;
         }
 
@@ -3582,6 +3603,7 @@ namespace PersAhwal
                 localCopy.Text = FilespathOut + docName + DateTime.Now.ToString("ddmmss") + ".docx";
             }
             System.IO.File.Copy(RouteFile, localCopy.Text);
+            //MessageBox.Show(localCopy.Text);    
             FileInfo fileInfo = new FileInfo(localCopy.Text);
             if (fileInfo.IsReadOnly) fileInfo.IsReadOnly = false;
         }
@@ -3768,6 +3790,7 @@ namespace PersAhwal
                     if (txtReview.Text == "")
                     {
                         txtReview.Text = SuffReplacements(StrSpecPur, صفة_مقدم_الطلب_off.SelectedIndex, صفة_الموكل_off.SelectedIndex);
+                        txtReview.Text = removeSpaceSub(txtReview.Text);
                         checkAutoUpdate.Checked = true;
                     }
 
@@ -3779,14 +3802,14 @@ namespace PersAhwal
                         getDefualtRight(DataSource);
                     if (قائمة_الحقوق.Text == "، وأذنت لمن يشهد والله خير الشاهدين")
                     {
-                        قائمة_الحقوق.Text = SuffReplacements(txtRightListStar[0], صفة_مقدم_الطلب_off.SelectedIndex, صفة_الموكل_off.SelectedIndex); 
-                        
+                        قائمة_الحقوق.Text = SuffReplacements(txtRightListStar[0], صفة_مقدم_الطلب_off.SelectedIndex, صفة_الموكل_off.SelectedIndex);
+                        قائمة_الحقوق.Text = removeSpaceRight(قائمة_الحقوق.Text);
                     }
                     break;
                 case 3:
                     checkAutoUpdate.Checked = false;
-                    قائمة_الحقوق.Text = removeSpace(قائمة_الحقوق.Text, true);
-                    txtReview.Text = removeSpace(txtReview.Text, false);
+                    قائمة_الحقوق.Text = removeSpaceRight(قائمة_الحقوق.Text);
+                    txtReview.Text = removeSpaceSub(txtReview.Text);
                     SuffConvertments(txtReview, صفة_مقدم_الطلب_off.SelectedIndex, صفة_الموكل_off.SelectedIndex);
                     SuffConvertments(قائمة_الحقوق, صفة_مقدم_الطلب_off.SelectedIndex, صفة_الموكل_off.SelectedIndex);
                     
@@ -4398,7 +4421,8 @@ namespace PersAhwal
             }
             else
             {
-                قائمة_الحقوق.Text = removeSpace(قائمة_الحقوق.Text, true);
+                قائمة_الحقوق.Text = removeSpaceRight(قائمة_الحقوق.Text);
+                
                 //MessageBox.Show(الحقوق_الممنوحة.Text);
                 //صفة_الموكل_off.Enabled = false;
                 savedRights.Checked = true;
@@ -5208,7 +5232,8 @@ namespace PersAhwal
                     قائمة_الحقوق.Text = reader["توكيل_بصيغة_غير_مدرجة_عام"].ToString();
                     قائمة_الحقوق.Text = SuffReplacements(قائمة_الحقوق.Text, صفة_مقدم_الطلب_off.SelectedIndex, صفة_الموكل_off.SelectedIndex);
                     starTectRightJob();
-                    قائمة_الحقوق.Text = removeSpace(قائمة_الحقوق.Text, true);
+                    قائمة_الحقوق.Text = removeSpaceRight(قائمة_الحقوق.Text);
+                    
                 }
                 
             }
@@ -5938,7 +5963,8 @@ namespace PersAhwal
         private void الحقوق_off_TextChanged(object sender, EventArgs e)
         {            
             PopulateCheckBoxes(الحقوق_off.Text.Replace(" ", "_").Replace("-", "_"), "TableAuthRights", DataSource, صفة_مقدم_الطلب_off.SelectedIndex, false);
-            قائمة_الحقوق.Text = removeSpace(قائمة_الحقوق.Text, true);            
+            قائمة_الحقوق.Text = removeSpaceRight(قائمة_الحقوق.Text);
+            
         }
 
         private void الحقوق_off_SelectedIndexChanged(object sender, EventArgs e)
@@ -7050,8 +7076,9 @@ namespace PersAhwal
                 //MessageBox.Show(txtReview.Text);
                 txtReview.Text = SuffReplacements(StrSpecPur, صفة_مقدم_الطلب_off.SelectedIndex, صفة_الموكل_off.SelectedIndex) ;
                 txtRevIndex++;
-                txtReview.Text = removeSpace(txtReview.Text, false);
             
+            txtReview.Text = removeSpaceSub(txtReview.Text);
+
         }
 
         private void pictureBox3_Click(object sender, EventArgs e)
@@ -7067,12 +7094,13 @@ namespace PersAhwal
             removedPreAuth();
             label11.Text = "الاختيار من قائمة المفضلة (" + txtRigIndex.ToString() + "/" + txtRightListIndex.ToString() + ")"; 
             txtRigIndex++;
-            قائمة_الحقوق.Text = removeSpace(قائمة_الحقوق.Text, true);
+            قائمة_الحقوق.Text = removeSpaceRight(قائمة_الحقوق.Text);
             
+
         }
 
 
-        private string removeSpace(string text, bool addLast)
+        private string removeSpaceSub(string text)
         {
             string authother = "";
             string removeAuthother = "";
@@ -7087,20 +7115,67 @@ namespace PersAhwal
                 if (sentence.Contains("لمن يشهد والله"))
                     lastSentence = sentence;
             }
-            if (addLast)
+            try
             {
-                if (!text.Contains("لمن يشهد والله"))
-                    text = text + "، وأذنت لمن يشهد والله خير الشاهدين";
-                else
-                    text = text.Replace(lastSentence, "، وأذنت لمن يشهد والله خير الشاهدين");
+                text = text.Replace(lastSentence, "");
             }
-            else {
-                try
-                {
-                    text = text.Replace(lastSentence, "");
-                }
-                catch (Exception ex) { }
+            catch (Exception ex) { }
+
+            try
+            {
+                text = text.Replace(authother, "");
+                text = text.Replace(removeAuthother, "");
             }
+            catch (Exception ex) { }
+
+            for (; text.Contains("،،");)
+            {
+                text = text.Replace("،،", "، ");
+            }
+            for (; text.Contains("..");)
+            {
+                text = text.Replace("..", ".");
+            }
+            
+            for (; text.Contains("  ");)
+            {
+                text = text.Replace("  ", " ");
+            }
+            text = text.Replace("، ،", "، ");
+            text = text.Replace("،", "، ");
+            text = text.Replace("1_", "");
+            text = text.Replace("0_", "");
+            text = text.Replace("،،", "،");
+            text = text.Replace("..", ".");
+            for (; text.Contains("  ");)
+            {
+                text = text.Replace("  ", " ");
+            }
+            text = text.Trim();
+
+
+            return text;
+        }
+
+        private string removeSpaceRight(string text)
+        {
+            string authother = "";
+            string removeAuthother = "";
+            string lastSentence = "";
+            string[] sentences = text.Split('،');
+            foreach (string sentence in sentences)
+            {
+                if (sentence.Contains("الحق في توكيل الغير"))
+                    authother = sentence;
+                if (sentence.Contains("ويعتبر التوكيل الصادر"))
+                    removeAuthother = sentence;
+                if (sentence.Contains("لمن يشهد والله"))
+                    lastSentence = sentence;
+            }
+            if (!text.Contains("لمن يشهد والله"))
+                text = text + "، وأذنت لمن يشهد والله خير الشاهدين";
+            else
+                text = text.Replace(lastSentence, "، وأذنت لمن يشهد والله خير الشاهدين");
             try
             {
                 text = text.Replace(authother, "");
@@ -7337,7 +7412,8 @@ namespace PersAhwal
             {
                 StrSpecPur = txtReviewListStar[txtRevStarIndex];
                 txtReview.Text = SuffReplacements(StrSpecPur, صفة_مقدم_الطلب_off.SelectedIndex, صفة_الموكل_off.SelectedIndex);
-                txtReview.Text = removeSpace(txtReview.Text, false);
+                
+                txtReview.Text = removeSpaceSub(txtReview.Text);
             }
             txtRevStarIndex++;                  
             checkAutoUpdate.Checked = true;
@@ -7378,7 +7454,8 @@ namespace PersAhwal
             {
                 string text = txtRightListStar[starRightIndexStar];
                 قائمة_الحقوق.Text = SuffReplacements(text, صفة_مقدم_الطلب_off.SelectedIndex, صفة_الموكل_off.SelectedIndex);
-                قائمة_الحقوق.Text = removeSpace(قائمة_الحقوق.Text, false);
+                قائمة_الحقوق.Text = removeSpaceRight(قائمة_الحقوق.Text);
+                
             }
             label11.Text = "الاختيار من قائمة المفضلة (" + starRightIndexStar.ToString() + "/" + txtRightListIndexStar.ToString() + ")"; 
             starRightIndexStar++;            
