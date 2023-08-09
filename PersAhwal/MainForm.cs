@@ -3309,22 +3309,6 @@ namespace PersAhwal
                     reportItems[ind + 5] = "مجموع المعاملات";//13 cells [0]
                     t.Rows[0].Cells[cellCount - 6].Paragraphs[0].Append(reportItems[ind + 5]).FontSize(12d).Bold().Alignment = Alignment.center;
 
-                    //t.Rows[0].Cells[0].Paragraphs[0].Append(reportItems[13]).FontSize(12d).Bold().Alignment = Alignment.center;
-                    //t.Rows[0].Cells[1].Paragraphs[0].Append(reportItems[12]).FontSize(12d).Bold().Alignment = Alignment.center;
-                    //t.Rows[0].Cells[2].Paragraphs[0].Append(reportItems[11]).FontSize(12d).Bold().Alignment = Alignment.center;
-                    //t.Rows[0].Cells[3].Paragraphs[0].Append(reportItems[10]).FontSize(12d).Bold().Alignment = Alignment.center;
-                    //t.Rows[0].Cells[4].Paragraphs[0].Append(reportItems[9]).FontSize(12d).Bold().Alignment = Alignment.center;
-                    //t.Rows[0].Cells[5].Paragraphs[0].Append(reportItems[8]).FontSize(12d).Bold().Alignment = Alignment.center;
-                    //t.Rows[0].Cells[6].Paragraphs[0].Append(reportItems[7]).FontSize(12d).Bold().Alignment = Alignment.center;
-                    //t.Rows[0].Cells[7].Paragraphs[0].Append(reportItems[6]).FontSize(12d).Bold().Alignment = Alignment.center;
-                    //t.Rows[0].Cells[8].Paragraphs[0].Append(reportItems[5]).FontSize(12d).Bold().Alignment = Alignment.center;
-                    //t.Rows[0].Cells[9].Paragraphs[0].Append(reportItems[4]).FontSize(12d).Bold().Alignment = Alignment.center;
-                    //t.Rows[0].Cells[10].Paragraphs[0].Append(reportItems[3]).FontSize(12d).Bold().Alignment = Alignment.center; //7 8
-                    //t.Rows[0].Cells[11].Paragraphs[0].Append(reportItems[2]).FontSize(12d).Bold().Alignment = Alignment.center;//5
-                    //t.Rows[0].Cells[12].Paragraphs[0].Append(reportItems[1]).FontSize(12d).Bold().Alignment = Alignment.center; //3
-                    //t.Rows[0].Cells[13].Paragraphs[0].Append(reportItems[0]).FontSize(12d).Bold().Alignment = Alignment.center;//0 1 2 4 6 9
-                    //t.Rows[0].Cells[14].Paragraphs[0].Append(CountName).FontSize(12d).Bold().Alignment = Alignment.center;
-
                     int AllSum = 0;
                     for (int c = 1; c < totColCount; c++)
                     {
@@ -3371,41 +3355,26 @@ namespace PersAhwal
                     int FinalSum = 0;
                     for (; w < preInfo.Items.Count; w++)
                     {
-                        //t.Rows[w + 1].Cells[0].Paragraphs[0].Append(monthSumV[w].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;                        
-                        //t.Rows[w + 1].Cells[1].Paragraphs[0].Append(rep1[w, 13].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                        //t.Rows[w + 1].Cells[2].Paragraphs[0].Append(rep1[w, 12].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                        //t.Rows[w + 1].Cells[3].Paragraphs[0].Append(rep1[w, 11].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                        //t.Rows[w + 1].Cells[4].Paragraphs[0].Append(rep1[w, 10].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                        //t.Rows[w + 1].Cells[5].Paragraphs[0].Append(rep1[w, 9].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                        //t.Rows[w + 1].Cells[6].Paragraphs[0].Append(rep1[w, 8].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                        //t.Rows[w + 1].Cells[7].Paragraphs[0].Append(rep1[w, 7].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                        //t.Rows[w + 1].Cells[8].Paragraphs[0].Append(rep1[w, 6].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-                        //t.Rows[w + 1].Cells[9].Paragraphs[0].Append(rep1[w, 5].ToString()).FontSize(12d).Bold().Alignment = Alignment.center; //7 8
-                        //t.Rows[w + 1].Cells[10].Paragraphs[0].Append(rep1[w, 4].ToString()).FontSize(12d).Bold().Alignment = Alignment.center; //7 8
-                        //t.Rows[w + 1].Cells[11].Paragraphs[0].Append(rep1[w, 3].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;//5
-                        //t.Rows[w + 1].Cells[12].Paragraphs[0].Append(rep1[w, 2].ToString()).FontSize(12d).Bold().Alignment = Alignment.center; //3
-                        //t.Rows[w + 1].Cells[13].Paragraphs[0].Append(rep1[w, 1].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;//0 1 2 4 6 9
-                        //t.Rows[w + 1].Cells[14].Paragraphs[0].Append(subInfoName[w].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
-
                         cellCount = totColCount - 1;
-                        ind = 0;
-                        t.Rows[w+1].Cells[cellCount].Paragraphs[0].Append(subInfoName[w].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;//14
+                        //MessageBox.Show(cellCount.ToString() + " - " + totColCount.ToString());
+                        t.Rows[w + 1].Cells[cellCount].Paragraphs[0].Append(subInfoName[w].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;//14
                         t.Rows[w + 1].Cells[0].Paragraphs[0].Append(monthSumV[w].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
                         FinalSum = FinalSum + monthSumV[w];
-                        for (; ind < docCollectCombo.Items.Count; ind++)
-                        {                            
-                            t.Rows[w+1].Cells[cellCount].Paragraphs[0].Append(rep1[w, ind].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                        for (ind = 0; ind < docCollectCombo.Items.Count; ind++)
+                        {
+                            //if(cellCount != 12)
+                             t.Rows[w + 1].Cells[cellCount-1].Paragraphs[0].Append(rep1[w, ind+1].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
                             cellCount--;
                         }
 
-                        t.Rows[w+1].Cells[cellCount].Paragraphs[0].Append(rep1[w, ind].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
+                        //t.Rows[w+1].Cells[cellCount - 0].Paragraphs[0].Append(rep1[w, ind+0].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
                         t.Rows[w+1].Cells[cellCount - 1].Paragraphs[0].Append(rep1[w, ind+1].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
                         t.Rows[w+1].Cells[cellCount - 2].Paragraphs[0].Append(rep1[w, ind+2].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
                         t.Rows[w+1].Cells[cellCount - 3].Paragraphs[0].Append(rep1[w, ind+3].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
                         t.Rows[w+1].Cells[cellCount - 4].Paragraphs[0].Append(rep1[w, ind+4].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
                         t.Rows[w+1].Cells[cellCount - 5].Paragraphs[0].Append(rep1[w, ind+5].ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
                     }
-
+                    
                     cellCount = totColCount - 1;
                     ind = 1;
                     t.Rows[preInfo.Items.Count+1].Cells[0].Paragraphs[0].Append(FinalSum.ToString()).FontSize(12d).Bold().Alignment = Alignment.center;
@@ -10004,7 +9973,7 @@ namespace PersAhwal
             else
             {
                 dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
-                FormDivorce formDivorce = new FormDivorce(DataSource, false, EmployeeName, attendedVC.SelectedIndex, GregorianDate, HijriDate);
+                FormDivorce formDivorce = new FormDivorce(DataSource, false, EmployeeName, attendedVC.SelectedIndex, GregorianDate, HijriDate, FilespathOut);
                 formDivorce.ShowDialog();
             }
         }

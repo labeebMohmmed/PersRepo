@@ -9,6 +9,8 @@ using System.IO;
 using DocumentFormat.OpenXml.Presentation;
 using DocumentFormat.OpenXml.Drawing.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
+using System.Globalization;
+using System.Threading;
 
 namespace PersAhwal
 {
@@ -169,7 +171,17 @@ namespace PersAhwal
             //Application.Run(new PassAway(2,dataSource100A,  @"D:\PrimariFiles\ModelFiles\", archFile, JobPossition,EmployeeName, "29-06-2022", "28-11-1443"));
             //Application.Run(new FormAuth(2, -1, "", dataSource100A, @"D:\PrimariFiles\ModelFiles\", archFile, EmployeeName, JobPossition, "05-14-2023", "10-23-1444", true));
             //Application.Run(new FormCollection(2, -1, 0, EmployeeName,dataSource100A, @"D:\PrimariFiles\ModelFiles\", archFile, JobPossition, "04-12-2023", "11-09-1444"));
-            //Application.Run(new MainForm("موظف ارشفة", 3, "57", "لبيب محمد أحمد", "نائب قنصل", dataSource100S, dataSource100A, @"D:\PrimariFiles\ModelFiles\", archFile, @"D:\PrimariFiles\FormData\", FormDataFile + @"\", true, "08-02-2023", Modelfilespath, FormDataFile, false));
+            string Cdate = "08-02-2023";
+
+            CultureInfo arSA = new CultureInfo("ar-SA");
+            arSA.DateTimeFormat.Calendar = new GregorianCalendar();
+
+
+            Thread.CurrentThread.CurrentCulture = arSA;
+            new System.Globalization.GregorianCalendar();
+            Cdate = DateTime.Now.ToString("MM-dd-yyyy");
+            //MessageBox.Show(Cdate);
+            //Application.Run(new MainForm("موظف ارشفة", 3, "57", "لبيب محمد أحمد", "نائب قنصل", dataSource100S, dataSource100A, @"D:\PrimariFiles\ModelFiles\", archFile, @"D:\PrimariFiles\FormData\", FormDataFile + @"\", true, Cdate, Modelfilespath, FormDataFile, false));
             //Application.Run(new Form8(dataSource100A, archFile));
             //string[] str = new string[1] { "" };
             //Application.Run(new FormPics("57", EmployeeName, "لبيب محمد أحمد", "نائب قنصل", dataSource100A, 0, FormDataFile, archFile, 10, str, str, false, str, str));

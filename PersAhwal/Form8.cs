@@ -2259,7 +2259,7 @@ namespace PersAhwal
 
         private void button25_Click(object sender, EventArgs e)
         {
-              string[] data = new string[11];
+            string[] data = new string[11];
             string[] colList = new string[11];
             colList[0] = "رقم_المعاملة";
             colList[1] = "المعاملة";

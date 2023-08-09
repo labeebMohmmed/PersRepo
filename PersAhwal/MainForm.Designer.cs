@@ -1878,8 +1878,6 @@ namespace PersAhwal
             this.Controls.Add(this.button2);
             this.Controls.Add(this.Affbtn4);
             this.Controls.Add(this.Affbtn5);
-            this.Controls.Add(this.Affbtn2);
-            this.Controls.Add(this.Affbtn3);
             this.Controls.Add(this.perbtn1);
             this.Controls.Add(this.Affbtn0);
             this.Controls.Add(this.persbtn10);
@@ -1897,6 +1895,8 @@ namespace PersAhwal
             this.Controls.Add(this.flowLayoutPanel2);
             this.Controls.Add(this.PanelMandounb);
             this.Controls.Add(this.flowLayoutPanel3);
+            this.Controls.Add(this.Affbtn2);
+            this.Controls.Add(this.Affbtn3);
             this.Name = "MainForm";
             this.Text = "قسم الأحوال الشخصية والمعاملات القنصلية";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);

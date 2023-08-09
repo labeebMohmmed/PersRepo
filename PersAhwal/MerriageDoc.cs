@@ -1307,41 +1307,7 @@ namespace PersAhwal
             //MessageBox.Show(رقم_الهوية_1.Text);
         }
         
-        public void getID(TextBox رقم_الهوية_1,  string name)
-        {
-            if (gridFill) return;
-            DataTable dtbl = new DataTable();
-            string query = "SELECT * FROM TableGenNames where الاسم = N'" + name + "'";
-            SqlConnection sqlCon = new SqlConnection(DataSource);
-            try
-            {
-                if (sqlCon.State == ConnectionState.Closed)
-                    sqlCon.Open();
-            
-           
-            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
-            sqlDa.SelectCommand.CommandType = CommandType.Text;
-            
-            sqlDa.Fill(dtbl);
-            }
-
-            catch (Exception ex)
-            {
-                رقم_الهوية_1.Text = "P0";
-                return;
-            }
-            رقم_الهوية_1.Text = "P0";
-            foreach (DataRow row in dtbl.Rows)
-            {
-                try
-                {
-                    رقم_الهوية_1.Text = row["رقم_الهوية"].ToString();
-                }
-                catch (Exception ex) { }
-                return;
-            }
-            //MessageBox.Show(رقم_الهوية_1.Text);
-        }
+       
         public void getID(TextBox رقم_الهوية_1,  TextBox تاريخ_الميلاد_1, string name)
         {
             if (gridFill) return;
@@ -1416,13 +1382,42 @@ namespace PersAhwal
 
         private void الشاهد_الاول_TextChanged(object sender, EventArgs e)
         {
-            //getID(وثيقة_الشاهد_الاول, الشاهد_الاول.Text);
+            getID(وثيقة_الشاهد_الاول, الشاهد_الاول.Text);
         }
+        public void getID(TextBox رقم_الهوية_1, string name)
+        {
+            if (gridFill) return;
+            string query = "SELECT * FROM TableGenNames where الاسم = N'" + name + "' order by ID desc";
+            Console.WriteLine(query);
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex)
+            {
+                رقم_الهوية_1.Text = "P0";
+                return;
+            }
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
 
+            رقم_الهوية_1.Text = "P0";
+            foreach (DataRow row in dtbl.Rows)
+            {
+                رقم_الهوية_1.Text = row["رقم_الهوية"].ToString();
+                Console.WriteLine(رقم_الهوية_1.Text);
+                return;
+            }
+            //MessageBox.Show(رقم_الهوية_1.Text);
+        }
         private void الشاهد_الثاني_TextChanged(object sender, EventArgs e)
         {
             //getID(وثيقة_الشاهد_الثاني, الشاهد_الثاني.Text, "رقم_الهوية", "P0");
-            //getID(وثيقة_الشاهد_الثاني, الشاهد_الثاني.Text);
+           getID(وثيقة_الشاهد_الثاني, الشاهد_الثاني.Text);
         }
 
         private void وكيل_الزوج_TextChanged(object sender, EventArgs e)

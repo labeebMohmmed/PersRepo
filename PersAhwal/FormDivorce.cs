@@ -50,13 +50,15 @@ namespace PersAhwal
         string[] colIDs = new string[100];
         string[] forbidDs = new string[100];
         bool grid = false;
-        public FormDivorce(string dataSource, bool addEdit, string empName, int atVCIndex, string gregorianDate, string hijriDate)
+        string FilespathOut = "";
+        public FormDivorce(string dataSource, bool addEdit, string empName, int atVCIndex, string gregorianDate, string hijriDate, string filespathOut)
         {
             InitializeComponent();
             definColumn(dataSource);
             DataSource = dataSource;
             AddEdit = addEdit;
             AtVCIndex = atVCIndex;
+            FilespathOut = filespathOut;
             allList = getColList("TableDivorce");
 
             التاريخ_الهجري.Text = HijriDate = hijriDate;
@@ -184,7 +186,7 @@ namespace PersAhwal
             foreach (DataRow row in dtbl.Rows)
             {
 
-                if (row["name"].ToString() != "تاريخ_الارشفة1" &&row["name"].ToString() != "تاريخ_الاجراء" && row["name"].ToString() != "تاريخ_الارشفة2" && row["name"].ToString() != "ID" && row["name"].ToString() != "حالة_الارشفة" && row["name"].ToString() != "sms")
+                if (row["name"].ToString() != "تاريخ_الارشفة1"  && row["name"].ToString() != "تاريخ_الارشفة2" && row["name"].ToString() != "ID" && !row["name"].ToString().Contains("_off") && row["name"].ToString() != "حالة_الارشفة" && row["name"].ToString() != "sms")
                 {
                     allList[i] = row["name"].ToString();
                     //MessageBox.Show(row["name"].ToString());
@@ -267,7 +269,7 @@ namespace PersAhwal
 
                 }
                 التعليقات_السابقة_Off.Text = dataGridView1.CurrentRow.Cells["تعليق"].Value.ToString();
-                if (dataGridView1.CurrentRow.Cells["اسم_الزوج"].Value.ToString() == "")
+                if (dataGridView1.CurrentRow.Cells["اسم_الزوج"].Value.ToString() == "" && File.ReadAllText(FilespathOut + @"\autoDocs.txt") == "Yes")
                 {
                     newData = true;
                     FillDatafromGenArch("data1", genIDNo.ToString(), "TableDivorce");
@@ -275,6 +277,7 @@ namespace PersAhwal
                 AddEdit = grid = false;
                 dataGridView1.Visible = labDescribed.Visible = false;
                 PanelMain.Visible = true;
+                gridFill = false;
             }
         }
         private bool ready()
@@ -760,6 +763,60 @@ namespace PersAhwal
             autoCompleteTextBox1(الشاهد_الاول, DataSource, "الاسم", "TableGenNames");
             autoCompleteTextBox1(الشاهد_الثاني, DataSource, "الاسم", "TableGenNames");
             autoCompleteTextBox(المهنة, DataSource, "jobs", "TableListCombo");
+            diplomats(المأذون, DataSource);
+            if (المأذون.Items.Count >= VCIndexData()) المأذون.SelectedIndex = VCIndexData();
+        }
+        private int VCIndexData()
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return 0; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT VCIndesx,AttendVCAffairs FROM TableSettings", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable table = new DataTable();
+            sqlDa.Fill(table);
+            sqlCon.Close();
+            int index = 0;
+            foreach (DataRow dataRow in table.Rows)
+            {
+                if (!string.IsNullOrEmpty(dataRow["VCIndesx"].ToString()))
+                {
+                    index = Convert.ToInt32(dataRow["VCIndesx"].ToString());
+                }
+            }
+            return index;
+        }
+        private void diplomats(ComboBox combbox, string source)
+        {
+            combbox.Items.Clear();
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                saConn.Open();
+
+                string query = "select distinct EmployeeName from TableUser where EmployeeName is not null and الدبلوماسيون = N'yes' and Aproved like N'%أكده%' order by EmployeeName asc";
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.CommandType = CommandType.Text;
+
+                Console.WriteLine(query);
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    DataTable table = new DataTable();
+                    SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                    dataAdapter.Fill(table);
+
+                    foreach (DataRow dataRow in table.Rows)
+                    {
+                        combbox.Items.Add(dataRow["EmployeeName"].ToString());
+                    }
+                }
+                catch (Exception ex) { }
+                saConn.Close();
+            }
         }
         private void autoCompleteTextBox(TextBox textbox, string source, string comlumnName, string tableName)
         {
@@ -835,7 +892,8 @@ namespace PersAhwal
         public void getID(TextBox رقم_الهوية_1, TextBox تاريخ_الميلاد_1, TextBox المهنة_1, string name)
         {
             if (gridFill) return;
-            string query = "SELECT * FROM TableGenNames where الاسم = N'" + name + "'";
+            string query = "SELECT * FROM TableGenNames where الاسم = N'" + name + "'  order by ID desc";
+            Console.WriteLine(query);
             SqlConnection sqlCon = new SqlConnection(DataSource);
             try
             {
@@ -866,10 +924,41 @@ namespace PersAhwal
             }
             //MessageBox.Show(رقم_الهوية_1.Text);
         }
+        
+        public void getID(TextBox رقم_الهوية_1, string name)
+        {
+            if (gridFill) return;
+            string query = "SELECT * FROM TableGenNames where الاسم = N'" + name + "' order by ID desc";
+            Console.WriteLine(query);
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex)
+            {
+                رقم_الهوية_1.Text = "P0";
+                return;
+            }
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+
+            رقم_الهوية_1.Text = "P0";
+            foreach (DataRow row in dtbl.Rows)
+            {
+                رقم_الهوية_1.Text = row["رقم_الهوية"].ToString();
+                Console.WriteLine(رقم_الهوية_1.Text);
+                return;
+            }
+            //MessageBox.Show(رقم_الهوية_1.Text);
+        }
         public void getID(TextBox رقم_الهوية_1, TextBox تاريخ_الميلاد_1, string name)
         {
             if (gridFill) return;
-            string query = "SELECT * FROM TableGenNames where الاسم = N'" + name + "'";
+            string query = "SELECT * FROM TableGenNames where الاسم = N'" + name + "' order by ID desc";
             SqlConnection sqlCon = new SqlConnection(DataSource);
             try
             {
@@ -897,35 +986,7 @@ namespace PersAhwal
             }
             //MessageBox.Show(رقم_الهوية_1.Text);
         }
-        public void getID(TextBox رقم_الهوية_1, string name)
-        {
-            if (gridFill) return;
-            string query = "SELECT * FROM TableGenNames where الاسم = N'" + name + "'";
-            SqlConnection sqlCon = new SqlConnection(DataSource);
-            try
-            {
-                if (sqlCon.State == ConnectionState.Closed)
-                    sqlCon.Open();
-            }
-            catch (Exception ex)
-            {
-                رقم_الهوية_1.Text = "P0";
-                return;
-            }
-            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
-            sqlDa.SelectCommand.CommandType = CommandType.Text;
-            DataTable dtbl = new DataTable();
-            sqlDa.Fill(dtbl);
-
-            رقم_الهوية_1.Text = "P0";
-            foreach (DataRow row in dtbl.Rows)
-            {
-                رقم_الهوية_1.Text = row["رقم_الهوية"].ToString();
-                return;
-            }
-            //MessageBox.Show(رقم_الهوية_1.Text);
-        }
-
+        
 
         private void اسم_الزوجة_TextChanged(object sender, EventArgs e)
         {
@@ -934,12 +995,12 @@ namespace PersAhwal
 
         private void الشاهد_الاول_TextChanged(object sender, EventArgs e)
         {
-            getID(وثيقة_الشاهد_الاول, الشاهد_الاول.Text, "رقم_الهوية", "P0");
+            getID(وثيقة_الشاهد_الاول, الشاهد_الاول.Text);
         }
 
         private void الشاهد_الثاني_TextChanged(object sender, EventArgs e)
         {
-            getID(وثيقة_الشاهد_الثاني, الشاهد_الثاني.Text, "رقم_الهوية", "P0");
+            getID(وثيقة_الشاهد_الثاني, الشاهد_الثاني.Text);
         }
         public void getID(TextBox textTo, string name, string controlType, string def)
         {
@@ -1038,22 +1099,13 @@ namespace PersAhwal
                 try
                 {
 
-                    RecDay_off.Text = تاريخ_الايصال.Text.Split('-')[1];
-                    RecMonth_off.Text = تاريخ_الايصال.Text.Split('-')[2];
-                    recYear_off.Text = تاريخ_الايصال.Text.Split('-')[0];
+                    الايصال_اليوم.Text = تاريخ_الايصال.Text.Split('-')[1];
+                    الايصال_الشهر.Text = تاريخ_الايصال.Text.Split('-')[0];
+                    الايصال_السنة.Text = تاريخ_الايصال.Text.Split('-')[2];
                 }
                 catch (Exception ex) { }
             }
         }
-        private void اليوم_TextChanged(object sender, EventArgs e)
-        {
-            if (grid) return;
-            //تاريخ_الاجراء.Text = السنة_off.Text + "-" + اليوم_off.Text + "-" + الشهر_off.Text;
-            //MessageBox.Show(اليوم_off.Text);
-        }
-
-
-
        
         private void تاريخ_الاجراء_TextChanged(object sender, EventArgs e)
         {
@@ -1062,56 +1114,62 @@ namespace PersAhwal
                 try
                 {
 
-                    اليوم_off.Text = تاريخ_الاجراء.Text.Split('-')[1];
-                    الشهر_off.Text = تاريخ_الاجراء.Text.Split('-')[2];
-                    السنة_off.Text = تاريخ_الاجراء.Text.Split('-')[0];
+                    الإجراء_اليوم.Text = تاريخ_الاجراء.Text.Split('-')[1];
+                    الإجراء_الشهر.Text = تاريخ_الاجراء.Text.Split('-')[0];
+                    الإجراء_السنة.Text = تاريخ_الاجراء.Text.Split('-')[2];
                 }
                 catch (Exception ex) { }
             }
         }
 
-        private void recYear_off_TextChanged(object sender, EventArgs e)
+        private void الإجراء_السنة_TextChanged(object sender, EventArgs e)
         {
             if (grid) return;
-            تاريخ_الاجراء.Text = recYear_off.Text + "-" + RecDay_off.Text + "-" + RecMonth_off.Text;
-            if (recYear_off.Text.Length == 4)
-                RecMonth_off.Select();
+            تاريخ_الاجراء.Text = الإجراء_الشهر.Text + "-" + الإجراء_اليوم.Text + "-" + الإجراء_السنة.Text;
+            if (الإجراء_السنة.Text.Length == 4)
+                الإجراء_الشهر.Select();
+
         }
 
-        private void السنة_off_TextChanged_1(object sender, EventArgs e)
+        private void الإجراء_الشهر_TextChanged(object sender, EventArgs e)
         {
             if (grid) return;
-            تاريخ_الايصال.Text = السنة_off.Text + "-" + اليوم_off.Text + "-" + الشهر_off.Text;
-            if (السنة_off.Text.Length == 4)
-                الشهر_off.Select();
+            تاريخ_الاجراء.Text = الإجراء_الشهر.Text + "-" + الإجراء_اليوم.Text + "-" + الإجراء_السنة.Text;
+            if (الإجراء_الشهر.Text.Length == 2)
+                الإجراء_اليوم.Select();
+
         }
 
-        private void RecMonth_off_TextChanged(object sender, EventArgs e)
+        private void الإجراء_اليوم_TextChanged(object sender, EventArgs e)
         {
             if (grid) return;
-            تاريخ_الاجراء.Text = recYear_off.Text + "-" + RecDay_off.Text + "-" + RecMonth_off.Text;
-            if (RecMonth_off.Text.Length == 2)
-                RecDay_off.Select();
+            تاريخ_الاجراء.Text = الإجراء_الشهر.Text + "-" + الإجراء_اليوم.Text + "-" + الإجراء_السنة.Text;
+            if (الإجراء_اليوم.Text.Length == 2)
+                الايصال_السنة.Select();
         }
 
-        private void الشهر_off_TextChanged_1(object sender, EventArgs e)
+        private void الايصال_السنة_TextChanged(object sender, EventArgs e)
         {
             if (grid) return;
-            تاريخ_الايصال.Text = السنة_off.Text + "-" + اليوم_off.Text + "-" + الشهر_off.Text;
-            if (الشهر_off.Text.Length == 2)
-                اليوم_off.Select();
+            تاريخ_الايصال.Text = الايصال_الشهر.Text + "-" + الايصال_اليوم.Text + "-" + الايصال_السنة.Text;
+            if (الايصال_السنة.Text.Length == 4)
+                الايصال_الشهر.Select();
         }
 
-        private void RecDay_off_TextChanged_1(object sender, EventArgs e)
+        private void الايصال_الشهر_TextChanged(object sender, EventArgs e)
         {
             if (grid) return;
-            تاريخ_الاجراء.Text = recYear_off.Text + "-" + RecDay_off.Text + "-" + RecMonth_off.Text;
+            تاريخ_الايصال.Text = الايصال_الشهر.Text + "-" + الايصال_اليوم.Text + "-" + الايصال_السنة.Text;
+            if (الايصال_الشهر.Text.Length == 2)
+                الايصال_اليوم.Select();
         }
 
-        private void اليوم_off_TextChanged(object sender, EventArgs e)
+        private void الايصال_اليوم_TextChanged(object sender, EventArgs e)
         {
             if (grid) return;
-            تاريخ_الايصال.Text = السنة_off.Text + "-" + اليوم_off.Text + "-" + الشهر_off.Text;
+            تاريخ_الايصال.Text = الايصال_الشهر.Text + "-" + الايصال_اليوم.Text + "-" + الايصال_السنة.Text;
+            if (الايصال_اليوم.Text.Length == 2)
+                تعليق_جديد_Off.Select();
         }
     }
 }

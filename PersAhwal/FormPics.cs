@@ -151,17 +151,13 @@ namespace PersAhwal
             ServerType = serverType;
             DataSource = dataSource;
             FormType = formType;
-            // MessageBox.Show(pictureBox1.ImageLocation.ToString());
             button4.BringToFront();
             button4.BringToFront();
             button3.BringToFront();
             Console.WriteLine(2);
-            //return;
             btnAuth.Visible = true;
             FilespathIn = filespathIn;
             FilespathOut = filespathOut + @"\";
-            //MessageBox.Show(FilespathOut);
-            
             ArchiveState = archiveState;
             EmpName = empName;
             AVcName = aVcName;
@@ -171,20 +167,10 @@ namespace PersAhwal
             genPreparation(strData, strSubData, index);
             Console.WriteLine(3);
             Combo1.SelectedIndex = Combo1Index;
-            //OpenFile(Combo1.Text, false);            
             Console.WriteLine(4);
-            //updateNames();
             Console.WriteLine(5);
             correctNo();
-            Console.WriteLine(6);
-            //MessageBox.Show(Combo1Index.ToString());
-
-            //int docid = NewReportEntry(DataSource, GenQuery, 10, relatedPro.Split('-')[0], relatedPro.Split('-')[1]);
-
-            //var qrCode = QRCodeWriter.CreateQrCode(" ق س ج/80/23/12/5412");
-            //qrCode.SaveAsPng(FilespathOut + "ScanImg" + rowCount + imagecount.ToString() + ".png");
-            //MessageBox.Show(FilespathOut + "ScanImg" + rowCount + imagecount.ToString() + ".png");            
-            //pictureBox1.ImageLocation = PathImage[imagecount];
+            
             try
             {
                 txtMissionCode = missionBasicInfo().Split('*')[3];
@@ -310,9 +296,7 @@ namespace PersAhwal
             }
             else
             {
-                //المعاملات الأخرى
-                //if (FormType != 10)
-                //{
+                
                 for (int x = 0; x < strData.Length; x++)
                 {
                     if (strData[0] == "")
@@ -1716,6 +1700,8 @@ namespace PersAhwal
                                 }
                             }
                         }
+                        if(btnSaveEnd.Visible)
+                            btnSaveEnd.Select();
                     }
                     catch (Exception ex)
                     {
@@ -1821,6 +1807,8 @@ namespace PersAhwal
                 catch (Exception ex) {
                     
                 }
+                if (btnSaveEnd.Visible)
+                    btnSaveEnd.Select();
             }
         }
 
@@ -4962,6 +4950,15 @@ namespace PersAhwal
 
                 }
             
+        }
+
+        private void تاريخ_الميلاد_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)13)
+            {
+                if (btnSaveEnd.Visible)
+                    btnSaveEnd.Select();
+            }
         }
 
         private void button4_Click(object sender, EventArgs e)

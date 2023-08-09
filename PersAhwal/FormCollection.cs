@@ -2507,7 +2507,8 @@ namespace PersAhwal
             checkChanged(مقدم_الطلب, Panelapp);
             if (gridFill) return;
             int index = 0;
-            string[] text = new string[6];
+            string[] text = new string[7];
+            //text[6] = "";
             TextBox textBox = (TextBox)sender;
             
             foreach (Control control in Panelapp.Controls) {
@@ -2537,7 +2538,7 @@ namespace PersAhwal
                 if (text[5] == "")
                     text[5] = "ذكر";
 
-                // fillFirstInfo("", text[5], text[1], text[0], text[2], اللغة.Text, text[3], text[4], TextID);
+                //fillFirstInfo("", text[5], text[1], text[0], text[2], اللغة.Text, text[3], text[4], TextID);
 
             }
             else
@@ -2557,9 +2558,17 @@ namespace PersAhwal
                         text[5] = "ذكر";
                 }
                 catch (Exception ex) { }
+                
+               
             }
 
-            fillFirstInfo("", text[5], text[1], text[0], text[2], اللغة.Text, text[3], text[4], TextID, text[6]);
+            //MessageBox.Show(text[6] );
+            try
+            {
+                fillFirstInfo("", text[5], text[1], text[0], text[2], اللغة.Text, text[3], text[4], TextID, text[6]);
+            }catch (Exception ex) {
+                fillFirstInfo("", text[5], text[1], text[0], text[2], اللغة.Text, text[3], text[4], TextID, "");
+            }
 
         }
 
@@ -3501,7 +3510,7 @@ namespace PersAhwal
         private string getDocxPdf()
         {
             string doc = "";
-            string query = "select الإجراء_الأخير from TableCollection where رقم_المعاملة = N'" + رقم_المعاملة.Text + "'";
+            string query = "select الإجراء_الأخير from TableCollection where رقم_المعاملة = N'" + رقم_المعاملة.Text + "'and اسم_الموظف = N'" + اسم_الموظف.Text + "'";
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
@@ -3519,7 +3528,7 @@ namespace PersAhwal
 
         private int getTodaDocxPdf()
         {
-            string query = "select الإجراء_الأخير from TableCollection where التاريخ_الميلادي = N'" + GregorianDate + "' and الإجراء_الأخير = N'docx'";
+            string query = "select الإجراء_الأخير from TableCollection where التاريخ_الميلادي = N'" + GregorianDate + "' and الإجراء_الأخير = N'docx' and اسم_الموظف = N'" + اسم_الموظف.Text + "'";
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
@@ -3533,7 +3542,7 @@ namespace PersAhwal
 
         private void setDocxPdf(string doc)
         {
-            string query = "update TableCollection set الإجراء_الأخير = N'" + doc + "' where رقم_المعاملة = N'" + رقم_المعاملة.Text + "'";
+            string query = "update TableCollection set الإجراء_الأخير = N'" + doc + "' where رقم_المعاملة = N'" + رقم_المعاملة.Text + "'and اسم_الموظف = N'" + اسم_الموظف.Text + "'";
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();

@@ -20,6 +20,8 @@ using SixLabors.ImageSharp.Drawing;
 using System.Globalization;
 using System.Threading;
 using Word = Microsoft.Office.Interop.Word;
+using DocumentFormat.OpenXml.Office2010.Excel;
+
 namespace PersAhwal
 {
     public partial class Settings : Form
@@ -80,6 +82,9 @@ namespace PersAhwal
         bool reqGrid = false;
         string[] IDList = new string[100];
         string[] rightColNames;
+        int idList = 0;
+
+        string[] colReqList = new string[11];
         public Settings(string server, bool newSettings, string dataSource56, string dataSource57, bool setDataBase, string filepathIn, string filepathOut, string archFile, string formDataFile, string colName)
         {
             InitializeComponent();
@@ -92,6 +97,7 @@ namespace PersAhwal
             else if (Server == "56")
                 DataSource = DataSource56;
             allList = getColList("TableAddContext");
+            initialInfo();
             detectCharacter1(DataSource);
             detectCharacter2(DataSource);            
             NewSettings = newSettings;
@@ -114,6 +120,22 @@ namespace PersAhwal
             Suffex_preffixList();
             System.Globalization.CultureInfo TypeOfLanguage = new System.Globalization.CultureInfo("ar-SA");
             InputLanguage.CurrentInputLanguage = InputLanguage.FromCulture(TypeOfLanguage);
+        }
+
+        private void initialInfo()
+        {
+            colReqList [0] = "رقم_المعاملة";
+            colReqList [1] = "المعاملة";
+            colReqList [2] = "المطلوب_رقم1";
+            colReqList [3] = "المطلوب_رقم2";
+            colReqList [4] = "المطلوب_رقم3";
+            colReqList [5] = "المطلوب_رقم4";
+            colReqList [6] = "المطلوب_رقم5";
+            colReqList [7] = "المطلوب_رقم6";
+            colReqList [8] = "المطلوب_رقم7";
+            colReqList [9] = "المطلوب_رقم8";
+            colReqList [10] = "المطلوب_رقم9";
+
         }
 
         private void testFiles()
@@ -1365,80 +1387,114 @@ namespace PersAhwal
 
 
 
-        private string OpenFile(string documenNo, bool printOut, Button button)
+        private void OpenFile(string documenNo, bool printOut)
         {
-            string query = "SELECT ID, proForm1,Data1, Extension1 from TableProcReq where المعاملة=@المعاملة";
-            
-            SqlConnection Con = new SqlConnection(DataSource);
-            SqlCommand sqlCmd1 = new SqlCommand(query, Con);
-            sqlCmd1.Parameters.Add("@المعاملة", SqlDbType.NVarChar).Value = documenNo;
-            if (Con.State == ConnectionState.Closed)
-                Con.Open();
-            button.Enabled = false;
-            if (!Directory.Exists(ArchFile + @"\formUpdated"))
-            {
-                System.IO.Directory.CreateDirectory(ArchFile + @"\formUpdated");
-            }
+            string query = "SELECT ID, proForm1,Data1, Extension1 from TableProcReq where ID="+ documenNo;
 
-            var reader = sqlCmd1.ExecuteReader();
-            if (reader.Read())
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            foreach (DataRow reader in dtbl.Rows)
             {
-                string str = reader["proForm1"].ToString();
-                Console.WriteLine(str);
+                var name = reader["proForm1"].ToString();
+                if (name == "")
+                {
+                    reviewForms.Enabled = false;
+                    return;
+                }
                 try
                 {
                     var Data = (byte[])reader["Data1"];
+                    string ext = ".docx";
+                    if (reader["Extension1"].ToString() != "")
+                        ext = reader["Extension1"].ToString();
 
-                    CurrentFile = ArchFile + @"\formUpdated\" + str + ".docx";
-                string filePath = ArchFile + @"\" + str +".docx";
-                if (File.Exists(CurrentFile) && !fileIsOpen(CurrentFile)) {
-                    File.Delete(CurrentFile);
+                    var NewFileName = name.Replace(ext, DateTime.Now.ToString("ddMMyyyyhhmmss")) + ext;
+                    File.WriteAllBytes(NewFileName, Data);
+                    if (printOut)
+                        System.Diagnostics.Process.Start(NewFileName);
+                    reviewForms.Enabled = true;
                 }
-                
-                if (!File.Exists(CurrentFile))
-                {
-                    try
-                    {
-                        //File.Delete(CurrentFile);
-
-                        button.Enabled = true;
-
-                        if (printOut)
-                        {
-                            File.WriteAllBytes(filePath, Data);
-
-                            System.IO.File.Copy(filePath, CurrentFile);
-
-                            FileInfo fileInfo = new FileInfo(CurrentFile);
-                            if (fileInfo.IsReadOnly) fileInfo.IsReadOnly = false;
-                                Console.WriteLine("CurrentFile " + CurrentFile);
-                                System.Diagnostics.Process.Start(CurrentFile);
-                        }
-                        return CurrentFile;
-                    }
-                    catch (Exception ex)
-                    {
-                            Console.WriteLine("fail " +str);
-                            button.Enabled = false;
-                        return "";
-                    }
-
-                }
-                else if (File.Exists(CurrentFile) && fileIsOpen(CurrentFile))
-                {
-                    button.Enabled = false;
-                    MessageBox.Show("يرجى إغلاق الملف " + str + " أولا");
-                }
-                }
-                catch (Exception ex)
-                {
-                    button.Enabled = false;
-                    return "";
-                }
+                catch (Exception ex) { return; }
             }
-            else button.Enabled = false;
-            Con.Close();
-            return "";
+
+
+            sqlCon.Close();
+
+            //SqlConnection Con = new SqlConnection(DataSource);
+            //SqlCommand sqlCmd1 = new SqlCommand(query, Con);
+            
+            //if (Con.State == ConnectionState.Closed)
+            //    Con.Open();
+            //Console.WriteLine(query); 
+            //MessageBox.Show(query);
+            
+            //if (!Directory.Exists(ArchFile + @"\formUpdated"))
+            //{
+            //    System.IO.Directory.CreateDirectory(ArchFile + @"\formUpdated");
+            //}
+
+            //var reader = sqlCmd1.ExecuteReader();
+            //if (reader.Read())
+            //{
+            //    string str = reader["proForm1"].ToString();
+            //    Console.WriteLine(str);
+            //    try
+            //    {
+            //        var Data = (byte[])reader["Data1"];
+
+            //        CurrentFile = ArchFile + @"\formUpdated\" + str + ".docx";
+            //    string filePath = ArchFile + @"\" + str +".docx";
+            //        MessageBox.Show(filePath);
+            //    if (File.Exists(CurrentFile) && !fileIsOpen(CurrentFile)) {
+            //        File.Delete(CurrentFile);
+            //    }
+                
+            //    if (!File.Exists(CurrentFile))
+            //    {
+            //        try
+            //        {
+                        
+            //            if (printOut)
+            //            {
+            //                File.WriteAllBytes(filePath, Data);
+
+            //                System.IO.File.Copy(filePath, CurrentFile);
+
+            //                FileInfo fileInfo = new FileInfo(CurrentFile);
+            //                if (fileInfo.IsReadOnly) fileInfo.IsReadOnly = false;
+            //                    Console.WriteLine("CurrentFile " + CurrentFile);
+            //                    System.Diagnostics.Process.Start(CurrentFile);
+            //            }
+            //            return CurrentFile;
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //                Console.WriteLine("fail " +str);
+                            
+            //            return "";
+            //        }
+
+            //    }
+            //    else if (File.Exists(CurrentFile) && fileIsOpen(CurrentFile))
+            //    {
+                    
+            //        MessageBox.Show("يرجى إغلاق الملف " + str + " أولا");
+            //    }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        return "";
+            //    }
+            //}
+            
+            //Con.Close();
+            //return "";
         }
 
 
@@ -1989,6 +2045,290 @@ namespace PersAhwal
 
             }
             sqlCmd.ExecuteNonQuery();
+        }
+
+        private bool view_PreReqID(int ID)
+        {
+            bool rowFound = false;
+            //SqlConnection sqlCon = new SqlConnection(DataSource);
+            //try
+            //{
+            //    if (sqlCon.State == ConnectionState.Closed)
+            //        sqlCon.Open();
+            //}
+            //catch (Exception ex) { return false; }
+            //SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT * FROM TableProcReq where  ID=N'" + ID + "'", sqlCon);
+            //sqlDa.SelectCommand.CommandType = CommandType.Text;
+            //DataTable dtbl = new DataTable();
+            //sqlDa.Fill(dtbl);
+            //sqlCon.Close();
+            //if (dtbl.Rows.Count > 0)
+            //{
+            //    rowFound = true;
+
+            //    foreach (DataRow row in dtbl.Rows)
+            //    {
+            //        idList = Convert.ToInt32(row["ID"].ToString());                                                            
+            //        for (int index = 2; index < 11; index++)
+            //        {
+            //            foreach (Control control in panel_المستندات.Controls)
+            //            {
+            //                if (control.Name == colReqList[index])
+            //                {
+            //                    control.Text = row[colReqList[index]].ToString();
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
+            OpenFile(ID.ToString(), false);
+            return rowFound;
+        }
+
+        private void dataGridView2_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            
+            if (dataGridView2.CurrentRow.Index != -1)
+            {
+                idList = Convert.ToInt32(dataGridView2.CurrentRow.Cells[0].Value.ToString());
+                int col = 0;
+                foreach (Control control in panel_المستندات.Controls)
+                {
+                    try
+                    {
+                        if (dataGridView2.CurrentRow.Cells[control.Name].Value.ToString() != "")
+                        {
+                            control.Text = dataGridView2.CurrentRow.Cells[control.Name].Value.ToString();
+                            Console.WriteLine(col.ToString() + " - " + control.Text);
+                        }
+                    }
+                    catch (Exception ex) { }
+                    col++;
+                }
+            }
+            OpenFile(idList.ToString(), false);
+            dataGridView2.Visible = false;
+            panel_المستندات.Visible = true;
+            panel_المستندات.BringToFront();
+            //view_PreReqID(idList);
+
+        }
+
+        private void button18_Click(object sender, EventArgs e)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return ; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT * FROM TableProcReq order by المعاملة asc", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close(); 
+            dataGridView2.DataSource = dtbl;
+            dataGridView2.Columns["ID"].Visible = false;
+            dataGridView2.Columns[2].Width = 250;
+            dataGridView2.BringToFront();
+            dataGridView2.Visible = true;
+        }
+
+        private void reviewForms_Click(object sender, EventArgs e)
+        {
+            OpenFile(idList.ToString(), true);
+        }
+
+        private void btnUploadFroms_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                CurrentFile = @dlg.FileName;
+                uploadFormsReq(CurrentFile);
+            }
+        }
+        private void uploadFormsReq(string location)
+        {
+            if (location != "" && File.Exists(location) && !fileIsOpen(location))
+            {
+                MessageBox.Show(location);
+                using (Stream stream = File.OpenRead(location))
+                {
+                    byte[] buffer1 = new byte[stream.Length];
+                    stream.Read(buffer1, 0, buffer1.Length);
+                    var fileinfo1 = new FileInfo(location);
+                    string query = "UPDATE TableProcReq SET Data1=@Data1,proForm1=@proForm1 WHERE ID=" + idList;
+                    SqlConnection sqlCon = new SqlConnection(DataSource);
+                    try
+                    {
+                        if (sqlCon.State == ConnectionState.Closed)
+                            sqlCon.Open();
+                    }
+                    catch (Exception ex) { }
+                    SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+                    sqlCmd.CommandType = CommandType.Text;
+                    sqlCmd.Parameters.Add("@Data1", SqlDbType.VarBinary).Value = buffer1;
+                    sqlCmd.Parameters.Add("@proForm1", SqlDbType.NVarChar).Value = المعاملة.Text;
+                    sqlCmd.ExecuteNonQuery();
+                    sqlCon.Close();
+                    return;
+                }
+            }
+        }
+
+        private void button25_Click(object sender, EventArgs e)
+        {
+            string[] data = new string[11];
+            string[] colList = new string[11];
+            colList[0] = "رقم_المعاملة";
+            colList[1] = "المعاملة";
+            colList[2] = "المطلوب_رقم1";
+            colList[3] = "المطلوب_رقم2";
+            colList[4] = "المطلوب_رقم3";
+            colList[5] = "المطلوب_رقم4";
+            colList[6] = "المطلوب_رقم5";
+            colList[7] = "المطلوب_رقم6";
+            colList[8] = "المطلوب_رقم7";
+            colList[9] = "المطلوب_رقم8";
+            colList[10] = "المطلوب_رقم9";
+            data[0] = رقم_المعاملة.Text;
+            data[1] = المعاملة.Text;
+
+
+            for (int index = 2; index < 11; index++)
+            {
+                foreach (Control control in panel_المستندات.Controls)
+                {
+                    if (control.Name == colList[index])
+                    {
+                        //MessageBox.Show(control.Name +" - "+ colList[index]);
+
+                        data[index] = control.Text;
+                    }
+                }
+            }
+            if (idList == 0)
+                insertReqRow(DataSource, data);
+            else updatetReqRow(idList, DataSource, data);
+            
+            foreach (Control control in panel_المستندات.Controls)
+            {
+                if (control is Button && (control.Name.Contains("المطلوب_رقم") || control.Name.Contains("btnReq")))
+                {
+                    control.Text = "";
+                }
+            }
+        }
+
+        private void updatetReqRow(int id, string source, string[] data)
+        {
+            SqlConnection sqlCon = new SqlConnection(source);
+            string[] colList = new string[11];
+            colList[0] = "رقم_المعاملة";
+            colList[1] = "المعاملة";
+            colList[2] = "المطلوب_رقم1";
+            colList[3] = "المطلوب_رقم2";
+            colList[4] = "المطلوب_رقم3";
+            colList[5] = "المطلوب_رقم4";
+            colList[6] = "المطلوب_رقم5";
+            colList[7] = "المطلوب_رقم6";
+            colList[8] = "المطلوب_رقم7";
+            colList[9] = "المطلوب_رقم8";
+            colList[10] = "المطلوب_رقم9";
+            string item = "رقم_المعاملة=@رقم_المعاملة";
+
+            for (int col = 1; col < 11; col++)
+            {
+                item = item + "," + colList[col] + "=@" + colList[col];
+
+            }
+
+            string qurey = "UPDATE TableProcReq SET " + item + " WHERE ID=@ID";
+
+            SqlCommand sqlCmd = new SqlCommand(qurey, sqlCon);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return; }
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.Parameters.AddWithValue("@ID", id);
+            for (int col = 0; col < 11; col++)
+            {
+                sqlCmd.Parameters.AddWithValue(colList[col], data[col]);
+            }
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
+        }
+
+        private void insertReqRow(string source, string[] data)
+        {
+            SqlConnection sqlCon = new SqlConnection(source);
+            string[] colList = new string[11];
+            
+            string item = "رقم_المعاملة";
+            string value = "@رقم_المعاملة";
+            for (int col = 1; col < 11; col++)
+            {
+                item = item + "," + colList[col];
+                value = value + ",@" + colList[col];
+            }
+
+            string query = "INSERT INTO TableProcReq (" + item + ") values (" + value + ");SELECT @@IDENTITY as lastid";
+
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(query);
+                return;
+            }
+            sqlCmd.CommandType = CommandType.Text;
+            Console.WriteLine(query);
+            for (int col = 0; col < 11; col++)
+            {
+                sqlCmd.Parameters.AddWithValue(colList[col], data[col]);
+            }
+            try
+            {
+                var reader = sqlCmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    idList = Convert.ToInt32(reader["lastid"].ToString());
+                }
+
+            }
+            catch (Exception ex)
+            {
+                idList = 0;
+                MessageBox.Show(query);
+            }
+
+            sqlCon.Close();
+        }
+
+        private void button23_Click(object sender, EventArgs e)
+        {
+
+            string qurey = "delete from TableProcReq where ID=" + idList;
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            SqlCommand sqlCmd = new SqlCommand(qurey, sqlCon);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return; }
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
         }
 
         private void CreateColumns(string Columnname)
