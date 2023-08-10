@@ -230,7 +230,7 @@ namespace PersAhwal
         private void backup(string workFile) {
             string sqlInfoBackup = "AhwalDataBase_backup_";
             string sqlArchBackup = "ArchFilesDB_backup_";
-            string sqlAffairBackup = "SudaneseAffairs_";
+            string sqlAffairBackup = "SudaneseAffairs_backup_";
             //Console.WriteLine(workFile + "sqlbackup");
             
             string year = "";
@@ -247,41 +247,44 @@ namespace PersAhwal
                 if (backfiles[i].Contains(sqlInfoBackup))
                 {
                     var backfileinfo = new FileInfo(backfiles[i]);
-                    year = backfileinfo.LastWriteTime.ToShortDateString().Split('/')[2];
-                    month = backfileinfo.LastWriteTime.ToShortDateString().Split('/')[0];
+                    year = backfiles[i].Split('_')[2];
+                    month = backfiles[i].Split('_')[3];
                     if (month.Length == 1)
                         month = "0" + month;
-                    date = backfileinfo.LastWriteTime.ToShortDateString().Split('/')[1];
+                    date = backfiles[i].Split('_')[4];
                     if (date.Length == 1)
                         date = "0" + date;
                     datesInfo[i] = Convert.ToInt32(year + month + date);
-                    Console.WriteLine("Files to Delete " + datesInfo[i]);
+                    //Console.WriteLine(backfiles[i]);
+                    //Console.WriteLine("AhwalDataBase_backup_" + datesInfo[i]);
                 }
                 else if (backfiles[i].Contains(sqlArchBackup))
                 {
                     var backfileinfo = new FileInfo(backfiles[i]);
-                    year = backfileinfo.LastWriteTime.ToShortDateString().Split('/')[2];
-                    month = backfileinfo.LastWriteTime.ToShortDateString().Split('/')[0];
+                    year = backfiles[i].Split('_')[2];
+                    month = backfiles[i].Split('_')[3];
                     if (month.Length == 1)
                         month = "0" + month;
-                    date = backfileinfo.LastWriteTime.ToShortDateString().Split('/')[1];
+                    date = backfiles[i].Split('_')[4];
                     if (date.Length == 1)
                         date = "0" + date;
                     datesArch[i] = Convert.ToInt32(year + month + date);
-                    Console.WriteLine("Files to Delete " + datesArch[i]);
+                    //Console.WriteLine(backfiles[i]); 
+                    //Console.WriteLine("ArchFilesDB_backup_" + datesArch[i]);
                 }
                 else if (backfiles[i].Contains(sqlAffairBackup))
                 {
                     var backfileinfo = new FileInfo(backfiles[i]);
-                    year = backfileinfo.LastWriteTime.ToShortDateString().Split('/')[2];
-                    month = backfileinfo.LastWriteTime.ToShortDateString().Split('/')[0];
+                    year = backfiles[i].Split('_')[2];
+                    month = backfiles[i].Split('_')[3];
                     if (month.Length == 1)
                         month = "0" + month;
-                    date = backfileinfo.LastWriteTime.ToShortDateString().Split('/')[1];
+                    date = backfiles[i].Split('_')[4];
                     if (date.Length == 1)
                         date = "0" + date;
                     datesAffa[i] = Convert.ToInt32(year + month + date);
-                    Console.WriteLine("Files to Delete " + datesAffa[i]);
+                    //Console.WriteLine(backfiles[i]); 
+                    //Console.WriteLine("SudaneseAffairs_" + datesAffa[i]);
                 }
             }
             string maxdate = MaxDate(datesInfo).ToString().Split(' ')[0];
@@ -290,6 +293,7 @@ namespace PersAhwal
             date = SpecificDigit(maxdate, 7, 8);
 
             string newerFile = sqlInfoBackup + year + "_" + month + "_" + date + "_";
+            //Console.WriteLine(newerFile);
             for (int i = 0; i < backfiles.Length; i++)
             {
                 if (backfiles[i].Contains(sqlInfoBackup) && !backfiles[i].Contains(newerFile))
@@ -297,7 +301,7 @@ namespace PersAhwal
                     Console.WriteLine("Files to Delete " + backfiles[i]);
                     try
                     {
-                        File.Delete(backfiles[i]);
+                       File.Delete(backfiles[i]);
                     }
                     catch (Exception ex) { }
                 }
@@ -309,6 +313,7 @@ namespace PersAhwal
             date = SpecificDigit(maxdate, 7, 8);
 
             newerFile = sqlArchBackup + year + "_" + month + "_" + date + "_";
+            //Console.WriteLine(newerFile);
             for (int i = 0; i < backfiles.Length; i++)
             {
                 if (backfiles[i].Contains(sqlArchBackup) && !backfiles[i].Contains(newerFile))
@@ -328,6 +333,7 @@ namespace PersAhwal
             date = SpecificDigit(maxdate, 7, 8);
 
             newerFile = sqlAffairBackup + year + "_" + month + "_" + date + "_";
+            Console.WriteLine(newerFile);
             for (int i = 0; i < backfiles.Length; i++)
             {
                 if (backfiles[i].Contains(sqlAffairBackup) && !backfiles[i].Contains(newerFile))
@@ -335,7 +341,7 @@ namespace PersAhwal
                     Console.WriteLine("Files to Delete " + backfiles[i]);
                     try
                     {
-                        File.Delete(backfiles[i]);
+                       File.Delete(backfiles[i]);
                     }
                     catch (Exception ex) { }
                 }

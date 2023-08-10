@@ -2227,7 +2227,7 @@ namespace PersAhwal
 
         public string[] getID(TextBox text, int textID)
         {
-            string[] returnedText = new string[6];
+            string[] returnedText = new string[7] { "","","","","","",""};
 
             try
             {
@@ -2241,6 +2241,8 @@ namespace PersAhwal
                 returnedText[5] = sex.Split('_')[textID];
                 if (returnedText[5] == "")
                     returnedText[5] = "ذكر";
+                if (returnedText[6] == "")
+                    returnedText[6] = appExp;
             }
             catch(Exception ex) {
                 returnedText = new string[6] { "P0", "جواز سفر", "", "", "", "ذكر" };
@@ -2260,7 +2262,8 @@ namespace PersAhwal
                 returnedText[2] = row["مكان_الإصدار"].ToString();
                 returnedText[3] = row["المهنة"].ToString();
                 returnedText[4] = row["تاريخ_الميلاد"].ToString();
-                returnedText[5] = row["النوع"].ToString();                
+                returnedText[5] = row["النوع"].ToString();
+                returnedText[6] = row["انتهاء_الصلاحية"].ToString();
             }
             return returnedText;
         }
@@ -2507,7 +2510,7 @@ namespace PersAhwal
             checkChanged(مقدم_الطلب, Panelapp);
             if (gridFill) return;
             int index = 0;
-            string[] text = new string[7];
+            string[] textInfo = new string[7] { "","","","","","",""};
             //text[6] = "";
             TextBox textBox = (TextBox)sender;
             
@@ -2526,48 +2529,55 @@ namespace PersAhwal
             int id = Convert.ToInt32(TextID);
             if (textBox.Text == "")
             {
-                text[0] = docNo.Split('_')[id];
-                text[1] = docType.Split('_')[id];
-                if (text[1] == "")
-                    text[1] = "جواز سفر";
-                text[2] = docIsuue.Split('_')[id];
-                text[3] = appJob.Split('_')[id];
-                text[4] = appBirth.Split('_')[id];
-                text[5] = sex.Split('_')[id];
-                text[6] = appExp.Split('_')[id];
-                if (text[5] == "")
-                    text[5] = "ذكر";
+                textInfo[0] = docNo.Split('_')[id];
+                textInfo[1] = docType.Split('_')[id];
+                if (textInfo[1] == "")
+                    textInfo[1] = "جواز سفر";
+                textInfo[2] = docIsuue.Split('_')[id];
+                textInfo[3] = appJob.Split('_')[id];
+                textInfo[4] = appBirth.Split('_')[id];
+                textInfo[5] = sex.Split('_')[id];
+                textInfo[6] = appExp.Split('_')[id];
+                if (textInfo[5] == "")
+                    textInfo[5] = "ذكر";
 
                 //fillFirstInfo("", text[5], text[1], text[0], text[2], اللغة.Text, text[3], text[4], TextID);
 
             }
             else
             {
-                text = getID(textBox, Convert.ToInt32(TextID));
+                textInfo = getID(textBox, Convert.ToInt32(TextID));
 
                 try
                 {
-                    if (text[4] == "")
-                        text[4] = ageDetected.Split('_')[index];
+                    if (textInfo[4] == "")
+                        textInfo[4] = ageDetected.Split('_')[index];
                 }
                 catch (Exception ex) { }
 
                 try
                 {
-                    if (text[5] == "")
-                        text[5] = "ذكر";
+                    if (textInfo[5] == "")
+                        textInfo[5] = "ذكر";
+                }
+                catch (Exception ex) { }
+                
+                try
+                {
+                    if (textInfo[6] == "")
+                        textInfo[6] = appExp.Split('_')[index];
                 }
                 catch (Exception ex) { }
                 
                
             }
 
-            //MessageBox.Show(text[6] );
+            //MessageBox.Show(textInfo[6] );
             try
             {
-                fillFirstInfo("", text[5], text[1], text[0], text[2], اللغة.Text, text[3], text[4], TextID, text[6]);
+                fillFirstInfo("", textInfo[5], textInfo[1], textInfo[0], textInfo[2], اللغة.Text, textInfo[3], textInfo[4], TextID, textInfo[6]);
             }catch (Exception ex) {
-                fillFirstInfo("", text[5], text[1], text[0], text[2], اللغة.Text, text[3], text[4], TextID, "");
+                fillFirstInfo("", textInfo[5], textInfo[1], textInfo[0], textInfo[2], اللغة.Text, textInfo[3], textInfo[4], TextID, "");
             }
 
         }
