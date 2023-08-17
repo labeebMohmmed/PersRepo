@@ -2893,7 +2893,7 @@ namespace PersAhwal
                     SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
                     sqlDa.SelectCommand.CommandType = CommandType.Text;
                     Console.WriteLine(query);
-                    MessageBox.Show(query);
+                    //MessageBox.Show(query);
                     sqlDa.Fill(dataRowTable);
                     sqlCon.Close();
                     
@@ -10276,18 +10276,23 @@ namespace PersAhwal
             int Mdiffer = HijriDateDifferment(DataSource, false);
             string Stringdate, Stringmonth, StrHijriDate;
             StrHijriDate = DateTime.Now.ToString("dd-MM-yyyy");
+            //MessageBox.Show(StrHijriDate);
             string[] YearMonthDay = StrHijriDate.Split('-');
             int year, month, date;
             year = Convert.ToInt16(YearMonthDay[2]);
             month = Convert.ToInt16(YearMonthDay[1]) + Mdiffer;
             date = Convert.ToInt16(YearMonthDay[0]) + Ddiffer;
+            //MessageBox.Show(StrHijriDate);
+            if (date <= 0) date = 30;
             if (month < 10) Stringmonth = "0" + month.ToString();
             else Stringmonth = month.ToString();
-            if (date < 10) Stringdate = "0" + date.ToString();
-            else Stringdate = date.ToString();
+            if (date < 10)
+                Stringdate = "0" + date.ToString();
+            else 
+                Stringdate = date.ToString();
             HijriDate = Stringdate + "-" + Stringmonth + "-" + year.ToString();
             //if (HijriDate.Contains("-")) timer4.Enabled = false;
-            
+            //MessageBox.Show(HijriDate);
             if (!Hchecked && (Stringdate == "02" || Stringdate == "30") && File.ReadAllText(FilespathOut + @"\HijriCheck.txt") != GregorianDate)
             {
                 Hchecked = true;
