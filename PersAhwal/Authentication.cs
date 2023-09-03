@@ -77,7 +77,7 @@ namespace PersAhwal
         bool showGrid = false;
         string docStatus = "شهادة صحيحة";
         int picID = 0;
-        public Authentication(string dataSource, string atvc, string filespathOut, string employee, string filespathIn, string hijriDate, string greDate)
+        public Authentication(string dataSource, string atvc, string filespathOut, string employee, string hijriDate, string greDate)
         {
             InitializeComponent();
             DataSource = dataSource;
@@ -86,7 +86,7 @@ namespace PersAhwal
             عدد_المستندات_off.SelectedIndex = 0;
             نوع_تاريخ_التوثيق.SelectedIndex = 4;
             HijriDate = hijriDate;
-            FilespathIn = filespathIn;
+            //FilespathIn = filespathIn;
             FilespathOut = filespathOut+ @"\";    
             مدير_القسم.Text = atvc;
             تاريخ_الأرشفة.Text = greDate;
@@ -580,8 +580,13 @@ namespace PersAhwal
             {
                 BindingSource bs = new BindingSource();
                 bs.DataSource = dataGridView1.DataSource;
-                bs.Filter = dataGridView1.Columns["اسم_موقع_المكاتبة"].HeaderText.ToString() + " LIKE '%" + اسم_موقع_المكاتبة.Text + "%'";
-                dataGridView1.DataSource = dataGridView1.DataSource = bs;
+                try
+                {
+                    bs.Filter = dataGridView1.Columns["اسم_موقع_المكاتبة"].HeaderText.ToString() + " LIKE '%" + اسم_موقع_المكاتبة.Text + "%'";
+
+                    dataGridView1.DataSource = dataGridView1.DataSource = bs;
+                }
+                catch (Exception ex) { return; }
             }
         }
 

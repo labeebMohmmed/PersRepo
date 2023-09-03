@@ -59,7 +59,7 @@ namespace PersAhwal
         bool SaveEdit = true;
         string[] colIDs = new string[100];
         int ATVC = 0;
-        public Form10(int Atvc, int currentRow, int DocumentType, string EmpName, string dataSource, string filepathIn, string filepathOut, string jobposition, string gregorianDate, string hijriDate)
+        public Form10(int Atvc, int currentRow, int DocumentType, string EmpName, string dataSource, string filepathOut, string jobposition, string gregorianDate, string hijriDate)
         {
             InitializeComponent();
             //timer1.Enabled = true;
@@ -71,7 +71,7 @@ namespace PersAhwal
             Muaamla[0, 1] = "، أقر وبكامل قـــواي العقليـــة وحالــــتي المعتبــرة شــرعاً وقانوناً وبطوعي واختياري بأنه";
             Muaamla[0, 2] = "، وهذا إقرار مني بذلك .";
             DataSource = dataSource;
-            FilesPathIn = filepathIn + @"\";
+            //FilesPathIn = filepathIn + @"\";
             FilesPathOut = filepathOut;
             Jobposition = jobposition;
             colIDs[4] = ConsulateEmpName = EmpName;

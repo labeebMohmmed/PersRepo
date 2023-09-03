@@ -14,6 +14,7 @@ using System.Configuration;
 using System.Reflection;
 using System.Threading;
 using System.IO;
+using System.Net.NetworkInformation;
 
 namespace PersAhwal
 {
@@ -45,6 +46,8 @@ namespace PersAhwal
         int currentVersion57 = 0;
         string NewFiles = "";
         string workingDisk = "";
+        string MacAdd = "";
+
         string mainWorkingFile = @"E:\";
         
 
@@ -54,11 +57,19 @@ namespace PersAhwal
             string hostname = Dns.GetHostName();
             Console.WriteLine(IP);
             IP = Dns.GetHostByName(hostname).AddressList[0].ToString();
-
+            MacAdd =
+                (
+                from nic in NetworkInterface.GetAllNetworkInterfaces()
+                where nic.OperationalStatus == OperationalStatus.Up
+                select nic.GetPhysicalAddress().ToString()
+                ).FirstOrDefault();
+            
             NewFiles = newFiles;
             DataSource56 = dataSource56;
             DataSource57 = dataSource57;
             DataSource = DataSource57;
+            //MessageBox.Show(MacAdd);
+            
             //MessageBox.Show("1");
             FilepathOut = filepathOut.Replace("D", BackupDisck("workingDisk"));
             ServerModelFiles = modelFiles.Replace("D", BackupDisck("workingDisk"));
@@ -537,18 +548,39 @@ namespace PersAhwal
                     green.Visible = false;
                     red.Visible = true;
                     label.Visible = true;
-                    label.Text = text;
-                    ////Console.WriteLine("setting DataSource56 "+ DataSource56+ "--- DataSource57 "+ DataSource57);
-                    //this.Close();
-                    //var settings = new Settings(Server, true, DataSource56, DataSource57, true, FilespathIn, FilepathOut, ArchFile, FormDataFile);
-
-                    //settings.Show();
+                    label.Text = text;                    
                 }
                 finally
                 {
                     sqlCon.Close();
                 }
 
+        }
+        
+        private bool checkRe(string mac)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return false; }
+            string settingData = "select state from TableMac where macAdd = N'" + mac + "'";
+            SqlDataAdapter sqlDa = new SqlDataAdapter(settingData, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                if (dataRow["state"].ToString() == "authentic")
+                    return true;
+            }
+
+
+            return false;
         }
         
         private string getAppFolder()
@@ -690,32 +722,45 @@ namespace PersAhwal
             {
                 for (int Xindex = 0; Xindex < dataGrid.Rows.Count - 1; Xindex++)
                 {
-                    if (dataGrid.Rows[Xindex].Cells[4].Value.ToString() == username.Text.Trim())
+                    try
                     {
-                        idNo = Convert.ToInt32(dataGrid.Rows[Xindex].Cells[0].Value.ToString());
-                        userpass = dataGrid.Rows[Xindex].Cells[6].Value.ToString();
-                        userApro = dataGrid.Rows[Xindex].Cells[7].Value.ToString();
-                        joposition = dataGrid.Rows[Xindex].Cells[2].Value.ToString();
-                        name = dataGrid.Rows[Xindex].Cells[1].Value.ToString();
-                        division = dataGrid.Rows[Xindex].Cells[10].Value.ToString();
-                        career = dataGrid.Rows[Xindex].Cells[8].Value.ToString();
-                        foundedUser = true;
-                        if (division == "شؤون رعايا")
+                        if (dataGrid.Rows[Xindex].Cells[4].Value.ToString() == username.Text.Trim())
                         {
-                            Server = "56";
-                            DataSource = DataSource56;
-                            Pers_Peope = false;
+                            idNo = Convert.ToInt32(dataGrid.Rows[Xindex].Cells[0].Value.ToString());
+                            userpass = dataGrid.Rows[Xindex].Cells[6].Value.ToString();
+                            userApro = dataGrid.Rows[Xindex].Cells[7].Value.ToString();
+                            joposition = dataGrid.Rows[Xindex].Cells[2].Value.ToString();
+                            name = dataGrid.Rows[Xindex].Cells[1].Value.ToString();
+                            division = dataGrid.Rows[Xindex].Cells[10].Value.ToString();
+                            career = dataGrid.Rows[Xindex].Cells[8].Value.ToString();
+                            foundedUser = true;
+                            if (division == "شؤون رعايا")
+                            {
+                                Server = "56";
+                                DataSource = DataSource56;
+                                Pers_Peope = false;
+                            }
+                            else if (division == "احوال شخصية" || division == "الأرشفة العامة")
+                            {
+                                Server = "57";
+                                DataSource = DataSource57;
+                                Pers_Peope = true;
+                            }
+
                         }
-                        else if (division == "احوال شخصية" || division == "الأرشفة العامة")
-                        {
-                            Server = "57";
-                            DataSource = DataSource57;
-                            Pers_Peope = true;
-                        }
+                    }
+                    catch (Exception ex) {
+                        Console.WriteLine(dataGrid.RowCount.ToString());
+                        Console.WriteLine(Xindex.ToString());
+                        Console.WriteLine(dataGrid.Rows[Xindex].Cells[4].Value.ToString());
                         
                     }
+
                 }
-                if (!foundedUser) { MessageBox.Show("اسم المستخدم غير معرف في النظام"); return; }
+                if (!foundedUser) 
+                { 
+                    MessageBox.Show("اسم المستخدم غير معرف في النظام"); return; 
+                }
                 else
                 {
                     //MessageBox.Show("versionUpdateInfo");
@@ -794,8 +839,15 @@ namespace PersAhwal
                         dataSourceWrite(file, DataSource);
                         getModelOutFiles(DataSource);
                         Password.Clear();
-                        int userID = userLogInfo(name, IP);
-                        //MessageBox.Show(division);
+                        int userID = userLogInfo(name, IP, MacAdd); 
+                        btnLog.Enabled = checkRe(MacAdd);
+                        //MessageBox.Show(MacAdd);
+                        if (!btnLog.Enabled)
+                        {
+                            MessageBox.Show("الجهاز بالرقم( "+ MacAdd + " )غير معرف بالنظام، لا يمكن المتابعة");
+                            insertUnauthenticDev(name, IP, MacAdd);
+                            this.Close();
+                        }
                         if (division == "الأرشفة العامة")
                         {
                             AllConsArchInfo allConsArchInfo = new AllConsArchInfo(DataSource57, name, GregorianDate, LocalModelFiles, ArchFile, joposition);
@@ -803,6 +855,8 @@ namespace PersAhwal
                         }
                         else
                         {
+                            
+
                             MainForm mainForm = new MainForm(career, userID, Server, name, joposition, DataSource56, DataSource57, LocalModelFiles, FilepathOut, ArchFile, localModelForms, Pers_Peope, GregorianDate,  ServerModelFiles, ServerModelForms, true);
                             mainForm.ShowDialog();
                         }
@@ -856,7 +910,7 @@ namespace PersAhwal
             return Convert.ToInt32(rowCnt);
 
         }
-        private int userLogInfo(string name, string ip)
+        private int userLogInfo(string name, string ip, string macAdd)
         {
             
             SqlConnection sqlCon = new SqlConnection(DataSource);
@@ -867,16 +921,37 @@ namespace PersAhwal
                 }
                 catch (Exception ex) { return 0; }
 
-            SqlCommand sqlCmd = new SqlCommand("INSERT INTO TableUserLog (userName,timeDateIn,timeDateOut,pcIP) values (@userName,@timeDateIn,@timeDateOut,@pcIP)", sqlCon);
+            SqlCommand sqlCmd = new SqlCommand("INSERT INTO TableUserLog (userName,timeDateIn,timeDateOut,pcIP,macAdd) values (@userName,@timeDateIn,@timeDateOut,@pcIP,@macAdd)", sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.Parameters.AddWithValue("@userName", name);
             sqlCmd.Parameters.AddWithValue("@timeDateIn", DateTime.Now.ToString("G"));
             sqlCmd.Parameters.AddWithValue("@timeDateOut", DateTime.Now.ToString("G"));
             sqlCmd.Parameters.AddWithValue("@pcIP", ip);
+            sqlCmd.Parameters.AddWithValue("@macAdd", macAdd);
             sqlCmd.ExecuteNonQuery();
             sqlCon.Close();
 
             return loadIDNo("TableUserLog");
+        }
+        
+        private void insertUnauthenticDev(string name, string ip, string macAdd)
+        {
+            
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+
+            SqlCommand sqlCmd = new SqlCommand("INSERT INTO TableMac (macAdd,ipAdd,userName) values (@macAdd,@ipAdd,@userName)", sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.Parameters.AddWithValue("@userName", name);
+            sqlCmd.Parameters.AddWithValue("@ipAdd", ip);
+            sqlCmd.Parameters.AddWithValue("@macAdd", macAdd);
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
         }
 
         private void employeeName_TextChanged(object sender, EventArgs e)
@@ -905,7 +980,7 @@ namespace PersAhwal
                 serverType = "احوال شخصية";
             }
 
-                SignUp signUp = new SignUp("جديد", "غير محدد", DataSource, serverType, GregorianDate,"no","");
+                SignUp signUp = new SignUp("جديد", "غير محدد", DataSource, serverType, GregorianDate,"no","", - 1);
             signUp.Show();
         }
 

@@ -36,7 +36,7 @@ namespace PersAhwal
     {
         string DataSource = "";
         string insertAll = "";
-        string FilespathIn = "";
+        //string FilespathIn = "";
         string FilespathOut = "";
         string updateAll = "";
         string[] allList;
@@ -51,12 +51,12 @@ namespace PersAhwal
         string[] forbidDs = new string[100];
         static string[,] preffix = new string[10, 20];
         //string defMandoub = "أبوبكر الصديق";
-        public PassAway( int vcIndex, string dataSource, string filesPathIn, string filesPathOut, string jobposition, string empName, string gregorianDate, string hijriDate)
+        public PassAway( int vcIndex, string dataSource , string filesPathOut, string jobposition, string empName, string gregorianDate, string hijriDate)
         {
             InitializeComponent();
             definColumn(dataSource);
             DataSource = dataSource;
-            FilespathIn = filesPathIn;
+            //FilespathIn = filesPathIn;
             FilespathOut = filesPathOut;
             
            
@@ -466,7 +466,7 @@ namespace PersAhwal
 
         private void CreateAuth()
         {
-            string DocxInFile = FilespathIn + "إذن دفن.docx";
+            string DocxInFile =  "إذن دفن.docx";
             //MessageBox.Show(DocxInFile);
             //string wordOutFile = FilespathOut + "إذن دفن.docx" + DateTime.Now.ToString("ssmm") + ".docx";
             نص_الشهادة.Text = "القنصـلية العـامة لجمهـورية الســودان بجـدة،  بأن المواطننوع_مقدم_الطلب السودانينوع_مقدم_الطلب السيدنوع_مقدم_الطلب/***  حاملنوع_مقدم_الطلب ^^^ ه### أقرب الأقربين للمواطننوع_المتوفى السوادنينوع_المتوفى المتوف@@@ المرحومنوع_المتوفى بإذن الله السيدنوع_المتوفى/!!! حاملنوع_المتوفى &&& $$$ وافته%%% المنية بمدينة *&*، ترجو القنصلية العامة من جهات الاختصاص بالمملكة العربية السعودية تسليم جثمانه%%% إلى المذكور نوع_مقدم_الطلب أعلاه وتسهيل مهمة دفنه%%% محليا";
@@ -512,6 +512,7 @@ namespace PersAhwal
                 }
             }
             string docxouput = FilespathOut + "إذن دفن رقم " + رقم_اذن_الدفن.Text.Split('/')[4] + DateTime.Now.ToString("ssmm") + ".docx";
+            //OpenModelFile("إذن دفن", false, FilespathOut);
             string pdfouput = FilespathOut + "إذن دفن رقم " + رقم_اذن_الدفن.Text.Split('/')[4] + DateTime.Now.ToString("ssmm") + ".pdf";
             oBDoc.SaveAs2(docxouput);
             oBDoc.ExportAsFixedFormat(pdfouput, Word.WdExportFormat.wdExportFormatPDF);
@@ -797,7 +798,7 @@ namespace PersAhwal
             {
                 for (int docNo = 0; docNo <= عدد_الاستمارات.SelectedIndex; docNo++)
                 {
-                    string wordInFile = FilespathIn.Replace("ModelFiles", "FormData") + "استمارة إذن دفن.docx";
+                    string wordInFile =  "استمارة إذن دفن.docx";
                     string wordOutFile = FilespathOut + "استمارة إذن دفن" + docNo.ToString() + ".docx" + DateTime.Now.ToString("ssmm") + ".docx";
                     string pdfOutFile = FilespathOut + "استمارة إذن دفن" + docNo.ToString() + ".docx" + DateTime.Now.ToString("ssmm") + ".pdf";
                     string docID = DocIDGenerator();

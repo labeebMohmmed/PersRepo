@@ -25,7 +25,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>1035</ApplicationRevision>
+    <ApplicationRevision>1047</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -798,6 +798,10 @@
     <None Include="Resources\R %282%29.png" />
     <None Include="Resources\extlink.png" />
     <None Include="Resources\edit1.png" />
+    <None Include="Resources\computer-icons-system-administrator-clip-art-administrator-icon.jpg" />
+    <None Include="Resources\admin.png" />
+    <None Include="Resources\auth.png" />
+    <None Include="Resources\png-lock-picture-lock-2-icon-1600.png" />
     <Content Include="SqlServerTypes\readme.htm" />
     <Content Include="SqlServerTypes\x64\msvcr120.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

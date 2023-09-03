@@ -286,7 +286,7 @@ namespace PersAhwal
         public string AuthNoValue = "";
         int ATVC = 0;
         string Server = "M";
-        public Form11(int Atvc,int rowid,string AuthNo,string source57,string source56, string filespathIn, string filespathOut, string EmpName, string jobposition, string greDate, string hijriDate)
+        public Form11(int Atvc,int rowid,string AuthNo,string source57,string source56, string filespathOut, string EmpName, string jobposition, string greDate, string hijriDate)
         {
             DataSource = source57;
             DataSource56 = source56;
@@ -296,7 +296,7 @@ namespace PersAhwal
             AuthNoValue = AuthNo;
             ATVC = Atvc;
             InitializeComponent();
-            FilespathIn = filespathIn;
+            //FilespathIn = filespathIn;
             FilespathOut = filespathOut;
             ConsulateEmpName = EmpName;
             Jobposition = jobposition;

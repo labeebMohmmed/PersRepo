@@ -30,7 +30,7 @@ namespace PersAhwal
         string GriDate = "";
         bool grdview = false;
         string Update = "";
-        public SignUp(string employeename, string jobposition, string datasource, string serverType, string griDate, string update, string career)
+        public SignUp(string employeename, string jobposition, string datasource, string serverType, string griDate, string update, string career, int jobIndex)
         {
             InitializeComponent();
             DataSource = datasource;
@@ -48,7 +48,9 @@ namespace PersAhwal
                 JobPossition.Enabled = false;
                 ApplicantName.Enabled = false;
             }
-            if (career == "مدير نظام")
+            
+
+            if (career == "مدير نظام" || jobIndex != -1)
             {
                 this.Size = new Size(870, 769);
                 fillDatagrid();
@@ -65,6 +67,11 @@ namespace PersAhwal
                         break;
                     }
                 }
+            }
+            if (jobIndex != -1)
+            {
+                JobPossition.SelectedIndex = jobIndex;
+                JobPossition.Enabled = false;
             }
         }
 
@@ -385,10 +392,16 @@ namespace PersAhwal
                     else headOfMission.Checked = true;
                     EngEmployeeName.Text = dataGridView1.CurrentRow.Cells["EngEmployeeName"].Value.ToString();                    
                     Register.Text = "تعديل";
+                    btnActivete.Visible = true;
+                    btnActiveteM.Visible = false;
+                    btnActivete.BringToFront();
                     //MessageBox.Show(userpass);
                 }
                 else {
                     btnActiveteM.Enabled = false;
+                    btnActivete.Visible = false;
+                    btnActiveteM.Visible = true;
+                    btnActiveteM.BringToFront();
                     اسم_المندوب.Text = dataGridView1.CurrentRow.Cells["MandoubNames"].Value.ToString();
                     رقم_الهاتف.Text = dataGridView1.CurrentRow.Cells["MandoubPhones"].Value.ToString();
                     اسم_المنطقة.Text = dataGridView1.CurrentRow.Cells["MandoubAreas"].Value.ToString();
@@ -414,12 +427,19 @@ namespace PersAhwal
         }
         void FillDatafromGenArch(string doc, string id, string table)
         {
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            string query = "select * from TableGeneralArch where  رقم_المرجع='" + id + "' and نوع_المستند='" + doc + "' and docTable='" + table + "'";
+            string database = DataSource.Replace("AhwalDataBase", "ArchFilesDB");
+            //database = DataSource.Replace("SudaneseAffairs", "ArchFilesDB");
+            
+            SqlConnection sqlCon = new SqlConnection(database);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
-            SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableGeneralArch where  رقم_المرجع='" + id + "' and نوع_المستند='" + doc + "' and docTable='" + table + "'", sqlCon);
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
+            Console.WriteLine(database);
+            Console.WriteLine(query);
+            MessageBox.Show(database);
             sqlDa.Fill(dtbl);
             sqlCon.Close();
             if(dtbl.Rows.Count > 0) {
@@ -579,6 +599,7 @@ namespace PersAhwal
                 btnActiveteM.Visible = btnDeActiveteM.Visible = panelMandoub.Visible = true;
                 btnActivete.Visible = btnDeActivete.Visible = panelEmployee.Visible = false;
                 fillMandoubGrid();
+                //MessageBox.Show("text");
             }
         }
 
@@ -619,10 +640,10 @@ namespace PersAhwal
 
         private void بيانات_المندوب_Click(object sender, EventArgs e)
         {
-            string query = "insert into TableMandoudList (MandoubNames,MandoubAreas,MandoubPhones,مواعيد_الحضور,الصفة,وضع_المندوب,comment) values (@MandoubNames,@MandoubAreas,@MandoubPhones,@مواعيد_الحضور,@الصفة,@وضع_المندوب,@comment)";
+            string query = "insert into TableMandoudList (MandoubNames,MandoubAreas,MandoubPhones,مواعيد_الحضور,الصفة,وضع_المندوب,comment,رقم_الجواز) values (@MandoubNames,@MandoubAreas,@MandoubPhones,@مواعيد_الحضور,@الصفة,@وضع_المندوب,@comment,@رقم_الجواز)";
             string addInfo = "تم تسجيل حساب المندوب/" + اسم_المندوب.Text + " بتاريخ " + GriDate + Environment.NewLine + "----------------------------------------------";
             if (بيانات_المندوب.Text == "تعديل")
-                query = "update TableMandoudList set MandoubNames=@MandoubNames,MandoubAreas=@MandoubAreas,MandoubPhones=@MandoubPhones,مواعيد_الحضور=@مواعيد_الحضور,الصفة=@الصفة,وضع_المندوب=@وضع_المندوب,comment=@comment where ID=@id";
+                query = "update TableMandoudList set رقم_الجواز=@رقم_الجواز, MandoubNames=@MandoubNames,MandoubAreas=@MandoubAreas,MandoubPhones=@MandoubPhones,مواعيد_الحضور=@مواعيد_الحضور,الصفة=@الصفة,وضع_المندوب=@وضع_المندوب,comment=@comment where ID=@id";
 
                 SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
@@ -641,6 +662,7 @@ namespace PersAhwal
                     sqlCmd.Parameters.AddWithValue("@MandoubPhones", رقم_الهاتف.Text);
                     sqlCmd.Parameters.AddWithValue("@وضع_المندوب", "في انتظار تفعيل الحساب");
                     sqlCmd.Parameters.AddWithValue("@الصفة", الصفة.Text);
+                    sqlCmd.Parameters.AddWithValue("@رقم_الجواز", passport.Text);
                     sqlCmd.Parameters.AddWithValue("@مواعيد_الحضور", يوم_المراجعة.Text);
                     sqlCmd.Parameters.AddWithValue("@comment", addInfo + التعليقات_السابقة_Off.Text);
                     try
@@ -662,6 +684,7 @@ namespace PersAhwal
                     sqlCmd.Parameters.AddWithValue("@MandoubPhones", رقم_الهاتف.Text);
                     sqlCmd.Parameters.AddWithValue("@وضع_المندوب", "في انتظار تفعيل الحساب");
                     sqlCmd.Parameters.AddWithValue("@الصفة", الصفة.Text);
+                    sqlCmd.Parameters.AddWithValue("@رقم_الجواز", passport.Text);
                     sqlCmd.Parameters.AddWithValue("@مواعيد_الحضور", يوم_المراجعة.Text);
                     sqlCmd.Parameters.AddWithValue("@comment", addInfo + التعليقات_السابقة_Off.Text);
                     try

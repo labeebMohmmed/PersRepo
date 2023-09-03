@@ -144,13 +144,15 @@ namespace PersAhwal
         string altSubColName = "";
         bool dontCheck = false;
         string txtMissionCode = "ق س ج/80/";
-        public FormPics( string serverType, string empName, string aVcName,string jobPosition,string dataSource, int index, string filespathIn, string filespathOut, int formType, string[] strData, string[] strSubData, bool archiveState, string[] mandounList, string[] griDate)
+        bool MandArch = false;
+        public FormPics( string serverType, string gregorianDate, string empName, string aVcName,string jobPosition,string dataSource, int index, string filespathIn, string filespathOut, int formType, string[] strData, string[] strSubData, bool archiveState, string[] mandounList, string[] griDate)
         {
             InitializeComponent();
             Console.WriteLine(1);
             ServerType = serverType;
             DataSource = dataSource;
             FormType = formType;
+            GregorianDate = gregorianDate;
             button4.BringToFront();
             button4.BringToFront();
             button3.BringToFront();
@@ -180,7 +182,7 @@ namespace PersAhwal
             {
 
             }
-
+            //OpenFile("استمارات المناديب", true);
         }
         private string missionBasicInfo()
         {
@@ -904,6 +906,7 @@ namespace PersAhwal
                 query = "SELECT * FROM TableFileArch WHERE indexValue ='" + index + "' and FormType='" + formType + "'";
             Console.WriteLine(query);
             //MessageBox.Show(query);
+            //MessageBox.Show(ServerType);
             if (sqlCon.State == ConnectionState.Closed)
                 try
                 {
@@ -922,6 +925,7 @@ namespace PersAhwal
             {                
                 TableList = row["TableList"].ToString();
                 altColName = row["insert3"].ToString();
+                //MessageBox.Show(altColName);
                 altSubColName = row["insert4"].ToString();
                 ColNumList = row["insert2"].ToString();
                 getComment = row["getComment"].ToString();
@@ -1201,7 +1205,7 @@ namespace PersAhwal
             paraValues[1] = GregorianDate;
             noForm = DocIDGenerator(form);
             //if(AuthNoPart1)
-            //MessageBox.Show(AuthNoPart1);
+            //MessageBox.Show(GregorianDate);
             paraValues[2] = AuthNoPart1;
             paraValues[3] = com1;
             paraValues[4] = com2;
@@ -1437,7 +1441,7 @@ namespace PersAhwal
                     dataAdapter.Fill(table);
                     foreach (DataRow dataRow in table.Rows)
                     {
-                        if (dataRow["MandoubNames"].ToString() != "" && dataRow["وضع_المندوب"].ToString() == "الحساب مفعل")
+                        if (dataRow["MandoubNames"].ToString() != "")
                             combbox.Items.Add(dataRow["MandoubNames"].ToString() + " - " + dataRow["MandoubAreas"].ToString());
                     }
                 }catch (Exception ex) { }
@@ -2398,7 +2402,6 @@ namespace PersAhwal
             {
                 for (int x = 0; x < imagecount; x++)
                 {
-                    //MessageBox.Show(ArchMandoubID);
                     if (location[x] != "")
                     {
                         using (Stream stream = File.OpenRead(location[x]))
@@ -2416,6 +2419,7 @@ namespace PersAhwal
                 }
                 this.Close();
             }
+            if(MandArch) return;
             if (ArchiveState && newEntry)
             {
                 int docid = NewReportEntry(DataSource, GenQuery, FormType, Combo1.Text.Trim(), Combo2.Text.Trim());
@@ -3056,7 +3060,11 @@ namespace PersAhwal
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //tnSaveEnd.Enabled = false;
+            if (!checkActiv(mandoubName.Text.Split('-')[0].Trim()) && !MandArch)
+            {
+                MessageBox.Show("حساب المندوب عير مفعل، يرجى التواصل مع مدير القسم للتفعيل");
+                return;
+            }
             string date = DateTime.Now.Day.ToString() + "-" + DateTime.Now.Month.ToString() + "-" + DateTime.Now.Year.ToString();
             CreatePic(PathImage, ImageName);
             if (!printOut)return;
@@ -4126,7 +4134,7 @@ namespace PersAhwal
             string index = "-1";
             if (ServerType == "56")
                 index = SpecificDigit(noForm, 3, 3);
-
+            //MessageBox.Show(noForm);
             getColList(noForm, ArchiveState, index);
             //Console.Write("1 " + DateTime.Now.ToString("T"));
             if (noForm == "10" || noForm == "12")
@@ -4250,6 +4258,7 @@ namespace PersAhwal
             
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
+            Console.WriteLine(query);
             sqlDa.Fill(dtbl);
             sqlCon.Close();
             foreach (DataRow row in dtbl.Rows)
@@ -4384,6 +4393,27 @@ namespace PersAhwal
 
         }
 
+
+        private bool checkActiv(string mandoub)
+        {
+            if (mandoub == "حضور مباشرة إلى القنصلية")
+                return true;
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter("select وضع_المندوب from TableMandoudList where MandoubNames=N'" + mandoub.Split('-')[0].Trim() + "'", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            foreach (DataRow row in dtbl.Rows)
+            {
+                if(row["وضع_المندوب"].ToString() == "الحساب مفعل")
+                    return true;
+            }
+           return false;
+        }
         private void getMandoubID(string mandoub)
         {
             //MessageBox.Show(mandoub);
@@ -4487,6 +4517,12 @@ namespace PersAhwal
         private void button5_Click_1(object sender, EventArgs e)
         {
             //editForms();
+            if (!checkActiv(mandoubName.Text.Split('-')[0].Trim()))
+            {
+                MessageBox.Show("حساب المندوب عير مفعل، يرجى التواصل مع مدير القسم للتفعيل");
+                return;
+            }
+
             if (!mandoubName.Text.Contains("-")) return;
             button5.Enabled = false;
             reqFile = "";
@@ -4877,7 +4913,9 @@ namespace PersAhwal
 
         private void btnArchMandoub_Click(object sender, EventArgs e)
         {
+            MandArch = true;
             drawBoxes("أرشفة خطاب تفويض المندوب ", true, "");
+            drawBoxes("أرشفة جواز سفر المندوب ", true, "");
             ArchMandoubID = "";
             getMandoubID(mandoubName.Text);                
             btnSaveEnd.Location = new System.Drawing.Point(736, 668);

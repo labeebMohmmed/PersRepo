@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormAuth));
             this.labDescribed = new System.Windows.Forms.Button();
             this.btnNext = new System.Windows.Forms.Button();
@@ -215,6 +215,7 @@
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.button5 = new System.Windows.Forms.Button();
             this.التعليقات_السابقة_Off = new System.Windows.Forms.TextBox();
+            this.مكان_الاستخدام = new System.Windows.Forms.ComboBox();
             this.button1 = new System.Windows.Forms.Button();
             this.edited = new System.Windows.Forms.TextBox();
             this.texterror = new System.Windows.Forms.TextBox();
@@ -266,7 +267,6 @@
             this.timer4 = new System.Windows.Forms.Timer(this.components);
             this.backgroundWorker2 = new System.ComponentModel.BackgroundWorker();
             this.timer5 = new System.Windows.Forms.Timer(this.components);
-            this.مكان_الاستخدام = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.PanelDataGrid.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
@@ -348,23 +348,23 @@
             this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridView1.Location = new System.Drawing.Point(3, 0);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -2609,6 +2609,90 @@
             this.التعليقات_السابقة_Off.Size = new System.Drawing.Size(898, 800);
             this.التعليقات_السابقة_Off.TabIndex = 671;
             // 
+            // مكان_الاستخدام
+            // 
+            this.مكان_الاستخدام.Font = new System.Drawing.Font("Arabic Typesetting", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.مكان_الاستخدام.FormattingEnabled = true;
+            this.مكان_الاستخدام.Items.AddRange(new object[] {
+            "الخرطوم",
+            "طوكيو",
+            "موسكو",
+            "سيؤول",
+            "جاكارتا",
+            "بكين",
+            "القاهرة",
+            "لندن",
+            "بغداد",
+            "الرياض",
+            "كينشاسا",
+            "أنقرة",
+            "اسطنبول",
+            "بريتوريا",
+            "برلين",
+            "مدريد",
+            "أديس أبابا",
+            "نيروبي",
+            "كييف",
+            "روما",
+            "لواندا",
+            "دمشق",
+            "باريس",
+            "باكو",
+            "بوخاريست",
+            "كاراكاس",
+            "الرباط",
+            "الخرطوم",
+            "جوبا",
+            "منسك",
+            "أكرا",
+            "ياوندي",
+            "بيروت",
+            "فيينا",
+            "الجزائر",
+            "هراري",
+            "صنعاء",
+            "كوالالمبور",
+            "لوساكا",
+            "كمبالا",
+            "عمان",
+            "طرابلس",
+            "الكويت",
+            "مقديشو",
+            "بروكسل ",
+            "نبليسي",
+            "داكار",
+            "واعادوغو",
+            "دبلن",
+            "مسقط",
+            "نيامي",
+            "أبوجا",
+            "ستوكهولم",
+            "تونس",
+            "إنجامينا",
+            "أمستردام",
+            "بانغي",
+            "أوتاوا",
+            "أثينا",
+            "نواكشوط",
+            "كيغالي",
+            "واشنطن",
+            "أبو ظبي",
+            "أسمرة",
+            "أوسلو",
+            "كانبرا",
+            "الدوحة",
+            "نيودلهي",
+            "المنامة",
+            "موروني",
+            "إسلام أباد",
+            "جيبوتي"});
+            this.مكان_الاستخدام.Location = new System.Drawing.Point(659, 532);
+            this.مكان_الاستخدام.Name = "مكان_الاستخدام";
+            this.مكان_الاستخدام.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.مكان_الاستخدام.Size = new System.Drawing.Size(280, 42);
+            this.مكان_الاستخدام.TabIndex = 719;
+            this.مكان_الاستخدام.Text = "الخرطوم";
+            // 
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -3238,90 +3322,6 @@
             // 
             this.timer5.Interval = 1000;
             this.timer5.Tick += new System.EventHandler(this.timer5_Tick);
-            // 
-            // مكان_الاستخدام
-            // 
-            this.مكان_الاستخدام.Font = new System.Drawing.Font("Arabic Typesetting", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.مكان_الاستخدام.FormattingEnabled = true;
-            this.مكان_الاستخدام.Items.AddRange(new object[] {
-            "الخرطوم",
-            "طوكيو",
-            "موسكو",
-            "سيؤول",
-            "جاكارتا",
-            "بكين",
-            "القاهرة",
-            "لندن",
-            "بغداد",
-            "الرياض",
-            "كينشاسا",
-            "أنقرة",
-            "اسطنبول",
-            "بريتوريا",
-            "برلين",
-            "مدريد",
-            "أديس أبابا",
-            "نيروبي",
-            "كييف",
-            "روما",
-            "لواندا",
-            "دمشق",
-            "باريس",
-            "باكو",
-            "بوخاريست",
-            "كاراكاس",
-            "الرباط",
-            "الخرطوم",
-            "جوبا",
-            "منسك",
-            "أكرا",
-            "ياوندي",
-            "بيروت",
-            "فيينا",
-            "الجزائر",
-            "هراري",
-            "صنعاء",
-            "كوالالمبور",
-            "لوساكا",
-            "كمبالا",
-            "عمان",
-            "طرابلس",
-            "الكويت",
-            "مقديشو",
-            "بروكسل ",
-            "نبليسي",
-            "داكار",
-            "واعادوغو",
-            "دبلن",
-            "مسقط",
-            "نيامي",
-            "أبوجا",
-            "ستوكهولم",
-            "تونس",
-            "إنجامينا",
-            "أمستردام",
-            "بانغي",
-            "أوتاوا",
-            "أثينا",
-            "نواكشوط",
-            "كيغالي",
-            "واشنطن",
-            "أبو ظبي",
-            "أسمرة",
-            "أوسلو",
-            "كانبرا",
-            "الدوحة",
-            "نيودلهي",
-            "المنامة",
-            "موروني",
-            "إسلام أباد",
-            "جيبوتي"});
-            this.مكان_الاستخدام.Location = new System.Drawing.Point(659, 532);
-            this.مكان_الاستخدام.Name = "مكان_الاستخدام";
-            this.مكان_الاستخدام.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.مكان_الاستخدام.Size = new System.Drawing.Size(280, 42);
-            this.مكان_الاستخدام.TabIndex = 719;
-            this.مكان_الاستخدام.Text = "الخرطوم";
             // 
             // FormAuth
             // 

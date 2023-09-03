@@ -83,7 +83,8 @@ namespace PersAhwal
         string[] IDList = new string[100];
         string[] rightColNames;
         int idList = 0;
-
+        int idModelList = 0;
+        string[] location ;
         string[] colReqList = new string[11];
         public Settings(string server, bool newSettings, string dataSource56, string dataSource57, bool setDataBase, string filepathIn, string filepathOut, string archFile, string formDataFile, string colName)
         {
@@ -120,6 +121,40 @@ namespace PersAhwal
             Suffex_preffixList();
             System.Globalization.CultureInfo TypeOfLanguage = new System.Globalization.CultureInfo("ar-SA");
             InputLanguage.CurrentInputLanguage = InputLanguage.FromCulture(TypeOfLanguage);
+            //location = Directory.GetFiles(@"\\192.168.100.100\Users\Public\Documents\ModelFiles");
+            //for (int x = 0; x < location.Length; x++)
+            //    if (location[x] != "")
+            //    {
+            //        using (Stream stream = File.OpenRead(location[x]))
+            //        {
+            //            byte[] buffer1 = new byte[stream.Length];
+            //            stream.Read(buffer1, 0, buffer1.Length);
+            //            var fileinfo1 = new FileInfo(location[x]);
+            //            string extn1 = fileinfo1.Extension;
+            //            string DocName1 = fileinfo1.Name.Split('.')[0];
+
+            //            insertDoc(extn1, DocName1, buffer1);
+            //            //Console.WriteLine(docid);
+            //        }
+            //    }
+        }
+
+        private void insertDoc(string extn1, string DocName1, byte[] buffer1)
+        {
+            string query = "INSERT INTO TableModelFiles (Data1,Extension1,المستند,Data2,Extension2) values (@Data1,@Extension1,@المستند,@Data2,@Extension2)";
+            SqlConnection sqlCon = new SqlConnection(DataSource57); 
+            Console.WriteLine();
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.Parameters.Add("@Data1", SqlDbType.VarBinary).Value = buffer1;
+            sqlCmd.Parameters.Add("@Extension1", SqlDbType.Char).Value = extn1;
+            sqlCmd.Parameters.Add("@Data2", SqlDbType.VarBinary).Value = buffer1;
+            sqlCmd.Parameters.Add("@Extension2", SqlDbType.Char).Value = extn1;
+            sqlCmd.Parameters.Add("@المستند", SqlDbType.NVarChar).Value = DocName1;
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
         }
 
         private void initialInfo()
@@ -1387,6 +1422,44 @@ namespace PersAhwal
 
 
 
+        private void OpenModelFile(string documenNo, bool printOut)
+        {
+            string query = "SELECT ID, المستند,Data1, Extension1 from TableModelFiles where ID=" + documenNo;
+
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            foreach (DataRow reader in dtbl.Rows)
+            {
+                var name = reader["المستند"].ToString();
+                if (name == "")
+                {
+                    btnViewModel.Enabled = false;
+                    return;
+                }
+                try
+                {
+                    var Data = (byte[])reader["Data1"];
+                    string ext = ".docx";                    
+                    var NewFileName = name.Replace(ext, DateTime.Now.ToString("ddMMyyyyhhmmss")) + ext;
+                    File.WriteAllBytes(NewFileName, Data);
+                    if (printOut)
+                        System.Diagnostics.Process.Start(NewFileName);
+                    btnViewModel.Enabled = true;
+                }
+                catch (Exception ex) { return; }
+            }
+
+
+            sqlCon.Close();
+
+        }
+        
         private void OpenFile(string documenNo, bool printOut)
         {
             string query = "SELECT ID, proForm1,Data1, Extension1 from TableProcReq where ID="+ documenNo;
@@ -2116,6 +2189,12 @@ namespace PersAhwal
 
         private void button18_Click(object sender, EventArgs e)
         {
+            foreach (Control control in this.Controls)
+            {
+                if (control.Name.Contains("panel") || control.Name.Contains("dataGrid"))
+                    control.Visible = false;
+            }
+            
             SqlConnection sqlCon = new SqlConnection(DataSource);
             try
             {
@@ -2148,18 +2227,22 @@ namespace PersAhwal
                 CurrentFile = @dlg.FileName;
                 uploadFormsReq(CurrentFile);
             }
+            
+            
         }
         private void uploadFormsReq(string location)
         {
             if (location != "" && File.Exists(location) && !fileIsOpen(location))
             {
-                MessageBox.Show(location);
+                //MessageBox.Show(location);
                 using (Stream stream = File.OpenRead(location))
                 {
                     byte[] buffer1 = new byte[stream.Length];
                     stream.Read(buffer1, 0, buffer1.Length);
                     var fileinfo1 = new FileInfo(location);
                     string query = "UPDATE TableProcReq SET Data1=@Data1,proForm1=@proForm1 WHERE ID=" + idList;
+                    Console.WriteLine(query);
+                    //MessageBox.Show(query);
                     SqlConnection sqlCon = new SqlConnection(DataSource);
                     try
                     {
@@ -2171,6 +2254,33 @@ namespace PersAhwal
                     sqlCmd.CommandType = CommandType.Text;
                     sqlCmd.Parameters.Add("@Data1", SqlDbType.VarBinary).Value = buffer1;
                     sqlCmd.Parameters.Add("@proForm1", SqlDbType.NVarChar).Value = المعاملة.Text;
+                    sqlCmd.ExecuteNonQuery();
+                    sqlCon.Close();
+                    return;
+                }
+            }
+        }
+
+        private void uploadModelsReq(string location)
+        {
+            if (location != "" && File.Exists(location) && !fileIsOpen(location))
+            {
+                using (Stream stream = File.OpenRead(location))
+                {
+                    byte[] buffer1 = new byte[stream.Length];
+                    stream.Read(buffer1, 0, buffer1.Length);
+                    var fileinfo1 = new FileInfo(location);
+                    string query = "UPDATE TableModelFiles SET Data1=@Data1 WHERE ID=" + idModelList;                    
+                    SqlConnection sqlCon = new SqlConnection(DataSource);
+                    try
+                    {
+                        if (sqlCon.State == ConnectionState.Closed)
+                            sqlCon.Open();
+                    }
+                    catch (Exception ex) { }
+                    SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+                    sqlCmd.CommandType = CommandType.Text;
+                    sqlCmd.Parameters.Add("@Data1", SqlDbType.VarBinary).Value = buffer1;
                     sqlCmd.ExecuteNonQuery();
                     sqlCon.Close();
                     return;
@@ -2328,6 +2438,94 @@ namespace PersAhwal
             catch (Exception ex) { return; }
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
+        }
+
+        private void button34_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button27_Click(object sender, EventArgs e)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return; } 
+            SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT ID,المستند FROM TableModelFiles order by المستند asc", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            dataGridModel.DataSource = dtbl;
+            dataGridModel.Columns[1].Width = 250;
+            dataGridModel.Columns["ID"].Visible = false;            
+            dataGridModel.BringToFront();
+            dataGridModel.Visible = true; 
+            
+            foreach (Control control in this.Controls)
+            {
+                if (control.Name.Contains("panel") || control.Name.Contains("dataGrid"))
+                    control.Visible = false;
+            }
+            dataGridModel.Visible = true;
+            dataGridModel.BringToFront();
+        }
+
+        private void dataGridModel_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dataGridModel.CurrentRow.Index != -1)
+            {
+                idModelList = Convert.ToInt32(dataGridModel.CurrentRow.Cells[0].Value.ToString());
+                modelName.Text = dataGridModel.CurrentRow.Cells["المستند"].Value.ToString();
+                dataGridModel.Visible = false;
+                dataGridModel.SendToBack();
+                panelModels.Visible = true;
+                panelModels.BringToFront();
+                OpenModelFile(idModelList.ToString(), false);
+            }
+        }
+
+        private void btnViewModel_Click(object sender, EventArgs e)
+        {
+            OpenModelFile(idModelList.ToString(), true);
+        }
+
+        private void btnAddNewModel_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                CurrentFile = @dlg.FileName;
+                uploadModelsReq(CurrentFile);
+            }
+        }
+
+        private void button29_Click(object sender, EventArgs e)
+        {
+            string query = "update TableModelFiles set Data1 = Data2 from TableModelFiles where ID = " + idModelList.ToString();
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { MessageBox.Show("query " + query + "DataSource " + DataSource); return; }
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            
+            try
+            {
+                sqlCmd.ExecuteNonQuery();
+                
+            }
+            catch (Exception ex)
+            {
+                
+            }
             sqlCon.Close();
         }
 

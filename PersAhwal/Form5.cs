@@ -52,7 +52,7 @@ namespace PersAhwal
         int ATVC = 0;
         string[] colIDs = new string[100];
         string AuthTitle = "نائب قنصل";
-        public Form5(int Atvc, int currentRow, string EmpName, string dataSource, string filepathIn, string filepathOut, string jobposition, string gregorianDate, string hijriDate)
+        public Form5(int Atvc, int currentRow, string EmpName, string dataSource,  string filepathOut, string jobposition, string gregorianDate, string hijriDate)
         {
             InitializeComponent();
             //timer1.Enabled = true;
@@ -61,7 +61,7 @@ namespace PersAhwal
             التاريخ_الهجري.Text = hijriDate;
             ATVC = Atvc;
             DataSource = dataSource;
-            FilesPathIn = filepathIn + @"\";
+           // FilesPathIn = filepathIn + @"\";
             FilesPathOut = filepathOut;
             Jobposition = jobposition;
             FillDataGridView();

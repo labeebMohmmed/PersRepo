@@ -49,7 +49,7 @@ namespace PersAhwal
         bool newData = false;
         string[] colIDs = new string[100];
         string[] forbidDs = new string[100];
-        string FilespathIn = "";
+        //string FilespathIn = "";
         string FilespathOut = "";
         Word.Document oBDoc;
         object oBMiss;
@@ -62,14 +62,14 @@ namespace PersAhwal
         string localCopy_off1 = "";
         bool newInfo = true;
         bool grid = false;
-        public MerriageDoc(string dataSource, bool addEdit, string empName, int atVCIndex, string gregorianDate, string hijriDate, string filespathIn, string filespathOut)
+        public MerriageDoc(string dataSource, bool addEdit, string empName, int atVCIndex, string gregorianDate, string hijriDate, string filespathOut)
         {
             InitializeComponent();
             DataSource = dataSource;
             AddEdit = addEdit;
             AtVCIndex = atVCIndex;
             allList = getColList("TableMerrageDoc");
-            FilespathIn = filespathIn;
+            //FilespathIn = filespathIn;
             FilespathOut = filespathOut;
             التاريخ_الهجري.Text =  HijriDate = hijriDate;
             التاريخ_الميلادي.Text = GregorianDate = gregorianDate;
@@ -658,8 +658,8 @@ namespace PersAhwal
 
         private void chooseDocxFile(string docId, string name)
         {
-            string RouteFile = FilespathIn + "TableMerrageDoc.docx";
-            string RouteFile1 = FilespathIn + "merriageDocs.docx";
+            //string RouteFile = FilespathIn + "TableMerrageDoc.docx";
+            //string RouteFile1 = FilespathIn + "merriageDocs.docx";
             if (name != "")
                 localCopy_off = FilespathOut +@"\"+ name + DateTime.Now.ToString("ddmmss") + ".docx";
             else localCopy_off = FilespathOut + @"\" + docId.Replace("/", "_") + DateTime.Now.ToString("ddmmss") + ".docx";
@@ -670,7 +670,8 @@ namespace PersAhwal
                 else localCopy_off = FilespathOut + @"\" + docId.Replace("/", "_") + DateTime.Now.ToString("ddmmss") + ".docx";
             }
             //
-            System.IO.File.Copy(RouteFile, localCopy_off);
+            //System.IO.File.Copy(RouteFile, localCopy_off);
+            OpenModelFile("TableMerrageDoc", false, localCopy_off);
             FileInfo fileInfo = new FileInfo(localCopy_off);
             if (fileInfo.IsReadOnly) fileInfo.IsReadOnly = false;
             
@@ -684,7 +685,8 @@ namespace PersAhwal
                 else localCopy_off1 = FilespathOut + @"\" + docId.Replace("/", "_") + DateTime.Now.ToString("ddmmss") + "1.docx";
             }
             //
-            System.IO.File.Copy(RouteFile1, localCopy_off1);
+            //System.IO.File.Copy(RouteFile1, localCopy_off1);
+            OpenModelFile("merriageDocs", false, localCopy_off1);
             FileInfo fileInfo1 = new FileInfo(localCopy_off1);
             if (fileInfo1.IsReadOnly) fileInfo1.IsReadOnly = false;
 
@@ -1477,8 +1479,8 @@ namespace PersAhwal
                 {
 
                     اليوم_off.Text = تاريخ_الاجراء.Text.Split('-')[1];
-                    الشهر_off.Text = تاريخ_الاجراء.Text.Split('-')[2];
-                    السنة_off.Text = تاريخ_الاجراء.Text.Split('-')[0];
+                    الشهر_off.Text = تاريخ_الاجراء.Text.Split('-')[0];
+                    السنة_off.Text = تاريخ_الاجراء.Text.Split('-')[2];
                 }
                 catch (Exception ex) { }
             }
@@ -1492,8 +1494,8 @@ namespace PersAhwal
                 {
 
                     RecDay_off.Text = تاريخ_الايصال.Text.Split('-')[1];
-                    RecMonth_off.Text = تاريخ_الايصال.Text.Split('-')[2];
-                    recYear_off.Text = تاريخ_الايصال.Text.Split('-')[0];
+                    RecMonth_off.Text = تاريخ_الايصال.Text.Split('-')[0];
+                    recYear_off.Text = تاريخ_الايصال.Text.Split('-')[2];
                 }
                 catch (Exception ex) { }
             }
@@ -1506,7 +1508,7 @@ namespace PersAhwal
         private void اليوم_TextChanged(object sender, EventArgs e)
         {
             if (grid) return;
-            تاريخ_الاجراء.Text = السنة_off.Text + "-" + اليوم_off.Text + "-" + الشهر_off.Text;
+            تاريخ_الاجراء.Text = الشهر_off.Text + "-" + اليوم_off.Text + "-" + السنة_off.Text;
             //MessageBox.Show(اليوم_off.Text);
         }
 
@@ -1515,7 +1517,7 @@ namespace PersAhwal
         private void recYear_TextChanged(object sender, EventArgs e)
         {
             if (grid) return;
-            تاريخ_الايصال.Text = recYear_off.Text + "-" + RecDay_off.Text + "-" + RecMonth_off.Text;
+            تاريخ_الايصال.Text = RecMonth_off.Text + "-" + RecDay_off.Text + "-" + recYear_off.Text;
             if (recYear_off.Text.Length == 4)
                 RecMonth_off.Select();
         }
@@ -1523,7 +1525,7 @@ namespace PersAhwal
         private void RecMonth_TextChanged(object sender, EventArgs e)
         {
             if (grid) return;
-            تاريخ_الايصال.Text = recYear_off.Text + "-" + RecDay_off.Text + "-" + RecMonth_off.Text;
+            تاريخ_الايصال.Text = RecMonth_off.Text + "-" + RecDay_off.Text + "-" + recYear_off.Text;
             if (RecMonth_off.Text.Length == 2)
                 RecDay_off.Select();
         }
@@ -1533,7 +1535,7 @@ namespace PersAhwal
         private void السنة_off_TextChanged(object sender, EventArgs e)
         {
             if (grid) return;
-            تاريخ_الاجراء.Text = السنة_off.Text + "-" + اليوم_off.Text + "-" + الشهر_off.Text;
+            تاريخ_الاجراء.Text = الشهر_off.Text + "-" + اليوم_off.Text + "-" + السنة_off.Text;
             if (السنة_off.Text.Length == 4)
                 الشهر_off.Select();
         }
@@ -1541,7 +1543,7 @@ namespace PersAhwal
         private void الشهر_off_TextChanged(object sender, EventArgs e)
         {
             if (grid) return;
-            تاريخ_الاجراء.Text = السنة_off.Text + "-" + اليوم_off.Text + "-" + الشهر_off.Text;
+            تاريخ_الاجراء.Text = الشهر_off.Text + "-" + اليوم_off.Text + "-" + السنة_off.Text;
             if (الشهر_off.Text.Length == 2)
                 اليوم_off.Select();
         }
@@ -1549,7 +1551,42 @@ namespace PersAhwal
         private void RecDay_off_TextChanged(object sender, EventArgs e)
         {
             if (grid) return;
-            تاريخ_الايصال.Text = recYear_off.Text + "-" + RecDay_off.Text + "-" + RecMonth_off.Text;
+            تاريخ_الايصال.Text = RecMonth_off.Text + "-" + RecDay_off.Text + "-" + recYear_off.Text;
+            if (RecDay_off.Text.Length == 2)
+                السنة_off.Select();
+        }
+        private string OpenModelFile(string documen, bool printOut, string FileName)
+        {
+            string query = "SELECT ID, المستند,Data1, Extension1 from TableModelFiles where المستند=N'" + documen.Split('.')[0] + "'";
+
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            foreach (DataRow reader in dtbl.Rows)
+            {
+                var name = reader["المستند"].ToString();
+                if (name == "")
+                {
+                    return "";
+                }
+                try
+                {
+                    var Data = (byte[])reader["Data1"];
+                    string ext = ".docx";
+                    //FileName = name.Replace(ext, DateTime.Now.ToString("ddMMyyyyhhmmss")) + ext;
+                    File.WriteAllBytes(FileName, Data);
+                    if (printOut)
+                        System.Diagnostics.Process.Start(FileName);
+                }
+                catch (Exception ex) { return ""; }
+            }
+            sqlCon.Close();
+            return FileName;
         }
     }
 }

@@ -130,10 +130,11 @@ namespace PersAhwal
             // dataGrid
             // 
             this.dataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGrid.Location = new System.Drawing.Point(137, 331);
+            this.dataGrid.Location = new System.Drawing.Point(12, 304);
             this.dataGrid.Name = "dataGrid";
-            this.dataGrid.Size = new System.Drawing.Size(553, 239);
+            this.dataGrid.Size = new System.Drawing.Size(917, 408);
             this.dataGrid.TabIndex = 15;
+            this.dataGrid.Visible = false;
             // 
             // username
             // 
@@ -297,7 +298,7 @@ namespace PersAhwal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(941, 300);
+            this.ClientSize = new System.Drawing.Size(941, 299);
             this.Controls.Add(this.labelpass2);
             this.Controls.Add(this.labelpass1);
             this.Controls.Add(this.pass2);

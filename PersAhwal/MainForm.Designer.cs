@@ -38,6 +38,7 @@ namespace PersAhwal
             this.labelmonth = new System.Windows.Forms.Label();
             this.ConsulateEmployee = new System.Windows.Forms.Label();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.alllabelarch = new System.Windows.Forms.Label();
             this.labelarch = new System.Windows.Forms.Label();
             this.labelM = new System.Windows.Forms.Label();
             this.dataGridView5 = new System.Windows.Forms.DataGridView();
@@ -89,6 +90,8 @@ namespace PersAhwal
             this.Combtn1 = new System.Windows.Forms.Button();
             this.Combtn0 = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.picLock = new System.Windows.Forms.PictureBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.label3 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -148,8 +151,14 @@ namespace PersAhwal
             this.panelDate = new System.Windows.Forms.FlowLayoutPanel();
             this.picadd = new System.Windows.Forms.PictureBox();
             this.picremove = new System.Windows.Forms.PictureBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.picaddmonth = new System.Windows.Forms.PictureBox();
             this.pictremovemonth = new System.Windows.Forms.PictureBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.txtOrgDate = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.txtModDate = new System.Windows.Forms.TextBox();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.backgroundWorker3 = new System.ComponentModel.BackgroundWorker();
             this.button2 = new System.Windows.Forms.Button();
@@ -160,6 +169,11 @@ namespace PersAhwal
             this.persbtn52 = new System.Windows.Forms.Button();
             this.عدد_الفرص = new System.Windows.Forms.ComboBox();
             this.timer3 = new System.Windows.Forms.Timer(this.components);
+            this.summery = new System.Windows.Forms.Button();
+            this.timer5 = new System.Windows.Forms.Timer(this.components);
+            this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
+            this.macAddress = new System.Windows.Forms.TextBox();
+            this.button8 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView4)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView5)).BeginInit();
@@ -170,6 +184,8 @@ namespace PersAhwal
             this.SearchPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView6)).BeginInit();
             this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picLock)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -193,6 +209,7 @@ namespace PersAhwal
             ((System.ComponentModel.ISupportInitialize)(this.picaddmonth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictremovemonth)).BeginInit();
             this.paneloldPro.SuspendLayout();
+            this.flowLayoutPanel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // persbtn9
@@ -211,7 +228,7 @@ namespace PersAhwal
             // 
             this.labelVA.AutoSize = true;
             this.labelVA.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelVA.Location = new System.Drawing.Point(309, 0);
+            this.labelVA.Location = new System.Drawing.Point(139, 0);
             this.labelVA.Name = "labelVA";
             this.labelVA.Size = new System.Drawing.Size(0, 27);
             this.labelVA.TabIndex = 503;
@@ -219,7 +236,7 @@ namespace PersAhwal
             // dataGridView4
             // 
             this.dataGridView4.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView4.Location = new System.Drawing.Point(74, 3);
+            this.dataGridView4.Location = new System.Drawing.Point(466, 62);
             this.dataGridView4.Name = "dataGridView4";
             this.dataGridView4.Size = new System.Drawing.Size(98, 57);
             this.dataGridView4.TabIndex = 478;
@@ -229,7 +246,7 @@ namespace PersAhwal
             // 
             this.labelmonth.AutoSize = true;
             this.labelmonth.Font = new System.Drawing.Font("Arabic Typesetting", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelmonth.Location = new System.Drawing.Point(85, 36);
+            this.labelmonth.Location = new System.Drawing.Point(208, 36);
             this.labelmonth.Name = "labelmonth";
             this.labelmonth.Size = new System.Drawing.Size(112, 24);
             this.labelmonth.TabIndex = 507;
@@ -252,6 +269,7 @@ namespace PersAhwal
             // 
             this.flowLayoutPanel1.AutoScroll = true;
             this.flowLayoutPanel1.BackColor = System.Drawing.SystemColors.ButtonShadow;
+            this.flowLayoutPanel1.Controls.Add(this.alllabelarch);
             this.flowLayoutPanel1.Controls.Add(this.labelarch);
             this.flowLayoutPanel1.Controls.Add(this.labelM);
             this.flowLayoutPanel1.Controls.Add(this.labelVA);
@@ -262,14 +280,24 @@ namespace PersAhwal
             this.flowLayoutPanel1.Location = new System.Drawing.Point(685, 2);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(570, 730);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(567, 622);
             this.flowLayoutPanel1.TabIndex = 507;
+            // 
+            // alllabelarch
+            // 
+            this.alllabelarch.AutoSize = true;
+            this.alllabelarch.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.alllabelarch.Location = new System.Drawing.Point(403, 0);
+            this.alllabelarch.Name = "alllabelarch";
+            this.alllabelarch.Size = new System.Drawing.Size(161, 27);
+            this.alllabelarch.TabIndex = 513;
+            this.alllabelarch.Text = "جميع المعاملات غير المكتملة";
             // 
             // labelarch
             // 
             this.labelarch.AutoSize = true;
             this.labelarch.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelarch.Location = new System.Drawing.Point(441, 0);
+            this.labelarch.Location = new System.Drawing.Point(271, 0);
             this.labelarch.Name = "labelarch";
             this.labelarch.Size = new System.Drawing.Size(126, 27);
             this.labelarch.TabIndex = 500;
@@ -280,7 +308,7 @@ namespace PersAhwal
             // 
             this.labelM.AutoSize = true;
             this.labelM.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Bold);
-            this.labelM.Location = new System.Drawing.Point(315, 0);
+            this.labelM.Location = new System.Drawing.Point(145, 0);
             this.labelM.Name = "labelM";
             this.labelM.Size = new System.Drawing.Size(120, 27);
             this.labelM.TabIndex = 511;
@@ -290,7 +318,7 @@ namespace PersAhwal
             // dataGridView5
             // 
             this.dataGridView5.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView5.Location = new System.Drawing.Point(178, 3);
+            this.dataGridView5.Location = new System.Drawing.Point(8, 3);
             this.dataGridView5.Name = "dataGridView5";
             this.dataGridView5.Size = new System.Drawing.Size(125, 53);
             this.dataGridView5.TabIndex = 508;
@@ -299,7 +327,7 @@ namespace PersAhwal
             // dataGridView2
             // 
             this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView2.Location = new System.Drawing.Point(405, 66);
+            this.dataGridView2.Location = new System.Drawing.Point(298, 62);
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.Size = new System.Drawing.Size(162, 57);
             this.dataGridView2.TabIndex = 462;
@@ -308,7 +336,7 @@ namespace PersAhwal
             // dataGridView3
             // 
             this.dataGridView3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView3.Location = new System.Drawing.Point(237, 66);
+            this.dataGridView3.Location = new System.Drawing.Point(130, 62);
             this.dataGridView3.Name = "dataGridView3";
             this.dataGridView3.Size = new System.Drawing.Size(162, 57);
             this.dataGridView3.TabIndex = 512;
@@ -919,7 +947,7 @@ namespace PersAhwal
             // 
             this.labeldate.AutoSize = true;
             this.labeldate.Font = new System.Drawing.Font("Arabic Typesetting", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labeldate.Location = new System.Drawing.Point(90, 0);
+            this.labeldate.Location = new System.Drawing.Point(213, 0);
             this.labeldate.Name = "labeldate";
             this.labeldate.Size = new System.Drawing.Size(107, 24);
             this.labeldate.TabIndex = 504;
@@ -953,6 +981,8 @@ namespace PersAhwal
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.panel2.Controls.Add(this.picLock);
+            this.panel2.Controls.Add(this.pictureBox2);
             this.panel2.Controls.Add(this.label3);
             this.panel2.Controls.Add(this.pictureBox1);
             this.panel2.Controls.Add(this.label2);
@@ -971,6 +1001,31 @@ namespace PersAhwal
             this.panel2.TabIndex = 506;
             this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
             this.panel2.MouseLeave += new System.EventHandler(this.panel2_MouseLeave);
+            // 
+            // picLock
+            // 
+            this.picLock.Image = global::PersAhwal.Properties.Resources.png_lock_picture_lock_2_icon_1600;
+            this.picLock.Location = new System.Drawing.Point(247, 3);
+            this.picLock.Name = "picLock";
+            this.picLock.Size = new System.Drawing.Size(34, 34);
+            this.picLock.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picLock.TabIndex = 838;
+            this.picLock.TabStop = false;
+            this.picLock.Visible = false;
+            this.picLock.Click += new System.EventHandler(this.picLock_Click);
+            this.picLock.MouseEnter += new System.EventHandler(this.picLock_MouseEnter);
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = global::PersAhwal.Properties.Resources.admin;
+            this.pictureBox2.Location = new System.Drawing.Point(287, 0);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(34, 34);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox2.TabIndex = 837;
+            this.pictureBox2.TabStop = false;
+            this.pictureBox2.Click += new System.EventHandler(this.pictureBox2_Click_1);
+            this.pictureBox2.MouseEnter += new System.EventHandler(this.pictureBox2_MouseEnter);
             // 
             // label3
             // 
@@ -1249,7 +1304,7 @@ namespace PersAhwal
             "مدير إدارة الوافدين بيشة",
             "مدير إدارة الوافدين ينبع",
             "مدير إدارة الوافدين القنفذة"});
-            this.Affairsbtn7.Location = new System.Drawing.Point(424, 3);
+            this.Affairsbtn7.Location = new System.Drawing.Point(420, 3);
             this.Affairsbtn7.Name = "Affairsbtn7";
             this.Affairsbtn7.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.Affairsbtn7.Size = new System.Drawing.Size(247, 35);
@@ -1472,7 +1527,10 @@ namespace PersAhwal
             // 
             // flowLayoutPanel3
             // 
+            this.flowLayoutPanel3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.flowLayoutPanel3.Controls.Add(this.Affairsbtn7);
+            this.flowLayoutPanel3.Enabled = false;
+            this.flowLayoutPanel3.Font = new System.Drawing.Font("Tahoma", 8F);
             this.flowLayoutPanel3.Location = new System.Drawing.Point(5, 87);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
             this.flowLayoutPanel3.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -1704,20 +1762,26 @@ namespace PersAhwal
             this.panelDate.Controls.Add(this.labeldate);
             this.panelDate.Controls.Add(this.picadd);
             this.panelDate.Controls.Add(this.picremove);
+            this.panelDate.Controls.Add(this.label6);
             this.panelDate.Controls.Add(this.labelmonth);
             this.panelDate.Controls.Add(this.picaddmonth);
             this.panelDate.Controls.Add(this.pictremovemonth);
+            this.panelDate.Controls.Add(this.label7);
+            this.panelDate.Controls.Add(this.label4);
+            this.panelDate.Controls.Add(this.txtOrgDate);
+            this.panelDate.Controls.Add(this.label5);
+            this.panelDate.Controls.Add(this.txtModDate);
             this.panelDate.Location = new System.Drawing.Point(16, 134);
             this.panelDate.Name = "panelDate";
             this.panelDate.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.panelDate.Size = new System.Drawing.Size(200, 393);
+            this.panelDate.Size = new System.Drawing.Size(323, 393);
             this.panelDate.TabIndex = 833;
             this.panelDate.Visible = false;
             // 
             // picadd
             // 
             this.picadd.Image = global::PersAhwal.Properties.Resources.add;
-            this.picadd.Location = new System.Drawing.Point(56, 3);
+            this.picadd.Location = new System.Drawing.Point(179, 3);
             this.picadd.Name = "picadd";
             this.picadd.Size = new System.Drawing.Size(28, 30);
             this.picadd.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -1729,7 +1793,7 @@ namespace PersAhwal
             // picremove
             // 
             this.picremove.Image = global::PersAhwal.Properties.Resources.remove;
-            this.picremove.Location = new System.Drawing.Point(22, 3);
+            this.picremove.Location = new System.Drawing.Point(145, 3);
             this.picremove.Name = "picremove";
             this.picremove.Size = new System.Drawing.Size(28, 30);
             this.picremove.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -1738,10 +1802,20 @@ namespace PersAhwal
             this.picremove.Visible = false;
             this.picremove.Click += new System.EventHandler(this.picremove_Click_1);
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Arabic Typesetting", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(39, 0);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(100, 24);
+            this.label6.TabIndex = 512;
+            this.label6.Text = "                  ";
+            // 
             // picaddmonth
             // 
             this.picaddmonth.Image = global::PersAhwal.Properties.Resources.add;
-            this.picaddmonth.Location = new System.Drawing.Point(51, 39);
+            this.picaddmonth.Location = new System.Drawing.Point(174, 39);
             this.picaddmonth.Name = "picaddmonth";
             this.picaddmonth.Size = new System.Drawing.Size(28, 30);
             this.picaddmonth.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -1753,7 +1827,7 @@ namespace PersAhwal
             // pictremovemonth
             // 
             this.pictremovemonth.Image = global::PersAhwal.Properties.Resources.remove;
-            this.pictremovemonth.Location = new System.Drawing.Point(17, 39);
+            this.pictremovemonth.Location = new System.Drawing.Point(140, 39);
             this.pictremovemonth.Name = "pictremovemonth";
             this.pictremovemonth.Size = new System.Drawing.Size(28, 30);
             this.pictremovemonth.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -1761,6 +1835,54 @@ namespace PersAhwal
             this.pictremovemonth.TabStop = false;
             this.pictremovemonth.Visible = false;
             this.pictremovemonth.Click += new System.EventHandler(this.pictremovemonth_Click);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Arabic Typesetting", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(34, 36);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(100, 24);
+            this.label7.TabIndex = 513;
+            this.label7.Text = "                  ";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Arabic Typesetting", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(206, 72);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(114, 24);
+            this.label4.TabIndex = 510;
+            this.label4.Text = "التاريخ قبل التعديل:";
+            // 
+            // txtOrgDate
+            // 
+            this.txtOrgDate.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtOrgDate.Location = new System.Drawing.Point(5, 75);
+            this.txtOrgDate.Name = "txtOrgDate";
+            this.txtOrgDate.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.txtOrgDate.Size = new System.Drawing.Size(195, 35);
+            this.txtOrgDate.TabIndex = 508;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Arabic Typesetting", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(208, 113);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(112, 24);
+            this.label5.TabIndex = 511;
+            this.label5.Text = "التاريخ بعد التعديل:";
+            // 
+            // txtModDate
+            // 
+            this.txtModDate.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtModDate.Location = new System.Drawing.Point(7, 116);
+            this.txtModDate.Name = "txtModDate";
+            this.txtModDate.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.txtModDate.Size = new System.Drawing.Size(195, 35);
+            this.txtModDate.TabIndex = 509;
             // 
             // timer2
             // 
@@ -1870,23 +1992,76 @@ namespace PersAhwal
             this.timer3.Interval = 1000;
             this.timer3.Tick += new System.EventHandler(this.timer3_Tick);
             // 
+            // summery
+            // 
+            this.summery.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.summery.Location = new System.Drawing.Point(685, 630);
+            this.summery.Name = "summery";
+            this.summery.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.summery.Size = new System.Drawing.Size(567, 106);
+            this.summery.TabIndex = 840;
+            this.summery.Text = "ملخص معاملات اليوم";
+            this.summery.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.summery.UseVisualStyleBackColor = true;
+            this.summery.Click += new System.EventHandler(this.summery_Click);
+            // 
+            // timer5
+            // 
+            this.timer5.Enabled = true;
+            this.timer5.Interval = 30000;
+            this.timer5.Tick += new System.EventHandler(this.timer5_Tick_1);
+            // 
+            // flowLayoutPanel4
+            // 
+            this.flowLayoutPanel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.flowLayoutPanel4.Controls.Add(this.macAddress);
+            this.flowLayoutPanel4.Controls.Add(this.button8);
+            this.flowLayoutPanel4.Location = new System.Drawing.Point(16, 131);
+            this.flowLayoutPanel4.Name = "flowLayoutPanel4";
+            this.flowLayoutPanel4.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.flowLayoutPanel4.Size = new System.Drawing.Size(359, 100);
+            this.flowLayoutPanel4.TabIndex = 842;
+            this.flowLayoutPanel4.Visible = false;
+            // 
+            // macAddress
+            // 
+            this.macAddress.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.macAddress.Location = new System.Drawing.Point(1, 3);
+            this.macAddress.Name = "macAddress";
+            this.macAddress.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.macAddress.Size = new System.Drawing.Size(353, 35);
+            this.macAddress.TabIndex = 475;
+            this.macAddress.TextChanged += new System.EventHandler(this.macAddress_TextChanged_1);
+            // 
+            // button8
+            // 
+            this.button8.Enabled = false;
+            this.button8.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button8.Location = new System.Drawing.Point(252, 44);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(102, 34);
+            this.button8.TabIndex = 474;
+            this.button8.Text = "تفعيل";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click_1);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1255, 745);
+            this.ClientSize = new System.Drawing.Size(1255, 777);
+            this.Controls.Add(this.flowLayoutPanel4);
+            this.Controls.Add(this.summery);
             this.Controls.Add(this.عدد_الفرص);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.attendedVC);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.persbtn52);
             this.Controls.Add(this.Combtn2);
             this.Controls.Add(this.Combtn1);
             this.Controls.Add(this.Affbtn1);
-            this.Controls.Add(this.mangerArch);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.Affbtn4);
             this.Controls.Add(this.Affbtn5);
@@ -1909,6 +2084,8 @@ namespace PersAhwal
             this.Controls.Add(this.PanelMandounb);
             this.Controls.Add(this.fileManagePanel2);
             this.Controls.Add(this.flowLayoutPanel3);
+            this.Controls.Add(this.mangerArch);
+            this.Controls.Add(this.attendedVC);
             this.Name = "MainForm";
             this.Text = "قسم الأحوال الشخصية والمعاملات القنصلية";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
@@ -1929,6 +2106,8 @@ namespace PersAhwal
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView6)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picLock)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
@@ -1955,6 +2134,8 @@ namespace PersAhwal
             ((System.ComponentModel.ISupportInitialize)(this.picaddmonth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictremovemonth)).EndInit();
             this.paneloldPro.ResumeLayout(false);
+            this.flowLayoutPanel4.ResumeLayout(false);
+            this.flowLayoutPanel4.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2089,5 +2270,19 @@ namespace PersAhwal
         private System.Windows.Forms.ComboBox عدد_الفرص;
         private System.Windows.Forms.Timer timer3;
         private System.Windows.Forms.DataGridView dataGridView6;
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.TextBox txtOrgDate;
+        private System.Windows.Forms.TextBox txtModDate;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label alllabelarch;
+        private System.Windows.Forms.Button summery;
+        private System.Windows.Forms.Timer timer5;
+        private System.Windows.Forms.PictureBox picLock;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
+        private System.Windows.Forms.TextBox macAddress;
+        private System.Windows.Forms.Button button8;
     }
 }

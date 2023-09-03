@@ -54,7 +54,7 @@ namespace PersAhwal
         string[] colIDs = new string[100];
         string GregorianDate = "";
         string HijriDate = "";
-        public Form4(int Atvc, int currentRow, string EmpName, string dataSource, string filepathIn, string filepathOut, string jobposition, string gregorianDate, string hijriDate)
+        public Form4(int Atvc, int currentRow, string EmpName, string dataSource,  string filepathOut, string jobposition, string gregorianDate, string hijriDate)
         {
             InitializeComponent();
             //timer1.Enabled = true;
@@ -63,7 +63,7 @@ namespace PersAhwal
             التاريخ_الهجري.Text = HijriDate = hijriDate;
             ATVC = Atvc;
             DataSource = dataSource;
-            FilesPathIn = filepathIn + @"\";
+            //FilesPathIn = filepathIn + @"\";
             FilesPathOut = filepathOut;
             colIDs[4] = ConsulateEmpName = EmpName;
             Jobposition = jobposition;

@@ -53,7 +53,7 @@ namespace PersAhwal
         bool gridFill = true;
         bool gridFillauto = true;
         string AuthTitle = "نائب قنصل";
-        public Form2(int atvc,int currentRow, string EmpName, string dataSource, string filepathIn, string filepathOut, string jobposition, string gregorianDate, string hijriDate)
+        public Form2(int atvc,int currentRow, string EmpName, string dataSource, string filepathOut, string jobposition, string gregorianDate, string hijriDate)
         {
             InitializeComponent();
             //timer1.Enabled = true;
@@ -63,7 +63,7 @@ namespace PersAhwal
             التاريخ_الهجري.Text = HijriDate = hijriDate;
             ATVC = atvc;
             DataSource = dataSource;
-            FilesPathIn = filepathIn + @"\";
+           // FilesPathIn = filepathIn + @"\";
             FilesPathOut = filepathOut;
             colIDs[4] = ConsulateEmpName = EmpName;
             UserJobposition = jobposition;

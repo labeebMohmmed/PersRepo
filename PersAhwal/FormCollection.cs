@@ -125,12 +125,12 @@ namespace PersAhwal
         string wordCheck = "";
         string checkEnd = "";
 
-        public FormCollection(int allowedTimes, int Atvc, int currentRow, int DocumentType, string empName, string dataSource, string filepathIn, string filepathOut, string jobposition, string gregorianDate, string hijriDate)
+        public FormCollection(int allowedTimes, int Atvc, int currentRow, int DocumentType, string empName, string dataSource, string filepathOut, string jobposition, string gregorianDate, string hijriDate)
         {
             InitializeComponent();
             definColumn(dataSource);
             DataSource = dataSource;
-            FilespathIn = filepathIn;
+            //FilespathIn = filepathIn;
             FilespathOut = filepathOut + @"\";
             //MessageBox.Show(FilespathOut);
             fillSamplesCodes(dataSource);
@@ -2245,7 +2245,7 @@ namespace PersAhwal
                     returnedText[6] = appExp;
             }
             catch(Exception ex) {
-                returnedText = new string[6] { "P0", "جواز سفر", "", "", "", "ذكر" };
+                returnedText = new string[7] { "P0", "جواز سفر", "", "", "", "ذكر","" };
             }
             string query = "SELECT * FROM TableGenNames where الاسم like N'" + text.Text + "%'";
             SqlConnection sqlCon = new SqlConnection(DataSource);
@@ -2529,18 +2529,21 @@ namespace PersAhwal
             int id = Convert.ToInt32(TextID);
             if (textBox.Text == "")
             {
-                textInfo[0] = docNo.Split('_')[id];
-                textInfo[1] = docType.Split('_')[id];
-                if (textInfo[1] == "")
-                    textInfo[1] = "جواز سفر";
-                textInfo[2] = docIsuue.Split('_')[id];
-                textInfo[3] = appJob.Split('_')[id];
-                textInfo[4] = appBirth.Split('_')[id];
-                textInfo[5] = sex.Split('_')[id];
-                textInfo[6] = appExp.Split('_')[id];
-                if (textInfo[5] == "")
-                    textInfo[5] = "ذكر";
-
+                try
+                {
+                    textInfo[0] = docNo.Split('_')[id];
+                    textInfo[1] = docType.Split('_')[id];
+                    if (textInfo[1] == "")
+                        textInfo[1] = "جواز سفر";
+                    textInfo[2] = docIsuue.Split('_')[id];
+                    textInfo[3] = appJob.Split('_')[id];
+                    textInfo[4] = appBirth.Split('_')[id];
+                    textInfo[5] = sex.Split('_')[id];
+                    textInfo[6] = appExp.Split('_')[id];
+                    if (textInfo[5] == "")
+                        textInfo[5] = "ذكر";
+                }
+                catch (Exception ex) { }
                 //fillFirstInfo("", text[5], text[1], text[0], text[2], اللغة.Text, text[3], text[4], TextID);
 
             }
@@ -2789,7 +2792,7 @@ namespace PersAhwal
 
             oBMiss = System.Reflection.Missing.Value;
             oBMicroWord = new Word.Application();
-
+            MessageBox.Show(localCopy.Text);
             object objCurrentCopy = localCopy.Text;
 
             try
@@ -2806,35 +2809,78 @@ namespace PersAhwal
             string proType = "";
 
             if (addNameIndex > 1) proType = " متعدد";
-            string RouteFile = FilespathIn + docType + proType + proType1 + ".docx";
-            Console.WriteLine(RouteFile); 
-            //MessageBox.Show(RouteFile);
+            //string RouteFile = FilespathIn + docType + proType + proType1 + ".docx";
+            string RouteFile = docType + proType + proType1;
             if (appName != "")
                 localCopy.Text = FilespathOut + appName + DateTime.Now.ToString("ddmmss") + ".docx";
-            else localCopy.Text = FilespathOut + docId.Replace("/", "_") + DateTime.Now.ToString("ddmmss") + ".docx";
-            while (File.Exists(localCopy.Text))
-            {
-                if (appName != "")
-                    localCopy.Text = FilespathOut + appName + DateTime.Now.ToString("ddmmss") + ".docx";
-                else localCopy.Text = FilespathOut + docId.Replace("/", "_") + DateTime.Now.ToString("ddmmss") + ".docx";
-            }
-            //
-            try
-            {
-                System.IO.File.Copy(RouteFile, localCopy.Text);
-            }
-            catch (Exception ex)
-            {
-                goBack = true;
+            else 
+                localCopy.Text = FilespathOut + docId.Replace("/", "_") + DateTime.Now.ToString("ddmmss") + ".docx";
+            //MessageBox.Show("1 " + localCopy.Text);
+            OpenModelFile(RouteFile, false, localCopy.Text);
+            //while (File.Exists(localCopy.Text))
+            //{
+            //    if (appName != "")
+            //        localCopy.Text = FilespathOut + appName + DateTime.Now.ToString("ddmmss") + ".docx";
+            //    else localCopy.Text = FilespathOut + docId.Replace("/", "_") + DateTime.Now.ToString("ddmmss") + ".docx";
 
-                return;
-            }
+            //    MessageBox.Show("2 " + localCopy.Text); 
+            //    localCopy.Text = OpenModelFile(RouteFile, false, localCopy.Text);
+            //}
+            
+
+            //try
+            //{
+            //    //System.IO.File.Copy(RouteFile, localCopy.Text);
+            //    //MessageBox.Show(localCopy.Text);
+                
+            //}
+            //catch (Exception ex)
+            //{
+            //    goBack = true;
+
+            //    return;
+            //}
             goBack = false;
-            FileInfo fileInfo = new FileInfo(localCopy.Text);
-            if (fileInfo.IsReadOnly) fileInfo.IsReadOnly = false;
+            //FileInfo fileInfo = new FileInfo(localCopy.Text);
+            //if (fileInfo.IsReadOnly) fileInfo.IsReadOnly = false;
             Console.WriteLine(localCopy.Text);
-            //MessageBox.Show(localCopy.Text);
+            //MessageBox.Show("3 " + localCopy.Text);
         }
+
+        private string OpenModelFile(string documen, bool printOut, string FileName)
+        {
+            string query = "SELECT ID, المستند,Data1, Extension1 from TableModelFiles where المستند=N'" + documen.Split('.')[0] + "'";
+
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            foreach (DataRow reader in dtbl.Rows)
+            {
+                var name = reader["المستند"].ToString();
+                if (name == "")
+                {
+                    return "";
+                }
+                try
+                {
+                    var Data = (byte[])reader["Data1"];
+                    string ext = ".docx";
+                    //FileName = name.Replace(ext, DateTime.Now.ToString("ddMMyyyyhhmmss")) + ext;
+                    File.WriteAllBytes(FileName, Data);
+                    if (printOut)
+                        System.Diagnostics.Process.Start(FileName);
+                }
+                catch (Exception ex) { return ""; }
+            }
+            sqlCon.Close();
+            return FileName;
+        }
+
         private void btnNext_Click(object sender, EventArgs e)
         {
             if (currentPanelIndex <= 4)

@@ -47,7 +47,7 @@ namespace PersAhwal
         string GregorianDate = "";
         string HijriDate = "";
         string AuthTitle = "نائب قنصل";
-        public Form6(int Atvc, int currentRow, string EmpName, string dataSource, string filepathIn, string filepathOut, string jobposition, string gregorianDate, string hijriDate)
+        public Form6(int Atvc, int currentRow, string EmpName, string dataSource,  string filepathOut, string jobposition, string gregorianDate, string hijriDate)
         {
             InitializeComponent();
             //timer1.Enabled = true;
@@ -57,7 +57,7 @@ namespace PersAhwal
             ATVC = Atvc;
             DataSource = dataSource;
             AttendViceConsul.SelectedIndex = 2;
-            FilesPathIn = filepathIn + @"\";
+            //FilesPathIn = filepathIn + @"\";
             FilesPathOut = filepathOut;
             colIDs [4] = ConsulateEmpName = EmpName;
             Jobposition = jobposition;

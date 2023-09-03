@@ -953,10 +953,10 @@
             "محمد عثمان عكاشة الحسين",
             "يوسف صديق أبوعاقلة",
             "لبيب محمد أحمد"});
-            this.موقع_المعاملة.Location = new System.Drawing.Point(16, 370);
+            this.موقع_المعاملة.Location = new System.Drawing.Point(39, 370);
             this.موقع_المعاملة.Name = "موقع_المعاملة";
             this.موقع_المعاملة.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.موقع_المعاملة.Size = new System.Drawing.Size(255, 35);
+            this.موقع_المعاملة.Size = new System.Drawing.Size(232, 35);
             this.موقع_المعاملة.TabIndex = 666;
             this.موقع_المعاملة.SelectedIndexChanged += new System.EventHandler(this.موقع_المعاملة_SelectedIndexChanged);
             this.موقع_المعاملة.TextChanged += new System.EventHandler(this.موقع_المعاملة_TextChanged);
@@ -965,7 +965,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(10, 367);
+            this.label2.Location = new System.Drawing.Point(33, 367);
             this.label2.Name = "label2";
             this.label2.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.label2.Size = new System.Drawing.Size(0, 27);

@@ -83,6 +83,16 @@ namespace PersAhwal.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap admin {
+            get {
+                object obj = ResourceManager.GetObject("admin", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap archive {
             get {
                 object obj = ResourceManager.GetObject("archive", resourceCulture);
@@ -203,6 +213,16 @@ namespace PersAhwal.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap auth {
+            get {
+                object obj = ResourceManager.GetObject("auth", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap computer_icons_businessperson_business_to_business_service_business {
             get {
                 object obj = ResourceManager.GetObject("computer-icons-businessperson-business-to-business-service-business", resourceCulture);
@@ -216,6 +236,16 @@ namespace PersAhwal.Properties {
         internal static System.Drawing.Bitmap computer_icons_businessperson_business_to_business_service_business1 {
             get {
                 object obj = ResourceManager.GetObject("computer-icons-businessperson-business-to-business-service-business1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap computer_icons_system_administrator_clip_art_administrator_icon {
+            get {
+                object obj = ResourceManager.GetObject("computer-icons-system-administrator-clip-art-administrator-icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -407,6 +437,16 @@ namespace PersAhwal.Properties {
         internal static System.Drawing.Bitmap png_clipart_computer_icons_back_icon_cdr_angle {
             get {
                 object obj = ResourceManager.GetObject("png-clipart-computer-icons-back-icon-cdr-angle", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap png_lock_picture_lock_2_icon_1600 {
+            get {
+                object obj = ResourceManager.GetObject("png-lock-picture-lock-2-icon-1600", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -60,7 +60,7 @@ namespace PersAhwal
         string GregorianDate = "";
         string HijriDate = "";
         string AuthTitle = "نائب قنصل";
-        public Form3(int Atvc ,int currentRow, int IqrarType, string EmpName, string dataSource, string filepathIn, string filepathOut, string jobposition, string gregorianDate, string hijriDate)
+        public Form3(int Atvc ,int currentRow, int IqrarType, string EmpName, string dataSource,  string filepathOut, string jobposition, string gregorianDate, string hijriDate)
         {
             InitializeComponent();
             colIDs[4] = ConsulateEmpName = EmpName;
@@ -76,7 +76,7 @@ namespace PersAhwal
             DataSource = dataSource;
             //timer1.Enabled = true;
             //timer2.Enabled = true;
-            FilesPathIn = filepathIn + @"\";
+            //FilesPathIn = filepathIn + @"\";
             FilesPathOut = filepathOut;
             Jobposition = jobposition;
             FillDataGridView();

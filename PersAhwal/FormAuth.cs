@@ -44,6 +44,7 @@ using Path = System.IO.Path;
 using OfficeOpenXml.Drawing.Controls;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Web;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace PersAhwal
 {
@@ -189,10 +190,10 @@ namespace PersAhwal
         string appBirth = "";
         string appExp = "";
         string lawFulModel = "";
-        public FormAuth(int allowedTimes, int atvc, int rowid, string AuthNo, string datasource, string filespathIn, string filespathOut, string empName, string jobposition, string greDate, string hijriDate, bool testItems)
+        public FormAuth(int allowedTimes, int atvc, int rowid, string AuthNo, string datasource, string filespathOut, string empName, string jobposition, string greDate, string hijriDate, bool testItems)
         {
             InitializeComponent();
-            FilespathIn = filespathIn;
+            //FilespathIn = filespathIn;
             FilespathOut = filespathOut + @"\";
             test = testItems;
             Atvc = atvc;
@@ -3593,13 +3594,71 @@ namespace PersAhwal
             return text;
         }
 
+        private void OpenModelFile(string documen, bool printOut, string FileName)
+        {
+            string query = "SELECT ID, المستند,Data1, Extension1 from TableModelFiles where المستند=N'" + documen.Split('.')[0]+"'";
 
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            foreach (DataRow reader in dtbl.Rows)
+            {
+                var name = reader["المستند"].ToString();
+                if (name == "")
+                {
+                    return ;
+                }
+                try
+                {
+                    var Data = (byte[])reader["Data1"];
+                    string ext = ".docx";
+                    FileName = name.Replace(ext, DateTime.Now.ToString("ddMMyyyyhhmmss")) + ext;
+                    File.WriteAllBytes(FileName, Data);
+                    if (printOut)
+                        System.Diagnostics.Process.Start(FileName);
+                }
+                catch (Exception ex) { return ; }
+            }
+            sqlCon.Close();            
+        }
 
         private void chooseDocxFile(string appName, string docId, string docType, bool visible)
         {
             string RouteFile;
             string strID = "1";
             string docName = docId.Split('/')[2] + docId.Split('/')[3] + docId.Split('/')[4] + "_";
+
+            //if (visible)
+            //{
+            //    strID = "2";
+            //}
+
+            //if (addNameIndex == 1)
+            //{
+            //    RouteFile = FilespathIn + "SingleAuth" + strID + ".docx";
+            //}
+            //else
+            //{
+            //    RouteFile = FilespathIn + "MultiAuth" + strID + ".docx";
+            //}
+            //if (docType == "شهادة ميلاد")
+            //    RouteFile = FilespathIn + "newAuthbirth" + strID + ".docx";
+
+            //localCopy.Text = FilespathOut + docName + DateTime.Now.ToString("ddmmss") + ".docx";
+
+            //while (File.Exists(localCopy.Text))
+            //{
+            //    localCopy.Text = FilespathOut + docName + DateTime.Now.ToString("ddmmss") + ".docx";
+            //}
+            //System.IO.File.Copy(RouteFile, localCopy.Text);
+            ////MessageBox.Show(localCopy.Text);    
+            //FileInfo fileInfo = new FileInfo(localCopy.Text);
+            //if (fileInfo.IsReadOnly) fileInfo.IsReadOnly = false;
 
             if (visible)
             {
@@ -3608,22 +3667,18 @@ namespace PersAhwal
 
             if (addNameIndex == 1)
             {
-                RouteFile = FilespathIn + "SingleAuth" + strID + ".docx";
+                RouteFile = "SingleAuth" + strID + ".docx";
             }
             else
             {
-                RouteFile = FilespathIn + "MultiAuth" + strID + ".docx";
+                RouteFile = "MultiAuth" + strID + ".docx";
             }
             if (docType == "شهادة ميلاد")
                 RouteFile = FilespathIn + "newAuthbirth" + strID + ".docx";
 
             localCopy.Text = FilespathOut + docName + DateTime.Now.ToString("ddmmss") + ".docx";
-            while (File.Exists(localCopy.Text))
-            {
-                localCopy.Text = FilespathOut + docName + DateTime.Now.ToString("ddmmss") + ".docx";
-            }
-            System.IO.File.Copy(RouteFile, localCopy.Text);
-            //MessageBox.Show(localCopy.Text);    
+            OpenModelFile(RouteFile, false, localCopy.Text);
+            //System.IO.File.Copy(RouteFile, localCopy.Text);
             FileInfo fileInfo = new FileInfo(localCopy.Text);
             if (fileInfo.IsReadOnly) fileInfo.IsReadOnly = false;
         }
@@ -3828,10 +3883,10 @@ namespace PersAhwal
                     }
                     break;
                 case 3:
-                    
                     checkAutoUpdate.Checked = false;
+                    الصفة_القانونية.Text = removeSpaceSub(الصفة_القانونية.Text);
                     قائمة_الحقوق.Text = removeSpaceRight(قائمة_الحقوق.Text);
-                    txtReview.Text = removeSpaceSub(txtReview.Text);
+                    txtReview.Text = removeSpaceSub(txtReview.Text);                    
                     SuffConvertments(txtReview, صفة_مقدم_الطلب_off.SelectedIndex, صفة_الموكل_off.SelectedIndex);
                     SuffConvertments(قائمة_الحقوق, صفة_مقدم_الطلب_off.SelectedIndex, صفة_الموكل_off.SelectedIndex);
                     SuffConvertments(الصفة_القانونية, صفة_مقدم_الطلب_off.SelectedIndex, صفة_الموكل_off.SelectedIndex);
