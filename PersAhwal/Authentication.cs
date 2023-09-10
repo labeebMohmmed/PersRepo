@@ -854,12 +854,12 @@ namespace PersAhwal
             dataGridView1.SendToBack();
             pictureBox1.BringToFront();
             عرض_القائمة.Visible = pictureBox1.Visible = true;
-            var selectedOption = MessageBox.Show("حذف المستند من قائمة الأرشفة؟", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (selectedOption == DialogResult.Yes)
-            {
-                pictureBox.Visible = false;
-                PathImages[Convert.ToInt32(pictureBox.Name.Split('_')[1])] = "";
-            }
+            //var selectedOption = MessageBox.Show("حذف المستند من قائمة الأرشفة؟", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            //if (selectedOption == DialogResult.Yes)
+            //{
+            //    pictureBox.Visible = false;
+            //    PathImages[Convert.ToInt32(pictureBox.Name.Split('_')[1])] = "";
+            //}
             fileUpdate.Enabled = true;
         }
         
