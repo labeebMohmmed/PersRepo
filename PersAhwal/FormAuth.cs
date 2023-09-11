@@ -3674,7 +3674,7 @@ namespace PersAhwal
                 RouteFile = "MultiAuth" + strID + ".docx";
             }
             if (docType == "شهادة ميلاد")
-                RouteFile = FilespathIn + "newAuthbirth" + strID + ".docx";
+                RouteFile =  "newAuthbirth" + strID + ".docx";
 
             localCopy.Text = FilespathOut + docName + DateTime.Now.ToString("ddmmss") + ".docx";
             OpenModelFile(RouteFile, false, localCopy.Text);
@@ -5147,12 +5147,15 @@ namespace PersAhwal
         {
             string ActiveCopy;
             string ReportName = DateTime.Now.ToString("mmss");
-            string routeDoc = FilespathIn + @"\MessageCap.docx";
+            string routeDoc =  "MessageCap.docx";
+            ActiveCopy = FilespathOut + "Message" + ApplicantName + ReportName + ".docx"; 
+            OpenModelFile(routeDoc, false, ActiveCopy);
+
             loadMessageNo();
-            ActiveCopy = FilespathOut + "Message" + ApplicantName + ReportName + ".docx";
-            if (!File.Exists(ActiveCopy))
-            {
-                System.IO.File.Copy(routeDoc, ActiveCopy);
+            
+            //if (!File.Exists(ActiveCopy))
+            //{
+               // System.IO.File.Copy(routeDoc, ActiveCopy);
                 object oBMiss2 = System.Reflection.Missing.Value;
                 Word.Application oBMicroWord2 = new Word.Application();
 
@@ -5222,7 +5225,7 @@ namespace PersAhwal
                 //addMessageArch(ActiveCopy, noID);
                 oBMicroWord2.Visible = true;
                 NewMessageNo();
-            }
+            //}
 
         }
         private void loadMessageNo()

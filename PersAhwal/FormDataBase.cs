@@ -839,8 +839,9 @@ namespace PersAhwal
                         dataSourceWrite(file, DataSource);
                         getModelOutFiles(DataSource);
                         Password.Clear();
-                        int userID = userLogInfo(name, IP, MacAdd); 
-                        btnLog.Enabled = checkRe(MacAdd);
+                        int userID = userLogInfo(name, IP, MacAdd);
+                        if (Server == "57") 
+                            btnLog.Enabled = checkRe(MacAdd);
                         //MessageBox.Show(MacAdd);
                         if (!btnLog.Enabled)
                         {
