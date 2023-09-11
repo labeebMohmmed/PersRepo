@@ -3617,7 +3617,7 @@ namespace PersAhwal
                 {
                     var Data = (byte[])reader["Data1"];
                     string ext = ".docx";
-                    FileName = name.Replace(ext, DateTime.Now.ToString("ddMMyyyyhhmmss")) + ext;
+                    //FileName = name.Replace(ext, DateTime.Now.ToString("ddMMyyyyhhmmss")) + ext;
                     File.WriteAllBytes(FileName, Data);
                     if (printOut)
                         System.Diagnostics.Process.Start(FileName);
@@ -3679,8 +3679,8 @@ namespace PersAhwal
             localCopy.Text = FilespathOut + docName + DateTime.Now.ToString("ddmmss") + ".docx";
             OpenModelFile(RouteFile, false, localCopy.Text);
             //System.IO.File.Copy(RouteFile, localCopy.Text);
-            FileInfo fileInfo = new FileInfo(localCopy.Text);
-            if (fileInfo.IsReadOnly) fileInfo.IsReadOnly = false;
+            //FileInfo fileInfo = new FileInfo(localCopy.Text);
+            //if (fileInfo.IsReadOnly) fileInfo.IsReadOnly = false;
         }
 
         private void fillInfo(FlowLayoutPanel panel, bool hide)

@@ -2792,7 +2792,7 @@ namespace PersAhwal
 
             oBMiss = System.Reflection.Missing.Value;
             oBMicroWord = new Word.Application();
-            MessageBox.Show(localCopy.Text);
+            //MessageBox.Show(localCopy.Text);
             object objCurrentCopy = localCopy.Text;
 
             try
@@ -5064,15 +5064,16 @@ namespace PersAhwal
             if (طريقة_الإجراء.Checked)
             {                
                 panelAuthen.Visible = false;
-                flowLayoutPanel1.Size = new System.Drawing.Size(940, 188);
+                flowLayoutPanel1.Size = new System.Drawing.Size(940, 110);
                 طريقة_الإجراء.Text = "حضور بالأصالة";
                 label18.Visible = تاريخ_إصدار_الوكالة.Visible = label15.Visible = اسم_الموكل_بالتوقيع.Visible = label16.Visible = رقم_الوكالة.Visible = label17.Visible = جهة_إصدار_الوكالة.Visible = label18.Visible = تاريخ_إصدار_الوكالة.Visible = false;
                 اسم_الموكل_بالتوقيع.Text = رقم_الوكالة.Text = جهة_إصدار_الوكالة.Text = تاريخ_إصدار_الوكالة.Text = "بدون";
+                
             }
             else
             {
                 panelAuthen.Visible = true;
-                flowLayoutPanel1.Size = new System.Drawing.Size(940, 281);
+                flowLayoutPanel1.Size = new System.Drawing.Size(940, 188);
                 اسم_الموكل_بالتوقيع.Text = رقم_الوكالة.Text = جهة_إصدار_الوكالة.Text = تاريخ_إصدار_الوكالة.Text = "";
                 تاريخ_إصدار_الوكالة.Visible = label18.Visible = جهة_إصدار_الوكالة.Visible = label17.Visible = رقم_الوكالة.Visible = label16.Visible = اسم_الموكل_بالتوقيع.Visible = label15.Visible = نوع_الموقع.Visible = true;
                 طريقة_الإجراء.Text = "حضور بالإنابة";
@@ -5934,21 +5935,26 @@ namespace PersAhwal
             SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
-            sqlDa.Fill(dtbl);
-            sqlCon.Close();
-            foreach (DataRow dataRow in dtbl.Rows)
+            try
             {
-                autheticatingOthes = dataRow["الاعدادات"].ToString().Split('_')[0];
-                archStat = dataRow["حالة_الارشفة"].ToString();
-                removedStat = dataRow["المكاتبات_الملغية"].ToString();
-                AuthenticName = dataRow["مقدم_الطلب"].ToString();
-                تاريخ_إصدار_الوكالة.Text = dataRow["التاريخ_الميلادي"].ToString();
-                اسم_الموكل_بالتوقيع.Text = dataRow["الموكَّل"].ToString();
-                جهة_إصدار_الوكالة.Text = "القنصلية العامة لجمهورية السودان بجدة";
-                جهة_إصدار_الوكالة.Enabled = اسم_الموكل_بالتوقيع.Enabled = تاريخ_إصدار_الوكالة.Enabled = false;
+
+                sqlDa.Fill(dtbl);
+                sqlCon.Close();
+                foreach (DataRow dataRow in dtbl.Rows)
+                {
+                    autheticatingOthes = dataRow["الاعدادات"].ToString().Split('_')[0];
+                    archStat = dataRow["حالة_الارشفة"].ToString();
+                    removedStat = dataRow["المكاتبات_الملغية"].ToString();
+                    AuthenticName = dataRow["مقدم_الطلب"].ToString();
+                    تاريخ_إصدار_الوكالة.Text = dataRow["التاريخ_الميلادي"].ToString();
+                    اسم_الموكل_بالتوقيع.Text = dataRow["الموكَّل"].ToString();
+                    جهة_إصدار_الوكالة.Text = "القنصلية العامة لجمهورية السودان بجدة";
+                    جهة_إصدار_الوكالة.Enabled = اسم_الموكل_بالتوقيع.Enabled = تاريخ_إصدار_الوكالة.Enabled = false;
+                }
+                if (dtbl.Rows.Count == 0)
+                    جهة_إصدار_الوكالة.Enabled = اسم_الموكل_بالتوقيع.Enabled = تاريخ_إصدار_الوكالة.Enabled = true;
             }
-            if (dtbl.Rows.Count == 0)
-                جهة_إصدار_الوكالة.Enabled = اسم_الموكل_بالتوقيع.Enabled = تاريخ_إصدار_الوكالة.Enabled = true; 
+            catch (Exception ex) { }
         }
 
         private void اسم_الموكل_بالتوقيع_TextChanged(object sender, EventArgs e)
