@@ -660,6 +660,7 @@ namespace PersAhwal
         {
             //string RouteFile = FilespathIn + "TableMerrageDoc.docx";
             //string RouteFile1 = FilespathIn + "merriageDocs.docx";
+            localCopy_off = "";
             if (name != "")
                 localCopy_off = FilespathOut +@"\"+ name + DateTime.Now.ToString("ddmmss") + ".docx";
             else localCopy_off = FilespathOut + @"\" + docId.Replace("/", "_") + DateTime.Now.ToString("ddmmss") + ".docx";
@@ -671,9 +672,10 @@ namespace PersAhwal
             }
             //
             //System.IO.File.Copy(RouteFile, localCopy_off);
+           // MessageBox.Show(localCopy_off);
             OpenModelFile("TableMerrageDoc", false, localCopy_off);
-            FileInfo fileInfo = new FileInfo(localCopy_off);
-            if (fileInfo.IsReadOnly) fileInfo.IsReadOnly = false;
+            //FileInfo fileInfo = new FileInfo(localCopy_off);
+            //if (fileInfo.IsReadOnly) fileInfo.IsReadOnly = false;
             
             if (name != "")
                 localCopy_off1 = FilespathOut + @"\" + name + DateTime.Now.ToString("ddmmss") + "1.docx";

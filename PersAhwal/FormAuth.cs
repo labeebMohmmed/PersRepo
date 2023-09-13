@@ -189,6 +189,7 @@ namespace PersAhwal
         string appJob = "";
         string appBirth = "";
         string appExp = "";
+        string year = "";
         string lawFulModel = "";
         public FormAuth(int allowedTimes, int atvc, int rowid, string AuthNo, string datasource, string filespathOut, string empName, string jobposition, string greDate, string hijriDate, bool testItems)
         {
@@ -205,8 +206,10 @@ namespace PersAhwal
             Jobposition = jobposition;
             التاريخ_الميلادي.Text = GreDate = greDate;
             التاريخ_الهجري.Text = HijriDate = hijriDate;
+            year = greDate.Split('-')[2];
+            fillYears(yearSel);
             genPreperations();
-            FillDataGridView(DataSource);
+            FillDataGridView(DataSource, year);
             getMaxRange(DataSource);
             اسم_الموظف.Text = EmpName;
             
@@ -215,6 +218,33 @@ namespace PersAhwal
             legend1 = new Legend();
             chartArea1 = new ChartArea();
         }
+
+        private void fillYears(ComboBox combo)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            combo.Items.Clear();
+            combo.Items.Add("جميع الأعوام");
+            string query = "select distinct DATENAME(YEAR, التاريخ) as years from TableGeneralArch order by DATENAME(YEAR, التاريخ) desc";
+            SqlConnection Con = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
+            if (Con.State == ConnectionState.Closed)
+                try
+                {
+                    Con.Open();
+                    SqlDataAdapter sqlDa = new SqlDataAdapter(query, Con);
+                    sqlDa.SelectCommand.CommandType = CommandType.Text;
+                    DataTable dtbl2 = new DataTable();
+                    sqlDa.Fill(dtbl2);
+                    sqlCon.Close();
+                    foreach (DataRow dataRow in dtbl2.Rows)
+                    {
+                        if(dataRow["years"].ToString().Length == 4) 
+                            combo.Items.Add(dataRow["years"].ToString());
+                    }
+                }
+                catch (Exception ex) { }
+           
+        }
+
         private void fillSamplesCodes(string source)
         {
             using (SqlConnection saConn = new SqlConnection(source))
@@ -3718,7 +3748,7 @@ namespace PersAhwal
         {
             if (currentPanelIndex > 0) currentPanelIndex--;
             else return;
-            if (currentPanelIndex == 0) FillDataGridView(DataSource);
+            if (currentPanelIndex == 0) FillDataGridView(DataSource, year);
             panelShow(currentPanelIndex);
             btnPrevious.BringToFront();
             btnNext.BringToFront();
@@ -5621,7 +5651,7 @@ namespace PersAhwal
             deleteRowsData(رقم_التوكيل.Text, "docID", "archives", DataSource);
             deleteRowsData(رقم_التوكيل.Text, "رقم_معاملة_القسم", "TableGeneralArch", DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
 
-            FillDataGridView(DataSource);
+            FillDataGridView(DataSource, year);
         }
         private void deleteRowsData(string docID, string docIDName, string v2, string source)
         {
@@ -6183,12 +6213,16 @@ namespace PersAhwal
 
         }
 
-        public void FillDataGridView(string dataSource)
+        public void FillDataGridView(string dataSource, string year)
         {
+            string query = "select * from TableAuth where DATEPART(year,التاريخ_الميلادي) =" + year +" order by ID";
+            if (year == "جميع الأعوام")
+                query = "select * from TableAuth order by ID";
+            Console.WriteLine(query);
             SqlConnection sqlCon = new SqlConnection(dataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
-            SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableAuth", sqlCon);
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
             sqlDa.Fill(dtbl);
@@ -7841,6 +7875,16 @@ namespace PersAhwal
                 الأهلية.Text = "الأهلية المعززة";
                 الصفة_القانونية.Enabled = true;
             }
+        }
+
+        private void yearSel_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            FillDataGridView(DataSource, yearSel.Text);
+        }
+
+        private void label13_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)

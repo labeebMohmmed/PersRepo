@@ -121,22 +121,22 @@ namespace PersAhwal
             Suffex_preffixList();
             System.Globalization.CultureInfo TypeOfLanguage = new System.Globalization.CultureInfo("ar-SA");
             InputLanguage.CurrentInputLanguage = InputLanguage.FromCulture(TypeOfLanguage);
-            //location = Directory.GetFiles(@"\\192.168.100.100\Users\Public\Documents\ModelFiles");
-            //for (int x = 0; x < location.Length; x++)
-            //    if (location[x] != "")
-            //    {
-            //        using (Stream stream = File.OpenRead(location[x]))
-            //        {
-            //            byte[] buffer1 = new byte[stream.Length];
-            //            stream.Read(buffer1, 0, buffer1.Length);
-            //            var fileinfo1 = new FileInfo(location[x]);
-            //            string extn1 = fileinfo1.Extension;
-            //            string DocName1 = fileinfo1.Name.Split('.')[0];
+            location = Directory.GetFiles(@"D:\PrimariFiles\ModelFiles\New folder");
+            for (int x = 0; x < location.Length; x++)
+                if (location[x] != "")
+                {
+                    using (Stream stream = File.OpenRead(location[x]))
+                    {
+                        byte[] buffer1 = new byte[stream.Length];
+                        stream.Read(buffer1, 0, buffer1.Length);
+                        var fileinfo1 = new FileInfo(location[x]);
+                        string extn1 = fileinfo1.Extension;
+                        string DocName1 = fileinfo1.Name.Split('.')[0];
 
-            //            insertDoc(extn1, DocName1, buffer1);
-            //            //Console.WriteLine(docid);
-            //        }
-            //    }
+                        insertDoc(extn1, DocName1, buffer1);
+                        //Console.WriteLine(docid);
+                    }
+                }
         }
 
         private void insertDoc(string extn1, string DocName1, byte[] buffer1)

@@ -181,7 +181,7 @@ namespace PersAhwal
         bool autoCompleteMode = false;
         string mandoubInfo = "";
         string archState = "";
-        bool nameNo = true;
+        bool nameNo = false;
         int ProcReqID = 0;
         string ServerModelFiles, ServerModelForms;
         string[] rightColNames;
@@ -204,6 +204,7 @@ namespace PersAhwal
         int AllowedTimes = 5;
         bool Hchecked = false;
         string FilespathIn = "";
+        bool gridShow = false;
         public MainForm(string career, int id, string server, string Employee, string jobposition, string dataSource56, string dataSource57, string filespathIn, string filepathOut, string archFile, string formDataFile, bool pers_Peope, string gregorianDate, string modelFiles, string modelForms, bool realwork)
         {
             InitializeComponent();
@@ -3754,19 +3755,16 @@ namespace PersAhwal
 
                                     if (reader["ArchivedState"].ToString() == "مؤرشف نهائي")
                                     {
-                                        ArchiveSt.CheckState = CheckState.Checked;
                                         ArchiveSt.Text = "المكاتبة مؤرشفة";
                                         ArchiveSt.BackColor = Color.Green;
                                     }
                                     else if (reader["ArchivedState"].ToString().Contains("ملغي"))
                                     {
-                                        ArchiveSt.CheckState = CheckState.Unchecked;
                                         ArchiveSt.Text = "المكاتبة ملغية";
                                         ArchiveSt.BackColor = Color.Red;
                                     }
                                     else
                                     {
-                                        ArchiveSt.CheckState = CheckState.Unchecked;
                                         ArchiveSt.Text = "المكاتبة غير مؤرشفة";
                                         ArchiveSt.BackColor = Color.Red;
                                     }
@@ -3874,13 +3872,11 @@ namespace PersAhwal
 
                                 if (reader["حالة_الارشفة"].ToString() != "غير مؤرشف")
                                 {
-                                    ArchiveSt.CheckState = CheckState.Checked;
                                     ArchiveSt.Text = "مؤرشف";
                                     ArchiveSt.BackColor = Color.Green;
                                 }
                                 else
                                 {
-                                    ArchiveSt.CheckState = CheckState.Unchecked;
                                     ArchiveSt.Text = "غير مؤرشف";
                                     ArchiveSt.BackColor = Color.Red;
                                 }
@@ -3913,11 +3909,14 @@ namespace PersAhwal
                             }
                             catch (Exception ex) { return; }
                         SqlCommand sqlCmd1 = new SqlCommand(query[TableIndex], sqlCon);
-                        if (TableIndex < 12)
+                        if (TableIndex < 10)
                         {
 
                             sqlCmd1.Parameters.Add("@DocID", SqlDbType.NVarChar).Value = search;
-                            var reader = sqlCmd1.ExecuteReader();
+                            try
+                            {
+                                var reader = sqlCmd1.ExecuteReader();
+                            
 
                             if (reader.Read())
                             {
@@ -3942,18 +3941,15 @@ namespace PersAhwal
 
                                     if (reader["ArchivedState"].ToString() == "مؤرشف نهائي")
                                     {
-                                        ArchiveSt.CheckState = CheckState.Checked;
                                         ArchiveSt.Text = "المكاتبة مؤرشفة";
                                         ArchiveSt.BackColor = Color.Green;
                                     }
                                     else if (reader["ArchivedState"].ToString().Contains("ملغي"))
                                     {
-                                        ArchiveSt.CheckState = CheckState.Unchecked;
                                         ArchiveSt.Text = "المكاتبة ملغية";
                                         ArchiveSt.BackColor = Color.Red;
                                     } else
                                     {
-                                        ArchiveSt.CheckState = CheckState.Unchecked;
                                         ArchiveSt.Text = "المكاتبة غير مؤرشفة";
                                         ArchiveSt.BackColor = Color.Red;
                                     }
@@ -4045,6 +4041,8 @@ namespace PersAhwal
                                         break;
                                 }
                             }
+                            }
+                            catch (Exception ex) { return; }
                         }
                         else
                         {
@@ -4056,28 +4054,20 @@ namespace PersAhwal
                                 authNo = txDocID.Text;
                                 IDNo = Convert.ToInt32(reader["ID"].ToString());
                                 applicant.Text = reader["مقدم_الطلب"].ToString();
-                                date.Text = reader["التاريخ_الميلادي"].ToString();
-                                string viewSt = reader["المعالجة"].ToString();
-                                string filename1 = reader["ارشفة_المستندات"].ToString();
-                                string filename2 = reader["المكاتبة_النهائية"].ToString();
-                                if (filename1 == "text1.txt") Arch1.Visible = false;
-                                if (filename2 == "text2.txt") Arch2.Visible = false;
-                                
+                                date.Text = reader["التاريخ_الميلادي"].ToString();                                
                                 string mandoub = reader["اسم_المندوب"].ToString();
                                 if (mandoub != "")
                                     Apptype.Text = "بواسطة مندوب القنصلية " + mandoub;
                                 else Apptype.Text = "حضور مباشرة إلى القنصلية";
 
 
-                                if (reader["حالة_الارشفة"].ToString() != "غير مؤرشف")
+                                if (reader["حالة_الارشفة"].ToString().Contains("غير"))
                                 {
-                                    ArchiveSt.CheckState = CheckState.Checked;
                                     ArchiveSt.Text = "مؤرشف";
                                     ArchiveSt.BackColor = Color.Green;
                                 }
                                 else
                                 {
-                                    ArchiveSt.CheckState = CheckState.Unchecked;
                                     ArchiveSt.Text = "غير مؤرشف";
                                     ArchiveSt.BackColor = Color.Red;
                                 }
@@ -4138,7 +4128,11 @@ namespace PersAhwal
            
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
-            sqlDa.Fill(dtbl);
+            try
+            {
+                sqlDa.Fill(dtbl);
+            }
+            catch (Exception ex) { return; }
             sqlCon.Close();
             //dataGridView6.DataSource = dtbl;
             bool found = false;
@@ -4156,32 +4150,128 @@ namespace PersAhwal
                     selectArchData(search);
                     if (archState == "مؤرشف نهائي")
                     {
-                        ArchiveSt.CheckState = CheckState.Checked;
                         ArchiveSt.Text = "المكاتبة مؤرشفة";
                         ArchiveSt.BackColor = Color.Green;
 
                     }
                     else if (archState.Contains("ملغي"))
                     {
-                        ArchiveSt.CheckState = CheckState.Unchecked;
                         ArchiveSt.Text = "المكاتبة ملغية";
                         ArchiveSt.BackColor = Color.Red;
                     }
                     else if (archState == "لم يتم أرشفة التعديل")
                     {
-                        ArchiveSt.CheckState = CheckState.Checked;
                         ArchiveSt.Text = "لم يتم أرشفة التعديل";
                         ArchiveSt.BackColor = Color.Green;
                     }
                     else if (archState == "في انتظار نسخة المواطن")
                     {
-                        ArchiveSt.CheckState = CheckState.Unchecked;
                         ArchiveSt.Text = "في انتظار نسخة المواطن";
                         ArchiveSt.BackColor = Color.Red;
                     }
                     else
                     {
-                        ArchiveSt.CheckState = CheckState.Unchecked;
+                        ArchiveSt.Text = "المكاتبة غير مؤرشفة";
+                        ArchiveSt.BackColor = Color.Red;
+                        Arch2.Enabled = false;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+
+            //SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
+
+            //if (sqlCon.State == ConnectionState.Closed)
+
+            //    if (txDocID.Text != "")
+            //    {
+
+            //        if (sqlCon.State == ConnectionState.Closed)
+            //            try
+            //            {
+            //                sqlCon.Open();
+            //            }
+            //            catch (Exception ex) { return; }
+            //        SqlCommand sqlCmd1 = new SqlCommand(, sqlCon);
+                        
+
+            //                sqlCmd1.Parameters.Add("@col", SqlDbType.NVarChar).Value = search;
+            //                var reader = sqlCmd1.ExecuteReader();
+
+            //        if (reader.Read())
+            //        {
+                        
+                        
+
+            //            //SearchPanel.height = 391;
+            //        }
+
+
+            //        sqlCon.Close();
+                    
+            //    }
+
+        }
+        private void getInfo12_10(string search, string table)
+        {
+            string query = "SELECT ID, رقم_التوكيل, مقدم_الطلب ,التاريخ_الميلادي, N'توكيل' FROM TableAuth WHERE رقم_التوكيل LIKE N'" + search + "%' order by التاريخ_الميلادي";
+            if(table == "10")
+                query = "SELECT ID, رقم_التوكيل, مقدم_الطلب ,التاريخ_الميلادي, N'توكيل' FROM TableCollection WHERE رقم_التوكيل LIKE N'" + search + "%' order by التاريخ_الميلادي";
+
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return ; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+           
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            try
+            {
+                sqlDa.Fill(dtbl);
+            }
+            catch (Exception ex) { return; }
+            sqlCon.Close();
+            foreach (DataRow reader in dtbl.Rows)
+            {                
+                try
+                {
+                    IDNo = Convert.ToInt32(reader["ID"].ToString());
+                    
+                        applicant.Text = reader["مقدم_الطلب"].ToString();
+                    
+                    date.Text = reader["التاريخ_الميلادي"].ToString();
+
+                    selectArchData(search);
+                    if (archState == "مؤرشف نهائي")
+                    {
+                        ArchiveSt.Text = "المكاتبة مؤرشفة";
+                        ArchiveSt.BackColor = Color.Green;
+
+                    }
+                    else if (archState.Contains("ملغي"))
+                    {
+                        ArchiveSt.Text = "المكاتبة ملغية";
+                        ArchiveSt.BackColor = Color.Red;
+                    }
+                    else if (archState == "لم يتم أرشفة التعديل")
+                    {
+                        ArchiveSt.Text = "لم يتم أرشفة التعديل";
+                        ArchiveSt.BackColor = Color.Green;
+                    }
+                    else if (archState == "في انتظار نسخة المواطن")
+                    {
+                        ArchiveSt.Text = "في انتظار نسخة المواطن";
+                        ArchiveSt.BackColor = Color.Red;
+                    }
+                    else
+                    {
                         ArchiveSt.Text = "المكاتبة غير مؤرشفة";
                         ArchiveSt.BackColor = Color.Red;
                         Arch2.Enabled = false;
@@ -4537,9 +4627,16 @@ namespace PersAhwal
 
         private void txtSearch_TextChanged_2(object sender, EventArgs e)
         {
-            if (!nameNo) return;
-            //MessageBox.Show("رقم_معاملة_القسم");
-            FillDatafromGenArch(txDocID.Text, "رقم_معاملة_القسم");
+            if (gridShow || !nameNo || txDocID.Text.Split('/').Length < 5 || txDocID.Text.Split('/')[4] == "") return;
+            //MessageBox.Show("number changed");
+            Console.WriteLine("txDocID " + txDocID.Text.Split('/')[3]);
+            if (txDocID.Text.Split('/')[3] == "10" || txDocID.Text.Split('/')[3] == "12")
+            {
+                getInfo12_10(txDocID.Text, txDocID.Text.Split('/')[3]);
+            }
+            else
+                FillDatafromGenArch(txDocID.Text, "رقم_معاملة_القسم");
+            nameNo = true;
         }
 
         private void txtSearch_KeyPress_1(object sender, KeyPressEventArgs e)
@@ -7892,12 +7989,14 @@ namespace PersAhwal
 
         private void applicant_TextChanged(object sender, EventArgs e)
         {
-            if (nameNo) return;
-            //MessageBox.Show("الاسم");
-            FillDatafromGenArch(applicant.Text, "الاسم");
-            string query = "select distinct رقم_معاملة_القسم,الاسم from TableGeneralArch where الاسم like N'" + applicant.Text + "'";
+            if (gridShow || nameNo || applicant.Text == "") return;
+            //MessageBox.Show("name changed");
+            string query = "SELECT ID, رقم_التوكيل, مقدم_الطلب  , التاريخ_الميلادي , N'توكيل' as [نوع المكاتبة] FROM TableAuth WHERE مقدم_الطلب LIKE N'" + applicant.Text+"%'" +
+                " union " +
+                "SELECT ID, رقم_المعاملة, مقدم_الطلب , التاريخ_الميلادي , N'معاملة أخرى' as [نوع المكاتبة] FROM TableCollection WHERE مقدم_الطلب LIKE N'" + applicant.Text+"%'" +
+                "order by مقدم_الطلب";
             Console.WriteLine(query);
-            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
+            SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 try
                 {
@@ -7908,14 +8007,28 @@ namespace PersAhwal
 
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
-            sqlDa.Fill(dtbl);
-            sqlCon.Close();
-            dataGridView6.DataSource = dtbl;
+            try
             {
-                dataGridView6.Columns[0].Width = 150;
-                dataGridView6.Columns[1].Width = 200;
+                sqlDa.Fill(dtbl);
             }
+            catch (Exception ex) { return; }
+            sqlCon.Close();
+            dataGridView7.DataSource = dtbl;
+            if(dtbl.Rows.Count > 0)
+            {
+                dataGridView7.Columns[0].Visible = dataGridView7.Columns[1].Visible = false;
+                dataGridView7.Columns[2].Width = 180;
+                dataGridView7.Columns[3].Width = 90;
+                dataGridView7.Columns[4].Width = 80;
+                IDNo = Convert.ToInt32(dataGridView7.Rows[0].Cells[0].Value.ToString());
+                txDocID.Text = dataGridView7.Rows[0].Cells[1].Value.ToString();
+                //applicant.Text = dataGridView7.Rows[0].Cells[2].Value.ToString();
+                date.Text = dataGridView7.Rows[0].Cells[3].Value.ToString();                
+            }
+            if (nameNo) return;
+            FillDatafromGenArch(applicant.Text, "الاسم");
         }
+        
         private void txtSearch_Click(object sender, EventArgs e)
         {
             nameNo = true;
@@ -10088,7 +10201,7 @@ namespace PersAhwal
             m = Convert.ToInt16(YearMonthDayS[1]);
             d = Convert.ToInt16(YearMonthDayS[2]);
 
-
+            MessageBox.Show("day " + d.ToString() +" month "+m.ToString() +" year " +  year.ToString());
             if (m < 10) Currentmonth = "0" + m.ToString();
             else Currentmonth = m.ToString();
             if (d < 10) CurrentDay = "0" + d.ToString();
@@ -10684,6 +10797,37 @@ namespace PersAhwal
                     break;
             }
         }
+
+        private void applicant_MouseClick(object sender, MouseEventArgs e)
+        {
+            nameNo = false;
+            gridShow = false;
+        }
+
+        private void txDocID_MouseClick(object sender, MouseEventArgs e)
+        {
+            nameNo = true;
+            gridShow = false;
+        }
+
+        private void dataGridView7_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dataGridView7.Rows.Count > 1)
+            {
+                gridShow = true;
+                IDNo = Convert.ToInt32(dataGridView7.CurrentRow.Cells[0].Value.ToString());
+                txDocID.Text = dataGridView7.CurrentRow.Cells[1].Value.ToString();
+                applicant.Text = dataGridView7.CurrentRow.Cells[2].Value.ToString();
+                date.Text = dataGridView7.CurrentRow.Cells[3].Value.ToString();
+                //MessageBox.Show("clicked");
+            }
+        }
+
+        private void dataGridView7_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
         private void Open3File(int id, int fileNo)
         {
             string query;

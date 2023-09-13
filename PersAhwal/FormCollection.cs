@@ -124,6 +124,7 @@ namespace PersAhwal
         string appExp = "";
         string wordCheck = "";
         string checkEnd = "";
+        string year = "";
 
         public FormCollection(int allowedTimes, int Atvc, int currentRow, int DocumentType, string empName, string dataSource, string filepathOut, string jobposition, string gregorianDate, string hijriDate)
         {
@@ -132,7 +133,9 @@ namespace PersAhwal
             DataSource = dataSource;
             //FilespathIn = filepathIn;
             FilespathOut = filepathOut + @"\";
+            year = gregorianDate.Split('-')[2];
             //MessageBox.Show(FilespathOut);
+            fillYears(yearSel);
             fillSamplesCodes(dataSource);
             AtVCIndex = Atvc;
             AllowedTimes = allowedTimes;
@@ -143,7 +146,7 @@ namespace PersAhwal
             Console.WriteLine("1");
             genPreperations();
             Console.WriteLine("2");
-            FillDataGridView(DataSource);
+            FillDataGridView(DataSource, year);
             Console.WriteLine("3");
             getMaxRange(DataSource);
             backgroundWorker2.RunWorkerAsync();
@@ -161,6 +164,33 @@ namespace PersAhwal
             }
 
         }
+
+        private void fillYears(ComboBox combo)
+        {
+            combo.Items.Add("جميع الأعوام");
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            combo.Items.Clear();
+            string query = "select distinct DATENAME(YEAR, التاريخ) as years from TableGeneralArch order by DATENAME(YEAR, التاريخ) desc";
+            SqlConnection Con = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
+            if (Con.State == ConnectionState.Closed)
+                try
+                {
+                    Con.Open();
+                    SqlDataAdapter sqlDa = new SqlDataAdapter(query, Con);
+                    sqlDa.SelectCommand.CommandType = CommandType.Text;
+                    DataTable dtbl2 = new DataTable();
+                    sqlDa.Fill(dtbl2);
+                    sqlCon.Close();
+                    foreach (DataRow dataRow in dtbl2.Rows)
+                    {
+                        if (dataRow["years"].ToString().Length == 4)
+                            combo.Items.Add(dataRow["years"].ToString());
+                    }
+                }
+                catch (Exception ex) { }
+            
+        }
+
         private string missionBasicInfo()
         {
             string infoDet = "";
@@ -225,12 +255,15 @@ namespace PersAhwal
         }
 
 
-        public void FillDataGridView(string dataSource)
+        public void FillDataGridView(string dataSource, string year)
         {
+            string query = "select * from TableCollection where DATEPART(year,التاريخ_الميلادي) =" + year +" order by ID";
+            if (year == "جميع الأعوام")
+                query = "select * from TableCollection order by ID";
             SqlConnection sqlCon = new SqlConnection(dataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
-            SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableCollection", sqlCon);
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
             sqlDa.Fill(dtbl);
@@ -5413,7 +5446,7 @@ namespace PersAhwal
         {
             if (currentPanelIndex > 0) currentPanelIndex--;
             else return;
-            if (currentPanelIndex == 0) FillDataGridView(DataSource);
+            if (currentPanelIndex == 0) FillDataGridView(DataSource, year);
             panelShow(currentPanelIndex);
         }
 
@@ -6080,7 +6113,7 @@ namespace PersAhwal
         {
             deleteFromCollection();
             deleteFromArch();
-            FillDataGridView(DataSource);
+            FillDataGridView(DataSource, year);
             panelShow(0);
         }
         
@@ -6316,6 +6349,12 @@ namespace PersAhwal
         private void txtReview_MouseEnter(object sender, EventArgs e)
         {
             //MessageBox.Show(txtReview.Height.ToString());
+        }
+
+        private void yearSel_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            FillDataGridView(DataSource, yearSel.Text);
+            
         }
     }
 }
