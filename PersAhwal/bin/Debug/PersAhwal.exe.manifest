@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
-  <asmv1:assemblyIdentity name="PersAhwal.exe" version="1.0.0.1053" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
+  <asmv1:assemblyIdentity name="PersAhwal.exe" version="1.0.0.1055" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
   <description asmv2:iconFile="personal status (1).ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
   <application />
   <entryPoint>
@@ -146,7 +146,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>bNZa0nFuuz53DRdAD2XTK2VCKzKAa1GKF35JWs1CxM4=</dsig:DigestValue>
+        <dsig:DigestValue>XUBZkzvMT/a+K8Wycy2sYVl0wcH/ks4zLJIRPu87WZM=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -1022,7 +1022,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>XOr0hSPavhbjJo1HhGc5PSevaS7Ma7QkOXEsfqelFUI=</dsig:DigestValue>
+        <dsig:DigestValue>pfDaADd+5kIQoPE4fxVoJz3LAr2jV+BiMToS1iS9ii0=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -1034,7 +1034,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>rpJksh6x8ulNO8VtkRZkT3RNjTPcYQCt5m1dMhXnZik=</dsig:DigestValue>
+        <dsig:DigestValue>ga5WUEpTHpO0DrHGEUOqVtB02ct2n+InIBRFPdg1pgE=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

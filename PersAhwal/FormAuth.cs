@@ -420,7 +420,7 @@ namespace PersAhwal
             }
             else if (addNameIndex > 1)
             {
-                residState = "، والمقيم" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5] + " بالمملكة العربية السعودية";
+                residState = "، والمقيم" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5] + " بالمملكة العربية السعودية، ";
                 if (وضع_الإقامة.Text.Contains("زائر"))
                     residState = "، ";
 
@@ -429,7 +429,7 @@ namespace PersAhwal
                     if (lawFullStet) 
                         الصفة_القانونية.Text = " العقلية وبطوع" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 12] + " واختيار" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 12] + " وحالت" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 12] + " المعتبرة شرعا قانونا";
                     نص_مقدم_الطلب0.Text = "نحن المواطن" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5] + " الموقع" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5] + " ";
-                    نص_مقدم_الطلب1.Text = residState + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 12] + الصفة_القانونية.Text + createAuthPart1(true);
+                    نص_مقدم_الطلب1.Text = residState +  الصفة_القانونية.Text + createAuthPart1(true);
                     //legaceyAuthInfo = createAuthPart1(true);
                 }
                 else
@@ -439,7 +439,7 @@ namespace PersAhwal
                     نص_مقدم_الطلب0.Text = "نحن المواطن" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5] + " الموقع" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 5] + " ";
                     if (إجراء_التوكيل.Text.Contains("تنازل"))
                         نص_مقدم_الطلب1.Text = residState + الصفة_القانونية.Text+ " ،بهذا فقد تنازل" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 1] + createAuthPart1(true);
-                    else نص_مقدم_الطلب1.Text = residState + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 12] + الصفة_القانونية.Text+ "، بهذا فقد أوكل" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 1] + createAuthPart1(true);
+                    else نص_مقدم_الطلب1.Text = residState + الصفة_القانونية.Text+ "، بهذا فقد أوكل" + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 1] + createAuthPart1(true);
 
                 }                
             }
@@ -6215,7 +6215,7 @@ namespace PersAhwal
 
         public void FillDataGridView(string dataSource, string year)
         {
-            string query = "select * from TableAuth where DATEPART(year,التاريخ_الميلادي) =" + year +" order by ID";
+            string query = "select * from TableAuth where DATEPART(year,تاريخ_الارشفة1) =" + year +" order by ID";
             if (year == "جميع الأعوام")
                 query = "select * from TableAuth order by ID";
             Console.WriteLine(query);

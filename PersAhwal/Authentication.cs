@@ -1034,7 +1034,10 @@ namespace PersAhwal
         {
             if (تاريخ_توقيع_المكاتبة.Text.Length == 10)
             {
-                int month = Convert.ToInt32(SpecificDigit(تاريخ_توقيع_المكاتبة.Text, 1, 2));
+                try
+                {
+                    int month = Convert.ToInt32(SpecificDigit(تاريخ_توقيع_المكاتبة.Text, 1, 2));
+               
                 if (month > 12 && !gridFill)
                 {
                     MessageBox.Show("الشهر يحب أن يكون أقل من 12");
@@ -1042,6 +1045,8 @@ namespace PersAhwal
                     تاريخ_توقيع_المكاتبة.Text = SpecificDigit(تاريخ_توقيع_المكاتبة.Text, 3, 10);
                     return;
                 }
+                }
+                catch (Exception ex) { return; }
             }
 
             if (تاريخ_توقيع_المكاتبة.Text.Length == 11)

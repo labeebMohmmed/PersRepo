@@ -2303,6 +2303,8 @@ namespace PersAhwal
                     File.WriteAllBytes(FileName, Data);
                     if (printOut)
                         System.Diagnostics.Process.Start(FileName);
+                    FileInfo fileInfo = new FileInfo(FileName);
+                    if (fileInfo.IsReadOnly) fileInfo.IsReadOnly = false;
                 }
                 catch (Exception ex) { return ""; }
             }
@@ -2452,7 +2454,7 @@ namespace PersAhwal
             string noID = DocIDGenerator("1");
             getHeadTitle(DataSource);
 
-            string pdfCopy = FilespathOut + @"\" + DateTime.Now.ToString("mmss") + ".pdf";
+            string pdfCopy = FilespathOut + @"\" + DateTime.Now.ToString("mmss") + " معاملات أخرى.pdf";
             string[] items = new string[4] ;
             string[] values= new string[4];
             items[0] = "signiturePic";
@@ -2463,8 +2465,10 @@ namespace PersAhwal
             values[2] = attendedVC.Text;
             values[3] = headTitle;
             
-            string wordCopy = FilespathOut + @"\" + DateTime.Now.ToString("mmss") + "2.docx";
+            string wordCopy = FilespathOut + @"\" + DateTime.Now.ToString("mmss") + "معاملات اخرى.docx";
             OpenModelFile("reportIqrar", false, wordCopy);
+            FileInfo fileInfo = new FileInfo(wordCopy);
+            if (fileInfo.IsReadOnly) fileInfo.IsReadOnly = false;
             Word.Document oBDoc;
             object oBMiss;
             Word.Application oBMicroWord;
@@ -2572,7 +2576,7 @@ namespace PersAhwal
         {
             string noID = DocIDGenerator("1");
             getHeadTitle(DataSource);
-            string pdfCopy = FilespathOut + @"\"+ DateTime.Now.ToString("mmss") + ".pdf";
+            string pdfCopy = FilespathOut + @"\" + DateTime.Now.ToString("mmss") + " توكيلات.pdf";
             string[] items = new string[4] ;
             string[] values= new string[4];
             items[0] = "signiturePic";
@@ -2583,8 +2587,12 @@ namespace PersAhwal
             values[2] = attendedVC.Text;
             values[3] = headTitle;
             //string wordIn = FilespathIn + @"\reportAuth.docx";
-            string wordCopy = FilespathOut + @"\" + DateTime.Now.ToString("mmss") + "1.docx";
+
+            string wordCopy = FilespathOut + @"\" + DateTime.Now.ToString("mmss") + "توكيلات.docx";
             OpenModelFile("reportAuth", false, wordCopy);
+            FileInfo fileInfo = new FileInfo(wordCopy);
+            if (fileInfo.IsReadOnly) fileInfo.IsReadOnly = false;
+
             Word.Document oBDoc;
             object oBMiss;
             Word.Application oBMicroWord;
@@ -3166,6 +3174,8 @@ namespace PersAhwal
             string ActiveCopy = FilespathOut + @"\"+   reportName;
             //System.IO.File.Copy(route, ActiveCopy);
             OpenModelFile("DailyReport", false, ActiveCopy);
+            FileInfo fileInfo = new FileInfo(ActiveCopy);
+            if (fileInfo.IsReadOnly) fileInfo.IsReadOnly = false;
             using (var document = DocX.Load(ActiveCopy))
             {
                 System.Globalization.CultureInfo TypeOfLanguage = new System.Globalization.CultureInfo("ar-SA");
@@ -3305,6 +3315,9 @@ namespace PersAhwal
 
             //System.IO.File.Copy(route, ActiveCopy);
             OpenModelFile("DailyReportCopy", false, ActiveCopy);
+            FileInfo fileInfo = new FileInfo(ActiveCopy);
+            if (fileInfo.IsReadOnly) fileInfo.IsReadOnly = false;
+
             using (DocX document = DocX.Load(ActiveCopy))
             {
                 System.Globalization.CultureInfo TypeOfLanguage = new System.Globalization.CultureInfo("ar-SA");
@@ -5123,14 +5136,15 @@ namespace PersAhwal
                 {
                     signedDoc = true;
                 }
-                if (totalrowsAuth > 0)
-                {
-                    createAuth(totalrowsAuth, pictureName, signedDoc);
-                }
                 if (totalrowsAffadivit > 0)
                 {
                     createIqrar(totalrowsAffadivit, pictureName, signedDoc);
                 }
+                if (totalrowsAuth > 0)
+                {
+                    createAuth(totalrowsAuth, pictureName, signedDoc);
+                }
+                
 
                 if (ReportType.SelectedIndex == 0)
                     CreateCarsReportAuth(ReportName3);

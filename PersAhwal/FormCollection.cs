@@ -167,9 +167,10 @@ namespace PersAhwal
 
         private void fillYears(ComboBox combo)
         {
-            combo.Items.Add("جميع الأعوام");
+            
             SqlConnection sqlCon = new SqlConnection(DataSource);
             combo.Items.Clear();
+            combo.Items.Add("جميع الأعوام");
             string query = "select distinct DATENAME(YEAR, التاريخ) as years from TableGeneralArch order by DATENAME(YEAR, التاريخ) desc";
             SqlConnection Con = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
             if (Con.State == ConnectionState.Closed)
@@ -257,7 +258,7 @@ namespace PersAhwal
 
         public void FillDataGridView(string dataSource, string year)
         {
-            string query = "select * from TableCollection where DATEPART(year,التاريخ_الميلادي) =" + year +" order by ID";
+            string query = "select * from TableCollection where DATEPART(year,تاريخ_الارشفة1) =" + year +" order by ID";
             if (year == "جميع الأعوام")
                 query = "select * from TableCollection order by ID";
             SqlConnection sqlCon = new SqlConnection(dataSource);
