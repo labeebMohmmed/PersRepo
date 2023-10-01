@@ -7350,6 +7350,7 @@ namespace PersAhwal
             {
                 text = text.Replace("  ", " ");
             }
+            text = text.Replace("أدناه،", "أدناه");
             text = text.Replace("، ،", "، ");
             text = text.Replace("،", "، ");
             text = text.Replace("1_", "");

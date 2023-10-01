@@ -181,11 +181,79 @@ namespace PersAhwal
             }
 
             username.Select();
+            
+            //checkRenew();
 
-            
-            
+
         }
 
+        private bool checkRenew()
+        {
+            string query = "";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            try
+            {
+                query = "SELECT DATEDIFF(year, '" + getRenew() + "', '" + GregorianDate + "') as yearDiff";
+            }
+            catch (Exception ex) { return false; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            try
+            {
+                sqlDa.Fill(dtbl);
+                sqlCon.Close();
+
+                foreach (DataRow row in dtbl.Rows)
+                {
+                    int age = Convert.ToInt32(row["yearDiff"].ToString());
+                    //MessageBox.Show(row["yearDiff"].ToString());
+                    if (age != 0)
+                    {
+                        //textBox.BackColor = System.Drawing.Color.MistyRose;
+                        Password.Enabled = false;
+                        return true;
+                    }                    
+                }
+            }
+            catch (Exception ex) {
+                Console.WriteLine(query);
+                MessageBox.Show("تاريخ ميلاد غير صالح"); }
+            return false;
+
+        }
+        
+        private string getRenew()
+        {
+            string query = "";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            try
+            {
+                query = "select  renew from TableSettings";
+            }
+            catch (Exception ex) { return ""; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            try
+            {
+                sqlDa.Fill(dtbl);
+                sqlCon.Close();
+
+                foreach (DataRow row in dtbl.Rows)
+                {
+                    return row["renew"].ToString();                    
+                }
+            }
+            catch (Exception ex) {
+                return ""; }
+            return "";
+
+        }
         private string BackupDisck(string colName)
         {
             string infoDet = "";
@@ -703,7 +771,10 @@ namespace PersAhwal
        
         private void btnSave_Click(object sender, EventArgs e)
         {
-            
+            //string autoGenPass = 
+            //if (checkRenew() && ) { 
+
+            //}
             bool Procede = false;
             bool foundedUser = false;
 
@@ -955,6 +1026,8 @@ namespace PersAhwal
             sqlCon.Close();
         }
 
+        
+
         private void employeeName_TextChanged(object sender, EventArgs e)
         {
 
@@ -1077,6 +1150,11 @@ namespace PersAhwal
             return differment;
         }
         private void timer2_Tick(object sender, EventArgs e)
+        {
+            getDate();
+        }
+
+        private void getDate()
         {
             CultureInfo arSA = new CultureInfo("ar-SA");
             arSA.DateTimeFormat.Calendar = new GregorianCalendar();

@@ -159,11 +159,11 @@ namespace PersAhwal
                 sqlCmd.CommandType = CommandType.Text;
                 sqlCmd.Parameters.AddWithValue("@ID", IDEmp);
                 sqlCmd.Parameters.AddWithValue("@Pass", newPass);
-                sqlCmd.Parameters.AddWithValue("@EngEmployeeName", EngEmployeeName.Text);
-                sqlCmd.Parameters.AddWithValue("@UserName", userName.Text);
+                sqlCmd.Parameters.AddWithValue("@EngEmployeeName", ApplicantName.Text);
+                sqlCmd.Parameters.AddWithValue("@EmployeeName", userName.Text);
                 sqlCmd.Parameters.AddWithValue("@JobPosition", JobPossition.Text);
                 sqlCmd.Parameters.AddWithValue("@Gender", EmpGender.Text);
-                sqlCmd.Parameters.AddWithValue("@EmployeeName", ApplicantName.Text);
+                sqlCmd.Parameters.AddWithValue("@UserName", EngEmployeeName.Text);
                 sqlCmd.Parameters.AddWithValue("@RestPAss", "done");
                 sqlCmd.Parameters.AddWithValue("@comment", addInfo + التعليقات_السابقة_Off.Text);
 
@@ -218,16 +218,17 @@ namespace PersAhwal
                         sqlCmd.CommandType = CommandType.StoredProcedure;                        
                         sqlCmd.Parameters.AddWithValue("@ID", 0);
                         sqlCmd.Parameters.AddWithValue("@mode", "Add");
-                        sqlCmd.Parameters.AddWithValue("@EmployeeName", ApplicantName.Text);
+                        sqlCmd.Parameters.AddWithValue("@EmployeeName", userName.Text);
                         sqlCmd.Parameters.AddWithValue("@JobPosition", JobPossition.Text);
                         sqlCmd.Parameters.AddWithValue("@Gender", EmpGender.Text);
-                        sqlCmd.Parameters.AddWithValue("@UserName", userName.Text);
+                        sqlCmd.Parameters.AddWithValue("@UserName", ApplicantName.Text);
                         sqlCmd.Parameters.AddWithValue("@Email", "");
                         sqlCmd.Parameters.AddWithValue("@Pass", password1.Text);
                         sqlCmd.Parameters.AddWithValue("@EngEmployeeName", EngEmployeeName.Text);
                         sqlCmd.Parameters.AddWithValue("@Aproved", "غير مؤكد");
                         sqlCmd.Parameters.AddWithValue("@Purpose", ServerType);
-                        if(headOfMission.Checked)
+                        sqlCmd.Parameters.AddWithValue("@RestPAss", "done");
+                        if (headOfMission.Checked)
                             sqlCmd.Parameters.AddWithValue("@headOfMission", "head");
                         else 
                             sqlCmd.Parameters.AddWithValue("@headOfMission", "");
@@ -523,6 +524,7 @@ namespace PersAhwal
             sqlCmd.Parameters.AddWithValue("@Email", "");
             sqlCmd.Parameters.AddWithValue("@EngEmployeeName", EngEmployeeName.Text);
             sqlCmd.Parameters.AddWithValue("@Pass", userpass);
+            sqlCmd.Parameters.AddWithValue("@RestPAss", "done");
             sqlCmd.Parameters.AddWithValue("@Aproved", "أكده " + Jobposition + " " + Employeename);
             sqlCmd.Parameters.AddWithValue("@Purpose", ServerType);
             if (headOfMission.Checked)
@@ -565,6 +567,7 @@ namespace PersAhwal
             sqlCmd.Parameters.AddWithValue("@Pass", password1.Text);
             sqlCmd.Parameters.AddWithValue("@Aproved", "غير مؤكد ");
             sqlCmd.Parameters.AddWithValue("@Purpose", ServerType);
+            sqlCmd.Parameters.AddWithValue("@RestPAss", "");
             sqlCmd.Parameters.AddWithValue("@comment", addInfo + التعليقات_السابقة_Off.Text);
             try
             {

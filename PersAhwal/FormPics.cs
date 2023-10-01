@@ -4127,7 +4127,7 @@ namespace PersAhwal
             txtIDNo.Text = docIDNumber = txtMissionCode + year + "/" + noForm + "/" + rowCount;
             smsDocIDNumber = "ق س ج/" + rowCount + "/" + noForm + "/" + year;
 
-            MerrageAndDivProc();
+            //MerrageAndDivProc();
 
 
 
