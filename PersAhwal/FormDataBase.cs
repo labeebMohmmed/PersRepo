@@ -54,6 +54,7 @@ namespace PersAhwal
         public FormDataBase(string server,string dataSource56, string dataSource57, string modelFiles, string filepathOut, string archFile, string modelForms, string newFiles)
         {
             InitializeComponent();
+            getDate();
             string hostname = Dns.GetHostName();
             Console.WriteLine(IP);
             IP = Dns.GetHostByName(hostname).AddressList[0].ToString();
@@ -182,48 +183,12 @@ namespace PersAhwal
 
             username.Select();
             
-            //checkRenew();
+            
 
 
         }
 
-        private bool checkRenew()
-        {
-            string query = "";
-            SqlConnection sqlCon = new SqlConnection(DataSource);
-            if (sqlCon.State == ConnectionState.Closed)
-                sqlCon.Open();
-            try
-            {
-                query = "SELECT DATEDIFF(year, '" + getRenew() + "', '" + GregorianDate + "') as yearDiff";
-            }
-            catch (Exception ex) { return false; }
-            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
-            sqlDa.SelectCommand.CommandType = CommandType.Text;
-            DataTable dtbl = new DataTable();
-            try
-            {
-                sqlDa.Fill(dtbl);
-                sqlCon.Close();
-
-                foreach (DataRow row in dtbl.Rows)
-                {
-                    int age = Convert.ToInt32(row["yearDiff"].ToString());
-                    //MessageBox.Show(row["yearDiff"].ToString());
-                    if (age != 0)
-                    {
-                        //textBox.BackColor = System.Drawing.Color.MistyRose;
-                        Password.Enabled = false;
-                        return true;
-                    }                    
-                }
-            }
-            catch (Exception ex) {
-                Console.WriteLine(query);
-                MessageBox.Show("تاريخ ميلاد غير صالح"); }
-            return false;
-
-        }
+        
         
         private string getRenew()
         {
@@ -1030,7 +995,7 @@ namespace PersAhwal
 
         private void employeeName_TextChanged(object sender, EventArgs e)
         {
-
+           
         }
 
         private void employeeName_KeyPress(object sender, KeyPressEventArgs e)
@@ -1104,7 +1069,22 @@ namespace PersAhwal
 
         private void Password_TextChanged(object sender, EventArgs e)
         {
-
+            if (actDate == username.Text)
+            {
+                SqlConnection sqlCon = new SqlConnection(DataSource);
+                if (sqlCon.State == ConnectionState.Closed)
+                    try
+                    {
+                        sqlCon.Open();
+                    }
+                    catch (Exception ex) { return; }
+                SqlCommand sqlCmd = new SqlCommand("update TableSettings set renew=@renew where ID=@id", sqlCon);
+                sqlCmd.CommandType = CommandType.Text;
+                sqlCmd.Parameters.AddWithValue("@id", 1);
+                sqlCmd.Parameters.AddWithValue("@renew", GregorianDate);
+                sqlCmd.ExecuteNonQuery();
+                sqlCon.Close();
+            }
         }
 
         private void timer3_Tick(object sender, EventArgs e)
@@ -1151,9 +1131,9 @@ namespace PersAhwal
         }
         private void timer2_Tick(object sender, EventArgs e)
         {
-            getDate();
+            
         }
-
+        string actDate = "";
         private void getDate()
         {
             CultureInfo arSA = new CultureInfo("ar-SA");
@@ -1163,8 +1143,16 @@ namespace PersAhwal
             Thread.CurrentThread.CurrentCulture = arSA;
             new System.Globalization.GregorianCalendar();
             GregorianDate = DateTime.Now.ToString("MM-dd-yyyy");
+            int year = Convert.ToInt32(SpecificDigit(GregorianDate.Split('-')[2], 3, 4)); 
+            int month = Convert.ToInt32(GregorianDate.Split('-')[0]);
+            int day = Convert.ToInt32(GregorianDate.Split('-')[1]);
             if (GregorianDate.Contains("-")) timer2.Enabled = false;
+
+            actDate = "##314" + (7 * (year + day) + month).ToString() + "_@PErs" + (301 * month).ToString();
+            //MessageBox.Show(actDate);
         }
+
+       
 
         private void FormDataBase_MouseEnter_1(object sender, EventArgs e)
         {

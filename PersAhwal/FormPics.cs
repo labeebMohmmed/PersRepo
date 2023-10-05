@@ -172,7 +172,7 @@ namespace PersAhwal
             Console.WriteLine(4);
             Console.WriteLine(5);
             correctNo();
-            
+            checkRenew();
             try
             {
                 txtMissionCode = missionBasicInfo().Split('*')[3];
@@ -184,6 +184,78 @@ namespace PersAhwal
             }
             //OpenFile("استمارات المناديب", true);
         }
+
+        private bool checkRenew()
+        {
+            string query = "";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            try
+            {
+                query = "SELECT DATEDIFF(year, '" + getRenew() + "', '" + GregorianDate + "') as yearDiff";
+            }
+            catch (Exception ex) { return false; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            try
+            {
+                sqlDa.Fill(dtbl);
+                sqlCon.Close();
+
+                foreach (DataRow row in dtbl.Rows)
+                {
+                    int age = Convert.ToInt32(row["yearDiff"].ToString());
+                    Console.WriteLine(query);
+                    //MessageBox.Show(row["yearDiff"].ToString());
+                    if (age != 0)
+                    {
+                        this.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(query);
+                MessageBox.Show("تاريخ ميلاد غير صالح");
+            }
+            return false;
+
+        }
+
+        private string getRenew()
+        {
+            string query = "";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            try
+            {
+                query = "select  renew from TableSettings";
+            }
+            catch (Exception ex) { return ""; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            try
+            {
+                sqlDa.Fill(dtbl);
+                sqlCon.Close();
+
+                foreach (DataRow row in dtbl.Rows)
+                {
+                    return row["renew"].ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+            return "";
+
+        }
+
         private string missionBasicInfo()
         {
             string infoDet = "";
