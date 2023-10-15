@@ -77,6 +77,7 @@ namespace PersAhwal
         bool showGrid = false;
         string docStatus = "شهادة صحيحة";
         int picID = 0;
+        int countScan = 0;
         public Authentication(string dataSource, string atvc, string filespathOut, string employee, string hijriDate, string greDate)
         {
             InitializeComponent();
@@ -396,6 +397,10 @@ namespace PersAhwal
         private void حفظ_وإنهاء_الارشفة_Click(object sender, EventArgs e)
         {
             string comment = "";
+            //if (imagecount > 2 && عدد_المستندات_off.SelectedIndex == 0)
+            //{
+            //    MessageBox.Show("المستندات المؤرشفة أكثر من");
+            //}
             if (!اسم_الجهة.Enabled)
             {
                 var selectedOption = MessageBox.Show("", "هل الشهادة صحيحة؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);

@@ -688,11 +688,9 @@ namespace PersAhwal
             this.Controls.Add(this.panelpicTemp);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.btnSaveEnd);
-            this.Controls.Add(this.تاريخ_الميلاد);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panelFinalArch);
             this.Controls.Add(this.btnExten);
-            this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.btnArchived);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.dataGridView2);
@@ -700,11 +698,13 @@ namespace PersAhwal
             this.Controls.Add(this.lalProType);
             this.Controls.Add(this.docId);
             this.Controls.Add(this.label5);
+            this.Controls.Add(this.button3);
+            this.Controls.Add(this.Combo2);
+            this.Controls.Add(this.تاريخ_الميلاد);
             this.Controls.Add(this.txtIDNo);
             this.Controls.Add(this.Combo1);
             this.Controls.Add(this.button4);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.Combo2);
+            this.Controls.Add(this.btnDelete);
             this.Name = "FormPics";
             this.Text = "أرشفة الملفات";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormPics_FormClosed);

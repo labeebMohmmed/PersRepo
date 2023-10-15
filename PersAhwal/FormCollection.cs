@@ -6357,5 +6357,10 @@ namespace PersAhwal
             FillDataGridView(DataSource, yearSel.Text);
             
         }
+
+        private void panelAuthen_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

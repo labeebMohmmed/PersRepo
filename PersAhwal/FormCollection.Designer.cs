@@ -35,6 +35,8 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormCollection));
             this.PanelFiles = new System.Windows.Forms.Panel();
+            this.label14 = new System.Windows.Forms.Label();
+            this.yearSel = new System.Windows.Forms.ComboBox();
             this.آلية_البحث = new System.Windows.Forms.ComboBox();
             this.btnSettings = new System.Windows.Forms.Button();
             this.label36 = new System.Windows.Forms.Label();
@@ -250,8 +252,6 @@
             this.backgroundWorker2 = new System.ComponentModel.BackgroundWorker();
             this.timer3 = new System.Windows.Forms.Timer(this.components);
             this.btnPrevious = new System.Windows.Forms.Button();
-            this.label14 = new System.Windows.Forms.Label();
-            this.yearSel = new System.Windows.Forms.ComboBox();
             this.PanelFiles.SuspendLayout();
             this.panelapplicationInfo.SuspendLayout();
             this.Panelapp.SuspendLayout();
@@ -295,6 +295,33 @@
             this.PanelFiles.Name = "PanelFiles";
             this.PanelFiles.Size = new System.Drawing.Size(1339, 38);
             this.PanelFiles.TabIndex = 634;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.Location = new System.Drawing.Point(743, 6);
+            this.label14.Name = "label14";
+            this.label14.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.label14.Size = new System.Drawing.Size(55, 27);
+            this.label14.TabIndex = 697;
+            this.label14.Text = "الموظف:";
+            // 
+            // yearSel
+            // 
+            this.yearSel.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.yearSel.FormattingEnabled = true;
+            this.yearSel.Items.AddRange(new object[] {
+            "مقدم الطلب",
+            "نوع_التوكيل",
+            "إجراء_التوكيل"});
+            this.yearSel.Location = new System.Drawing.Point(668, 2);
+            this.yearSel.Name = "yearSel";
+            this.yearSel.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.yearSel.Size = new System.Drawing.Size(69, 35);
+            this.yearSel.TabIndex = 696;
+            this.yearSel.Text = "2023";
+            this.yearSel.SelectedIndexChanged += new System.EventHandler(this.yearSel_SelectedIndexChanged);
             // 
             // آلية_البحث
             // 
@@ -3080,33 +3107,6 @@
             this.btnPrevious.Text = "السابق";
             this.btnPrevious.UseVisualStyleBackColor = false;
             this.btnPrevious.Click += new System.EventHandler(this.button18_Click);
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(743, 6);
-            this.label14.Name = "label14";
-            this.label14.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label14.Size = new System.Drawing.Size(55, 27);
-            this.label14.TabIndex = 697;
-            this.label14.Text = "الموظف:";
-            // 
-            // yearSel
-            // 
-            this.yearSel.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.yearSel.FormattingEnabled = true;
-            this.yearSel.Items.AddRange(new object[] {
-            "مقدم الطلب",
-            "نوع_التوكيل",
-            "إجراء_التوكيل"});
-            this.yearSel.Location = new System.Drawing.Point(668, 2);
-            this.yearSel.Name = "yearSel";
-            this.yearSel.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.yearSel.Size = new System.Drawing.Size(69, 35);
-            this.yearSel.TabIndex = 696;
-            this.yearSel.Text = "2023";
-            this.yearSel.SelectedIndexChanged += new System.EventHandler(this.yearSel_SelectedIndexChanged);
             // 
             // FormCollection
             // 

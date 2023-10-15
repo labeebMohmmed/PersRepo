@@ -1270,7 +1270,6 @@ C:\Users\hp\Source\Repos\PersRepo\PersAhwal\obj\Debug\PersAhwal.exe
 C:\Users\hp\Source\Repos\PersRepo\PersAhwal\obj\Debug\PersAhwal.pdb
 C:\Users\hp\source\repos\PersRepo\PersAhwal\bin\Debug\SautinSoft.Document.dll
 C:\Users\hp\source\repos\PersRepo\PersAhwal\bin\Debug\SautinSoft.Document.xml
-C:\Users\hp\source\repos\PersRepo\PersAhwal\obj\Debug\Interop.HPWia2DriverRootLib.dll
 C:\Users\hp\source\repos\PersRepo\PersAhwal\obj\Debug\PersAhwal.Authentication.resources
 C:\Users\hp\source\repos\PersRepo\PersAhwal\obj\Debug\PersAhwal.AllConsArchInfo.resources
 C:\Users\hp\source\repos\PersRepo\PersAhwal\obj\Debug\PersAhwal.exe.config
@@ -1289,3 +1288,4 @@ C:\Users\hp\source\repos\PersRepo\PersAhwal\bin\Debug\IronSoftware.Drawing.Commo
 C:\Users\hp\source\repos\PersRepo\PersAhwal\bin\Debug\Microsoft.Extensions.Logging.Abstractions.xml
 C:\Users\hp\source\repos\PersRepo\PersAhwal\bin\Debug\SixLabors.ImageSharp.xml
 C:\Users\hp\source\repos\PersRepo\PersAhwal\bin\Debug\System.Text.Encoding.CodePages.xml
+C:\Users\hp\source\repos\PersRepo\PersAhwal\obj\Debug\PersAhwal.Accountant.resources
