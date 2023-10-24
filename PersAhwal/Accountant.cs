@@ -49,6 +49,11 @@ namespace PersAhwal
         string AccountantEmp = "";
         string Joposition = "";
         string colName = "";
+        int[] allSum;
+        string[] StrallSum;
+        string[] StrallCol;
+        string itemSum = "الاسم";
+        string valueSum = "N'الجملة'";
         public Accountant(string dataSource, string greDate, string accountant, string joposition)
         {
             InitializeComponent();
@@ -429,7 +434,7 @@ namespace PersAhwal
         //        }
         //    }
         //}
-        
+
         private void print()
         {
             string noForm = SpecificDigit(رقم_المعاملة.Text, 3, 4);
@@ -437,24 +442,40 @@ namespace PersAhwal
             string state = existed(getTables(noForm), colName);
             if (state == "لا توجد معاملة" && نوع_المعاملة.SelectedIndex != 4)
             {
-                
-                    var selectedOption = MessageBox.Show("لا توجد معاملة بالرقم الموضح", "المعاملة لا تتعلق بقسم الأحوال الشخصية؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                var selectedOption = MessageBox.Show("لا توجد معاملة بالرقم الموضح", "المعاملة لا تتعلق بقسم الأحوال الشخصية؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (selectedOption == DialogResult.No)
                 {
                     return;
                 }
-                
+
             }
             else if (state == "تم السداد")
             {
-                MessageBox.Show("المعاملة الموضح تم سدادها مسبقا");
-                DocxOutFile = @"D:\ArchiveFiles\" + DateTime.Now.ToString("dd-hh-mm-ss") + "ايصال.docx";
-                pdfOutFile = @"D:\ArchiveFiles\" + DateTime.Now.ToString("dd-hh-mm-ss") + "ايصال.pdf";
+                var selectedOption = MessageBox.Show("طباعة الابصال؟","المعاملة الموضح تم سدادها مسبقا", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if(selectedOption == DialogResult.Yes)
+                {
+                    DocxOutFile = @"D:\ArchiveFiles\" + DateTime.Now.ToString("dd-hh-mm-ss") + "ايصال.docx";
+                    pdfOutFile = @"D:\ArchiveFiles\" + DateTime.Now.ToString("dd-hh-mm-ss") + "ايصال.pdf";
+
+                    OpenModelFile(DocxInFile, false, DocxOutFile);
+                    pictureName = @"D:\PrimariFiles\ModelFiles\صقر.png";
+                    try
+                    {
+                        values[2] = (Convert.ToInt32(القيمة.Text) + Convert.ToInt32(المقر.Text)).ToString();
+                    }
+                    catch (Exception ex) { }
+                    values[1] = التاريخ_الميلادي.Text;
+                    //values[2] = القيمة.Text;
+                    values[3] = المتحصل.Text;
+                    values[4] = رقم_المعاملة.Text;
+                    values[5] = مقدم_الطلب.Text;
+                    values[6] = المعاملة.Text;
+                    
+                    
+                    PrintDoc();
+                }
                 
-                OpenModelFile(DocxInFile, false, DocxOutFile);
-                pictureName = @"D:\PrimariFiles\ModelFiles\صقر.png";
-                
-                PrintDoc();
 
                 return;
             }
@@ -474,28 +495,32 @@ namespace PersAhwal
             }
 
 
-            if (!checkEmpty(panelMain) )
+            if (!checkEmpty(panelMain))
             {
                 return;
             }
 
-             DocxOutFile = @"D:\ArchiveFiles\" + DateTime.Now.ToString("dd-hh-mm-ss") + "ايصال.docx";
-             pdfOutFile = @"D:\ArchiveFiles\" + DateTime.Now.ToString("dd-hh-mm-ss") + "ايصال.pdf";
-             
+            DocxOutFile = @"D:\ArchiveFiles\" + DateTime.Now.ToString("dd-hh-mm-ss") + "ايصال.docx";
+            pdfOutFile = @"D:\ArchiveFiles\" + DateTime.Now.ToString("dd-hh-mm-ss") + "ايصال.pdf";
+
             OpenModelFile(DocxInFile, false, DocxOutFile);
             pictureName = @"D:\PrimariFiles\ModelFiles\صقر.png";
             values[1] = التاريخ_الميلادي.Text;
-            values[2] = القيمة.Text;
+            try
+            {
+                values[2] = (Convert.ToInt32(القيمة.Text) + Convert.ToInt32(المقر.Text)).ToString();
+            }
+            catch (Exception ex) { }
             values[3] = المتحصل.Text;
             values[4] = رقم_المعاملة.Text;
             values[5] = مقدم_الطلب.Text;
             values[6] = المعاملة.Text;
             bool insertCase = newReceipt();
             save2DataBase(panelMain, insertCase);
-            
+
             if (نوع_المعاملة.SelectedIndex == 4)
                 save2HandAuth();
-
+            
             PrintDoc();
             paid(noForm, "تم السداد");
         }
@@ -536,8 +561,8 @@ namespace PersAhwal
 
         private void PrintDoc() {
             //System.IO.File.Copy(DocxInFile, DocxOutFile);
-            FileInfo fileInfo = new FileInfo(DocxOutFile);
-            if (fileInfo.IsReadOnly) fileInfo.IsReadOnly = false;
+            //FileInfo fileInfo = new FileInfo(DocxOutFile);
+            //if (fileInfo.IsReadOnly) fileInfo.IsReadOnly = false;
 
             Word._Application wordApp = new Word.Application();
             //wordApp.Visible = true;
@@ -850,7 +875,7 @@ namespace PersAhwal
 
         private void المعاملة_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string query = "select القيم from TableReceiptItems where البند = N'" + المعاملة.Text+ "'"; ;
+            string query = "select القيم,المقر from TableReceiptItems where البند = N'" + المعاملة.Text+ "'"; ;
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
@@ -862,7 +887,10 @@ namespace PersAhwal
             foreach (DataRow dataRow in dtbl.Rows)
             {
                 القيمة.Text = dataRow["القيم"].ToString();
+                المقر.Text = dataRow["المقر"].ToString();
             }
+            if (المقر.Text == "")
+                المقر.Text = "0";
         }
         
         private bool checkStatus(string table, string column)
@@ -896,7 +924,7 @@ namespace PersAhwal
             DataTable dtbl = new DataTable();
             sqlDa.Fill(dtbl);
         }
-        
+
         private void createColumnsForTables()
         {
             string query = "select المعاملة from TableReceipt where التاريخ_الميلادي = '" + SearchDate + "' group by المعاملة";
@@ -907,17 +935,39 @@ namespace PersAhwal
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
             sqlDa.Fill(dtbl);
-
+            inertName();
+            allSum = new int[dtbl.Rows.Count +3];
+            StrallSum = new string[dtbl.Rows.Count +3];
+            StrallCol = new string[dtbl.Rows.Count +3];
+            StrallSum[0] = "الاسم";
+            StrallCol[0] = "الجملة";
+            int count = 1;
             foreach (DataRow dataRow in dtbl.Rows)
             {
-                CreateColumns(dataRow["المعاملة"].ToString().Replace(" ", "_"));
+                CreateColumns(dataRow["المعاملة"].ToString().Replace(" ", "_").TrimEnd().TrimStart());
+                inertColName(dataRow["المعاملة"].ToString());
+                StrallCol[count]  = dataRow["المعاملة"].ToString().Replace(" ", "_").TrimEnd().TrimStart();
+                //MessageBox.Show(StrallCol[count]);
+                count++;                             
             }
+            StrallCol[dtbl.Rows.Count + 1] = "المقر";
+            StrallCol[dtbl.Rows.Count + 2] = "الجملة";
+            CreateColumns("المقر");
+            inertColName("المقر");
+            CreateColumns("الجملة");
+            inertColName("الجملة");
+            itemSum = "الاسم";
+            valueSum = "N'الجملة'";
+            insertValues(SearchDate);
+            getSum(StrallCol);
+            inert(itemSum, valueSum);
         }
-        private void button6_Click_2(object sender, EventArgs e)
+
+        private void insertValues(string date)
         {
-            ProReceiptTable();
-            createColumnsForTables();
-            string  query = "select المعاملة from TableReceipt where التاريخ_الميلادي = '"+ SearchDate + "' group by المعاملة";
+            string items;
+            string values;
+            string query = "select رقم_معاملة_القسم,مقدم_الطلب,المعاملة,القيمة,المقر from TableReceipt where التاريخ_الميلادي = '" + date + "' and حالة_الايصال = N'تم السداد' order by ID desc";
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
@@ -925,13 +975,116 @@ namespace PersAhwal
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
             sqlDa.Fill(dtbl);
-            
+            int count = 0;
             foreach (DataRow dataRow in dtbl.Rows)
             {
-                CreateColumns(dataRow["المعاملة"].ToString().Replace(" ","_"));
-            }
+                string col = dataRow["المعاملة"].ToString().Replace(" ", "_");
+                string name = dataRow["مقدم_الطلب"].ToString().Replace(" ", "_");
+                string value = dataRow["القيمة"].ToString().Replace(" ", "_"); 
+                string buildsupp = dataRow["المقر"].ToString().Replace(" ", "_");
+                if (buildsupp == "")
+                    buildsupp = "0";
 
-            //filllExcelGrid(SearchDate);
+                string sum = (Convert.ToInt32(buildsupp) + Convert.ToInt32(value)).ToString();
+                items = "الاسم,المقر,الجملة," + col;
+                values = "N'" + name + "'," + buildsupp +","+sum+","+ value;
+
+                count++;
+                inert(items, values);
+            }
+            //MessageBox.Show(itemSum + " - " + valueSum); 
+            
+            
+        }
+        
+        private void getSum(string[] colNames)
+        {
+            
+            for (int i = 1; i < (colNames.Length) && colNames[i]!= ""; i++)
+            {
+                string query = "select "+ colNames[i] + " from ReceiptTable";
+                //MessageBox.Show(query);
+                SqlConnection sqlCon = new SqlConnection(DataSource);
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+                SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+                sqlDa.SelectCommand.CommandType = CommandType.Text;
+                DataTable dtbl = new DataTable();
+                sqlDa.Fill(dtbl);
+                int sum = 0;
+                foreach (DataRow dataRow in dtbl.Rows)
+                {
+                    //try
+                    //{
+                    string value = dataRow[colNames[i]].ToString();
+                    if (value == "" || value == colNames[i].Replace("_"," "))
+                        value = "0";
+                    try
+                    {
+                        sum = sum + Convert.ToInt32(value);
+                        Console.WriteLine(value);
+
+
+
+                    }
+                    catch (Exception ex)
+                    {
+                        //MessageBox.Show(value);
+                    }
+                }
+                //MessageBox.Show(sum +" - "+ colNames[i]);
+                
+                valueSum = valueSum + "," + sum.ToString() ;
+                itemSum = itemSum + "," + colNames[i]; 
+
+                
+            }            
+        }
+        private void inert(string items, string values)
+        {
+            string query = "insert into ReceiptTable ( " + items + " ) values ( " + values + " )";
+            Console.WriteLine(query);
+            //MessageBox.Show(query);
+            SqlConnection sqlConnection = new SqlConnection(DataSource);
+            if (sqlConnection.State == ConnectionState.Closed)
+                sqlConnection.Open();
+            SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.ExecuteNonQuery();
+        }
+        
+        private void inertName()
+        {
+            string query = "insert into ReceiptTable ( الاسم ) values ( N'الاسم' )";
+            Console.WriteLine(query);
+            //MessageBox.Show(query);
+            SqlConnection sqlConnection = new SqlConnection(DataSource);
+            if (sqlConnection.State == ConnectionState.Closed)
+                sqlConnection.Open();
+            SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.ExecuteNonQuery();
+        }
+        
+        private void inertColName(string colname)
+        {
+            string query = "update ReceiptTable set "+colname.Replace(" ","_")+" = N'"+ colname + "' where ID = 1";
+            Console.WriteLine(query);
+            //MessageBox.Show(query);
+            SqlConnection sqlConnection = new SqlConnection(DataSource);
+            if (sqlConnection.State == ConnectionState.Closed)
+                sqlConnection.Open();
+            SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.ExecuteNonQuery();
+        }
+        private void button6_Click_2(object sender, EventArgs e)
+        {
+            ProReceiptTable();
+            createColumnsForTables();
+            
+
+            filllExcelGrid(SearchDate);
         }
 
         private void CreateColumns(string Columnname)
@@ -1059,7 +1212,7 @@ namespace PersAhwal
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
-            string strQuery = "select رقم_معاملة_القسم,مقدم_الطلب,المعاملة,القيمة from TableReceipt where التاريخ_الميلادي = '" + date + "' and حالة_الايصال = N'تم السداد' order by ID desc";
+            string strQuery = "select * from ReceiptTable order by ID asc";
             SqlDataAdapter sqlDa = new SqlDataAdapter(strQuery, sqlCon);
 
             sqlDa.SelectCommand.CommandType = CommandType.Text;

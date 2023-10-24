@@ -448,7 +448,7 @@ namespace PersAhwal
             DataTable dtbl = new DataTable();
             Console.WriteLine(database);
             Console.WriteLine(query);
-            MessageBox.Show(database);
+            //btnActiveteMMessageBox.Show(database);
             sqlDa.Fill(dtbl);
             sqlCon.Close();
             if(dtbl.Rows.Count > 0) {
