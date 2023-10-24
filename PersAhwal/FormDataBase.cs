@@ -776,7 +776,7 @@ namespace PersAhwal
                                 DataSource = DataSource56;
                                 Pers_Peope = false;
                             }
-                            else if (division == "احوال شخصية" || division == "الأرشفة العامة")
+                            else if (division == "احوال شخصية" || division == "الأرشفة العامة"|| division == "محاسب")
                             {
                                 Server = "57";
                                 DataSource = DataSource57;
@@ -889,6 +889,11 @@ namespace PersAhwal
                         {
                             AllConsArchInfo allConsArchInfo = new AllConsArchInfo(DataSource57, name, GregorianDate, LocalModelFiles, ArchFile, joposition);
                             allConsArchInfo.ShowDialog();
+                        }
+                        if (division == "محاسب")
+                        {
+                            Accountant accountant = new Accountant(DataSource57, GregorianDate, name, career);
+                            accountant.ShowDialog();
                         }
                         else
                         {

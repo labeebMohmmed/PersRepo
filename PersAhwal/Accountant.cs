@@ -12,7 +12,7 @@ using System.Windows.Forms;
 
 using ZXing;
 using Color = System.Drawing.Color;
-using ZXing;
+
 using static Azure.Core.HttpHeader;
 using Word = Microsoft.Office.Interop.Word;
 using System.IO;
@@ -22,6 +22,8 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using DocumentFormat.OpenXml.Bibliography;
 using Aspose.Words.Settings;
 using Control = System.Windows.Forms.Control;
+using OfficeOpenXml;
+using System.Data.SqlTypes;
 
 namespace PersAhwal
 {
@@ -34,6 +36,7 @@ namespace PersAhwal
         string DataSource = "";
         bool gridFill = true;
         string GreDate = "";
+        string SearchDate = "";
         string txtMissionCodeNum = "";
         string txtMissionCode = "";
         string[] foundList;
@@ -41,25 +44,74 @@ namespace PersAhwal
         string[] values = new string[8];
         string[] items = new string[8] { "barcode", "التاريخ_الميلادي", "القيمة", "المتحصل", "رقم_المعاملة", "مقدم_الطلب" , "المعاملة" , "البعثة" };
         int intID = 0;
+        int itemID = 0;
         string updateAll, insertAll;
         string AccountantEmp = "";
+        string Joposition = "";
         string colName = "";
-        public Accountant(string dataSource, string greDate, string accountant, string txtmissionCode, string txtmissionCodeNum, string mission)
+        public Accountant(string dataSource, string greDate, string accountant, string joposition)
         {
             InitializeComponent();
             DataSource = dataSource;
-            txtMissionCode = txtmissionCode;
-            txtMissionCodeNum = txtmissionCodeNum;
-            التاريخ_الميلادي.Text = التاريخ.Text = GreDate = greDate;
+            Joposition = joposition;
+            string missionInfo = missionBasicInfo().Split('*')[3];
+            txtMissionCode = missionInfo.Split('/')[1];
+            //MessageBox.Show(txtMissionCode);
+            txtMissionCodeNum = missionInfo.Split('/')[0];
+            //MessageBox.Show(txtMissionCodeNum);
+            التاريخ_الميلادي.Text = التاريخ.Text = GreDate = SearchDate= greDate;
             المتحصل.Text = AccountantEmp = accountant;
-            البعثة.Text = values[7] = mission;
+            البعثة.Text = values[7] = missionBasicInfo().Split('*')[0];
+            //MessageBox.Show(values[7]);
             allList = getColList("TableReceipt");
             FillDataGridView(DataSource, greDate.Split('-')[2]);
-
+            FillDataGridViewItems(DataSource);
             values[0] = @"D:\ArchiveFiles\" + DateTime.Now.ToString("dd-hh-mm-ss") + "الباركود.png";
             comboBox1.SelectedIndex = 0;
+            آلية_البحث.SelectedIndex = 0;
+            if(Joposition != "مدير")
+                button13.Enabled = false;
         }
+        private string missionBasicInfo()
+        {
+            string infoDet = "";
+            string query = "select بيانات_البعثة from TableSettings";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return ""; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            try
+            {
+                sqlDa.Fill(dtbl);
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
 
+
+
+            sqlCon.Close();
+
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                try
+                {
+                    infoDet = dataRow["بيانات_البعثة"].ToString();
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+            return infoDet;
+        }
         private string getTables(string id) {
             string table = "";
             switch (id) {
@@ -79,7 +131,7 @@ namespace PersAhwal
                     table = "TableDivorce";
                     colName = "رقم_المعاملة";
                     break;
-                case "22":
+                case "21":
                         table = "TableHandAuth";
                     colName = "رقم_معاملة_القسم";
                     break;
@@ -227,6 +279,24 @@ namespace PersAhwal
             sqlCon.Close();
             ColorFulGrid9();
         }
+        
+        public void FillDataGridViewItems(string dataSource)
+        {
+            string query = "select * from TableReceiptItems order by ID";
+            SqlConnection sqlCon = new SqlConnection(dataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            dataGridView2.DataSource = dtbl;
+            dataGridView2.Columns[0].Visible = false ;
+            dataGridView2.Columns[1].Width = 380;
+            dataGridView2.Columns[2].Width = 200;
+            sqlCon.Close();
+            
+        }
 
         private void ColorFulGrid9()
         {
@@ -262,7 +332,7 @@ namespace PersAhwal
         public bool newReceipt()
         {
             string query = "select * from TableReceipt where رقم_معاملة_القسم = N'" + رقم_معاملة_القسم .Text+ "'";
-            
+            Console.WriteLine("newReceipt  " + query);   
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
@@ -279,6 +349,7 @@ namespace PersAhwal
         public string existed(string table, string colName)
         {
             string query = "select حالة_السداد from " + table + " where "+ colName + " = N'" + رقم_معاملة_القسم .Text+ "'";
+            Console.WriteLine(query);
             string state = "";
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
@@ -362,20 +433,22 @@ namespace PersAhwal
         private void print()
         {
             string noForm = SpecificDigit(رقم_المعاملة.Text, 3, 4);
+            
             string state = existed(getTables(noForm), colName);
-            if (state == "لا توجد معاملة")
+            if (state == "لا توجد معاملة" && نوع_المعاملة.SelectedIndex != 4)
             {
-                MessageBox.Show("لا توجد معاملة بالرقم الموضح");
-                return;
+                
+                    var selectedOption = MessageBox.Show("لا توجد معاملة بالرقم الموضح", "المعاملة لا تتعلق بقسم الأحوال الشخصية؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (selectedOption == DialogResult.No)
+                {
+                    return;
+                }
+                
             }
             else if (state == "تم السداد")
             {
-                var selectedOption = MessageBox.Show("المعاملة الموضح تم سدادها مسبقا", "معاينة تفاصيل السداد؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (selectedOption == DialogResult.Yes)
-                {
-
-                }
-                return;
+                MessageBox.Show("المعاملة الموضح تم سدادها مسبقا");
+                //return;
             }
             else if (state == "تم الالغاء")
             {
@@ -386,14 +459,22 @@ namespace PersAhwal
                 }
                 return;
             }
+            else if (القيمة.Text == "بدون")
+            {
+                MessageBox.Show("المعاملة غير مدرجة بقائمة البنود المعتمدة، لا يمكن المتابعة");
+                return;
+            }
 
 
             if (!checkEmpty(panelMain) )
             {
                 return;
             }
-            
 
+             DocxOutFile = @"D:\ArchiveFiles\" + DateTime.Now.ToString("dd-hh-mm-ss") + "ايصال.docx";
+             pdfOutFile = @"D:\ArchiveFiles\" + DateTime.Now.ToString("dd-hh-mm-ss") + "ايصال.pdf";
+             DocxInFile = @"D:\PrimariFiles\ModelFiles\الايصال.docx";
+             pictureName = @"D:\PrimariFiles\ModelFiles\صقر.png";
             values[1] = التاريخ_الميلادي.Text;
             values[2] = القيمة.Text;
             values[3] = المتحصل.Text;
@@ -402,7 +483,15 @@ namespace PersAhwal
             values[6] = المعاملة.Text;
             bool insertCase = newReceipt();
             save2DataBase(panelMain, insertCase);
+            
+            if (نوع_المعاملة.SelectedIndex == 4)
+                save2HandAuth();
 
+            PrintDoc();
+            paid(noForm, "تم السداد");
+        }
+
+        private void PrintDoc() {
             System.IO.File.Copy(DocxInFile, DocxOutFile);
             FileInfo fileInfo = new FileInfo(DocxOutFile);
             if (fileInfo.IsReadOnly) fileInfo.IsReadOnly = false;
@@ -434,7 +523,7 @@ namespace PersAhwal
                     BookAuthIDNo.Text = values[index - 1];
                     object rangeAuthIDNo = BookAuthIDNo;
                     wordDoc.Bookmarks.Add(items[index - 1], ref rangeAuthIDNo);
-                //MessageBox.Show (items[index - 1] + " - " + values[index - 1]);
+                    //MessageBox.Show (items[index - 1] + " - " + values[index - 1]);
                 }
                 //}
                 //catch (Exception ex) { }
@@ -444,10 +533,8 @@ namespace PersAhwal
             wordDoc.Close();
             wordApp.Quit();
             System.Diagnostics.Process.Start(pdfOutFile);
-            
-            paid(noForm, "تم السداد");
         }
-        private bool checkEmpty(Panel panel)
+            private bool checkEmpty(Panel panel)
         {
             foreach (Control control in panel.Controls)
             {
@@ -464,12 +551,13 @@ namespace PersAhwal
             return true;
         }
 
-        private bool save2DataBase(Panel panel, bool insert)
+        private string save2DataBase(Panel panel, bool insert)
         {
             string query = checkList(panel, allList, "TableReceipt", insert);
             Console.WriteLine(query);
+            string id = "";
             //MessageBox.Show(query);
-            if (query == "UPDATE TableReceipt SET where ID = @id") return true;
+            if (query == "UPDATE TableReceipt SET where ID = @id") return "";
             Console.WriteLine(panel.Name + " - " + query);
             SqlConnection sqlConnection = new SqlConnection(DataSource);
             if (sqlConnection.State == ConnectionState.Closed)
@@ -487,13 +575,41 @@ namespace PersAhwal
                         if (name == foundList[i])
                         {
                             sqlCommand.Parameters.AddWithValue("@" + foundList[i], control.Text);
-                        MessageBox.Show(i.ToString() + " " + foundList[i] + " - " + control.Text);
+                        //MessageBox.Show(i.ToString() + " " + foundList[i] + " - " + control.Text);
                         Console.WriteLine(i.ToString() + " " + foundList[i] + " - " + control.Text);
                             break;
                         }
                     }
             }
-            sqlCommand.ExecuteNonQuery();
+            if (query.Contains("update"))
+                sqlCommand.ExecuteNonQuery();
+            else {
+                var reader = sqlCommand.ExecuteReader();
+                if (reader.Read())
+                {
+                    id =  reader["lastid"].ToString();
+                }
+                //sqlCommand.Close();
+            }
+            return id;
+        }
+        
+        private bool save2HandAuth()
+        {
+            رقم_المعاملة.Text = DocIDGenerator();
+            string query = "insert into TableHandAuth (Viewed,حالة_السداد,رقم_معاملة_القسم) values (N'" + مقدم_الطلب .Text+ "',N'تم السداد',N'"+ رقم_معاملة_القسم .Text+ "')";
+            Console.WriteLine(query);
+            SqlConnection sqlConnection = new SqlConnection(DataSource);
+            if (sqlConnection.State == ConnectionState.Closed)
+                sqlConnection.Open();
+            SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+            sqlCommand.CommandType = CommandType.Text;
+            try
+            {
+                sqlCommand.ExecuteNonQuery();
+            }catch(Exception ex) {
+                return false;
+            }
             return true;
         }
 
@@ -538,7 +654,7 @@ namespace PersAhwal
             if(insert)                
             return updateAll = "UPDATE " + table + " SET " + updateValues + " where ID = @id";
             else
-                return insertAll = "insert into " + table + "(" + insertItems + ") values (" + insertValues + ")";
+                return insertAll = "insert into " + table + "(" + insertItems + ") values (" + insertValues + ");SELECT @@IDENTITY as lastid";
             
         }
 
@@ -594,6 +710,7 @@ namespace PersAhwal
             {
                 case 0:
                     print();
+                    FillDataGridView(DataSource, GreDate.Split('-')[2]);
                     break;
                 case 1:
                     رقم_المعاملة.Enabled = المعاملة.Enabled = مقدم_الطلب.Enabled = true;
@@ -605,7 +722,7 @@ namespace PersAhwal
                     break;
                 case 2:
                     if (التاريخ_الميلادي.Text == التاريخ.Text) {
-                        حالة_الايصال.Text = "ملغي";
+                        حالة_الايصال.Text = "تم الالغاء";
 
                         SqlConnection sqlCon = new SqlConnection(DataSource);
                         if (sqlCon.State == ConnectionState.Closed)
@@ -614,23 +731,41 @@ namespace PersAhwal
                                 sqlCon.Open();
                             }
                             catch (Exception ex) { return; }
-                        SqlCommand sqlCmd = new SqlCommand("UPDATE TableReceipt SET حالة_الايصال =N'ملغي'", sqlCon);
+                        SqlCommand sqlCmd = new SqlCommand("UPDATE TableReceipt SET حالة_الايصال =N'تم الالغاء' where ID = " + intID.ToString(), sqlCon);
                         sqlCmd.CommandType = CommandType.Text;
-                        sqlCmd.Parameters.AddWithValue("@ID", intID);
+                        
                         sqlCmd.ExecuteNonQuery();
 
                     }
                     else {
                         MessageBox.Show("غير ممكن إلغاء معاملة بتاريخ مسبق");
+
                     }
+                    string noForm = SpecificDigit(رقم_المعاملة.Text, 3, 4);
+                    paid(noForm, "تم الالغاء");
+                    FillDataGridView(DataSource, GreDate.Split('-')[2]);
                     break;
             }
-            FillDataGridView(DataSource, GreDate.Split('-')[2]);
+            
         }
 
-        private void المعاملة_SelectedIndexChanged(object sender, EventArgs e)
+        private void نوع_المعاملة_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string query = "select القيمة from TableReceiptItems where البند = N'" + المعاملة.Text+ "'"; ;
+            if (نوع_المعاملة.SelectedIndex == 4)
+                رقم_المعاملة.Text = DocIDGenerator();
+        }
+
+        private string DocIDGenerator()
+        {
+            string formtype = "21";
+            string year = DateTime.Now.Year.ToString().Replace("20", "");
+            string query = "select max(cast (right(رقم_معاملة_القسم,LEN(رقم_معاملة_القسم) - 15) as int)) as newDocID from TableHandAuth where رقم_معاملة_القسم like N'" + txtMissionCodeNum + "/" + txtMissionCode + "/" + year + "/" + formtype + "%'";
+            Console.WriteLine(query);
+            return  year + formtype  + getUniqueID(query);
+        }
+
+        private string getUniqueID(string query)
+        {
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
@@ -638,9 +773,214 @@ namespace PersAhwal
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
             sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            string maxID = "1";
             foreach (DataRow dataRow in dtbl.Rows)
             {
-                القيمة.Text = dataRow["القيمة"].ToString();
+                try
+                {
+                    maxID = (Convert.ToInt32(dataRow["newDocID"].ToString()) + 1).ToString();
+                    //MessageBox.Show(dataRow["newDocID"].ToString());
+                }
+                catch (Exception ex)
+                {
+                    return maxID;
+                }
+            }
+            return maxID;
+        }
+
+        private void المعاملة_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)13)
+                btnEnd.PerformClick();
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            BindingSource bs = new BindingSource();
+            bs.DataSource = dataGridView1.DataSource;
+            bs.Filter = dataGridView1.Columns[آلية_البحث.Text.Replace(" ", "_")].HeaderText.ToString() + " LIKE '" + ListSearch.Text + "%'";
+            dataGridView1.DataSource = bs;
+            ColorFulGrid9();
+        }
+
+        private void المعاملة_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string query = "select القيم from TableReceiptItems where البند = N'" + المعاملة.Text+ "'"; ;
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            القيمة.Text = "بدون";
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                القيمة.Text = dataRow["القيم"].ToString();
+            }
+        }
+        
+        private bool checkStatus(string table, string column)
+        {
+            bool allowed = true;
+            string query = "select endTime from " + table + " where "+ column + " = N'" + رقم_معاملة_القسم.Text+ "'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            القيمة.Text = "بدون";
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                if( dataRow["endTime"].ToString() != "")
+                    allowed = false;
+            }
+            return allowed;
+        }
+
+        private void button6_Click_2(object sender, EventArgs e)
+        {
+            filllExcelGrid(SearchDate);
+        }
+
+        private void yearReport_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void dateTimeFrom_ValueChanged(object sender, EventArgs e)
+        {
+            SearchDate = dateTimeFrom.Text.Split('-')[1] +"-"+dateTimeFrom.Text.Split('-')[0]+"-"+dateTimeFrom.Text.Split('-')[2];
+            MessageBox.Show(SearchDate);
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            if (button9.Text == "إضافة")
+            {
+                string query = "insert into TableReceiptItems (القيم,البند) values (N'" + القيم.Text + "',N'" + البند.Text + "')";
+                Console.WriteLine(query);
+                SqlConnection sqlConnection = new SqlConnection(DataSource);
+                if (sqlConnection.State == ConnectionState.Closed)
+                    sqlConnection.Open();
+                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                sqlCommand.CommandType = CommandType.Text;
+                try
+                {
+                    sqlCommand.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    return;
+                }
+            }
+            else {
+                SqlConnection sqlCon = new SqlConnection(DataSource);
+                if (sqlCon.State == ConnectionState.Closed)
+                    try
+                    {
+                        sqlCon.Open();
+                    }
+                    catch (Exception ex) { return; }
+                SqlCommand sqlCmd = new SqlCommand("UPDATE TableReceiptItems SET البند =N'" + البند.Text + "',القيم=N'"+ القيم.Text + "'  where ID = " + itemID.ToString(), sqlCon);
+                sqlCmd.CommandType = CommandType.Text;
+                sqlCmd.ExecuteNonQuery();
+                button9.Text = "إضافة";
+            }
+            البند.Text = القيم.Text = "";
+            FillDataGridViewItems(DataSource);
+        }
+
+        private void dataGridView2_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dataGridView2.CurrentRow.Index != -1)
+            {
+                gridFill = true;
+                itemID = Convert.ToInt32(dataGridView2.CurrentRow.Cells[0].Value.ToString());
+                foreach (Control control in panelMain.Controls)
+                {
+                    البند.Text = dataGridView2.CurrentRow.Cells["البند"].Value.ToString();
+                    القيم.Text = dataGridView2.CurrentRow.Cells["القيم"].Value.ToString();
+                    button9.Text = "تعديل";
+                }
+            }
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            string query = "delete from TableReceiptItems where ID = " + itemID.ToString();
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();
+            البند.Text = القيم.Text = "";
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            panelItems.Visible = false;
+            panelItems.SendToBack();    
+        }
+
+        private void button13_Click(object sender, EventArgs e)
+        {
+            panelItems.Visible = true;
+            panelItems.BringToFront();
+        }
+
+        private void المعاملة_TextChanged(object sender, EventArgs e)
+        {
+            القيمة.Text = "بدون";
+        }
+
+        private void filllExcelGrid(string date)
+        {            
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            string strQuery = "select رقم_معاملة_القسم,مقدم_الطلب,المعاملة,القيمة from TableReceipt where التاريخ_الميلادي = '" + date + "' and حالة_الايصال = N'تم السداد' order by ID desc";
+            SqlDataAdapter sqlDa = new SqlDataAdapter(strQuery, sqlCon);
+
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+
+            sqlDa.Fill(dtbl);
+            gridExcel.DataSource = dtbl;
+            
+            sqlCon.Close();
+            string ReportName = DateTime.Now.ToString("mmss");
+            using (SaveFileDialog sfd = new SaveFileDialog() { Filter = "Excel workbook|*.xlsx" })
+            {
+                //sfd.FileName = FilesPathIn + "رقم الملف " + fileN +"_" +ReportName;
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        var fileinfo = new FileInfo(sfd.FileName);
+                        using (var package = new ExcelPackage(fileinfo))
+                        {
+                            ExcelWorksheet excelsheet = package.Workbook.Worksheets.Add("Rights");
+                            excelsheet.Cells.LoadFromDataTable(dtbl);
+                            package.Save();
+
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+
+                    System.Diagnostics.Process.Start(sfd.FileName);
+                }
             }
         }
     }

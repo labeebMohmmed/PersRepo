@@ -44,6 +44,12 @@
             this.btnFileUpload = new System.Windows.Forms.Button();
             this.btnFileDownload = new System.Windows.Forms.Button();
             this.PanelMain = new System.Windows.Forms.Panel();
+            this.الإجراء_الشهر = new System.Windows.Forms.TextBox();
+            this.الايصال_اليوم = new System.Windows.Forms.TextBox();
+            this.الايصال_الشهر = new System.Windows.Forms.TextBox();
+            this.الإجراء_اليوم = new System.Windows.Forms.TextBox();
+            this.الايصال_السنة = new System.Windows.Forms.TextBox();
+            this.الإجراء_السنة = new System.Windows.Forms.TextBox();
             this.تاريخ_الاجراء = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
             this.label27 = new System.Windows.Forms.Label();
@@ -115,12 +121,7 @@
             this.button7 = new System.Windows.Forms.Button();
             this.button8 = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.الإجراء_السنة = new System.Windows.Forms.TextBox();
-            this.الايصال_السنة = new System.Windows.Forms.TextBox();
-            this.الإجراء_اليوم = new System.Windows.Forms.TextBox();
-            this.الايصال_الشهر = new System.Windows.Forms.TextBox();
-            this.الايصال_اليوم = new System.Windows.Forms.TextBox();
-            this.الإجراء_الشهر = new System.Windows.Forms.TextBox();
+            this.حالة_السداد = new System.Windows.Forms.TextBox();
             this.PanelFiles.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView6)).BeginInit();
             this.PanelMain.SuspendLayout();
@@ -274,6 +275,7 @@
             // 
             // PanelMain
             // 
+            this.PanelMain.Controls.Add(this.حالة_السداد);
             this.PanelMain.Controls.Add(this.الإجراء_الشهر);
             this.PanelMain.Controls.Add(this.الايصال_اليوم);
             this.PanelMain.Controls.Add(this.الايصال_الشهر);
@@ -342,6 +344,72 @@
             this.PanelMain.Size = new System.Drawing.Size(1370, 698);
             this.PanelMain.TabIndex = 698;
             this.PanelMain.Paint += new System.Windows.Forms.PaintEventHandler(this.PanelMain_Paint);
+            // 
+            // الإجراء_الشهر
+            // 
+            this.الإجراء_الشهر.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.الإجراء_الشهر.Location = new System.Drawing.Point(1021, 253);
+            this.الإجراء_الشهر.Name = "الإجراء_الشهر";
+            this.الإجراء_الشهر.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.الإجراء_الشهر.Size = new System.Drawing.Size(30, 35);
+            this.الإجراء_الشهر.TabIndex = 1016;
+            this.الإجراء_الشهر.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.الإجراء_الشهر.TextChanged += new System.EventHandler(this.الإجراء_الشهر_TextChanged);
+            // 
+            // الايصال_اليوم
+            // 
+            this.الايصال_اليوم.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.الايصال_اليوم.Location = new System.Drawing.Point(951, 294);
+            this.الايصال_اليوم.Name = "الايصال_اليوم";
+            this.الايصال_اليوم.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.الايصال_اليوم.Size = new System.Drawing.Size(30, 35);
+            this.الايصال_اليوم.TabIndex = 1015;
+            this.الايصال_اليوم.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.الايصال_اليوم.TextChanged += new System.EventHandler(this.الايصال_اليوم_TextChanged);
+            // 
+            // الايصال_الشهر
+            // 
+            this.الايصال_الشهر.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.الايصال_الشهر.Location = new System.Drawing.Point(1021, 294);
+            this.الايصال_الشهر.Name = "الايصال_الشهر";
+            this.الايصال_الشهر.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.الايصال_الشهر.Size = new System.Drawing.Size(30, 35);
+            this.الايصال_الشهر.TabIndex = 1014;
+            this.الايصال_الشهر.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.الايصال_الشهر.TextChanged += new System.EventHandler(this.الايصال_الشهر_TextChanged);
+            // 
+            // الإجراء_اليوم
+            // 
+            this.الإجراء_اليوم.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.الإجراء_اليوم.Location = new System.Drawing.Point(951, 253);
+            this.الإجراء_اليوم.Name = "الإجراء_اليوم";
+            this.الإجراء_اليوم.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.الإجراء_اليوم.Size = new System.Drawing.Size(30, 35);
+            this.الإجراء_اليوم.TabIndex = 1013;
+            this.الإجراء_اليوم.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.الإجراء_اليوم.TextChanged += new System.EventHandler(this.الإجراء_اليوم_TextChanged);
+            // 
+            // الايصال_السنة
+            // 
+            this.الايصال_السنة.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.الايصال_السنة.Location = new System.Drawing.Point(1123, 294);
+            this.الايصال_السنة.Name = "الايصال_السنة";
+            this.الايصال_السنة.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.الايصال_السنة.Size = new System.Drawing.Size(50, 35);
+            this.الايصال_السنة.TabIndex = 1012;
+            this.الايصال_السنة.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.الايصال_السنة.TextChanged += new System.EventHandler(this.الايصال_السنة_TextChanged);
+            // 
+            // الإجراء_السنة
+            // 
+            this.الإجراء_السنة.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.الإجراء_السنة.Location = new System.Drawing.Point(1123, 253);
+            this.الإجراء_السنة.Name = "الإجراء_السنة";
+            this.الإجراء_السنة.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.الإجراء_السنة.Size = new System.Drawing.Size(50, 35);
+            this.الإجراء_السنة.TabIndex = 1011;
+            this.الإجراء_السنة.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.الإجراء_السنة.TextChanged += new System.EventHandler(this.الإجراء_السنة_TextChanged);
             // 
             // تاريخ_الاجراء
             // 
@@ -1153,71 +1221,14 @@
             this.timer1.Enabled = true;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // الإجراء_السنة
+            // حالة_السداد
             // 
-            this.الإجراء_السنة.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.الإجراء_السنة.Location = new System.Drawing.Point(1123, 253);
-            this.الإجراء_السنة.Name = "الإجراء_السنة";
-            this.الإجراء_السنة.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.الإجراء_السنة.Size = new System.Drawing.Size(50, 35);
-            this.الإجراء_السنة.TabIndex = 1011;
-            this.الإجراء_السنة.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.الإجراء_السنة.TextChanged += new System.EventHandler(this.الإجراء_السنة_TextChanged);
-            // 
-            // الايصال_السنة
-            // 
-            this.الايصال_السنة.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.الايصال_السنة.Location = new System.Drawing.Point(1123, 294);
-            this.الايصال_السنة.Name = "الايصال_السنة";
-            this.الايصال_السنة.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.الايصال_السنة.Size = new System.Drawing.Size(50, 35);
-            this.الايصال_السنة.TabIndex = 1012;
-            this.الايصال_السنة.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.الايصال_السنة.TextChanged += new System.EventHandler(this.الايصال_السنة_TextChanged);
-            // 
-            // الإجراء_اليوم
-            // 
-            this.الإجراء_اليوم.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.الإجراء_اليوم.Location = new System.Drawing.Point(951, 253);
-            this.الإجراء_اليوم.Name = "الإجراء_اليوم";
-            this.الإجراء_اليوم.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.الإجراء_اليوم.Size = new System.Drawing.Size(30, 35);
-            this.الإجراء_اليوم.TabIndex = 1013;
-            this.الإجراء_اليوم.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.الإجراء_اليوم.TextChanged += new System.EventHandler(this.الإجراء_اليوم_TextChanged);
-            // 
-            // الايصال_الشهر
-            // 
-            this.الايصال_الشهر.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.الايصال_الشهر.Location = new System.Drawing.Point(1021, 294);
-            this.الايصال_الشهر.Name = "الايصال_الشهر";
-            this.الايصال_الشهر.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.الايصال_الشهر.Size = new System.Drawing.Size(30, 35);
-            this.الايصال_الشهر.TabIndex = 1014;
-            this.الايصال_الشهر.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.الايصال_الشهر.TextChanged += new System.EventHandler(this.الايصال_الشهر_TextChanged);
-            // 
-            // الايصال_اليوم
-            // 
-            this.الايصال_اليوم.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.الايصال_اليوم.Location = new System.Drawing.Point(951, 294);
-            this.الايصال_اليوم.Name = "الايصال_اليوم";
-            this.الايصال_اليوم.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.الايصال_اليوم.Size = new System.Drawing.Size(30, 35);
-            this.الايصال_اليوم.TabIndex = 1015;
-            this.الايصال_اليوم.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.الايصال_اليوم.TextChanged += new System.EventHandler(this.الايصال_اليوم_TextChanged);
-            // 
-            // الإجراء_الشهر
-            // 
-            this.الإجراء_الشهر.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.الإجراء_الشهر.Location = new System.Drawing.Point(1021, 253);
-            this.الإجراء_الشهر.Name = "الإجراء_الشهر";
-            this.الإجراء_الشهر.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.الإجراء_الشهر.Size = new System.Drawing.Size(30, 35);
-            this.الإجراء_الشهر.TabIndex = 1016;
-            this.الإجراء_الشهر.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.الإجراء_الشهر.TextChanged += new System.EventHandler(this.الإجراء_الشهر_TextChanged);
+            this.حالة_السداد.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.حالة_السداد.Location = new System.Drawing.Point(41, 51);
+            this.حالة_السداد.Name = "حالة_السداد";
+            this.حالة_السداد.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.حالة_السداد.Size = new System.Drawing.Size(126, 35);
+            this.حالة_السداد.TabIndex = 1017;
             // 
             // FormDivorce
             // 
@@ -1339,5 +1350,6 @@
         private System.Windows.Forms.TextBox الإجراء_اليوم;
         private System.Windows.Forms.TextBox الايصال_السنة;
         private System.Windows.Forms.TextBox الإجراء_السنة;
+        private System.Windows.Forms.TextBox حالة_السداد;
     }
 }

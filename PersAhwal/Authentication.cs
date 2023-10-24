@@ -94,6 +94,17 @@ namespace PersAhwal
             موظف_الأرشقة.Text = employee;
             fillDataGrid("");
             allList = getColList("TableHandAuth");
+            if (checkReciptState() == "OK")
+            {
+                panel1.Visible = picVersio.Visible = panelpicTemp.Visible = fileUpdate.Visible = false;
+                dataGridView1.Size = new System.Drawing.Size(1214, 616);
+
+            }
+            else
+            {
+                panel1.Visible = picVersio.Visible = panelpicTemp.Visible = fileUpdate.Visible = true;
+                dataGridView1.Size = new System.Drawing.Size(577, 616);
+            }
         }
 
         private string[] getColList(string table)
@@ -147,7 +158,7 @@ namespace PersAhwal
         {
             
             SqlConnection sqlCon = new SqlConnection(DataSource);
-            string query1 = "SELECT ID,اسم_موقع_المكاتبة ,نوع_المكاتبة,جنسية_الدبلوماسي,تاريخ_الأرشفة,Viewed,تاريخ_توقيع_المكاتبة,العدد,تعليق,مدير_القسم,موظف_الأرشقة,اسم_الجهة,اسم_صاحب_الشهادة,رقم_الشهادة,رقم_معاملة_القسم,الحالة FROM TableHandAuth order by ID desc";
+            string query1 = "SELECT ID,اسم_موقع_المكاتبة ,نوع_المكاتبة,جنسية_الدبلوماسي,تاريخ_الأرشفة, Viewed as صاحب_المستند,تاريخ_توقيع_المكاتبة,العدد,تعليق,مدير_القسم,موظف_الأرشقة,اسم_الجهة,اسم_صاحب_الشهادة,رقم_الشهادة,رقم_معاملة_القسم,الحالة FROM TableHandAuth order by ID desc";
             //try
             //{
                 if (sqlCon.State == ConnectionState.Closed)
@@ -275,8 +286,8 @@ namespace PersAhwal
                     sqlCon.Open();
                 }
                 catch (Exception ex) { return 0; }
-            SqlCommand sqlCmd = new SqlCommand("INSERT INTO TableHandAuth ( نوع_المكاتبة,اسم_موقع_المكاتبة,جنسية_الدبلوماسي,تاريخ_الأرشفة,تاريخ_توقيع_المكاتبة,العدد,تعليق,مدير_القسم,حالة_الارشفة,اسم_الجهة,رقم_الشهادة,اسم_صاحب_الشهادة,رقم_معاملة_القسم,الحالة,الجنسية) values (@نوع_المكاتبة,@اسم_موقع_المكاتبة,@جنسية_الدبلوماسي,@تاريخ_الأرشفة,@تاريخ_توقيع_المكاتبة,@العدد,@تعليق,@مدير_القسم,@حالة_الارشفة,@اسم_الجهة,@رقم_الشهادة,@اسم_صاحب_الشهادة,@رقم_معاملة_القسم,@الحالة,@الجنسية);SELECT @@IDENTITY as lastid", sqlCon);
-            if (id != 1) sqlCmd = new SqlCommand("UPDATE TableHandAuth SET الجنسية=@الجنسية, نوع_المكاتبة=@نوع_المكاتبة,اسم_موقع_المكاتبة=@اسم_موقع_المكاتبة,جنسية_الدبلوماسي=@جنسية_الدبلوماسي,تاريخ_الأرشفة=@تاريخ_الأرشفة,تاريخ_توقيع_المكاتبة=@تاريخ_توقيع_المكاتبة,العدد=@العدد,تعليق=@تعليق,مدير_القسم=@مدير_القسم,حالة_الارشفة=@حالة_الارشفة,اسم_الجهة=@اسم_الجهة,اسم_صاحب_الشهادة=@اسم_صاحب_الشهادة,رقم_الشهادة=@رقم_الشهادة,الحالة=@الحالة where ID=@ID", sqlCon);
+            SqlCommand sqlCmd = new SqlCommand("INSERT INTO TableHandAuth ( نوع_المكاتبة,اسم_موقع_المكاتبة,جنسية_الدبلوماسي,تاريخ_الأرشفة,تاريخ_توقيع_المكاتبة,العدد,تعليق,مدير_القسم,حالة_الارشفة,اسم_الجهة,رقم_الشهادة,اسم_صاحب_الشهادة,رقم_معاملة_القسم,الحالة,الجنسية,endTime) values (@نوع_المكاتبة,@اسم_موقع_المكاتبة,@جنسية_الدبلوماسي,@تاريخ_الأرشفة,@تاريخ_توقيع_المكاتبة,@العدد,@تعليق,@مدير_القسم,@حالة_الارشفة,@اسم_الجهة,@رقم_الشهادة,@اسم_صاحب_الشهادة,@رقم_معاملة_القسم,@الحالة,@الجنسية,@endTime);SELECT @@IDENTITY as lastid", sqlCon);
+            if (id != 1) sqlCmd = new SqlCommand("UPDATE TableHandAuth SET الجنسية=@الجنسية, نوع_المكاتبة=@نوع_المكاتبة,اسم_موقع_المكاتبة=@اسم_موقع_المكاتبة,جنسية_الدبلوماسي=@جنسية_الدبلوماسي,تاريخ_الأرشفة=@تاريخ_الأرشفة,تاريخ_توقيع_المكاتبة=@تاريخ_توقيع_المكاتبة,العدد=@العدد,تعليق=@تعليق,مدير_القسم=@مدير_القسم,حالة_الارشفة=@حالة_الارشفة,اسم_الجهة=@اسم_الجهة,اسم_صاحب_الشهادة=@اسم_صاحب_الشهادة,رقم_الشهادة=@رقم_الشهادة,الحالة=@الحالة,endTime=@endTime where ID=@ID", sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.Parameters.AddWithValue("@ID", id);
             sqlCmd.Parameters.AddWithValue("@نوع_المكاتبة", نوع_المكاتبة);
@@ -285,6 +296,7 @@ namespace PersAhwal
             sqlCmd.Parameters.AddWithValue("@تاريخ_توقيع_المكاتبة", تاريخ_توقيع_المكاتبة);
             sqlCmd.Parameters.AddWithValue("@العدد", العدد);
             sqlCmd.Parameters.AddWithValue("@الجنسية", appSex);
+            sqlCmd.Parameters.AddWithValue("@endTime", DateTime.Now.ToString("g"));
             sqlCmd.Parameters.AddWithValue("@الحالة", docStatus);
             sqlCmd.Parameters.AddWithValue("@رقم_معاملة_القسم", رقم_معاملة_القسم);
             sqlCmd.Parameters.AddWithValue("@اسم_الجهة", اسم_الجهة.Text);
@@ -644,6 +656,7 @@ namespace PersAhwal
             if (dataGridView1.CurrentRow.Index != -1)
             {
                 Messid = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value.ToString());
+                panel1.Visible = picVersio.Visible = true;
                 gridFill = true;
                 fillInfo();
                 رقم_معاملة_القسم = dataGridView1.CurrentRow.Cells["رقم_معاملة_القسم"].Value.ToString();
@@ -1241,6 +1254,23 @@ namespace PersAhwal
         private void button17_Click(object sender, EventArgs e)
         {
             نوع_المكاتبة_check = false;
+        }
+        private string checkReciptState()
+        {
+            SqlConnection Con = new SqlConnection(DataSource);
+            string state = "";
+            string query = "select activeReceipt from Tablesettings where ID=@id";
+            SqlCommand sqlCmd1 = new SqlCommand(query, Con);
+            sqlCmd1.Parameters.Add("@Id", SqlDbType.Int).Value = "1";
+            if (Con.State == ConnectionState.Closed)
+                Con.Open();
+
+            var reader = sqlCmd1.ExecuteReader();
+            if (reader.Read())
+            {
+                state = reader["activeReceipt"].ToString();
+            }
+            return state;
         }
     }
 }

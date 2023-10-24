@@ -126,7 +126,12 @@ namespace PersAhwal
 
         private void button1_Click(object sender, EventArgs e)
         {
+            string career = "مدير";
+            if(JobPossition.Text == "تعين محلي" || JobPossition.Text == "مندوب جالية" || JobPossition.Text == "محاسب")
+                career = "موظف";
             string newPass = userpass;
+            if (JobPossition.Text == "محاسب"||JobPossition.Text == "مدير مالي")
+                ServerType = "محاسب";            
             SqlConnection sqlCon = new SqlConnection(DataSource);
             string addInfo = "قام " + ApplicantName.Text + " بتحديث بيانات حسابه بتاريخ " + GriDate +Environment.NewLine + "----------------------------------------------";
             if (Register.Text == "تحديث")
@@ -155,7 +160,7 @@ namespace PersAhwal
 
                 if (sqlCon.State == ConnectionState.Closed)
                     sqlCon.Open();
-                SqlCommand sqlCmd = new SqlCommand("UPDATE TableUser SET EngEmployeeName = @EngEmployeeName,UserName = @UserName,JobPosition = @JobPosition,Gender = @Gender,EmployeeName = @EmployeeName,Pass = @Pass,RestPAss=@RestPAss,comment=@comment WHERE ID = @ID", sqlCon);
+                SqlCommand sqlCmd = new SqlCommand("UPDATE TableUser SET Career = @Career, EngEmployeeName = @EngEmployeeName,UserName = @UserName,JobPosition = @JobPosition,Gender = @Gender,EmployeeName = @EmployeeName,Pass = @Pass,RestPAss=@RestPAss,comment=@comment WHERE ID = @ID", sqlCon);
                 sqlCmd.CommandType = CommandType.Text;
                 sqlCmd.Parameters.AddWithValue("@ID", IDEmp);
                 sqlCmd.Parameters.AddWithValue("@Pass", newPass);
@@ -165,6 +170,7 @@ namespace PersAhwal
                 sqlCmd.Parameters.AddWithValue("@Gender", EmpGender.Text);
                 sqlCmd.Parameters.AddWithValue("@UserName", EngEmployeeName.Text);
                 sqlCmd.Parameters.AddWithValue("@RestPAss", "done");
+                sqlCmd.Parameters.AddWithValue("@Career", career);
                 sqlCmd.Parameters.AddWithValue("@comment", addInfo + التعليقات_السابقة_Off.Text);
 
                 sqlCmd.ExecuteNonQuery();
@@ -219,6 +225,7 @@ namespace PersAhwal
                         sqlCmd.Parameters.AddWithValue("@ID", 0);
                         sqlCmd.Parameters.AddWithValue("@mode", "Add");
                         sqlCmd.Parameters.AddWithValue("@EmployeeName", userName.Text);
+                        sqlCmd.Parameters.AddWithValue("@Career", career);
                         sqlCmd.Parameters.AddWithValue("@JobPosition", JobPossition.Text);
                         sqlCmd.Parameters.AddWithValue("@Gender", EmpGender.Text);
                         sqlCmd.Parameters.AddWithValue("@UserName", ApplicantName.Text);
@@ -265,7 +272,7 @@ namespace PersAhwal
                 {
                     if (password1.Text.Equals(password2.Text) && JobPossition.SelectedIndex != 0)
                     {
-                        string query = "UPDATE TableUser SET EngEmployeeName=@EngEmployeeName,EmployeeName=@EmployeeName,JobPosition=@JobPosition,Gender=@Gender,UserName=@UserName,Email=@Email, Pass=@Pass,Aproved=@Aproved,Purpose=@Purpose,comment=@comment WHERE ID=@ID";
+                        string query = "UPDATE TableUser SET Career= @Career,EngEmployeeName=@EngEmployeeName,EmployeeName=@EmployeeName,JobPosition=@JobPosition,Gender=@Gender,UserName=@UserName,Email=@Email, Pass=@Pass,Aproved=@Aproved,Purpose=@Purpose,comment=@comment WHERE ID=@ID";
                          addInfo = "تم تعديل حساب الموظف/" + ApplicantName.Text + " بتاريخ " + GriDate + Environment.NewLine + "----------------------------------------------";
 
                         if (sqlCon.State == ConnectionState.Closed)
@@ -279,6 +286,7 @@ namespace PersAhwal
                         sqlCmd.Parameters.AddWithValue("@Gender", EmpGender.Text);
                         sqlCmd.Parameters.AddWithValue("@UserName", userName.Text);
                         sqlCmd.Parameters.AddWithValue("@Email", "");
+                        sqlCmd.Parameters.AddWithValue("@Career", career);
                         sqlCmd.Parameters.AddWithValue("@Pass", password1.Text);
                         sqlCmd.Parameters.AddWithValue("@EngEmployeeName", EngEmployeeName.Text);
                         sqlCmd.Parameters.AddWithValue("@Aproved", "غير مؤكد");
@@ -508,6 +516,12 @@ namespace PersAhwal
 
         private void btnActivete_Click(object sender, EventArgs e)
         {
+            string career = "مدير";
+            if (JobPossition.Text == "محاسب" || JobPossition.Text == "مدير مالي")
+                ServerType = "محاسب";
+
+            if (JobPossition.Text == "تعين محلي" || JobPossition.Text == "مندوب جالية" || JobPossition.Text == "محاسب")
+                career = "موظف"; 
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
@@ -518,6 +532,7 @@ namespace PersAhwal
             sqlCmd.Parameters.AddWithValue("@mode", "Edit");
 
             sqlCmd.Parameters.AddWithValue("@EmployeeName", ApplicantName.Text);
+            sqlCmd.Parameters.AddWithValue("@Career", career);
             sqlCmd.Parameters.AddWithValue("@JobPosition", JobPossition.Text);
             sqlCmd.Parameters.AddWithValue("@Gender", EmpGender.Text);
             sqlCmd.Parameters.AddWithValue("@UserName", userName.Text);
@@ -551,6 +566,12 @@ namespace PersAhwal
 
         private void btnDeActivete_Click(object sender, EventArgs e)
         {
+            string career = "مدير";
+            if (JobPossition.Text == "تعين محلي" || JobPossition.Text == "مندوب جالية" || JobPossition.Text == "محاسب")
+                career = "موظف";
+            if (JobPossition.Text == "محاسب" || JobPossition.Text == "مدير مالي")
+                ServerType = "محاسب";
+
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
@@ -564,6 +585,7 @@ namespace PersAhwal
             sqlCmd.Parameters.AddWithValue("@Gender", EmpGender.Text);
             sqlCmd.Parameters.AddWithValue("@UserName", userName.Text);
             sqlCmd.Parameters.AddWithValue("@Email", "");
+            sqlCmd.Parameters.AddWithValue("@Career", career);
             sqlCmd.Parameters.AddWithValue("@Pass", password1.Text);
             sqlCmd.Parameters.AddWithValue("@Aproved", "غير مؤكد ");
             sqlCmd.Parameters.AddWithValue("@Purpose", ServerType);

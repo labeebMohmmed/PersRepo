@@ -46,6 +46,9 @@
             this.btnFileUpload = new System.Windows.Forms.Button();
             this.btnFileDownload = new System.Windows.Forms.Button();
             this.PanelMain = new System.Windows.Forms.Panel();
+            this.label4 = new System.Windows.Forms.Label();
+            this.عقد_تراجع = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.إجمالي_الصداق_كتابة = new System.Windows.Forms.TextBox();
             this.نوع_وثيقة_الثاني = new System.Windows.Forms.ComboBox();
@@ -139,9 +142,7 @@
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.labDescribed = new System.Windows.Forms.Button();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
-            this.label2 = new System.Windows.Forms.Label();
-            this.عقد_تراجع = new System.Windows.Forms.ComboBox();
-            this.label4 = new System.Windows.Forms.Label();
+            this.حالة_السداد = new System.Windows.Forms.TextBox();
             this.PanelFiles.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView6)).BeginInit();
             this.PanelMain.SuspendLayout();
@@ -186,7 +187,7 @@
             this.lalCount.Location = new System.Drawing.Point(8, 6);
             this.lalCount.Name = "lalCount";
             this.lalCount.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.lalCount.Size = new System.Drawing.Size(42, 27);
+            this.lalCount.Size = new System.Drawing.Size(41, 27);
             this.lalCount.TabIndex = 808;
             this.lalCount.Text = "0 فرد";
             // 
@@ -314,6 +315,7 @@
             // 
             // PanelMain
             // 
+            this.PanelMain.Controls.Add(this.حالة_السداد);
             this.PanelMain.Controls.Add(this.label4);
             this.PanelMain.Controls.Add(this.عقد_تراجع);
             this.PanelMain.Controls.Add(this.label2);
@@ -409,6 +411,41 @@
             this.PanelMain.Size = new System.Drawing.Size(1351, 679);
             this.PanelMain.TabIndex = 692;
             this.PanelMain.Visible = false;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(1226, 51);
+            this.label4.Name = "label4";
+            this.label4.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.label4.Size = new System.Drawing.Size(79, 27);
+            this.label4.TabIndex = 1008;
+            this.label4.Text = "صفة الإجراء:";
+            // 
+            // عقد_تراجع
+            // 
+            this.عقد_تراجع.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.عقد_تراجع.FormattingEnabled = true;
+            this.عقد_تراجع.Items.AddRange(new object[] {
+            "عقد قران",
+            "تراجع"});
+            this.عقد_تراجع.Location = new System.Drawing.Point(1056, 47);
+            this.عقد_تراجع.Name = "عقد_تراجع";
+            this.عقد_تراجع.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.عقد_تراجع.Size = new System.Drawing.Size(150, 35);
+            this.عقد_تراجع.TabIndex = 1007;
+            this.عقد_تراجع.Text = "عقد قران";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(1224, 49);
+            this.label2.Name = "label2";
+            this.label2.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.label2.Size = new System.Drawing.Size(0, 27);
+            this.label2.TabIndex = 1006;
             // 
             // label1
             // 
@@ -1364,7 +1401,7 @@
             // 
             this.label19.AutoSize = true;
             this.label19.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label19.Location = new System.Drawing.Point(198, 8);
+            this.label19.Location = new System.Drawing.Point(271, 6);
             this.label19.Name = "label19";
             this.label19.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.label19.Size = new System.Drawing.Size(79, 27);
@@ -1375,10 +1412,10 @@
             // 
             this.رقم_المعاملة.Enabled = false;
             this.رقم_المعاملة.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.رقم_المعاملة.Location = new System.Drawing.Point(9, 5);
+            this.رقم_المعاملة.Location = new System.Drawing.Point(106, 3);
             this.رقم_المعاملة.Name = "رقم_المعاملة";
             this.رقم_المعاملة.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.رقم_المعاملة.Size = new System.Drawing.Size(183, 35);
+            this.رقم_المعاملة.Size = new System.Drawing.Size(159, 35);
             this.رقم_المعاملة.TabIndex = 675;
             // 
             // dataGridView1
@@ -1449,40 +1486,14 @@
             this.timer2.Interval = 1000;
             this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
             // 
-            // label2
+            // حالة_السداد
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(1224, 49);
-            this.label2.Name = "label2";
-            this.label2.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label2.Size = new System.Drawing.Size(0, 27);
-            this.label2.TabIndex = 1006;
-            // 
-            // عقد_تراجع
-            // 
-            this.عقد_تراجع.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.عقد_تراجع.FormattingEnabled = true;
-            this.عقد_تراجع.Items.AddRange(new object[] {
-            "عقد قران",
-            "تراجع"});
-            this.عقد_تراجع.Location = new System.Drawing.Point(1056, 47);
-            this.عقد_تراجع.Name = "عقد_تراجع";
-            this.عقد_تراجع.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.عقد_تراجع.Size = new System.Drawing.Size(150, 35);
-            this.عقد_تراجع.TabIndex = 1007;
-            this.عقد_تراجع.Text = "عقد قران";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(1226, 51);
-            this.label4.Name = "label4";
-            this.label4.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label4.Size = new System.Drawing.Size(79, 27);
-            this.label4.TabIndex = 1008;
-            this.label4.Text = "صفة الإجراء:";
+            this.حالة_السداد.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.حالة_السداد.Location = new System.Drawing.Point(8, 3);
+            this.حالة_السداد.Name = "حالة_السداد";
+            this.حالة_السداد.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.حالة_السداد.Size = new System.Drawing.Size(92, 35);
+            this.حالة_السداد.TabIndex = 1018;
             // 
             // MerriageDoc
             // 
@@ -1620,5 +1631,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox عقد_تراجع;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox حالة_السداد;
     }
 }

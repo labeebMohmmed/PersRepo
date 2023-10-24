@@ -421,11 +421,11 @@ namespace PersAhwal
                 picVersio.BringToFront();
                 if (Server == "57")
                     backgroundWorker3.RunWorkerAsync();
-                عدد_الفرص.Enabled = true;
+                عدد_الفرص.Enabled = checkReceip.Enabled = true;
             }
             else
             {
-                عدد_الفرص.Enabled = picSettings.Visible = pictureBox2.Visible = picLock.Visible = false;
+                عدد_الفرص.Enabled = checkReceip.Enabled = picSettings.Visible = pictureBox2.Visible = picLock.Visible = false;
                 empUpdate.BringToFront();
             }
         }
@@ -10723,7 +10723,16 @@ namespace PersAhwal
                 "الإجراءات الأخرى (" + collCountAll.ToString() + "): في انتظار الادخال (" + collNotFill.ToString() + ")، في انتظار الارشفة (" + collNotArch.ToString() + ")، إكتمل إجراءها (" + collDone.ToString() + ")" + Environment.NewLine +
                 "عدد المستندات التي تم توثيقها (" + authenti.ToString() + ") " + Environment.NewLine +
                 "عدد معاملات الزواج والطلاق غير المكتملة (" + (countSummery1("TableMerrageDoc", "اسم_الزوج") + countSummery1("TableDivorce", "اسم_الزوج")).ToString() + ")";
-
+            if (checkReciptState() == "OK")
+            {
+                checkReceip.Checked = true;
+                checkReceip.Text = "تعطيل الايصالات المالية";
+            }
+            else
+            {
+                checkReceip.Checked = false;
+                checkReceip.Text = "تفعيل الايصالات المالية";
+            }
         }
 
         private void timer5_Tick_1(object sender, EventArgs e)
@@ -10920,6 +10929,50 @@ namespace PersAhwal
         private void dataGridView7_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
+        }
+
+        private void checkReceip_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkReceip.Checked) {
+                alterReciptState("OK");
+                checkReceip.Text = "تعطيل الايصالات المالية";
+            }
+            else {
+                alterReciptState("STOP");
+                checkReceip.Text = "تفعيل الايصالات المالية";
+            }
+        }
+
+        private void alterReciptState(string state) {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                    try
+                    {
+                        sqlCon.Open();
+                    }
+                    catch (Exception ex) { return; }
+                SqlCommand sqlCmd = new SqlCommand("update Tablesettings set activeReceipt=N'"+ state + "' where ID=1", sqlCon);
+                sqlCmd.CommandType = CommandType.Text;
+                sqlCmd.ExecuteNonQuery();
+                sqlCon.Close();
+            
+        }
+            private string checkReciptState()
+        {
+            SqlConnection Con = new SqlConnection(DataSource);
+            string state = "";
+            string query = "select activeReceipt from Tablesettings where ID=@id";
+            SqlCommand sqlCmd1 = new SqlCommand(query, Con);
+            sqlCmd1.Parameters.Add("@Id", SqlDbType.Int).Value = "1";
+            if (Con.State == ConnectionState.Closed)
+                Con.Open();
+
+            var reader = sqlCmd1.ExecuteReader();
+            if (reader.Read())
+            {
+                state = reader["activeReceipt"].ToString();
+            }
+            return state;
         }
 
         private void Open3File(int id, int fileNo)

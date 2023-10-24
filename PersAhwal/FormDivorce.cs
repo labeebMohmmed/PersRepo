@@ -186,7 +186,7 @@ namespace PersAhwal
             foreach (DataRow row in dtbl.Rows)
             {
 
-                if (row["name"].ToString() != "تاريخ_الارشفة1"  && row["name"].ToString() != "تاريخ_الارشفة2" && row["name"].ToString() != "ID" && !row["name"].ToString().Contains("_off") && row["name"].ToString() != "حالة_الارشفة" && row["name"].ToString() != "sms")
+                if (row["name"].ToString() != "endTime" && row["name"].ToString() != "تاريخ_الارشفة1"  && row["name"].ToString() != "تاريخ_الارشفة2" && row["name"].ToString() != "ID" && !row["name"].ToString().Contains("_off") && row["name"].ToString() != "حالة_الارشفة" && row["name"].ToString() != "sms")
                 {
                     allList[i] = row["name"].ToString();
                     //MessageBox.Show(row["name"].ToString());
@@ -274,11 +274,79 @@ namespace PersAhwal
                     newData = true;
                     FillDatafromGenArch("data1", genIDNo.ToString(), "TableDivorce");
                 }
+                if (checkReciptState() == "OK")
+                {
+                    if (حالة_السداد.Text == "")
+                        حالة_السداد.Text = "غير مسددة";
+
+                    if (حالة_السداد.Text == "تم الالغاء")
+                    {
+                        MessageBox.Show("تم إلغاء الايصال المالي للمعاملة، لا يمكن المتابعة");
+
+                        return;
+                    }
+                    else if ((حالة_السداد.Text == "" || حالة_السداد.Text == "غير مسددة"))
+                    {
+                        var selectedOption = MessageBox.Show("متابعة الإجراء إكرامي؟(", "المعاملة غير مسددة", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (selectedOption == DialogResult.Yes)
+                        {
+                            skipPayment("TableCollection");
+                        }
+                        else if (selectedOption == DialogResult.No)
+                        {
+                            return;
+                        }
+                    }
+                    else if (حالة_السداد.Text == "" || حالة_السداد.Text == "غير مسددة")
+                    {
+                        MessageBox.Show("لم يتم سداد الايصال المالي للمعاملة، لا يمكن المتابعة");
+
+                        return;
+
+                    }
+                }
                 AddEdit = grid = false;
                 dataGridView1.Visible = labDescribed.Visible = false;
                 PanelMain.Visible = true;
                 gridFill = false;
             }
+        }
+
+        private void skipPayment(string table)
+        {
+
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+            SqlCommand sqlCmd = new SqlCommand("UPDATE " + table + " SET حالة_السداد =N'إكرامي' where ID = " + genIDNo.ToString(), sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.Parameters.AddWithValue("@ID", genIDNo);
+            sqlCmd.ExecuteNonQuery();
+        }
+        public string existed(string table, string colName)
+        {
+            string query = "select حالة_السداد from " + table + " where " + colName + " = N'" + رقم_المعاملة.Text + "'";
+            string state = "";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            if (dtbl.Rows.Count == 0)
+                state = "لا توجد معاملة";
+            else
+                foreach (DataRow dataRow in dtbl.Rows)
+                {
+                    state = dataRow["حالة_السداد"].ToString();
+                }
+            return state;
         }
         private bool ready()
         {
@@ -1170,6 +1238,23 @@ namespace PersAhwal
             تاريخ_الايصال.Text = الايصال_الشهر.Text + "-" + الايصال_اليوم.Text + "-" + الايصال_السنة.Text;
             if (الايصال_اليوم.Text.Length == 2)
                 تعليق_جديد_Off.Select();
+        }
+        private string checkReciptState()
+        {
+            SqlConnection Con = new SqlConnection(DataSource);
+            string state = "";
+            string query = "select activeReceipt from Tablesettings where ID=@id";
+            SqlCommand sqlCmd1 = new SqlCommand(query, Con);
+            sqlCmd1.Parameters.Add("@Id", SqlDbType.Int).Value = "1";
+            if (Con.State == ConnectionState.Closed)
+                Con.Open();
+
+            var reader = sqlCmd1.ExecuteReader();
+            if (reader.Read())
+            {
+                state = reader["activeReceipt"].ToString();
+            }
+            return state;
         }
     }
 }

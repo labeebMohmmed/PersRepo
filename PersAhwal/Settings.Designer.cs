@@ -150,7 +150,7 @@ namespace PersAhwal
             this.Pan.Location = new System.Drawing.Point(821, 0);
             this.Pan.Name = "Pan";
             this.Pan.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.Pan.Size = new System.Drawing.Size(254, 766);
+            this.Pan.Size = new System.Drawing.Size(254, 749);
             this.Pan.TabIndex = 631;
             // 
             // button6
@@ -934,7 +934,7 @@ namespace PersAhwal
             this.dataGridView2.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.LightGreen;
             this.dataGridView2.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dataGridView2.RowTemplate.Height = 30;
-            this.dataGridView2.Size = new System.Drawing.Size(810, 729);
+            this.dataGridView2.Size = new System.Drawing.Size(810, 712);
             this.dataGridView2.TabIndex = 859;
             this.dataGridView2.Visible = false;
             this.dataGridView2.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellClick);
@@ -1044,7 +1044,7 @@ namespace PersAhwal
             this.dataGridModel.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.LightGreen;
             this.dataGridModel.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dataGridModel.RowTemplate.Height = 30;
-            this.dataGridModel.Size = new System.Drawing.Size(810, 729);
+            this.dataGridModel.Size = new System.Drawing.Size(810, 712);
             this.dataGridModel.TabIndex = 861;
             this.dataGridModel.Visible = false;
             this.dataGridModel.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridModel_CellClick);
@@ -1054,7 +1054,7 @@ namespace PersAhwal
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(1075, 766);
+            this.ClientSize = new System.Drawing.Size(1075, 749);
             this.Controls.Add(this.panelModels);
             this.Controls.Add(this.panel_المستندات);
             this.Controls.Add(this.missioInfopanel);

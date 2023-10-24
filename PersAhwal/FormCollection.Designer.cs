@@ -56,6 +56,8 @@
             this.التاريخ_الميلادي = new System.Windows.Forms.TextBox();
             this.label29 = new System.Windows.Forms.Label();
             this.التاريخ_الهجري = new System.Windows.Forms.TextBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.حالة_السداد = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.Panelapp = new System.Windows.Forms.FlowLayoutPanel();
             this.مقدم_الطلب = new System.Windows.Forms.TextBox();
@@ -337,6 +339,7 @@
             this.آلية_البحث.Size = new System.Drawing.Size(204, 35);
             this.آلية_البحث.TabIndex = 694;
             this.آلية_البحث.Text = "مقدم الطلب";
+            this.آلية_البحث.SelectedIndexChanged += new System.EventHandler(this.آلية_البحث_SelectedIndexChanged);
             // 
             // btnSettings
             // 
@@ -474,6 +477,8 @@
             this.panelapplicationInfo.Controls.Add(this.التاريخ_الميلادي);
             this.panelapplicationInfo.Controls.Add(this.label29);
             this.panelapplicationInfo.Controls.Add(this.التاريخ_الهجري);
+            this.panelapplicationInfo.Controls.Add(this.label19);
+            this.panelapplicationInfo.Controls.Add(this.حالة_السداد);
             this.panelapplicationInfo.Controls.Add(this.label5);
             this.panelapplicationInfo.Controls.Add(this.Panelapp);
             this.panelapplicationInfo.Controls.Add(this.btnPanelapp);
@@ -554,17 +559,17 @@
             // 
             this.رقم_المعاملة.Enabled = false;
             this.رقم_المعاملة.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.رقم_المعاملة.Location = new System.Drawing.Point(545, 30);
+            this.رقم_المعاملة.Location = new System.Drawing.Point(639, 30);
             this.رقم_المعاملة.Name = "رقم_المعاملة";
             this.رقم_المعاملة.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.رقم_المعاملة.Size = new System.Drawing.Size(269, 35);
+            this.رقم_المعاملة.Size = new System.Drawing.Size(175, 35);
             this.رقم_المعاملة.TabIndex = 660;
             // 
             // label23
             // 
             this.label23.AutoSize = true;
             this.label23.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label23.Location = new System.Drawing.Point(445, 27);
+            this.label23.Location = new System.Drawing.Point(539, 27);
             this.label23.Name = "label23";
             this.label23.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.label23.Size = new System.Drawing.Size(94, 27);
@@ -575,11 +580,12 @@
             // 
             this.التاريخ_الميلادي.Enabled = false;
             this.التاريخ_الميلادي.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.التاريخ_الميلادي.Location = new System.Drawing.Point(279, 30);
+            this.التاريخ_الميلادي.Location = new System.Drawing.Point(426, 30);
             this.التاريخ_الميلادي.Name = "التاريخ_الميلادي";
             this.التاريخ_الميلادي.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.التاريخ_الميلادي.Size = new System.Drawing.Size(160, 35);
+            this.التاريخ_الميلادي.Size = new System.Drawing.Size(107, 35);
             this.التاريخ_الميلادي.TabIndex = 661;
+            this.التاريخ_الميلادي.Text = "2023-10-12";
             this.التاريخ_الميلادي.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.التاريخ_الميلادي.TextChanged += new System.EventHandler(this.التاريخ_الميلادي_TextChanged);
             // 
@@ -587,7 +593,7 @@
             // 
             this.label29.AutoSize = true;
             this.label29.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label29.Location = new System.Drawing.Point(183, 27);
+            this.label29.Location = new System.Drawing.Point(330, 27);
             this.label29.Name = "label29";
             this.label29.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.label29.Size = new System.Drawing.Size(90, 27);
@@ -598,11 +604,33 @@
             // 
             this.التاريخ_الهجري.Enabled = false;
             this.التاريخ_الهجري.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.التاريخ_الهجري.Location = new System.Drawing.Point(17, 30);
+            this.التاريخ_الهجري.Location = new System.Drawing.Point(217, 30);
             this.التاريخ_الهجري.Name = "التاريخ_الهجري";
             this.التاريخ_الهجري.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.التاريخ_الهجري.Size = new System.Drawing.Size(160, 35);
+            this.التاريخ_الهجري.Size = new System.Drawing.Size(107, 35);
             this.التاريخ_الهجري.TabIndex = 663;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label19.Location = new System.Drawing.Point(136, 27);
+            this.label19.Name = "label19";
+            this.label19.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.label19.Size = new System.Drawing.Size(75, 27);
+            this.label19.TabIndex = 700;
+            this.label19.Text = "حالة السداد:";
+            // 
+            // حالة_السداد
+            // 
+            this.حالة_السداد.Enabled = false;
+            this.حالة_السداد.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.حالة_السداد.Location = new System.Drawing.Point(23, 30);
+            this.حالة_السداد.Name = "حالة_السداد";
+            this.حالة_السداد.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.حالة_السداد.Size = new System.Drawing.Size(107, 35);
+            this.حالة_السداد.TabIndex = 701;
+            this.حالة_السداد.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label5
             // 
@@ -3117,10 +3145,10 @@
             this.Controls.Add(this.PanelFiles);
             this.Controls.Add(this.btnNext);
             this.Controls.Add(this.labDescribed);
-            this.Controls.Add(this.finalPanel);
             this.Controls.Add(this.panelapplicationInfo);
             this.Controls.Add(this.PanelDataGrid);
             this.Controls.Add(this.panelAuthRights);
+            this.Controls.Add(this.finalPanel);
             this.Name = "FormCollection";
             this.Text = "FormCollection";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormCollection_FormClosed);
@@ -3385,5 +3413,7 @@
         private System.Windows.Forms.TextBox txtArabName;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.ComboBox yearSel;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.TextBox حالة_السداد;
     }
 }

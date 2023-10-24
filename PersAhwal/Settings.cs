@@ -119,24 +119,25 @@ namespace PersAhwal
             panelMainFiles.Location = Settingspanel.Location = missioInfopanel.Location = new System.Drawing.Point(4, 2);
             
             Suffex_preffixList();
+            //itemsUpload();
             System.Globalization.CultureInfo TypeOfLanguage = new System.Globalization.CultureInfo("ar-SA");
             InputLanguage.CurrentInputLanguage = InputLanguage.FromCulture(TypeOfLanguage);
-            location = Directory.GetFiles(@"D:\PrimariFiles\ModelFiles\New folder");
-            for (int x = 0; x < location.Length; x++)
-                if (location[x] != "")
-                {
-                    using (Stream stream = File.OpenRead(location[x]))
-                    {
-                        byte[] buffer1 = new byte[stream.Length];
-                        stream.Read(buffer1, 0, buffer1.Length);
-                        var fileinfo1 = new FileInfo(location[x]);
-                        string extn1 = fileinfo1.Extension;
-                        string DocName1 = fileinfo1.Name.Split('.')[0];
+            //location = Directory.GetFiles(@"D:\PrimariFiles\ModelFiles\New folder");
+            //for (int x = 0; x < location.Length; x++)
+            //    if (location[x] != "")
+            //    {
+            //        using (Stream stream = File.OpenRead(location[x]))
+            //        {
+            //            byte[] buffer1 = new byte[stream.Length];
+            //            stream.Read(buffer1, 0, buffer1.Length);
+            //            var fileinfo1 = new FileInfo(location[x]);
+            //            string extn1 = fileinfo1.Extension;
+            //            string DocName1 = fileinfo1.Name.Split('.')[0];
 
-                        insertDoc(extn1, DocName1, buffer1);
-                        //Console.WriteLine(docid);
-                    }
-                }
+            //            insertDoc(extn1, DocName1, buffer1);
+            //            //Console.WriteLine(docid);
+            //        }
+            //    }
         }
 
         private void insertDoc(string extn1, string DocName1, byte[] buffer1)
@@ -1961,6 +1962,34 @@ namespace PersAhwal
 
             return range;
         }
+        
+        private Excel.Range itemsUpload()
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.ShowDialog();
+            xlApp = new Excel.Application();
+            xlWorkBook = xlApp.Workbooks.Open(@dlg.FileName, 0, true, 5, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false, false, 0, true, 1, 0);
+            xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
+
+            range = xlWorkSheet.UsedRange;
+            rw = range.Rows.Count;
+            cl = range.Columns.Count;
+            //MessageBox.Show(rw.ToString() + " - " + cl.ToString());
+            //ColumnNamesLoad();
+            string cols = "";
+            
+                for (rCnt = 1; rCnt < 42; rCnt++)
+                {
+                    string item = (string)(range.Cells[rCnt, 1] as Excel.Range).Value2;
+                string value = Convert.ToString((range.Cells[rCnt, 2] as Excel.Range).Value2);
+                
+                    //MessageBox.Show(item + " - " + value);
+                    InsertItem(DataSource, value, item);
+                }
+            
+            
+            return range;
+        }
         private void ColumnNamesLoad()
         {
             bool found = false;
@@ -1992,6 +2021,22 @@ namespace PersAhwal
             SqlConnection sqlCon = new SqlConnection(source);
             string column = "@" + comlumnName;
             string qurey = "SET IDENTITY_INSERT dbo." + table + " ON;  insert into " + table + " (ID," + comlumnName + ") values ('" + id.ToString() + "', N'" + data + "')";
+            SqlCommand sqlCmd = new SqlCommand(qurey, sqlCon);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
+        }
+        
+        private void InsertItem(string source, string value, string item)
+        {
+            SqlConnection sqlCon = new SqlConnection(source);            
+            string qurey = "insert into TableReceiptItems (البند,القيم) values (N'" + item + "', N'" + value + "')";
             SqlCommand sqlCmd = new SqlCommand(qurey, sqlCon);
             if (sqlCon.State == ConnectionState.Closed)
                 try
