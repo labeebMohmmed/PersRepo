@@ -664,6 +664,8 @@ namespace PersAhwal
                 التعليقات_السابقة_Off.Text = تعليق.Text;
                 تعليق.Text = "";
                 حفظ_وإنهاء_الارشفة.Text = "تعديل وإنهاء الارشفة";
+                dataGridView1.Size = new System.Drawing.Size(577, 616);
+                panel1.Visible = picVersio.Visible = panelpicTemp.Visible = fileUpdate.Visible = true;
             }
             gridFill = false;
             return;

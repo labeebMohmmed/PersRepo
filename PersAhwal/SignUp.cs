@@ -411,6 +411,7 @@ namespace PersAhwal
                     btnActivete.Visible = false;
                     btnActiveteM.Visible = true;
                     btnActiveteM.BringToFront();
+                    passport.Text = dataGridView1.CurrentRow.Cells["رقم_الجواز"].Value.ToString();
                     اسم_المندوب.Text = dataGridView1.CurrentRow.Cells["MandoubNames"].Value.ToString();
                     رقم_الهاتف.Text = dataGridView1.CurrentRow.Cells["MandoubPhones"].Value.ToString();
                     اسم_المنطقة.Text = dataGridView1.CurrentRow.Cells["MandoubAreas"].Value.ToString();
@@ -448,7 +449,7 @@ namespace PersAhwal
             DataTable dtbl = new DataTable();
             Console.WriteLine(database);
             Console.WriteLine(query);
-            //btnActiveteMMessageBox.Show(database);
+            //MessageBox.Show(database);
             sqlDa.Fill(dtbl);
             sqlCon.Close();
             if(dtbl.Rows.Count > 0) {
@@ -637,7 +638,7 @@ namespace PersAhwal
                     sqlCon.Open();
                 }
                 catch (Exception ex) { return; }
-            SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT ID,MandoubNames,MandoubAreas,MandoubPhones,مواعيد_الحضور,الصفة,وضع_المندوب,comment FROM TableMandoudList", sqlCon);
+            SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT ID,MandoubNames,MandoubAreas,MandoubPhones,مواعيد_الحضور,الصفة,وضع_المندوب,comment,رقم_الجواز FROM TableMandoudList", sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable table = new DataTable();
             sqlDa.Fill(table);

@@ -54,6 +54,8 @@ namespace PersAhwal
         string[] StrallCol;
         string itemSum = "الاسم";
         string valueSum = "N'الجملة'";
+        string primeryLink = "";
+        bool onUpdate = false;
         public Accountant(string dataSource, string greDate, string accountant, string joposition)
         {
             InitializeComponent();
@@ -69,13 +71,25 @@ namespace PersAhwal
             البعثة.Text = values[7] = missionBasicInfo().Split('*')[0];
             //MessageBox.Show(values[7]);
             allList = getColList("TableReceipt");
-            FillDataGridView(DataSource, greDate.Split('-')[2]);
+            FillDataGridView(DataSource, greDate,false);
             FillDataGridViewItems(DataSource);
             values[0] = @"D:\ArchiveFiles\" + DateTime.Now.ToString("dd-hh-mm-ss") + "الباركود.png";
             comboBox1.SelectedIndex = 0;
             آلية_البحث.SelectedIndex = 0;
             if(Joposition != "مدير")
                 button13.Enabled = false;
+
+            if (Directory.Exists(@"D:\"))
+            {
+                primeryLink = @"D:\PrimariFiles\";
+            }
+            else
+            {
+                string appFileName = Environment.GetCommandLineArgs()[0];
+                string directory = System.IO.Path.GetDirectoryName(appFileName);
+                directory = directory + @"\";
+                primeryLink = directory + @"PrimariFiles\";
+            }
         }
         private string missionBasicInfo()
         {
@@ -261,10 +275,10 @@ namespace PersAhwal
                 saConn.Close();
             }
         }
-        public void FillDataGridView(string dataSource, string year)
+        public void FillDataGridView(string dataSource, string greDate, bool allpro)
         {
-            string query = "select * from TableReceipt where DATEPART(year,التاريخ_الميلادي) =" + year + " order by ID";
-            if (year == "جميع الأعوام")
+            string query = "select * from TableReceipt where التاريخ_الميلادي = '" + greDate + "' order by ID";
+            if (allpro == true)
                 query = "select * from TableReceipt order by ID";
             SqlConnection sqlCon = new SqlConnection(dataSource);
             if (sqlCon.State == ConnectionState.Closed)
@@ -277,10 +291,10 @@ namespace PersAhwal
             dataGridView1.Sort(dataGridView1.Columns["ID"], System.ComponentModel.ListSortDirection.Descending);
             dataGridView1.Columns[0].Visible = false;
             //dataGridView1.Columns["نوع_المعاملة"].Visible = false ;
-            dataGridView1.Columns[1].Width = 200;
+            dataGridView1.Columns[1].Visible = false;
             dataGridView1.Columns[2].Width = 200;
-            dataGridView1.Columns[3].Width = 200;
-            //dataGridView1.Columns[3].Width = 40;
+            dataGridView1.Columns[3].Width = 180;
+            dataGridView1.Columns[6].Width = 200;
             sqlCon.Close();
             ColorFulGrid9();
         }
@@ -390,7 +404,8 @@ namespace PersAhwal
             }
         }
 
-        private string SpecificDigit(string text, int Firstdigits, int Lastdigits)
+        
+            private string SpecificDigit(string text, int Firstdigits, int Lastdigits)
         {
             char[] characters = text.ToCharArray();
             string firstNchar = "";
@@ -778,10 +793,10 @@ namespace PersAhwal
             {
                 case 0:
                     print();
-                    FillDataGridView(DataSource, GreDate.Split('-')[2]);
+                    FillDataGridView(DataSource, GreDate, false);
                     break;
                 case 1:
-                    رقم_المعاملة.Enabled = المعاملة.Enabled = مقدم_الطلب.Enabled = true;
+                    رقم_المعاملة.Enabled = نوع_المعاملة.Enabled = المعاملة.Enabled = مقدم_الطلب.Enabled = true;
                     رقم_المعاملة.Text = المعاملة.Text = رقم_معاملة_القسم.Text = مقدم_الطلب.Text = القيمة.Text = "";
                     التاريخ_الميلادي.Text = التاريخ.Text;
                     حالة_الايصال.Visible = button7.Visible = false;
@@ -811,7 +826,7 @@ namespace PersAhwal
                     }
                     string noForm = SpecificDigit(رقم_المعاملة.Text, 3, 4);
                     paid(noForm, "تم الالغاء");
-                    FillDataGridView(DataSource, GreDate.Split('-')[2]);
+                    FillDataGridView(DataSource, GreDate, false);
                     break;
             }
             
@@ -1119,7 +1134,7 @@ namespace PersAhwal
         private void dateTimeFrom_ValueChanged(object sender, EventArgs e)
         {
             SearchDate = dateTimeFrom.Text.Split('-')[1] +"-"+dateTimeFrom.Text.Split('-')[0]+"-"+dateTimeFrom.Text.Split('-')[2];
-            MessageBox.Show(SearchDate);
+            //MessageBox.Show(SearchDate);
         }
 
         private void button9_Click(object sender, EventArgs e)
@@ -1207,6 +1222,12 @@ namespace PersAhwal
             القيمة.Text = "بدون";
         }
 
+        private void آلية_البحث_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (آلية_البحث.Text == "عرض جميع المعاملات")
+                FillDataGridView(DataSource, GreDate, true);
+        }
+
         private void filllExcelGrid(string date)
         {            
             SqlConnection sqlCon = new SqlConnection(DataSource);
@@ -1245,6 +1266,87 @@ namespace PersAhwal
 
                     System.Diagnostics.Process.Start(sfd.FileName);
                 }
+            }
+        }
+        private void upDateClose()
+        {
+            string version = getVersio();
+            try
+            {
+                File.Delete(primeryLink + "fileUpdate.txt");
+                System.Diagnostics.Process.Start(getAppFolder() + @"\setup.exe");
+                dataSourceWrite(primeryLink + @"\Personnel\getVersio.txt", version);
+                
+
+                dataSourceWrite(primeryLink + "updatingSetup.txt", "updating");
+            }
+            catch (Exception ex)
+            {
+                onUpdate = false;
+                //MessageBox.Show("close");
+            }
+        }
+        private string getVersio()
+        {
+            //return "";
+            string ver = "1.0.0.0";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    try
+                    {
+                        sqlCon.Open();
+                    }
+                    catch (Exception ex) { return ""; }
+                string settingData = "select Version from TableSettings where ID='1'";
+                SqlDataAdapter sqlDa = new SqlDataAdapter(settingData, sqlCon);
+                sqlDa.SelectCommand.CommandType = CommandType.Text;
+                DataTable dtbl = new DataTable();
+                sqlDa.Fill(dtbl);
+
+
+                foreach (DataRow dataRow in dtbl.Rows)
+                {
+                    ver = dataRow["Version"].ToString();
+
+                }
+            }
+            catch (Exception ex) { }
+            return ver;
+        }
+
+
+        private string getAppFolder()
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return ""; }
+            string settingData = "select FolderApp from TableSettings where ID='1'";
+            SqlDataAdapter sqlDa = new SqlDataAdapter(settingData, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            string ver = "";
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                ver = dataRow["FolderApp"].ToString();
+
+            }
+            return ver;
+        }
+        private void dataSourceWrite(string dataSourcepath, string text)
+        {
+            using (FileStream fs = File.Create(dataSourcepath))
+            {
+                string dataasstring = text;
+                byte[] info = new UTF8Encoding(true).GetBytes(dataasstring);
+                fs.Write(info, 0, info.Length);
+                fs.Close();
             }
         }
     }

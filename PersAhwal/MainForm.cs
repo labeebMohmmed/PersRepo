@@ -225,8 +225,8 @@ namespace PersAhwal
             infoPreparation(dataSource56, pers_Peope);
             TablesList();
             ClearFileds();
-            getPro1(DataSource);
-            getPro2(DataSource);
+            //getPro1(DataSource);
+            //getPro2(DataSource);
             loadSettings(DataSource, false, false, false, false);
 
             columnNames();
