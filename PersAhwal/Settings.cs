@@ -21,6 +21,8 @@ using System.Globalization;
 using System.Threading;
 using Word = Microsoft.Office.Interop.Word;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using System.Runtime;
+using System.Windows.Media.Animation;
 
 namespace PersAhwal
 {
@@ -138,7 +140,35 @@ namespace PersAhwal
             //            //Console.WriteLine(docid);
             //        }
             //    }
+            if (checkReciptState() == "OK")
+            {
+                checkReceip.Checked = true;
+                checkReceip.Text = "تعطيل الايصالات المالية";
+            }
+            else
+            {
+                checkReceip.Checked = false;
+                checkReceip.Text = "تفعيل الايصالات المالية";
+            }
         }
+        private string checkReciptState()
+        {
+            SqlConnection Con = new SqlConnection(DataSource);
+            string state = "";
+            string query = "select activeReceipt from Tablesettings where ID=@id";
+            SqlCommand sqlCmd1 = new SqlCommand(query, Con);
+            sqlCmd1.Parameters.Add("@Id", SqlDbType.Int).Value = "1";
+            if (Con.State == ConnectionState.Closed)
+                Con.Open();
+
+            var reader = sqlCmd1.ExecuteReader();
+            if (reader.Read())
+            {
+                state = reader["activeReceipt"].ToString();
+            }
+            return state;
+        }
+
 
         private void insertDoc(string extn1, string DocName1, byte[] buffer1)
         {
@@ -2572,6 +2602,35 @@ namespace PersAhwal
                 
             }
             sqlCon.Close();
+        }
+
+        private void checkReceip_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkReceip.Checked)
+            {
+                alterReciptState("OK");
+                checkReceip.Text = "تعطيل الايصالات المالية";
+            }
+            else
+            {
+                alterReciptState("STOP");
+                checkReceip.Text = "تفعيل الايصالات المالية";
+            }
+        }
+        private void alterReciptState(string state)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+            SqlCommand sqlCmd = new SqlCommand("update Tablesettings set activeReceipt=N'" + state + "' where ID=1", sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
+
         }
 
         private void CreateColumns(string Columnname)

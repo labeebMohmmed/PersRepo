@@ -6248,16 +6248,7 @@ namespace PersAhwal
                 MessageBox.Show("المعاملة الموضح تم إلغاءها");                
                 return;
             }
-            else if (state == "تم السداد")
-            {
-                var selectedOption = MessageBox.Show("المعاملة الموضح تم سدادها مسبقا", "معاينة تفاصيل السداد؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (selectedOption == DialogResult.Yes)
-                {
-
-                }
-                return;
-            }
-            else 
+            
 
             if (getDocxPdf() != "docx")
                 setDocxPdf(doc);

@@ -1138,6 +1138,12 @@ namespace PersAhwal
         {
             
         }
+
+        private void appversion_MouseClick(object sender, MouseEventArgs e)
+        {
+            upDateClose();
+        }
+
         string actDate = "";
         private void getDate()
         {

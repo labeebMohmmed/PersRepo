@@ -191,6 +191,7 @@ namespace PersAhwal
             this.appversion.Size = new System.Drawing.Size(56, 27);
             this.appversion.TabIndex = 23;
             this.appversion.Text = "0.0.0.0";
+            this.appversion.MouseClick += new System.Windows.Forms.MouseEventHandler(this.appversion_MouseClick);
             // 
             // timer1
             // 
