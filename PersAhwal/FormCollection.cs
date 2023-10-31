@@ -40,6 +40,7 @@ using DocumentFormat.OpenXml.Drawing.Spreadsheet;
 using SixLabors.ImageSharp.Drawing;
 using DocumentFormat.OpenXml.Drawing;
 using System.Data.SqlTypes;
+using static System.Windows.Forms.AxHost;
 
 namespace PersAhwal
 {
@@ -381,6 +382,7 @@ namespace PersAhwal
                     btnDelete.Visible = btnFile1.Visible = btnFile2.Visible = btnFile3.Visible = Panelapp.Visible = true;
                     break;
                 case 2:
+                    حالة_السداد.Text = existed("TableCollection", "رقم_المعاملة");
                     if (نوع_الإجراء.Text.Contains("عامة")||نوع_الإجراء.Text.Contains("توكيل"))
                     {
                         نوع_الإجراء.BackColor = System.Drawing.Color.MistyRose;
@@ -431,20 +433,7 @@ namespace PersAhwal
                             MessageBox.Show("تم إلغاء الايصال المالي للمعاملة، لا يمكن المتابعة");
                             currentPanelIndex--;
                             return;
-                        }
-                        else if ((حالة_السداد.Text == "" || حالة_السداد.Text == "غير مسددة") && Jobposition.Contains("قنصل"))
-                        {
-                            var selectedOption = MessageBox.Show("متابعة الإجراء إكرامي؟(", "المعاملة غير مسددة", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                            if (selectedOption == DialogResult.Yes)
-                            {
-                                skipPayment("TableCollection");
-                            }
-                            else if (selectedOption == DialogResult.No)
-                            {
-                                currentPanelIndex--;
-                                return;
-                            }
-                        }
+                        }                        
                         else if ((حالة_السداد.Text == "" || حالة_السداد.Text == "غير مسددة") && !Jobposition.Contains("قنصل"))
                         {
                             MessageBox.Show("لم يتم سداد الايصال المالي للمعاملة، لا يمكن المتابعة");
@@ -663,7 +652,7 @@ namespace PersAhwal
             }
         }
 
-        private void skipPayment(string table) {
+        private void skipPayment(string table, string state) {
 
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
@@ -672,7 +661,7 @@ namespace PersAhwal
                     sqlCon.Open();
                 }
                 catch (Exception ex) { return; }
-            SqlCommand sqlCmd = new SqlCommand("UPDATE "+ table + " SET حالة_السداد =N'إكرامي' where ID = " + intID.ToString(), sqlCon);
+            SqlCommand sqlCmd = new SqlCommand("UPDATE "+ table + " SET حالة_السداد =N'"+ state + "' where ID = " + intID.ToString(), sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.Parameters.AddWithValue("@ID", intID);
             sqlCmd.ExecuteNonQuery();
@@ -1921,6 +1910,30 @@ namespace PersAhwal
                 ageDetected = تاريخ_الميلاد.Text;
                 fillInfo(PaneltxtReview, false);
                 fillInfo(panelapplicationInfo, false);
+                if ((حالة_السداد.Text == "" || حالة_السداد.Text == "غير مسددة") && Jobposition.Contains("قنصل"))
+                {
+                    var selectedOption1 = MessageBox.Show("هل المعاملة تم سدادها؟", "متابعة الإجراء", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (selectedOption1 == DialogResult.Yes)
+                    {
+                        حالة_السداد.Text = "تم السداد";
+
+
+                    }
+                    else if (selectedOption1 == DialogResult.No)
+                    {
+                        var selectedOption = MessageBox.Show("متابعة الإجراء إكرامي؟(", "المعاملة غير مسددة", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (selectedOption == DialogResult.Yes)
+                        {
+                            حالة_السداد.Text = "إكرامي";
+                        }
+                        else if (selectedOption == DialogResult.No)
+                        {
+                            currentPanelIndex--;
+                            return;
+                        }
+                    }
+                    skipPayment("TableCollection", حالة_السداد.Text);
+                }
                 fillInfo(PanelItemsboxes, false);
                 fillInfo(finalPanel, false);
                 currentPanelIndex = 1;
@@ -6242,13 +6255,7 @@ namespace PersAhwal
 
         private void FinalPrint(string doc)
         {
-            string state = existed("TableCollection","رقم_المعاملة");
-            if (state == "تم الالغاء")
-            {
-                MessageBox.Show("المعاملة الموضح تم إلغاءها");                
-                return;
-            }
-            
+           
 
             if (getDocxPdf() != "docx")
                 setDocxPdf(doc);

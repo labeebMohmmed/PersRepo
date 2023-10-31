@@ -5780,7 +5780,7 @@ namespace PersAhwal
 
         private void button5_Click_1(object sender, EventArgs e)
         {
-            Authentication authentication = new Authentication(DataSource, attendedVC.Text, FilespathOut, EmployeeName, HijriDate, GregorianDate);
+            Authentication authentication = new Authentication(DataSource, attendedVC.Text, FilespathOut, EmployeeName, HijriDate, GregorianDate, UserJobposition);
             authentication.ShowDialog();
 
         }

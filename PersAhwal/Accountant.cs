@@ -50,6 +50,7 @@ namespace PersAhwal
         string AccountantEmp = "";
         string Joposition = "";
         string colName = "";
+        string tableName = "";
         int[] allSum;
         string[] StrallSum;
         string[] StrallCol;
@@ -57,6 +58,7 @@ namespace PersAhwal
         string valueSum = "N'الجملة'";
         string primeryLink = "";
         bool onUpdate = false;
+        bool AddNewReceipt = true;
         public Accountant(string dataSource, string greDate, string accountant, string joposition)
         {
             InitializeComponent();
@@ -136,40 +138,44 @@ namespace PersAhwal
             return infoDet;
         }
         private string getTables(string id) {
-            string table = "";
+            tableName  = "";
             switch (id) {
                 case "10":
-                    table = "TableCollection";
+                    tableName = "TableCollection";
                     colName = "رقم_المعاملة";
                     break;
                 case "12":
-                    table = "TableAuth";
+                    tableName = "TableAuth";
                     colName = "رقم_التوكيل";
                     break;
                 case "15":
-                    table = "TableMerrageDoc";
+                    tableName = "TableMerrageDoc";
                     colName = "رقم_المعاملة";
                     break;
                 case "17":
-                    table = "TableDivorce";
+                    tableName = "TableDivorce";
                     colName = "رقم_المعاملة";
                     break;
                 case "21":
-                        table = "TableHandAuth";
+                        tableName = "TableHandAuth";
                     colName = "رقم_معاملة_القسم";
                     break;
                 }
-            return table;
+            return tableName;
         }
         private void paid(string form, string payState) {
-            SqlConnection sqlCon = new SqlConnection(DataSource);
+            getTables(form);
+            string query = "UPDATE " + tableName + " SET حالة_السداد =N'" + payState + "' where " + colName + " = N'" + رقم_معاملة_القسم.Text + "'";
+            Console.WriteLine(query);
+            //MessageBox.Show(query);
+                SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 try
                 {
                     sqlCon.Open();
                 }
                 catch (Exception ex) { return; }
-            SqlCommand sqlCmd = new SqlCommand("UPDATE "+ getTables(form) + " SET حالة_السداد =N'" + payState + "' where " +colName+ " = N'" +رقم_معاملة_القسم.Text+"'", sqlCon);
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.ExecuteNonQuery();
         }
@@ -461,7 +467,7 @@ namespace PersAhwal
             string noForm = SpecificDigit(رقم_المعاملة.Text, 3, 4);
             string DocxInFile = "الايصال.docx";
             string state = existed(getTables(noForm), colName);
-            if (state == "تم السداد")
+            if (state == "تم السداد" && AddNewReceipt)
             {
                 var selectedOption = MessageBox.Show("طباعة الابصال؟","المعاملة الموضح تم سدادها مسبقا", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if(selectedOption == DialogResult.Yes)
@@ -731,6 +737,7 @@ namespace PersAhwal
             if (dataGridView1.CurrentRow.Index != -1)
             {
                 gridFill = true;
+                AddNewReceipt = false;
                 foreach (Control control in panelMain.Controls)
                 {
                     panelFill(control);
@@ -854,18 +861,11 @@ namespace PersAhwal
                     save2DataBase(panelMain, insertCase);
                     paid(noForm, حالة_الايصال.Text);
                     FillDataGridView(DataSource, GreDate, false); 
-                    print();                                    
+                    print();
+                    ClearTonewReceipt();
                     break;
                 case "معاملة جديدة":
-                    رقم_المعاملة.Enabled = نوع_المعاملة.Enabled = المعاملة.Enabled = مقدم_الطلب.Enabled = true;
-                    رقم_المعاملة.Text = رقم_معاملة_القسم.Text = مقدم_الطلب.Text = القيمة.Text = "";
-                    المعاملة.Text = "إختر البند";
-                    نوع_المعاملة.Text = "إختر نوع المعاملة";
-                    حالة_الايصال.Text = "تم السداد";
-                    التاريخ_الميلادي.Text = التاريخ.Text;
-                    حالة_الايصال.Visible = label2.Visible = false;
-                    المتحصل.Text = AccountantEmp;
-                    خيارات_المعاملات.SelectedIndex = 0;
+                    ClearTonewReceipt();
                     break;
                 case "إلغاء ايصال":
                     if (التاريخ_الميلادي.Text == التاريخ.Text) {
@@ -890,9 +890,24 @@ namespace PersAhwal
                     }                    
                     paid(noForm, "تم الالغاء");
                     FillDataGridView(DataSource, GreDate, false);
+                    ClearTonewReceipt();
                     break;
             }
             
+        }
+
+        private void ClearTonewReceipt()
+        {
+            AddNewReceipt = true;
+            رقم_المعاملة.Enabled = نوع_المعاملة.Enabled = المعاملة.Enabled = مقدم_الطلب.Enabled = true;
+            رقم_المعاملة.Text = رقم_معاملة_القسم.Text = مقدم_الطلب.Text = القيمة.Text = "";
+            المعاملة.Text = "إختر البند";
+            نوع_المعاملة.Text = "إختر نوع المعاملة";
+            حالة_الايصال.Text = "تم السداد";
+            التاريخ_الميلادي.Text = التاريخ.Text;
+            حالة_الايصال.Visible = label2.Visible = false;
+            المتحصل.Text = AccountantEmp;
+            خيارات_المعاملات.SelectedIndex = 0;
         }
 
         private void نوع_المعاملة_SelectedIndexChanged(object sender, EventArgs e)

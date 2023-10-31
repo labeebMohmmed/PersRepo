@@ -609,6 +609,18 @@ namespace PersAhwal
                     dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightPink;
 
                 }
+                if (dataGridView1.Rows[i].Cells["حالة_السداد"].Value.ToString() == "تم السداد")
+                {
+
+                    dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightBlue;
+                    arch++;
+                }
+                if (dataGridView1.Rows[i].Cells["حالة_السداد"].Value.ToString() == "تم الالغاء")
+                {
+
+                    dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightGray;
+                    arch++;
+                }
                 if (dataGridView1.Rows[i].Cells["حالة_الارشفة"].Value.ToString() == "مؤرشف نهائي")
                 {
 
@@ -2498,6 +2510,30 @@ namespace PersAhwal
                 صفة_الموكل_off.SelectedIndex = Appcases(جنس_الموكَّل, addAuthticIndex);
                 
                 fillInfo(panelapplicationInfo, false);
+                if ((حالة_السداد.Text == "" || حالة_السداد.Text == "غير مسددة") && Jobposition.Contains("قنصل"))
+                {
+                    var selectedOption1 = MessageBox.Show("هل المعاملة تم سدادها؟", "متابعة الإجراء", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (selectedOption1 == DialogResult.Yes)
+                    {
+                        حالة_السداد.Text = "تم السداد";
+                        
+                        
+                    }
+                    else if (selectedOption1 == DialogResult.No)
+                    {
+                        var selectedOption = MessageBox.Show("متابعة الإجراء إكرامي؟(", "المعاملة غير مسددة", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (selectedOption == DialogResult.Yes)
+                        {
+                            حالة_السداد.Text = "إكرامي";                                                         
+                        }
+                        else if (selectedOption == DialogResult.No)
+                        {
+                            currentPanelIndex--;
+                            return;
+                        }
+                    }
+                    skipPayment("TableAuth", حالة_السداد.Text);
+                }
                 fillInfo(panelAuthOptions, false);
                 fillInfo(PanelItemsboxes, false);
                 fillInfo(panellawfulState, false);
@@ -3874,8 +3910,10 @@ namespace PersAhwal
                         currentPanelIndex--; return;
                     }
                     save2DataBase(panelapplicationInfo);
+
                     if (checkReciptState() == "OK")
                     {
+                        حالة_السداد.Text = existed("TableAuth", "رقم_التوكيل");
                         if (حالة_السداد.Text == "")
                             حالة_السداد.Text = "غير مسددة";
 
@@ -3884,20 +3922,7 @@ namespace PersAhwal
                             MessageBox.Show("تم إلغاء الايصال المالي للمعاملة، لا يمكن المتابعة");
                             currentPanelIndex--;
                             return;
-                        }
-                        else if ((حالة_السداد.Text == "" || حالة_السداد.Text == "غير مسددة") && Jobposition.Contains("قنصل"))
-                        {
-                            var selectedOption = MessageBox.Show("متابعة الإجراء إكرامي؟(", "المعاملة غير مسددة", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                            if (selectedOption == DialogResult.Yes)
-                            {
-                                skipPayment("TableCollection");
-                            }
-                            else if (selectedOption == DialogResult.No)
-                            {
-                                currentPanelIndex--;
-                                return;
-                            }
-                        }
+                        }                        
                         else if ((حالة_السداد.Text == "" || حالة_السداد.Text == "غير مسددة") && !Jobposition.Contains("قنصل"))
                         {
                             MessageBox.Show("لم يتم سداد الايصال المالي للمعاملة، لا يمكن المتابعة");
@@ -4054,7 +4079,7 @@ namespace PersAhwal
             }
         }
 
-        private void skipPayment(string table)
+        private void skipPayment(string table, string state)
         {
 
             SqlConnection sqlCon = new SqlConnection(DataSource);
@@ -4064,7 +4089,7 @@ namespace PersAhwal
                     sqlCon.Open();
                 }
                 catch (Exception ex) { return; }
-            SqlCommand sqlCmd = new SqlCommand("UPDATE " + table + " SET حالة_السداد =N'إكرامي' where ID = " + intID.ToString(), sqlCon);
+            SqlCommand sqlCmd = new SqlCommand("UPDATE " + table + " SET حالة_السداد =N'"+ state + "' where ID = " + intID.ToString(), sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.Parameters.AddWithValue("@ID", intID);
             sqlCmd.ExecuteNonQuery();

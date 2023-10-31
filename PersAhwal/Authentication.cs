@@ -67,6 +67,7 @@ namespace PersAhwal
         string[] foundList;
         string updateAll = "";
         string insertAll = "";
+        string UserJobposition = "";
         bool gridFill = false;
         PictureBox picUpdate;
         DeviceInfo AvailableScanner = null;
@@ -78,10 +79,11 @@ namespace PersAhwal
         string docStatus = "شهادة صحيحة";
         int picID = 0;
         int countScan = 0;
-        public Authentication(string dataSource, string atvc, string filespathOut, string employee, string hijriDate, string greDate)
+        public Authentication(string dataSource, string atvc, string filespathOut, string employee, string hijriDate, string greDate, string jobposition)
         {
             InitializeComponent();
             DataSource = dataSource;
+            UserJobposition = jobposition;
             جنسية_الدبلوماسي.SelectedIndex = 0;
             نوع_تاريخ_التوثيق.SelectedIndex = 0;
             عدد_المستندات_off.SelectedIndex = 0;
@@ -96,15 +98,22 @@ namespace PersAhwal
             allList = getColList("TableHandAuth");
             if (checkReciptState() == "OK")
             {
-                panel1.Visible = picVersio.Visible = panelpicTemp.Visible = fileUpdate.Visible = false;
-                dataGridView1.Size = new System.Drawing.Size(1214, 616);
+                picVersio.Visible = fileUpdate.Visible = addDoc.Visible = false;
 
+                //dataGridView1.Size = new System.Drawing.Size(1214, 616);
+                if (UserJobposition.Contains("قنصل"))
+                    addDoc.Visible = true;
+                else 
+                    addDoc.Visible = false;
+                
             }
             else
             {
-                panel1.Visible = picVersio.Visible = panelpicTemp.Visible = fileUpdate.Visible = true;
-                dataGridView1.Size = new System.Drawing.Size(577, 616);
+                picVersio.Visible = fileUpdate.Visible = true;
+                //dataGridView1.Size = new System.Drawing.Size(577, 616);
             }
+            if(UserJobposition.Contains("قنصل"))
+                addDoc.Visible = true;
         }
 
         private string[] getColList(string table)
@@ -130,6 +139,9 @@ namespace PersAhwal
             {
                 Console.WriteLine(row["name"].ToString());
                 //MessageBox.Show(row["name"].ToString());
+                if (row["name"].ToString() == "Viewed")
+                    allList[i] = "صاحب_المستند";
+                else 
                 allList[i] = row["name"].ToString();
                 if (i == 0)
                 {
@@ -287,7 +299,7 @@ namespace PersAhwal
                 }
                 catch (Exception ex) { return 0; }
             SqlCommand sqlCmd = new SqlCommand("INSERT INTO TableHandAuth ( نوع_المكاتبة,اسم_موقع_المكاتبة,جنسية_الدبلوماسي,تاريخ_الأرشفة,تاريخ_توقيع_المكاتبة,العدد,تعليق,مدير_القسم,حالة_الارشفة,اسم_الجهة,رقم_الشهادة,اسم_صاحب_الشهادة,رقم_معاملة_القسم,الحالة,الجنسية,endTime) values (@نوع_المكاتبة,@اسم_موقع_المكاتبة,@جنسية_الدبلوماسي,@تاريخ_الأرشفة,@تاريخ_توقيع_المكاتبة,@العدد,@تعليق,@مدير_القسم,@حالة_الارشفة,@اسم_الجهة,@رقم_الشهادة,@اسم_صاحب_الشهادة,@رقم_معاملة_القسم,@الحالة,@الجنسية,@endTime);SELECT @@IDENTITY as lastid", sqlCon);
-            if (id != 1) sqlCmd = new SqlCommand("UPDATE TableHandAuth SET الجنسية=@الجنسية, نوع_المكاتبة=@نوع_المكاتبة,اسم_موقع_المكاتبة=@اسم_موقع_المكاتبة,جنسية_الدبلوماسي=@جنسية_الدبلوماسي,تاريخ_الأرشفة=@تاريخ_الأرشفة,تاريخ_توقيع_المكاتبة=@تاريخ_توقيع_المكاتبة,العدد=@العدد,تعليق=@تعليق,مدير_القسم=@مدير_القسم,حالة_الارشفة=@حالة_الارشفة,اسم_الجهة=@اسم_الجهة,اسم_صاحب_الشهادة=@اسم_صاحب_الشهادة,رقم_الشهادة=@رقم_الشهادة,الحالة=@الحالة,endTime=@endTime where ID=@ID", sqlCon);
+            if (id != 1) sqlCmd = new SqlCommand("UPDATE TableHandAuth SET الجنسية=@الجنسية, نوع_المكاتبة=@نوع_المكاتبة,اسم_موقع_المكاتبة=@اسم_موقع_المكاتبة,جنسية_الدبلوماسي=@جنسية_الدبلوماسي,تاريخ_الأرشفة=@تاريخ_الأرشفة,تاريخ_توقيع_المكاتبة=@تاريخ_توقيع_المكاتبة,العدد=@العدد,تعليق=@تعليق,مدير_القسم=@مدير_القسم,حالة_الارشفة=@حالة_الارشفة,اسم_الجهة=@اسم_الجهة,Viewed=@صاحب_المستند,رقم_الشهادة=@رقم_الشهادة,الحالة=@الحالة,endTime=@endTime where ID=@ID", sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.Parameters.AddWithValue("@ID", id);
             sqlCmd.Parameters.AddWithValue("@نوع_المكاتبة", نوع_المكاتبة);
@@ -295,12 +307,13 @@ namespace PersAhwal
             sqlCmd.Parameters.AddWithValue("@جنسية_الدبلوماسي", جنسية_الدبلوماسي);
             sqlCmd.Parameters.AddWithValue("@تاريخ_توقيع_المكاتبة", تاريخ_توقيع_المكاتبة);
             sqlCmd.Parameters.AddWithValue("@العدد", العدد);
+            sqlCmd.Parameters.AddWithValue("@Viewed", صاحب_المستند.Text);
             sqlCmd.Parameters.AddWithValue("@الجنسية", appSex);
             sqlCmd.Parameters.AddWithValue("@endTime", DateTime.Now.ToString("g"));
             sqlCmd.Parameters.AddWithValue("@الحالة", docStatus);
             sqlCmd.Parameters.AddWithValue("@رقم_معاملة_القسم", رقم_معاملة_القسم);
             sqlCmd.Parameters.AddWithValue("@اسم_الجهة", اسم_الجهة.Text);
-            sqlCmd.Parameters.AddWithValue("@اسم_صاحب_الشهادة", اسم_صاحب_الشهادة.Text);
+            sqlCmd.Parameters.AddWithValue("@اسم_صاحب_الشهادة", صاحب_المستند.Text);
             sqlCmd.Parameters.AddWithValue("@رقم_الشهادة", رقم_الشهادة.Text);
             sqlCmd.Parameters.AddWithValue("@تاريخ_الأرشفة", تاريخ_الأرشفة);
             sqlCmd.Parameters.AddWithValue("@حالة_الارشفة", "مؤرشف نهائي");
@@ -388,7 +401,7 @@ namespace PersAhwal
             SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.Parameters.AddWithValue("@الاسم", name);
-            sqlCmd.Parameters.AddWithValue("@رقم_معاملة_القسم", messNo);
+            sqlCmd.Parameters.AddWithValue("@رقم_معاملة_القسم", messNo); 
             sqlCmd.Parameters.AddWithValue("@نوع_المستند", docType);
             sqlCmd.Parameters.AddWithValue("@الموظف", employee);
             sqlCmd.Parameters.AddWithValue("@التاريخ", date);
@@ -431,7 +444,7 @@ namespace PersAhwal
             if (selectedOption1 == DialogResult.Yes)
                 appSex = "سوداني"; 
             
-            if (اسم_الجهة.Text != "" && اسم_صاحب_الشهادة.Text != "" && رقم_الشهادة.Text != "")
+            if (اسم_الجهة.Text != "" && صاحب_المستند.Text != "" && رقم_الشهادة.Text != "")
             {
                 CreateMessageAuthentication(تاريخ_الأرشفة.Text, HijriDate, مدير_القسم.Text);
             }
@@ -449,6 +462,11 @@ namespace PersAhwal
             if (اسم_موقع_المكاتبة.Text.Length == 0)
             {
                 MessageBox.Show("يرجى توضيح اسم موثق المكاتبة ");
+                return;
+            }
+            if (صاحب_المستند.Text.Length == 0)
+            {
+                MessageBox.Show("يرجى كتابة اسم صاحب المستند ");
                 return;
             }
             int iD = 1;
@@ -481,7 +499,7 @@ namespace PersAhwal
             string ReportName = DateTime.Now.ToString("mmss");
             string routeDoc = FilespathIn + @"\MessageCapCheck.docx";
             loadMessageNo();
-            ActiveCopy = FilespathOut + "Message" + اسم_صاحب_الشهادة.Text + ReportName + ".docx";
+            ActiveCopy = FilespathOut + "Message" + صاحب_المستند.Text + ReportName + ".docx";
             if (!File.Exists(ActiveCopy))
             {
                 System.IO.File.Copy(routeDoc, ActiveCopy);
@@ -512,7 +530,7 @@ namespace PersAhwal
 
                 string noID = MessageNo + (MessageDocNo + 1).ToString();
 
-                BookMApplicantName.Text = اسم_صاحب_الشهادة.Text;
+                BookMApplicantName.Text = صاحب_المستند.Text;
                 BookMassageNo.Text = noID;
                 BookMassageIqrarNo.Text = رقم_الشهادة.Text;
                 BookDateGre.Text = gregorianDate;
@@ -756,6 +774,7 @@ namespace PersAhwal
             {
                 if (control.Name == allList[col])
                 {
+                    //MessageBox.Show(allList[col] +" - "+ dataGridView1.CurrentRow.Cells[allList[col]].Value.ToString());
                     if (dataGridView1.CurrentRow.Cells[allList[col]].Value.ToString() != "")
                     {
                         control.Text = dataGridView1.CurrentRow.Cells[allList[col]].Value.ToString();
@@ -957,14 +976,14 @@ namespace PersAhwal
             {
                 البحث_بتاريخ.Text = تاريخ_الأرشفة.Text;
                 نوع_تاريخ_التوثيق.Width = 286;
-                نوع_تاريخ_التوثيق.Location = new System.Drawing.Point(19, 44);
+                نوع_تاريخ_التوثيق.Location = new System.Drawing.Point(19, 91);
                 btnYear.Visible = combYear.Visible = comboMonth.Visible = btnMonth.Visible = false;
             }
 
             else if (نوع_تاريخ_التوثيق.SelectedIndex == 1)
             {
                 نوع_تاريخ_التوثيق.Width = 190;
-                نوع_تاريخ_التوثيق.Location = new System.Drawing.Point(115, 44);
+                نوع_تاريخ_التوثيق.Location = new System.Drawing.Point(115, 91);
                 btnYear.Visible = combYear.Visible = comboMonth.Visible = btnMonth.Visible = false;
             }
             else if (نوع_تاريخ_التوثيق.SelectedIndex == 2) {
@@ -1137,7 +1156,7 @@ namespace PersAhwal
 
         private void button35_Click(object sender, EventArgs e)
         {
-            اسم_الجهة.Enabled = اسم_صاحب_الشهادة.Enabled = رقم_الشهادة.Enabled = true;
+            اسم_الجهة.Enabled = صاحب_المستند.Enabled = رقم_الشهادة.Enabled = true;
             docStatus = "في انتظار تأكيد صحتها";
         }
 
@@ -1273,6 +1292,30 @@ namespace PersAhwal
                 state = reader["activeReceipt"].ToString();
             }
             return state;
+        }
+
+        private void addDoc_Click(object sender, EventArgs e)
+        {
+            addDoc.Enabled = false;
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }                                                                           
+                catch (Exception ex) { return ; }
+            SqlCommand sqlCmd = new SqlCommand("INSERT INTO TableHandAuth (تاريخ_الأرشفة,تعليق,مدير_القسم,رقم_معاملة_القسم) values (@تاريخ_الأرشفة,@تعليق,@مدير_القسم,@رقم_معاملة_القسم);SELECT @@IDENTITY as lastid", sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.Parameters.AddWithValue("@رقم_معاملة_القسم", DocIDGenerator());
+            sqlCmd.Parameters.AddWithValue("@تاريخ_الأرشفة", تاريخ_الأرشفة.Text);
+            
+            sqlCmd.Parameters.AddWithValue("@تعليق", تعليق.Text + Environment.NewLine + " --------------" + تاريخ_الأرشفة + "--------------- " + Environment.NewLine + "تم التصديق عليها إكراميا");
+            sqlCmd.Parameters.AddWithValue("@مدير_القسم", موظف_الأرشقة.Text);
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
+            fillDataGrid("");
+            addDoc.Enabled = true;
+            MessageBox.Show("تم إضافة نافذة توثيق لمعاملة إكراميا");
         }
     }
 }
