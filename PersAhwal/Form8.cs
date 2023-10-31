@@ -495,7 +495,8 @@ namespace PersAhwal
             text = text.Replace("0_", "");
             text = text.Replace("،،", "،");
             text = text.Replace("..", ".");
-            text = text.Replace("، ،", "، ");
+            text = text.Replace("..", ".");
+            text = text.Replace("!", "'");
             for (; text.Contains("  ");)
             {
                 text = text.Replace("  ", " ");
@@ -531,6 +532,8 @@ namespace PersAhwal
         private string SuffReplacements(string text, int appCaseIndex, int intAuthcases)
         {
 
+            if (text.Contains("!"))
+                text = text.Replace("!", "'");
             if (text.Contains("  "))
                 text = text.Replace("  ", " ");
             if (text.Contains("tN"))
@@ -640,6 +643,8 @@ namespace PersAhwal
         private string SuffReversReplacements(string text, int appCaseIndex, int intAuthcases)
         {
 
+            if (text.Contains("'"))
+                text = text.Replace("'", "!");
             if (text.Contains("  "))
                 text = text.Replace("  ", " ");
             if (text.Contains("حقل1"))
@@ -941,6 +946,7 @@ namespace PersAhwal
         }
         private void checkStarTextExist(string dataSource, string col, string genTable)
         {
+            deletDup(col);
             string query = "select ID," + col + " from " + genTable;
             Console.WriteLine(query);
            // MessageBox.Show("checkStarTextExist " + query);
@@ -1082,7 +1088,9 @@ namespace PersAhwal
                     idList = Convert.ToInt32(row["ID"].ToString());
                     if (row["proForm1"].ToString() != "")
                         checlList[3] = "";
-                    
+
+                    //MessageBox.Show(row["توضيح_المعاملة"].ToString());
+
                     if (row["توضيح_المعاملة"].ToString() != "")
                         checlList[5] = "";
 
@@ -1165,6 +1173,7 @@ namespace PersAhwal
         
         private bool view_ProDocID(int ID)
         {
+            //MessageBox.Show(ID.ToString());
             bool rowFound = false; 
             SqlConnection sqlCon = new SqlConnection(DataSource);
             try
@@ -1185,6 +1194,7 @@ namespace PersAhwal
                 {
                     TableProcReqID = row["ID"].ToString();
                     labID.Text = row["ID"].ToString();
+                    //MessageBox.Show(row["توضيح_المعاملة"].ToString());
                     txtExplain.Text = row["توضيح_المعاملة"].ToString();
                     جميع_المعاملات.Text = row["المعاملة"].ToString();
                 }
@@ -1348,7 +1358,7 @@ namespace PersAhwal
                 CreateColumn(قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), selectTable, "max");
             
             النص.Text = SuffReversReplacements(النص.Text, 0, 0);
-            string query = "insert into " + selectTable + " (" + قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_") + ") values (N'" + النص.Text + "Star');SELECT @@IDENTITY as lastid";
+            string query = "insert into " + selectTable + " (" + قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_") + ") values (N'" + النص.Text.Replace("'", "!") + "Star');SELECT @@IDENTITY as lastid";
            
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
@@ -1523,12 +1533,13 @@ namespace PersAhwal
                     if (!checkColExistance(selectTable, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_")))
                         CreateColumn(قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), selectTable, "max");
                 }
+                
 
-                string query = "insert into TableCollectStarText (" + قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_") + ") values (N'" + النص.Text + "')";
+                string query = "insert into TableCollectStarText (" + قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_") + ") values (N'" + النص.Text.Replace("'", "!") + "')";
                 if (الموضوع.SelectedIndex == 1)
-                    query = "insert into TableAuthStarText (" + قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_") + ") values (N'" + النص.Text + "')";
+                    query = "insert into TableAuthStarText (" + قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_") + ") values (N'" + النص.Text.Replace("'", "!") + "')";
                 if (الموضوع.SelectedIndex == 2)
-                    query = "insert into TableAuthsub (" + قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_") + ") values (N'" + النص.Text + "')";
+                    query = "insert into TableAuthsub (" + قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_") + ") values (N'" + النص.Text.Replace("'","!") + "')";
 
                 Console.WriteLine(query);
                 SqlConnection sqlCon = new SqlConnection(DataSource);
@@ -1550,6 +1561,32 @@ namespace PersAhwal
             //this.Close();
         }
 
+        private void deletDup(string col)
+        {
+            string table = "TableCollectStarText";
+            if (الموضوع.SelectedIndex == 1)
+                table = "TableAuthStarText";
+            if (الموضوع.SelectedIndex == 2)
+                table = "TableAuthsub";
+
+            
+            
+            string dupQuery = "update "+ table+ " set " + col + " = null where ID in(SELECT ID FROM " + table +
+                       " WHERE  " + col + " is not null " +
+                       " and ID NOT IN (SELECT miN(ID) " +
+                       " FROM "+ table+
+                       " GROUP BY " + col + ")) ";
+
+            
+            Console.WriteLine("dupQuery " + dupQuery);
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlCommand sqlCmd = new SqlCommand(dupQuery, sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();
+            this.Close();
+        }
         private bool  goPanel() {
             for (int i = 0; i < 6; i++)
                 if (checlList[i] != "")
