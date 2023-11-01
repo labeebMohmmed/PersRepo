@@ -910,6 +910,7 @@ namespace PersAhwal
                 {
                     النص.Text = SuffReplacements(dr["TextModel"].ToString(), 0, 0);
                     اللغة.Text = dr["Lang"].ToString();
+                    payment.Text = dr["payment"].ToString();
                     if (الموضوع.SelectedIndex == 1)
                     {
                         الأهلية.Text = SuffReplacements(dr["الأهلية"].ToString(), 0, 0);
@@ -920,6 +921,10 @@ namespace PersAhwal
                     if (اللغة.Text == "الانجليزية")
                         اللغة.Checked = true;
                     else اللغة.Checked = false;
+                    
+                    if (payment.Text == "معفي")
+                        payment.Checked = true;
+                    else payment.Checked = false;
 
 
                     foreach (Control control in PanelItemsboxes.Controls) 
@@ -1584,8 +1589,12 @@ namespace PersAhwal
                 sqlCon.Open();
             SqlCommand sqlCmd = new SqlCommand(dupQuery, sqlCon);
             sqlCmd.CommandType = CommandType.Text;
-            sqlCmd.ExecuteNonQuery();
-            this.Close();
+            try
+            {
+                sqlCmd.ExecuteNonQuery();
+            }
+            catch (Exception ex) { }
+            
         }
         private bool  goPanel() {
             for (int i = 0; i < 6; i++)
@@ -2763,6 +2772,14 @@ namespace PersAhwal
                     panelFill(DataSource, getTableName(listFiels[index]));
                 }
             }
+        }
+
+        private void payment_CheckedChanged(object sender, EventArgs e)
+        {
+            if (payment.Checked)
+                payment.Text = "معفي";
+            else
+                payment.Text = "عادي";
         }
     }
 }

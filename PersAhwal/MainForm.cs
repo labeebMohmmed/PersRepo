@@ -34,6 +34,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml;
 using OfficeOpenXml.Table.PivotTable;
 using Microsoft.SqlServer.Management.Assessment;
+using Microsoft.Reporting.WinForms;
 
 namespace PersAhwal
 {
@@ -46,6 +47,7 @@ namespace PersAhwal
     {
         string messageID = "";
         string AuthTitle = "";
+        string ReceSearchDate = "";
         DataTable dataRowTable;
         static string[] queryNewYear = new string[15];
         string DataSource, DataSource56, DataSource57, GregorianDate, HijriDate, GregorianDateReport;
@@ -5534,7 +5536,7 @@ namespace PersAhwal
                 ReportPanel.BringToFront();
                 flowLayoutPanel1.Visible = ReportPanel.Visible = true;
                 panel4.Visible = false;
-                PanelMandounb.Visible = SearchPanel.Visible = fileManagePanel2.Visible = SearchPanel.Visible = false;
+                PanelMandounb.Visible = SearchPanel.Visible = fileManagePanel2.Visible = SearchPanel.Visible = PanelReceipt.Visible = false;
                 fillYears(yearReport);
             }
             else ReportPanel.Visible = false;
@@ -10922,9 +10924,88 @@ namespace PersAhwal
 
         }
 
+        private void Combtn21_Click(object sender, EventArgs e)
+        {
+            if (PanelReceipt.Visible == false)
+            {
+                PanelReceipt.BringToFront();
+                PanelReceipt.Visible = true;
+                panel4.Visible = false;
+                PanelMandounb.Visible = SearchPanel.Visible = fileManagePanel2.Visible = SearchPanel.Visible = ReportPanel.Visible = false;
+                ReceSearchDate = receSearDate.Text.Split('-')[1] + "-" + receSearDate.Text.Split('-')[2] + "-" + receSearDate.Text.Split('-')[0];
+                getReceiptIfo(ReceSearchDate);
+            }
+            else PanelReceipt.Visible = false;
+        }
 
-       
-            
+        public void getReceiptIfo(string greDate)
+        {
+            string query = "select * from TableReceipt where التاريخ_الميلادي = '" + greDate + "' order by ID";
+            Console.WriteLine(query);
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            dataGridView8.DataSource = dtbl;
+            dataGridView8.Sort(dataGridView8.Columns["ID"], System.ComponentModel.ListSortDirection.Descending);
+            dataGridView8.Columns[0].Visible = false;
+            //dataGridView8.Columns["نوع_المعاملة"].Visible = false ;
+            dataGridView8.Columns[1].Visible = false;
+            dataGridView8.Columns[2].Width = 200;
+            dataGridView8.Columns[3].Width = 180;
+            dataGridView8.Columns[6].Width = 200;
+            sqlCon.Close();
+
+            ColorFulGrid9();
+        }
+
+        private void receSearDate_ValueChanged(object sender, EventArgs e)
+        {
+            ReceSearchDate = receSearDate.Text.Split('-')[1] + "-" + receSearDate.Text.Split('-')[2] + "-" + receSearDate.Text.Split('-')[0];
+            getReceiptIfo(ReceSearchDate);
+        }
+
+        private void dataGridView8_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            foreach (Control control in PanelReceipt.Controls)
+            {
+                panelFill(control);
+                dataGridView8.Visible = false;
+            }
+
+        }
+
+        public void panelFill(Control control)
+        {
+            string[] allList = getColList("TableReceipt");
+            for (int col = 0; col < allList.Length; col++)
+            {
+                if (control.Name == allList[col])
+                {
+                    if (dataGridView8.CurrentRow.Cells[allList[col]].Value.ToString() != "")
+                    {
+                        control.Text = dataGridView8.CurrentRow.Cells[allList[col]].Value.ToString();                        
+                        حالة_الايصال.Visible = label2.Visible = true;
+                        Console.WriteLine(control.Text);
+                    }
+                    try
+                    {
+                       القيمة.Text = (Convert.ToInt32(القيمة.Text) + Convert.ToInt32(المقر.Text)).ToString();
+                    }
+                    catch (Exception ex) { }
+                    control.Enabled = false;
+                }
+            }
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            dataGridView8.Visible  = true;
+        }
+
         private void Open3File(int id, int fileNo)
         {
             string query;

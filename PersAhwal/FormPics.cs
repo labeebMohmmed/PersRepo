@@ -53,11 +53,13 @@ using SixLabors.ImageSharp;
 using Rectangle = System.Drawing.Rectangle;
 using Color = System.Drawing.Color;
 using System.Windows.Controls.Primitives;
+using static System.Windows.Forms.AxHost;
 
 namespace PersAhwal
 {
     public partial class FormPics : Form
     {
+        string Payment = "";
         string AppNameText = "";
         string Combo1Text = "";
         string Combo2Text = "";
@@ -2519,6 +2521,8 @@ namespace PersAhwal
                     }
                 }
                 UpdateComment(AuthNoPart1);
+                if (Payment != "")
+                    skipPayment(TableList, Payment, docid.ToString());
             }
             else if (ArchiveState && !newEntry)
             {
@@ -3194,50 +3198,8 @@ namespace PersAhwal
                     
                 }
 
-            }
-            //else {
-
-
-
-            //}
-
-            this.Close();
-            //if (ArchiveState && relatedPro != "")
-            //{
-            //    var selectedOption = MessageBox.Show("تم رصد " + relatedPro.Split('-')[0] +" بشأن " + relatedPro.Split('-')[1] + " يتم عادة إجراءه مع المعاملة المشار التي تم إجراءها", "هل ترغب في إجراءها؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            //    if (selectedOption == DialogResult.No)
-            //    {
-            //        this.Close();
-            //    }
-            //    else if (selectedOption == DialogResult.Yes)
-            //    {
-            //        mainProNo = AuthNoPart1;
-            //        FormType = 10;
-
-            //        string mainTable = TableList;
-            //        string mainCol = allInsertNamesList[2];
-
-
-            //        getColList("10", true, "-1");
-            //        int docid = NewReportEntry(DataSource, GenQuery, 10, relatedPro.Split('-')[0], relatedPro.Split('-')[1]);
-
-            //        if (docid == 0)
-            //        {
-            //            MessageBox.Show("عملية غير صالحة .. تعذر المتابعة، في حالة تكرار الرسالة يرجى إخطار مشغل البرنامج");
-            //            this.Close();
-            //        }
-            //        addRelatedInfo(DataSource, mainTable, AuthNoPart1, mainProNo, mainCol);
-            //        //insertDocMand(DataSource, AuthNoPart1);
-            //        addRelatedArch(DataSource, AuthNoPart1, mainProNo);
-            //        OpenFile(relatedPro, false);
-            //        if (File.Exists(reqFile))
-            //        {
-            //            string wordOutFile = FilespathOut + Combo1.Text.Trim() + DateTime.Now.ToString("ssmm") + "معاملة مرتبة.docx";
-            //            CreateAuth(date.Split('-')[2].Replace("20", "") + "10" + rowCount + Environment.NewLine + date, reqFile, wordOutFile);
-            //        }
-            //    }
-            //}
-
+            }            
+            this.Close();            
             if (AppNameText != "" && AppNameText != "اكتب اسم مقدم الطلب")
                 updateAppName(AppNameText, refNo, TableList);
 
@@ -3246,6 +3208,39 @@ namespace PersAhwal
             btnSaveEnd.Enabled = true;
         }
 
+        private void getPaymentState(string mainCol, string subCol)
+        {
+            string query = "select payment from TableAddContext where altColName=N'" + mainCol + "' and altSubColName=N'" + subCol + "'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            foreach (DataRow reader in dtbl.Rows)
+            {
+                Payment = reader["payment"].ToString();                
+            }
+            //MessageBox.Show(Payment);
+        }
+
+        private void skipPayment(string table, string state, string intID)
+        {
+
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+            SqlCommand sqlCmd = new SqlCommand("UPDATE " + table + " SET حالة_السداد =N'" + state + "' where ID = " + intID, sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.Parameters.AddWithValue("@ID", intID);
+            sqlCmd.ExecuteNonQuery();
+        }
 
         private void insertDocMand(string dataSource, string id)
         {
@@ -3930,7 +3925,7 @@ namespace PersAhwal
                 if (reqFile == "")
                     OpenFile(Combo1.Text, false);
             }
-
+            getPaymentState(Combo1.Text, Combo2.Text);
         }
        
 

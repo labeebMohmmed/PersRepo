@@ -304,7 +304,7 @@ namespace PersAhwal
                     dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightPink;
 
                 }
-                if (dataGridView1.Rows[i].Cells["حالة_السداد"].Value.ToString() == "تم السداد")
+                if (dataGridView1.Rows[i].Cells["حالة_السداد"].Value.ToString() == "تم السداد" || dataGridView1.Rows[i].Cells["حالة_السداد"].Value.ToString() == "معفي")
                 {
 
                     dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightBlue;

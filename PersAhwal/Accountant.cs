@@ -306,6 +306,7 @@ namespace PersAhwal
             dataGridView1.Columns[3].Width = 180;
             dataGridView1.Columns[6].Width = 200;
             sqlCon.Close();
+            
             ColorFulGrid9();
         }
         
@@ -335,6 +336,8 @@ namespace PersAhwal
         //    int unDesc = 0;
         //    int inComb = 0;
             int i = 0;
+            if(dataGridView1.Rows.Count < 2)
+                dataGridView1.Visible = false;  
             for (; i < dataGridView1.Rows.Count - 1; i++)
             {
                 
@@ -386,15 +389,19 @@ namespace PersAhwal
             SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
-            sqlDa.Fill(dtbl);            
-            sqlCon.Close();
-            if (dtbl.Rows.Count == 0)
-                state = "لا توجد معاملة";
-            else
-                foreach (DataRow dataRow in dtbl.Rows)
-                {
-                    state = dataRow["حالة_السداد"].ToString();
-                }
+            try
+            {
+                sqlDa.Fill(dtbl);
+                sqlCon.Close();
+                if (dtbl.Rows.Count == 0)
+                    state = "لا توجد معاملة";
+                else
+                    foreach (DataRow dataRow in dtbl.Rows)
+                    {
+                        state = dataRow["حالة_السداد"].ToString();
+                    }
+            }
+            catch (Exception ex) { }
             return state;
         }
 
@@ -413,6 +420,8 @@ namespace PersAhwal
                 رقم_المعاملة.Text = رقم_المعاملة.Text.TrimStart().TrimEnd();
                 string year = SpecificDigit(رقم_المعاملة.Text, 1, 2).Trim();
                 رقم_معاملة_القسم.Text = txtMissionCodeNum +"/"+ txtMissionCode +"/"+ year + "/" + noForm + "/" + rowCount;
+                
+                
             }
         }
 
@@ -467,36 +476,37 @@ namespace PersAhwal
             string noForm = SpecificDigit(رقم_المعاملة.Text, 3, 4);
             string DocxInFile = "الايصال.docx";
             string state = existed(getTables(noForm), colName);
-            if (state == "تم السداد" && AddNewReceipt)
-            {
-                var selectedOption = MessageBox.Show("طباعة الابصال؟","المعاملة الموضح تم سدادها مسبقا", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if(selectedOption == DialogResult.Yes)
-                {
-                    DocxOutFile = @"D:\ArchiveFiles\" + DateTime.Now.ToString("dd-hh-mm-ss") + "ايصال.docx";
-                    pdfOutFile = @"D:\ArchiveFiles\" + DateTime.Now.ToString("dd-hh-mm-ss") + "ايصال.pdf";
+            //if (state == "تم السداد" && AddNewReceipt)
+            //{
+            //    var selectedOption = MessageBox.Show("طباعة الابصال؟","المعاملة الموضح تم سدادها مسبقا", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            //    if(selectedOption == DialogResult.Yes)
+            //    {
+            //        DocxOutFile = @"D:\ArchiveFiles\" + DateTime.Now.ToString("dd-hh-mm-ss") + "ايصال.docx";
+            //        pdfOutFile = @"D:\ArchiveFiles\" + DateTime.Now.ToString("dd-hh-mm-ss") + "ايصال.pdf";
 
-                    OpenModelFile(DocxInFile, false, DocxOutFile);
-                    pictureName = @"D:\PrimariFiles\ModelFiles\صقر.png";
-                    try
-                    {
-                        values[2] = (Convert.ToInt32(القيمة.Text) + Convert.ToInt32(المقر.Text)).ToString();
-                    }
-                    catch (Exception ex) { }
-                    values[1] = التاريخ_الميلادي.Text;
-                    //values[2] = القيمة.Text;
-                    values[3] = المتحصل.Text;
-                    values[4] = رقم_المعاملة.Text;
-                    values[5] = مقدم_الطلب.Text;
-                    values[6] = المعاملة.Text;
+            //        OpenModelFile(DocxInFile, false, DocxOutFile);
+            //        pictureName = @"D:\PrimariFiles\ModelFiles\صقر.png";
+            //        try
+            //        {
+            //            values[2] = (Convert.ToInt32(القيمة.Text) + Convert.ToInt32(المقر.Text)).ToString();
+            //        }
+            //        catch (Exception ex) { }
+            //        values[1] = التاريخ_الميلادي.Text;
+            //        //values[2] = القيمة.Text;
+            //        values[3] = المتحصل.Text;
+            //        values[4] = رقم_المعاملة.Text;
+            //        values[5] = مقدم_الطلب.Text;
+            //        values[6] = المعاملة.Text;
                     
                     
-                    PrintDoc();
-                }
+            //        PrintDoc();
+            //    }
                 
 
-                return;
-            }
-            else if (state == "تم الالغاء")
+            //    return;
+            //}
+            //else 
+            if (state == "تم الالغاء")
             {
                 var selectedOption = MessageBox.Show("المعاملة الموضح تم إلغاءها", "معاينة تفاصيل الالغاء؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (selectedOption == DialogResult.Yes)
@@ -570,6 +580,39 @@ namespace PersAhwal
                         System.Diagnostics.Process.Start(FileName);
                 }
                 catch (Exception ex) { return; }
+            }
+            sqlCon.Close();
+        }
+        
+        private void getReceiptData(string colName, string colValue)
+        {
+            string query = "SELECT * from TableReceipt where " + colName + "=N'" + colValue + "'";
+
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            foreach (DataRow reader in dtbl.Rows)
+            {
+                foreach (Control control in panelMain.Controls)
+                {
+                    for (int col = 0; col < allList.Length; col++)
+                    {
+                        if (control.Name == allList[col])
+                        {
+                            control.Text = reader[control.Name].ToString();
+                            intID = Convert.ToInt32(reader["ID"].ToString());
+                            حالة_الايصال.Visible = label2.Visible = true;
+                            Console.WriteLine(control.Text);
+                            if (Joposition == "مدير")
+                                control.Enabled = false;
+                        }
+                    }
+                }
             }
             sqlCon.Close();
         }
@@ -773,7 +816,8 @@ namespace PersAhwal
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
+            if (خيارات_المعاملات.Text == "معاملة جديدة")
+                    ClearTonewReceipt();
         }
 
         private void button8_Click(object sender, EventArgs e)
@@ -783,6 +827,22 @@ namespace PersAhwal
         private bool checkDate()
         {
             string noForm = SpecificDigit(رقم_المعاملة.Text, 3, 4);
+            string state = existed(getTables(noForm), colName);
+            if (AddNewReceipt)
+            {
+                if (state == "معفي")
+                {
+                    MessageBox.Show("المعاملة مصدق عليها إكراميا ومعفية من سداد الرسوم");
+                    return false;
+                }
+                 if (state == "تم السداد")
+                {
+                    getReceiptData("رقم_المعاملة", رقم_المعاملة.Text);
+                    MessageBox.Show("المعاملة تم سداد الرسوم المتعلقة بها مسبقا");
+                    return false;
+                }
+            }
+
             if (نوع_المعاملة.Text == "إختر نوع المعاملة")
             {
                 نوع_المعاملة.BackColor = System.Drawing.Color.MistyRose;
@@ -820,7 +880,7 @@ namespace PersAhwal
                 return false;
             }
                        
-            string state = existed(getTables(noForm), colName);
+            
             if (state == "لا توجد معاملة" && نوع_المعاملة.SelectedIndex != 4 && نوع_المعاملة.Text != "أخرى")
             {
                 MessageBox.Show("رقم المعاملة غير موجود، يرجى التأكد أولا من الرقم المدخل");
@@ -864,9 +924,7 @@ namespace PersAhwal
                     print();
                     ClearTonewReceipt();
                     break;
-                case "معاملة جديدة":
-                    ClearTonewReceipt();
-                    break;
+                
                 case "إلغاء ايصال":
                     if (التاريخ_الميلادي.Text == التاريخ.Text) {
                         حالة_الايصال.Text = "تم الالغاء";
@@ -918,7 +976,7 @@ namespace PersAhwal
             {
                 رقم_المعاملة.Text = DocIDGenerator();
                 رقم_المعاملة.Enabled = false;   
-            }
+            }           
             else رقم_المعاملة.Enabled = true;
         }
 
@@ -1247,6 +1305,9 @@ namespace PersAhwal
         private void dateTimeFrom_ValueChanged(object sender, EventArgs e)
         {
             SearchDate = dateTimeFrom.Text.Split('-')[1] +"-"+dateTimeFrom.Text.Split('-')[0]+"-"+dateTimeFrom.Text.Split('-')[2];
+            FillDataGridView(DataSource, SearchDate, false);
+            ColorFulGrid9();
+
             //MessageBox.Show(SearchDate);
         }
 
