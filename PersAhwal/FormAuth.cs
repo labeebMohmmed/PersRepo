@@ -1745,16 +1745,23 @@ namespace PersAhwal
                         }
                         else
                         {
-                            int month = Convert.ToInt32(SpecificDigit(control.Text, 4, 5));
-                            if (month > 12)
+                            int month = 0;
+                            try
                             {
-                                MessageBox.Show("الشهر يحب أن يكون أقل من 12");
-                                //textBox.Text = "";
-                                control.Text = SpecificDigit(control.Text, 7, 10);
-                                control.BackColor = System.Drawing.Color.MistyRose;
-                                return false;
+                                month = Convert.ToInt32(SpecificDigit(control.Text, 4, 5));
+                                if (month > 12)
+                                {
+                                    MessageBox.Show("الشهر يحب أن يكون أقل من 12");
+                                    //textBox.Text = "";
+                                    control.Text = SpecificDigit(control.Text, 7, 10);
+                                    control.BackColor = System.Drawing.Color.MistyRose;
+                                    return false;
+                                }
                             }
-
+                            catch (Exception ex)
+                            {
+                                //control.Text = control.Text.Split('-')[1] + "-" + control.Text.Split('-')[0] + "-" + control.Text.Split('-')[2];                                
+                            }
                         }
                         btnPanelapp.Height = btnSaveApp.Height = Panelapp.Height = 130 * addNameIndex;
                     }
@@ -1787,7 +1794,9 @@ namespace PersAhwal
         }
         private void AppName_TextChanged(object sender, EventArgs e)
         {
-            checkChanged(مقدم_الطلب, Panelapp);
+            try
+            {
+                checkChanged(مقدم_الطلب, Panelapp);
             if (gridFill) return;
             TextBox textBox = (TextBox)sender;
             string TextID = textBox.Name.Split('_')[2].Replace(".", "");
@@ -1795,7 +1804,8 @@ namespace PersAhwal
             string[] text = new string[6];
             if (textBox.Text == "")
             {
-                text[0] = docNo.Split('_')[id];
+               
+                    text[0] = docNo.Split('_')[id];
                 text[1] = docType.Split('_')[id];
                 if (text[1] == "")
                     text[1] = "جواز سفر";
@@ -1804,8 +1814,10 @@ namespace PersAhwal
                 text[4] = appBirth.Split('_')[id];
                 text[5] = sex.Split('_')[id];
                 text[6] = appExp.Split('_')[id];
-                if (text[5] == "")
-                    text[5] = "ذكر";
+               
+                    if (text[5] == "")
+                        text[5] = "ذكر";
+                
 
                 // fillFirstInfo("", text[5], text[1], text[0], text[2], اللغة.Text, text[3], text[4], TextID);
 
@@ -1813,7 +1825,10 @@ namespace PersAhwal
             else {
                 text = getID(textBox);
             }
+            
             fillFirstInfo(Panelapp, "", text[5], text[1], text[0], text[2], "العربية", text[3], text[4], TextID, text[6]);
+            }
+            catch (Exception ex) { }
         }
 
         public void fillFirstInfo(FlowLayoutPanel panel, string name, string sex, string docType, string docNo, string docIssue, string language, string job, string age, string ID, string exp)
@@ -2521,7 +2536,7 @@ namespace PersAhwal
                     }
                     else if (selectedOption1 == DialogResult.No)
                     {
-                        var selectedOption = MessageBox.Show("متابعة الإجراء إكرامي؟(", "المعاملة غير مسددة", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        var selectedOption = MessageBox.Show("متابعة الإجراء إكرامي؟", "المعاملة غير مسددة", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                         if (selectedOption == DialogResult.Yes)
                         {
                             حالة_السداد.Text = "إكرامي";                                                         
@@ -4092,6 +4107,21 @@ namespace PersAhwal
             SqlCommand sqlCmd = new SqlCommand("UPDATE " + table + " SET حالة_السداد =N'"+ state + "' where ID = " + intID.ToString(), sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.Parameters.AddWithValue("@ID", intID);
+            sqlCmd.ExecuteNonQuery();
+        }
+        
+        private void removeComma()
+        {
+            string query = "update TableAuth set الموكَّل =  REPLACE (الموكَّل , N'،', N' ')";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
             sqlCmd.ExecuteNonQuery();
         }
         public string existed(string table, string colName)
@@ -6308,6 +6338,7 @@ namespace PersAhwal
 
         public void FillDataGridView(string dataSource, string year)
         {
+            removeComma();
             string query = "select * from TableAuth where DATEPART(year,تاريخ_الارشفة1) =" + year +" order by ID";
             if (year == "جميع الأعوام")
                 query = "select * from TableAuth order by ID";
@@ -8029,6 +8060,11 @@ namespace PersAhwal
                 }));
             }
 
+        }
+
+        private void الموكَّل_TextChanged(object sender, EventArgs e)
+        {
+            MessageBox.Show(الموكَّل.Text);
         }
 
         private void fillTextBoxesInvers()

@@ -299,7 +299,7 @@ namespace PersAhwal
                 }
                 catch (Exception ex) { return 0; }
             SqlCommand sqlCmd = new SqlCommand("INSERT INTO TableHandAuth ( نوع_المكاتبة,اسم_موقع_المكاتبة,جنسية_الدبلوماسي,تاريخ_الأرشفة,تاريخ_توقيع_المكاتبة,العدد,تعليق,مدير_القسم,حالة_الارشفة,اسم_الجهة,رقم_الشهادة,اسم_صاحب_الشهادة,رقم_معاملة_القسم,الحالة,الجنسية,endTime) values (@نوع_المكاتبة,@اسم_موقع_المكاتبة,@جنسية_الدبلوماسي,@تاريخ_الأرشفة,@تاريخ_توقيع_المكاتبة,@العدد,@تعليق,@مدير_القسم,@حالة_الارشفة,@اسم_الجهة,@رقم_الشهادة,@اسم_صاحب_الشهادة,@رقم_معاملة_القسم,@الحالة,@الجنسية,@endTime);SELECT @@IDENTITY as lastid", sqlCon);
-            if (id != 1) sqlCmd = new SqlCommand("UPDATE TableHandAuth SET الجنسية=@الجنسية, نوع_المكاتبة=@نوع_المكاتبة,اسم_موقع_المكاتبة=@اسم_موقع_المكاتبة,جنسية_الدبلوماسي=@جنسية_الدبلوماسي,تاريخ_الأرشفة=@تاريخ_الأرشفة,تاريخ_توقيع_المكاتبة=@تاريخ_توقيع_المكاتبة,العدد=@العدد,تعليق=@تعليق,مدير_القسم=@مدير_القسم,حالة_الارشفة=@حالة_الارشفة,اسم_الجهة=@اسم_الجهة,Viewed=@صاحب_المستند,رقم_الشهادة=@رقم_الشهادة,الحالة=@الحالة,endTime=@endTime where ID=@ID", sqlCon);
+            if (id != 1) sqlCmd = new SqlCommand("UPDATE TableHandAuth SET الجنسية=@الجنسية, نوع_المكاتبة=@نوع_المكاتبة,اسم_موقع_المكاتبة=@اسم_موقع_المكاتبة,جنسية_الدبلوماسي=@جنسية_الدبلوماسي,تاريخ_الأرشفة=@تاريخ_الأرشفة,تاريخ_توقيع_المكاتبة=@تاريخ_توقيع_المكاتبة,العدد=@العدد,تعليق=@تعليق,مدير_القسم=@مدير_القسم,حالة_الارشفة=@حالة_الارشفة,اسم_الجهة=@اسم_الجهة,Viewed=@Viewed,رقم_الشهادة=@رقم_الشهادة,الحالة=@الحالة,endTime=@endTime where ID=@ID", sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.Parameters.AddWithValue("@ID", id);
             sqlCmd.Parameters.AddWithValue("@نوع_المكاتبة", نوع_المكاتبة);
@@ -321,20 +321,24 @@ namespace PersAhwal
             sqlCmd.Parameters.AddWithValue("@تعليق", تعليق.Text + Environment.NewLine + " --------------"+ تاريخ_الأرشفة + "--------------- "+ Environment.NewLine+ التعليقات_السابقة_Off.Text);
 
             sqlCmd.Parameters.AddWithValue("@مدير_القسم", مدير_القسم);
-            
-
-            if (id == 1)
+            try
             {
-                var reader = sqlCmd.ExecuteReader();
-                if (reader.Read())
+                if (id == 1)
                 {
-                    id = Convert.ToInt32(reader["lastid"].ToString());
+                    var reader = sqlCmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        id = Convert.ToInt32(reader["lastid"].ToString());
+                    }
+                    sqlCon.Close();
                 }
+                else
+                    sqlCmd.ExecuteNonQuery();
                 sqlCon.Close();
             }
-            else
-                sqlCmd.ExecuteNonQuery();
-            sqlCon.Close();
+            catch (Exception ex)
+            { 
+            }
             return id;
         }
         private string DocIDGenerator()
@@ -488,8 +492,8 @@ namespace PersAhwal
                 SubAuthData(iD, نوع_المكاتبة.Text, اسم_موقع_المكاتبة.Text, جنسية_الدبلوماسي.Text, تاريخ_الأرشفة.Text, تاريخ_توقيع_المكاتبة.Text, العدد.Text, مدير_القسم.Text, comment);
                 CreatePic(PathImages, Messid.ToString(), رقم_معاملة_القسم);
                 MessageBox.Show("الرقم المرجعي " + PaperiD);
-            }            
-            
+            }
+            this.Close();
             
         }
         private void CreateMessageAuthentication(string gregorianDate, string gijriDate, string ViseConsul) {
@@ -611,7 +615,7 @@ namespace PersAhwal
 
         private void اسم_موقع_المكاتبة_TextChanged(object sender, EventArgs e)
         {
-            if (!نوع_المكاتبة_check)
+            if (!نوع_المكاتبة_check && !gridFill)
             {
                 BindingSource bs = new BindingSource();
                 bs.DataSource = dataGridView1.DataSource;
@@ -683,9 +687,10 @@ namespace PersAhwal
                 تعليق.Text = "";
                 حفظ_وإنهاء_الارشفة.Text = "تعديل وإنهاء الارشفة";
                 dataGridView1.Size = new System.Drawing.Size(577, 616);
+                addDoc.Visible = false;
                 panel1.Visible = picVersio.Visible = panelpicTemp.Visible = fileUpdate.Visible = true;
             }
-            gridFill = false;
+            //gridFill = false;
             return;
         }
         
@@ -1248,7 +1253,7 @@ namespace PersAhwal
 
         private void نوع_المكاتبة_TextChanged(object sender, EventArgs e)
         {
-            if (نوع_المكاتبة_check)
+            if (نوع_المكاتبة_check && !gridFill)
             {
                 BindingSource bs = new BindingSource();
                 bs.DataSource = dataGridView1.DataSource;

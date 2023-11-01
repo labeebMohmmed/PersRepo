@@ -483,7 +483,7 @@ namespace PersAhwal
                         PaneltxtReview.Height = 410;
                         PaneltxtReview.AutoScroll = false;
                     }
-                    
+                    txtReview.Text = SuffConvertments(txtReview.Text, صفة_مقدم_الطلب_off.SelectedIndex, 0, false);
                     break;
                 case 3:
 
@@ -719,7 +719,7 @@ namespace PersAhwal
                     break;                
             }
             if (!txtReview.Text.Contains(checkEnd))
-                return true;
+                return true;    
             else
                 return false;
         }
@@ -746,6 +746,8 @@ namespace PersAhwal
         {
             string[] words = text.Split(' ');
             checkAutoUpdate.Checked = false;
+            if (text.Contains("!"))
+                text = text.Replace("!", "'");
             foreach (string word in words)
             {
                 if (word == "" || word == " ") continue;
