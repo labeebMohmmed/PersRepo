@@ -345,13 +345,13 @@ namespace PersAhwal
         {
             string formtype = "21";
             string year = DateTime.Now.Year.ToString().Replace("20", "");
-            string query = "select max(cast (right(رقم_معاملة_القسم,LEN(رقم_معاملة_القسم) - 15) as int)) as newDocID from TableGeneralArch where رقم_معاملة_القسم like N'ق س ج/80/" + year + "/" + formtype + "%'";
-
+            string query = "select max(cast (right(رقم_معاملة_القسم,LEN(رقم_معاملة_القسم) - 15) as int)) as newDocID from TableHandAuth where رقم_معاملة_القسم like N'ق س ج/80/" + year + "/" + formtype + "%'";
+            Console.WriteLine(query);
             return "ق س ج/80/" + year + "/" + formtype + "/" + getUniqueID(query);
         }
         private string getUniqueID(string query)
         {
-            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
+            SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
@@ -363,8 +363,11 @@ namespace PersAhwal
             foreach (DataRow dataRow in dtbl.Rows)
             {
                 try
+                    
                 {
+                    //MessageBox.Show(dataRow["newDocID"].ToString());
                     maxID = (Convert.ToInt32(dataRow["newDocID"].ToString()) + 1).ToString();
+                    //MessageBox.Show(maxID);
                 }
                 catch (Exception ex)
                 {
