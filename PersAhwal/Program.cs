@@ -32,8 +32,8 @@ namespace PersAhwal
         //static string dataSource56 = "Data Source=192.168.100.56,49170;Network Library=DBMSSOCN;Initial Catalog=AhwalDataBase;User ID=ConsJeddahAdmin;Password=DataBC0nsJ49170";
         //static string dataSource56 = "Data Source=192.168.100.58,49170;Network Library=DBMSSOCN;Initial Catalog=SudaneseAffairs;User ID=SADDB;Password=SADDB96325";
         //static string dataSource57 = "Data Source=192.168.100.57,49170;Network Library=DBMSSOCN;Initial Catalog=AhwalDataBase;User ID=sa;Password=1234";
-        static string dataSource100A = "Data Source=192.168.100.100,49170;Network Library=DBMSSOCN;Initial Catalog=AhwalDataBase;User ID=GeneralUSerDB;Password=GeneralUSer_9632";
-        static string dataSource100S = "Data Source=192.168.100.100,49170;Network Library=DBMSSOCN;Initial Catalog=SudaneseAffairs;User ID=GeneralUSerDB;Password=GeneralUSer_9632";
+        static string dataSource100A = "Data Source=192.168.100.67,49149;Network Library=DBMSSOCN;Initial Catalog=AhwalDataBase;User ID=SQLSerAdmin;Password=sqlSER@jed80";
+        static string dataSource100S = "Data Source=192.168.100.67,49149;Network Library=DBMSSOCN;Initial Catalog=SudaneseAffairs;User ID=SQLSerAdmin;Password=sqlSER@jed80";
         //static string dataSource = "Data Source=192.168.100.100,49170;Initial Catalog=AhwalDataBase;User ID=Admin;Password=admin123";
         //static string dataSource = "Data Source=DESKTOP-KUPSRH8\\SQLEXPRESS;Initial Catalog=AhwalDataBase;Integrated Security=True";
         // Office computer 

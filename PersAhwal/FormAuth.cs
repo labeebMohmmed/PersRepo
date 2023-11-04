@@ -8064,7 +8064,7 @@ namespace PersAhwal
 
         private void الموكَّل_TextChanged(object sender, EventArgs e)
         {
-            MessageBox.Show(الموكَّل.Text);
+            //MessageBox.Show(الموكَّل.Text);
         }
 
         private void fillTextBoxesInvers()

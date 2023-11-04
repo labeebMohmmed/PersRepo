@@ -1256,5 +1256,14 @@ namespace PersAhwal
             }
             return state;
         }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            BindingSource bs = new BindingSource();
+            bs.DataSource = dataGridView1.DataSource;
+            bs.Filter = dataGridView1.Columns[2].HeaderText.ToString() + " LIKE '" + ListSearch.Text + "%'";
+            dataGridView1.DataSource = bs;
+            ColorFulGrid9();
+        }
     }
 }
