@@ -15,54 +15,61 @@ using System.IO;
 using DocumentFormat.OpenXml.Office2016.Drawing.Charts;
 using System.Data.SqlTypes;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using DocumentFormat.OpenXml.Presentation;
 
 namespace PersAhwal
 {
     public partial class SignUp : Form
     {
         string DataSource;
-        string Employeename;
+        string Empname;
         string userpass = "";
-        string Jobposition;
+        string JobPos;
         int IDEmp;
         bool resetpassword = false;
         string ServerType = "57";
         string GriDate = "";
         bool grdview = false;
         string Update = "";
-        public SignUp(string employeename, string jobposition, string datasource, string serverType, string griDate, string update, string career, int jobIndex)
+        string[] allList;
+
+        public SignUp(string employee, string jobposition, string datasource, string serverType, string griDate, string update, string career, int jobIndex)
         {
             InitializeComponent();
             DataSource = datasource;
-            Employeename = employeename;
-            if(employeename == "جديد")
+            allList = getColList("TableUser");
+            Empname = employee;
+            if (Empname == "جديد")
                 textBox2.Visible = label13.Visible = false;
             else textBox2.Visible = label13.Visible = true;
-            Jobposition = jobposition;
+            JobPos = jobposition;
             ServerType = serverType;
             GriDate = griDate;
             Update = update;
             if (update == "yes")
             {
                 Register.Text = "تحديث";
-                JobPossition.Enabled = false;
-                ApplicantName.Enabled = false;
+                JobPosition.Enabled = false;
+                UserName.Enabled = false;
             }
-            
+
+            getInfo(Empname);
 
             if (career == "مدير نظام" || jobIndex != -1)
             {
-                this.Size = new Size(870, 769);
-                fillDatagrid();
+                //this.Size = new Size(870, 769);
+                btnActivate.Visible = true;
+                //fillDatagrid();
             }
             else {
+                btnActivate.Visible = true;
                 fillDatagrid();
                 dataGridView1.Visible = false;
-                this.Size = new Size(870, 435);
-                for (int i = 0; i < dataGridView1.RowCount - 1; i++) 
+                this.Size = new Size(967, 435);
+                for (int i = 0; i < dataGridView1.RowCount - 1; i++)
                 {
-                    if (dataGridView1.Rows[i].Cells[1].Value.ToString() == Employeename)
-                    {                        
+                    if (dataGridView1.Rows[i].Cells[1].Value.ToString() == Empname)
+                    {
                         detectName(i);
                         break;
                     }
@@ -70,11 +77,108 @@ namespace PersAhwal
             }
             if (jobIndex != -1)
             {
-                JobPossition.SelectedIndex = jobIndex;
-                JobPossition.Enabled = false;
+                JobPosition.SelectedIndex = jobIndex;
+                JobPosition.Enabled = false;
             }
         }
 
+        string updateAll = "";
+        string insertAll = "";
+        private void getInfo(string name)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT * from TableUser WHERE EmployeeName = N'" + name + "'", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            foreach (DataRow row in dtbl.Rows)
+            {
+                JobPosition.Text = row["JobPosition"].ToString();
+                EmployeeName.Text = name;
+                EngEmployeeName.Text = row["EngEmployeeName"].ToString();
+                UserName.Text = row["UserName"].ToString();
+                JobPosition.Text = row["JobPosition"].ToString();
+                Gender.Text = row["Gender"].ToString();
+                if (Gender.Text == "ذكر")
+                    Gender.Checked = false;
+                else
+                    Gender.Checked = true;
+                headOfMission.Text = row["headOfMission"].ToString();
+                if (headOfMission.Text == "")
+                {
+                    headOfMission.Checked = false;
+                    headOfMission.Text = "عضو بعثة";
+                }
+                else
+                    headOfMission.Checked = true;
+                userpass = row["Pass"].ToString();
+                Register.Text = "تعديل";
+                btnActivete.Visible = true;
+                btnActiveteM.Visible = false;
+                btnActivete.BringToFront();
+            }
+        }
+
+        //public void panelFill(Control control)
+        //{
+        //    for (int col = 0; col < allList.Length; col++)
+        //    {
+        //        if (control.Name == allList[col])
+        //        {
+        //            if (dataGridView1.CurrentRow.Cells[allList[col]].Value.ToString() != "")
+        //            {
+        //                control.Text = dataGridView1.CurrentRow.Cells[allList[col]].Value.ToString();
+        //                IDEmp = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value.ToString());                        
+        //            }                    
+        //        }
+        //    }
+        //}
+        private string[] getColList(string table)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT name FROM sys.columns WHERE object_id = OBJECT_ID('" + table + "')", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            string[] allList = new string[dtbl.Rows.Count];
+            int i = 0;
+            string insertItems = "";
+            string insertValues = "";
+            string updateValues = "";
+            foreach (DataRow row in dtbl.Rows)
+            {
+
+                if (row["name"].ToString() != "endTime" && row["name"].ToString() != "ID" && row["name"].ToString() != "تاريخ_الارشفة1" && row["name"].ToString() != "تاريخ_الارشفة2" && row["name"].ToString() != "حالة_الارشفة" && row["name"].ToString() != "sms")
+                {
+                    allList[i] = row["name"].ToString();
+                    //MessageBox.Show(row["name"].ToString());
+                    if (i == 0)
+                    {
+                        insertItems = row["name"].ToString();
+                        insertValues = "@" + row["name"].ToString();
+                        updateValues = row["name"].ToString() + "=@" + row["name"].ToString();
+                    }
+                    else
+                    {
+                        insertItems = insertItems + "," + row["name"].ToString();
+                        insertValues = insertValues + "," + "@" + row["name"].ToString();
+                        updateValues = updateValues + "," + row["name"].ToString() + "=@" + row["name"].ToString();
+                    }
+                    i++;
+                }
+            }
+            updateAll = "UPDATE " + table + " SET " + updateValues + " where ID = @id";
+            insertAll = "INSERT INTO " + table + "(" + insertItems + ") values (" + insertValues + ")";
+
+            return allList;
+
+        }
         private void fillDatagrid()
         {
             //MessageBox.Show(DataSource);
@@ -83,7 +187,7 @@ namespace PersAhwal
                 sqlCon.Open();
             string settingData = "select ID,EmployeeName,JobPosition,Gender,UserName,Email,pass,comment,headOfMission,EngEmployeeName from TableUser ";
             SqlDataAdapter sqlDa = new SqlDataAdapter(settingData, sqlCon);
-            sqlDa.SelectCommand.CommandType = CommandType.Text;            
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
             sqlDa.Fill(dtbl);
             dataGridView1.DataSource = dtbl;
@@ -106,13 +210,13 @@ namespace PersAhwal
             sqlCon.Close();
             foreach (DataRow dataRow in dtbl.Rows)
             {
-                if (name == dataRow["EmployeeName"].ToString() )
+                if (name == dataRow["EmployeeName"].ToString())
                 {
-                    Register.Visible = false; 
-                    MessageBox.Show("يوجد حساب باسم نفس الموظف، يرجى التواصل مع مدير النظام لإسترداد كلمة المرور الخاصة به");                    
+                    Register.Visible = false;
+                    MessageBox.Show("يوجد حساب باسم نفس الموظف، يرجى التواصل مع مدير النظام لإسترداد كلمة المرور الخاصة به");
                     return true;
                 }
-                else if ( userName == dataRow["UserName"].ToString())
+                else if (userName == dataRow["UserName"].ToString())
                 {
                     Register.Visible = false;
                     MessageBox.Show("يوجد حساب بنفس اسم المرور، يرجى التواصل مع مدير النظام لإسترداد كلمة المرور الخاصة به");
@@ -123,51 +227,96 @@ namespace PersAhwal
             return false;
         }
 
+        private bool passwordCheck()
+        {
+            string newPass = userpass;
+            if (password1.Text != password2.Text)
+            {
+                MessageBox.Show("كلمة المرور غير متطابقة");
+                return false;
+            }
+            if (password1.Text == userpass)
+            {
+                newPass = password1.Text;
+                MessageBox.Show("كلمة المرور الجديدة لا يمكن أن تطابق الكلمة السابقة");
+                return false;
+            }
+            if (password1.Text != "" && password1.Text.Length < 6)
+            {
+                MessageBox.Show("كلمة المرور يجب أن لا تقل عن ستة رموز");
+                return false;
+            }
+            if (password1.Text != "" && password1.Text.All(char.IsDigit))
+            {
+                MessageBox.Show("كلمة المرور يجب أن تحتوي على أحرف");
+                return false;
+            }
+            return true;
+        }
+        string[] items = new string[15] { "", "", "","", "","", "", "","", "","", "", "","", ""};
+        string[] values = new string[15] { "", "", "","", "","", "", "","", "","", "", "","", ""};
+        private bool saveItems(string table, string[] item,string[] value, bool saveType) 
+        {
+            string query = ""; 
+                string itemName = item[0];
+            string itemValue = "@" + item[0];
+            string itemUpdate = item[0] + "=@" + item[0];
+            
+            for (int i = 1;  item[i] != ""; i++)
+            {
+                itemName  = itemName +","+ item[i];
+                itemValue = itemValue + ",@"+ item[i];
+                itemUpdate = itemUpdate + "," + item[i] + "=@" + item[i];
+            }
+            if(saveType)
+                 query = "insert into " + table + "(" + itemName + ")values { " + itemValue + ")";
+            else 
+                 query = "UPDATE " + table + " SET " + itemUpdate + " where ID = @ID";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
 
+            for (int i = 0;  item[i] != ""; i++)
+            {
+                sqlCmd.Parameters.AddWithValue("@" + item[i], value[i]);
+            }
+            try
+            {
+                sqlCmd.ExecuteNonQuery();
+            }
+            catch (Exception ex) {
+                return false;
+            }
+            return true;
+        }
         private void button1_Click(object sender, EventArgs e)
         {
             string career = "مدير";
-            if(JobPossition.Text == "تعين محلي" || JobPossition.Text == "مندوب جالية" || JobPossition.Text == "محاسب")
-                career = "موظف";
             string newPass = userpass;
-            if (JobPossition.Text == "محاسب"||JobPossition.Text == "مدير مالي")
+            if (JobPosition.Text == "تعين محلي" || JobPosition.Text == "مندوب جالية" || JobPosition.Text == "محاسب")
+                career = "موظف";
+            
+            if (JobPosition.Text == "محاسب"||JobPosition.Text == "مدير مالي")
                 ServerType = "محاسب";            
             SqlConnection sqlCon = new SqlConnection(DataSource);
-            string addInfo = "قام " + ApplicantName.Text + " بتحديث بيانات حسابه بتاريخ " + GriDate +Environment.NewLine + "----------------------------------------------";
+            string addInfo = "قام " + UserName.Text + " بتحديث بيانات حسابه بتاريخ " + GriDate +Environment.NewLine + "----------------------------------------------";
             if (Register.Text == "تحديث")
             {
-                if (password1.Text != password2.Text)
-                {
-                    MessageBox.Show("كلمة المرور غير متطابقة");
+                if(!passwordCheck())
                     return;
-                }
-                if (password1.Text == userpass)
-                {
-                    newPass = password1.Text;
-                    MessageBox.Show("كلمة المرور الجديدة لا يمكن أن تطابق الكلمة السابقة");
-                    return;
-                }                
-                if (password1.Text != "" && password1.Text.Length < 6)
-                {
-                    MessageBox.Show("كلمة المرور يجب أن لا تقل عن ستة رموز");
-                    return;
-                }
-                if (password1.Text != "" && password1.Text.All(char.IsDigit))
-                {
-                    MessageBox.Show("كلمة المرور يجب أن تحتوي على أحرف");
-                    return;
-                }
-
+               
                 if (sqlCon.State == ConnectionState.Closed)
                     sqlCon.Open();
                 SqlCommand sqlCmd = new SqlCommand("UPDATE TableUser SET Career = @Career, EngEmployeeName = @EngEmployeeName,UserName = @UserName,JobPosition = @JobPosition,Gender = @Gender,EmployeeName = @EmployeeName,Pass = @Pass,RestPAss=@RestPAss,comment=@comment WHERE ID = @ID", sqlCon);
                 sqlCmd.CommandType = CommandType.Text;
                 sqlCmd.Parameters.AddWithValue("@ID", IDEmp);
                 sqlCmd.Parameters.AddWithValue("@Pass", newPass);
-                sqlCmd.Parameters.AddWithValue("@EngEmployeeName", ApplicantName.Text);
-                sqlCmd.Parameters.AddWithValue("@EmployeeName", userName.Text);
-                sqlCmd.Parameters.AddWithValue("@JobPosition", JobPossition.Text);
-                sqlCmd.Parameters.AddWithValue("@Gender", EmpGender.Text);
+                sqlCmd.Parameters.AddWithValue("@EngEmployeeName", UserName.Text);
+                sqlCmd.Parameters.AddWithValue("@EmployeeName", EmployeeName.Text);
+                sqlCmd.Parameters.AddWithValue("@JobPosition", JobPosition.Text);
+                sqlCmd.Parameters.AddWithValue("@Gender", Gender.Text);
                 sqlCmd.Parameters.AddWithValue("@UserName", EngEmployeeName.Text);
                 sqlCmd.Parameters.AddWithValue("@RestPAss", "done");
                 sqlCmd.Parameters.AddWithValue("@Career", career);
@@ -179,7 +328,7 @@ namespace PersAhwal
                 this.Close();
                 return;
             }
-             addInfo = "تم إعادة ضبط كلمة المرور لحساب الموظف/" + ApplicantName.Text + " بتاريخ " + GriDate + Environment.NewLine + "----------------------------------------------";
+             addInfo = "تم إعادة ضبط كلمة المرور لحساب الموظف/" + UserName.Text + " بتاريخ " + GriDate + Environment.NewLine + "----------------------------------------------";
 
             if (resetpassword && password1.Text == userpass)
             {
@@ -208,7 +357,7 @@ namespace PersAhwal
             {
                 try
                 {
-                    if (JobPossition.SelectedIndex == 0)
+                    if (JobPosition.SelectedIndex == 0)
                     {
                         MessageBox.Show("يرجى اختيار الوظيفة");
                         return;
@@ -216,39 +365,46 @@ namespace PersAhwal
                     else if (password1.Text.Equals(password2.Text))
                     {
                         string query = "UserAddorEdit";
-                         addInfo = "تم تسجيل حساب الموظف/" + ApplicantName.Text + " بتاريخ " + GriDate + Environment.NewLine + "----------------------------------------------";
+                         addInfo = "تم تسجيل حساب الموظف/" + UserName.Text + " بتاريخ " + GriDate + Environment.NewLine + "----------------------------------------------";
 
                         if (sqlCon.State == ConnectionState.Closed)
                             sqlCon.Open();
                         SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
-                        sqlCmd.CommandType = CommandType.StoredProcedure;                        
-                        sqlCmd.Parameters.AddWithValue("@ID", 0);
-                        sqlCmd.Parameters.AddWithValue("@mode", "Add");
-                        sqlCmd.Parameters.AddWithValue("@EmployeeName", userName.Text);
-                        sqlCmd.Parameters.AddWithValue("@Career", career);
-                        sqlCmd.Parameters.AddWithValue("@JobPosition", JobPossition.Text);
-                        sqlCmd.Parameters.AddWithValue("@Gender", EmpGender.Text);
-                        sqlCmd.Parameters.AddWithValue("@UserName", ApplicantName.Text);
-                        sqlCmd.Parameters.AddWithValue("@Email", "");
-                        sqlCmd.Parameters.AddWithValue("@Pass", password1.Text);
-                        sqlCmd.Parameters.AddWithValue("@EngEmployeeName", EngEmployeeName.Text);
-                        sqlCmd.Parameters.AddWithValue("@Aproved", "غير مؤكد");
-                        sqlCmd.Parameters.AddWithValue("@Purpose", ServerType);
-                        sqlCmd.Parameters.AddWithValue("@RestPAss", "done");
+                        sqlCmd.CommandType = CommandType.StoredProcedure;
                         if (headOfMission.Checked)
                             sqlCmd.Parameters.AddWithValue("@headOfMission", "head");
-                        else 
+                        else
                             sqlCmd.Parameters.AddWithValue("@headOfMission", "");
-                        sqlCmd.Parameters.AddWithValue("@comment", addInfo + التعليقات_السابقة_Off.Text);
-                        try
-                        {
-                            sqlCmd.ExecuteNonQuery();
-                            MessageBox.Show("تم التسجيل بنجاح");
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show("خطأ في تسجيل البيانات");
-                        }
+                        items = new  string[15] { "EmployeeName",    "Career", "JobPosition",    "Gender",    "UserName",    "Pass",        "EngEmployeeName",     "Aproved", "Purpose", "  RestPAss", "headOfMission",     "comment",                             "", "", "" };
+                        values = new string[15] { EmployeeName.Text, "career", JobPosition.Text, Gender.Text, UserName.Text, password1.Text, EngEmployeeName.Text, "غير مؤكد", ServerType, "done",      headOfMission.Text, addInfo + التعليقات_السابقة_Off.Text, "", "", "" };
+                        saveItems("TableUser", items, values, true);
+                        //sqlCmd.Parameters.AddWithValue("@ID", 0);
+                        //sqlCmd.Parameters.AddWithValue("@mode", "Add");
+                        //sqlCmd.Parameters.AddWithValue("@EmployeeName", EmployeeName.Text);
+                        //sqlCmd.Parameters.AddWithValue("@Career", career);
+                        //sqlCmd.Parameters.AddWithValue("@JobPosition", JobPosition.Text);
+                        //sqlCmd.Parameters.AddWithValue("@Gender", Gender.Text);
+                        //sqlCmd.Parameters.AddWithValue("@UserName", UserName.Text);
+                        //sqlCmd.Parameters.AddWithValue("@Email", "");
+                        //sqlCmd.Parameters.AddWithValue("@Pass", password1.Text);
+                        //sqlCmd.Parameters.AddWithValue("@EngEmployeeName", EngEmployeeName.Text);
+                        //sqlCmd.Parameters.AddWithValue("@Aproved", "غير مؤكد");
+                        //sqlCmd.Parameters.AddWithValue("@Purpose", ServerType);
+                        //sqlCmd.Parameters.AddWithValue("@RestPAss", "done");
+                        //if (headOfMission.Checked)
+                        //    sqlCmd.Parameters.AddWithValue("@headOfMission", "head");
+                        //else 
+                        //    sqlCmd.Parameters.AddWithValue("@headOfMission", "");
+                        //sqlCmd.Parameters.AddWithValue("@comment", addInfo + التعليقات_السابقة_Off.Text);
+                        //try
+                        //{
+                        //    sqlCmd.ExecuteNonQuery();
+                        //    MessageBox.Show("تم التسجيل بنجاح");
+                        //}
+                        //catch (Exception ex)
+                        //{
+                        //    MessageBox.Show("خطأ في تسجيل البيانات");
+                        //}
 
                     }
                     else
@@ -270,10 +426,10 @@ namespace PersAhwal
             {
                 try
                 {
-                    if (password1.Text.Equals(password2.Text) && JobPossition.SelectedIndex != 0)
+                    if (password1.Text.Equals(password2.Text) && JobPosition.SelectedIndex != 0)
                     {
                         string query = "UPDATE TableUser SET Career= @Career,EngEmployeeName=@EngEmployeeName,EmployeeName=@EmployeeName,JobPosition=@JobPosition,Gender=@Gender,UserName=@UserName,Email=@Email, Pass=@Pass,Aproved=@Aproved,Purpose=@Purpose,comment=@comment WHERE ID=@ID";
-                         addInfo = "تم تعديل حساب الموظف/" + ApplicantName.Text + " بتاريخ " + GriDate + Environment.NewLine + "----------------------------------------------";
+                         addInfo = "تم تعديل حساب الموظف/" + UserName.Text + " بتاريخ " + GriDate + Environment.NewLine + "----------------------------------------------";
 
                         if (sqlCon.State == ConnectionState.Closed)
                             sqlCon.Open();
@@ -281,10 +437,10 @@ namespace PersAhwal
                         sqlCmd.CommandType = CommandType.Text;                        
                         sqlCmd.Parameters.AddWithValue("@ID", 0);
                         sqlCmd.Parameters.AddWithValue("@mode", "Add");
-                        sqlCmd.Parameters.AddWithValue("@EmployeeName", ApplicantName.Text);
-                        sqlCmd.Parameters.AddWithValue("@JobPosition", JobPossition.Text);
-                        sqlCmd.Parameters.AddWithValue("@Gender", EmpGender.Text);
-                        sqlCmd.Parameters.AddWithValue("@UserName", userName.Text);
+                        sqlCmd.Parameters.AddWithValue("@EmployeeName", EmployeeName.Text);
+                        sqlCmd.Parameters.AddWithValue("@JobPosition", JobPosition.Text);
+                        sqlCmd.Parameters.AddWithValue("@Gender", Gender.Text);
+                        sqlCmd.Parameters.AddWithValue("@UserName", UserName.Text);
                         sqlCmd.Parameters.AddWithValue("@Email", "");
                         sqlCmd.Parameters.AddWithValue("@Career", career);
                         sqlCmd.Parameters.AddWithValue("@Pass", password1.Text);
@@ -322,8 +478,8 @@ namespace PersAhwal
 
         private void EmpGender_CheckedChanged(object sender, EventArgs e)
         {
-            if (EmpGender.CheckState == CheckState.Unchecked) EmpGender.Text = "ذكر";
-            else EmpGender.Text = "أنثى";
+            if (Gender.CheckState == CheckState.Unchecked) Gender.Text = "ذكر";
+            else Gender.Text = "أنثى";
         }
 
        
@@ -332,12 +488,12 @@ namespace PersAhwal
         {
             IDEmp = Convert.ToInt32(dataGridView1.Rows[cell].Cells[0].Value.ToString());
             //MessageBox.Show(IDEmp.ToString());
-            ApplicantName.Text = dataGridView1.Rows[cell].Cells[1].Value.ToString();
-            JobPossition.Text = dataGridView1.Rows[cell].Cells[2].Value.ToString();
-            EmpGender.Text = dataGridView1.Rows[cell].Cells[3].Value.ToString();
-            if (EmpGender.Text == "ذكر") EmpGender.CheckState = CheckState.Unchecked;
-            else EmpGender.CheckState = CheckState.Checked;
-            userName.Text = dataGridView1.Rows[cell].Cells[4].Value.ToString();
+            UserName.Text = dataGridView1.Rows[cell].Cells[1].Value.ToString();
+            JobPosition.Text = dataGridView1.Rows[cell].Cells[2].Value.ToString();
+            Gender.Text = dataGridView1.Rows[cell].Cells[3].Value.ToString();
+            if (Gender.Text == "ذكر") Gender.CheckState = CheckState.Unchecked;
+            else Gender.CheckState = CheckState.Checked;
+            EmployeeName.Text = dataGridView1.Rows[cell].Cells[4].Value.ToString();
             //email.Text = dataGridView1.Rows[cell].Cells[5].Value.ToString();
             userpass = dataGridView1.Rows[cell].Cells[6].Value.ToString();
             password1.Visible = false;
@@ -389,13 +545,13 @@ namespace PersAhwal
                 IDEmp = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value.ToString());
                 if (panelEmployee.Visible)
                 {
-                    ApplicantName.Text = dataGridView1.CurrentRow.Cells[1].Value.ToString();
-                    JobPossition.Text = dataGridView1.CurrentRow.Cells[2].Value.ToString();
-                    EmpGender.Text = dataGridView1.CurrentRow.Cells[3].Value.ToString();
+                    UserName.Text = dataGridView1.CurrentRow.Cells[4].Value.ToString();
+                    JobPosition.Text = dataGridView1.CurrentRow.Cells[2].Value.ToString();
+                    Gender.Text = dataGridView1.CurrentRow.Cells[3].Value.ToString();
                     userpass = dataGridView1.CurrentRow.Cells["Pass"].Value.ToString();
-                    if (EmpGender.Text == "ذكر") EmpGender.CheckState = CheckState.Unchecked;
-                    else EmpGender.CheckState = CheckState.Checked;
-                    userName.Text = dataGridView1.CurrentRow.Cells[4].Value.ToString();
+                    if (Gender.Text == "ذكر") Gender.CheckState = CheckState.Unchecked;
+                    else Gender.CheckState = CheckState.Checked;
+                    EmployeeName.Text = dataGridView1.CurrentRow.Cells[1].Value.ToString(); 
                     if (dataGridView1.CurrentRow.Cells["headOfMission"].Value.ToString() == "")
                         headOfMission.Checked = false;
                     else headOfMission.Checked = true;
@@ -488,12 +644,12 @@ namespace PersAhwal
                     IDEmp = Convert.ToInt32(dataGridView1.Rows[x].Cells[0].Value.ToString());
                     if (IDEmp == ID)
                     {
-                        ApplicantName.Text = dataGridView1.Rows[x].Cells[1].Value.ToString();
-                        JobPossition.Text = dataGridView1.Rows[x].Cells[2].Value.ToString();
-                        EmpGender.Text = dataGridView1.Rows[x].Cells[3].Value.ToString();
-                        if (EmpGender.Text == "ذكر") EmpGender.CheckState = CheckState.Unchecked;
-                        else EmpGender.CheckState = CheckState.Checked;
-                        userName.Text = dataGridView1.Rows[x].Cells[4].Value.ToString();
+                        UserName.Text = dataGridView1.Rows[x].Cells[1].Value.ToString();
+                        JobPosition.Text = dataGridView1.Rows[x].Cells[2].Value.ToString();
+                        Gender.Text = dataGridView1.Rows[x].Cells[3].Value.ToString();
+                        if (Gender.Text == "ذكر") Gender.CheckState = CheckState.Unchecked;
+                        else Gender.CheckState = CheckState.Checked;
+                        EmployeeName.Text = dataGridView1.Rows[x].Cells[4].Value.ToString();
                         التعليقات_السابقة_Off.Text = dataGridView1.Rows[x].Cells["comment"].Value.ToString();
                         dataGridView1.Height = 195;
                         //email.Text = dataGridView1.Rows[x].Cells[5].Value.ToString();                
@@ -518,30 +674,30 @@ namespace PersAhwal
         private void btnActivete_Click(object sender, EventArgs e)
         {
             string career = "مدير";
-            if (JobPossition.Text == "محاسب" || JobPossition.Text == "مدير مالي")
+            if (JobPosition.Text == "محاسب" || JobPosition.Text == "مدير مالي")
                 ServerType = "محاسب";
 
-            if (JobPossition.Text == "تعين محلي" || JobPossition.Text == "مندوب جالية" || JobPossition.Text == "محاسب")
+            if (JobPosition.Text == "تعين محلي" || JobPosition.Text == "مندوب جالية" || JobPosition.Text == "محاسب")
                 career = "موظف"; 
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             SqlCommand sqlCmd = new SqlCommand("UserAddorEdit", sqlCon);
             sqlCmd.CommandType = CommandType.StoredProcedure;
-            string addInfo = "تم تفعيل حساب الموظف/" + ApplicantName.Text + " بتاريخ " + GriDate + Environment.NewLine + "----------------------------------------------";
+            string addInfo = "تم تفعيل حساب الموظف/" + UserName.Text + " بتاريخ " + GriDate + Environment.NewLine + "----------------------------------------------";
             sqlCmd.Parameters.AddWithValue("@ID", IDEmp);
             sqlCmd.Parameters.AddWithValue("@mode", "Edit");
 
-            sqlCmd.Parameters.AddWithValue("@EmployeeName", ApplicantName.Text);
+            sqlCmd.Parameters.AddWithValue("@EmployeeName", UserName.Text);
             sqlCmd.Parameters.AddWithValue("@Career", career);
-            sqlCmd.Parameters.AddWithValue("@JobPosition", JobPossition.Text);
-            sqlCmd.Parameters.AddWithValue("@Gender", EmpGender.Text);
-            sqlCmd.Parameters.AddWithValue("@UserName", userName.Text);
+            sqlCmd.Parameters.AddWithValue("@JobPosition", JobPosition.Text);
+            sqlCmd.Parameters.AddWithValue("@Gender", Gender.Text);
+            sqlCmd.Parameters.AddWithValue("@UserName", EmployeeName.Text);
             sqlCmd.Parameters.AddWithValue("@Email", "");
             sqlCmd.Parameters.AddWithValue("@EngEmployeeName", EngEmployeeName.Text);
             sqlCmd.Parameters.AddWithValue("@Pass", userpass);
             sqlCmd.Parameters.AddWithValue("@RestPAss", "done");
-            sqlCmd.Parameters.AddWithValue("@Aproved", "أكده " + Jobposition + " " + Employeename);
+            sqlCmd.Parameters.AddWithValue("@Aproved", "أكده " + JobPos + " " + Empname);
             sqlCmd.Parameters.AddWithValue("@Purpose", ServerType);
             if (headOfMission.Checked)
                 sqlCmd.Parameters.AddWithValue("@headOfMission", "head");
@@ -568,9 +724,9 @@ namespace PersAhwal
         private void btnDeActivete_Click(object sender, EventArgs e)
         {
             string career = "مدير";
-            if (JobPossition.Text == "تعين محلي" || JobPossition.Text == "مندوب جالية" || JobPossition.Text == "محاسب")
+            if (JobPosition.Text == "تعين محلي" || JobPosition.Text == "مندوب جالية" || JobPosition.Text == "محاسب")
                 career = "موظف";
-            if (JobPossition.Text == "محاسب" || JobPossition.Text == "مدير مالي")
+            if (JobPosition.Text == "محاسب" || JobPosition.Text == "مدير مالي")
                 ServerType = "محاسب";
 
             SqlConnection sqlCon = new SqlConnection(DataSource);
@@ -578,13 +734,13 @@ namespace PersAhwal
                 sqlCon.Open();
             SqlCommand sqlCmd = new SqlCommand("UserAddorEdit", sqlCon);
             sqlCmd.CommandType = CommandType.StoredProcedure;
-            string addInfo = "تم تعطيل حساب الموظف/" + ApplicantName.Text + " بتاريخ " + GriDate + Environment.NewLine + "----------------------------------------------";
+            string addInfo = "تم تعطيل حساب الموظف/" + UserName.Text + " بتاريخ " + GriDate + Environment.NewLine + "----------------------------------------------";
             sqlCmd.Parameters.AddWithValue("@ID", IDEmp);
             sqlCmd.Parameters.AddWithValue("@mode", "Edit");
-            sqlCmd.Parameters.AddWithValue("@EmployeeName", ApplicantName.Text);
-            sqlCmd.Parameters.AddWithValue("@JobPosition", JobPossition.Text);
-            sqlCmd.Parameters.AddWithValue("@Gender", EmpGender.Text);
-            sqlCmd.Parameters.AddWithValue("@UserName", userName.Text);
+            sqlCmd.Parameters.AddWithValue("@EmployeeName", UserName.Text);
+            sqlCmd.Parameters.AddWithValue("@JobPosition", JobPosition.Text);
+            sqlCmd.Parameters.AddWithValue("@Gender", Gender.Text);
+            sqlCmd.Parameters.AddWithValue("@UserName", EmployeeName.Text);
             sqlCmd.Parameters.AddWithValue("@Email", "");
             sqlCmd.Parameters.AddWithValue("@Career", career);
             sqlCmd.Parameters.AddWithValue("@Pass", password1.Text);
@@ -608,19 +764,19 @@ namespace PersAhwal
         {
             if(grdview || Update == "yes") return;
             //MessageBox.Show(Update);
-            checkName(ApplicantName.Text, userName.Text);
+            checkName(UserName.Text, EmployeeName.Text);
         }
 
         private void userName_TextChanged(object sender, EventArgs e)
         {
             if (grdview || Update == "yes") return;
            // MessageBox.Show(Update);
-            checkName(ApplicantName.Text, userName.Text);
+            checkName(UserName.Text, EmployeeName.Text);
         }
 
         private void JobPossition_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (JobPossition.SelectedIndex == 5) {
+            if (JobPosition.SelectedIndex == 5) {
                 comJob2.SelectedIndex = 5;
                 btnActiveteM.Visible = btnDeActiveteM.Visible = panelMandoub.Visible = true;
                 btnActivete.Visible = btnDeActivete.Visible = panelEmployee.Visible = false;
@@ -657,7 +813,7 @@ namespace PersAhwal
         {
             if (comJob2.SelectedIndex != 5)
             {
-                JobPossition.SelectedIndex = comJob2.SelectedIndex ;
+                JobPosition.SelectedIndex = comJob2.SelectedIndex ;
                 btnActiveteM.Visible = btnDeActiveteM.Visible = panelMandoub.Visible = false;
                 btnActivete.Visible = btnDeActivete.Visible = panelEmployee.Visible = true;
                 fillDatagrid();
@@ -828,7 +984,7 @@ namespace PersAhwal
                 //try
                 //{
                     sqlCmd.CommandType = CommandType.Text;
-                    sqlCmd.Parameters.AddWithValue("@EmployeeName", Employeename);
+                    sqlCmd.Parameters.AddWithValue("@EmployeeName", Empname);
                     using (Stream stream = File.OpenRead(Search))
                     {
                         byte[] buffer1 = new byte[stream.Length];
@@ -848,6 +1004,21 @@ namespace PersAhwal
                 //{
                 //}
             }
+        }
+
+        private void btnActivate_Click(object sender, EventArgs e)
+        {
+            this.Size = new Size(967, 769);
+            //btnActivate.Visible = true;
+            fillDatagrid();
+        }
+
+        private void btnActivate_Click_1(object sender, EventArgs e)
+        {
+            this.Size = new Size(967, 769);
+            //btnActivate.Visible = true;
+            fillDatagrid();
+            dataGridView1.Visible = true;
         }
     }
 }

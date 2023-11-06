@@ -173,7 +173,7 @@ namespace PersAhwal
             Combo1.SelectedIndex = Combo1Index;
             Console.WriteLine(4);
             Console.WriteLine(5);
-            correctNo();
+            //correctNo();
             checkRenew();
             try
             {
@@ -4904,7 +4904,9 @@ namespace PersAhwal
             {
                 saConn.Open();
 
-                string query = "select " + comlumnName + " from " + tableName;
+                string query = "select distinct " + comlumnName + " from " + tableName + " where " + comlumnName + "<> ''";
+                Console.WriteLine(query);
+                //MessageBox.Show(query);
                 SqlCommand cmd = new SqlCommand(query, saConn);
                 cmd.ExecuteNonQuery();
                 DataTable Textboxtable = new DataTable();
@@ -4918,11 +4920,11 @@ namespace PersAhwal
                 {
                     if (!string.IsNullOrEmpty(dataRow[comlumnName].ToString()))
                     {
-                        for (int x = 0; x < Textboxtable.Rows.Count; x++)
-                            if (dataRow[comlumnName].ToString().Equals(Textboxtable.Rows[x]))
-                                newSrt = false;
+                        //for (int x = 0; x < Textboxtable.Rows.Count; x++)
+                        //    if (dataRow[comlumnName].ToString().Equals(Textboxtable.Rows[x]))
+                        //        newSrt = false;
 
-                        if (newSrt)
+                        //if (newSrt)
                             autoComplete.Add(dataRow[comlumnName].ToString());
                     }
                 }
