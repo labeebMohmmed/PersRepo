@@ -182,7 +182,7 @@ namespace PersAhwal
             new System.Globalization.GregorianCalendar();
             Cdate = DateTime.Now.ToString("MM-dd-yyyy");
             //MessageBox.Show(Cdate);
-            Application.Run(new MainForm("موظف ارشفة", 3, "57", "لبيب محمد أحمد", "نائب قنصل", dataSource100S, dataSource100A, @"D:\PrimariFiles\ModelFiles\", archFile, @"D:\PrimariFiles\FormData\", FormDataFile + @"\", true, Cdate, Modelfilespath, FormDataFile, false));
+            //Application.Run(new MainForm("موظف ارشفة", 3, "57", "لبيب محمد أحمد", "نائب قنصل", dataSource100S, dataSource100A, @"D:\PrimariFiles\ModelFiles\", archFile, @"D:\PrimariFiles\FormData\", FormDataFile + @"\", true, Cdate, Modelfilespath, FormDataFile, false));
             //Application.Run(new Form8(dataSource100A, archFile));
             //string[] str = new string[1] { "" };
             //Application.Run(new FormPics("57", EmployeeName, "لبيب محمد أحمد", "نائب قنصل", dataSource100A, 0, FormDataFile, archFile, 10, str, str, false, str, str));
@@ -198,7 +198,7 @@ namespace PersAhwal
             //else if (source57)
             //{
             //    Console.WriteLine(dataSource100A);
-            //Application.Run(new FormDataBase("57", dataSource100S, dataSource100A, Modelfilespath + @"\", archFile, archFile, FormDataFile + @"\", newFiles));
+            Application.Run(new FormDataBase("57", dataSource100S, dataSource100A, Modelfilespath + @"\", archFile, archFile, FormDataFile + @"\", newFiles));
             //Application.Run(new Accountant(dataSource100A, Cdate, "محمد علي محمد", "مدير"));
             //}
         }

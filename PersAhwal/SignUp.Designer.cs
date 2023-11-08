@@ -29,8 +29,8 @@ namespace PersAhwal
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.Gender = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.UserName = new System.Windows.Forms.TextBox();
@@ -43,6 +43,7 @@ namespace PersAhwal
             this.password1 = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.btnActivate = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.Register = new System.Windows.Forms.Button();
             this.JobPosition = new System.Windows.Forms.ComboBox();
@@ -54,8 +55,10 @@ namespace PersAhwal
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.التعليقات_السابقة_Off = new System.Windows.Forms.TextBox();
             this.panelEmployee = new System.Windows.Forms.Panel();
+            this.editPass = new System.Windows.Forms.Button();
+            this.editPassword = new System.Windows.Forms.PictureBox();
             this.button1 = new System.Windows.Forms.Button();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.olspassword = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
             this.headOfMission = new System.Windows.Forms.CheckBox();
             this.label11 = new System.Windows.Forms.Label();
@@ -78,15 +81,15 @@ namespace PersAhwal
             this.label10 = new System.Windows.Forms.Label();
             this.btnDeActiveteM = new System.Windows.Forms.Button();
             this.btnActiveteM = new System.Windows.Forms.Button();
-            this.btnActivate = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.btnActivate)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
             this.panelEmployee.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.editPassword)).BeginInit();
             this.panelMandoub.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.btnActivate)).BeginInit();
             this.SuspendLayout();
             // 
             // Gender
@@ -162,17 +165,17 @@ namespace PersAhwal
             this.labelpass2.Location = new System.Drawing.Point(277, 90);
             this.labelpass2.Name = "labelpass2";
             this.labelpass2.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.labelpass2.Size = new System.Drawing.Size(123, 27);
+            this.labelpass2.Size = new System.Drawing.Size(94, 27);
             this.labelpass2.TabIndex = 329;
-            this.labelpass2.Text = "أعد كتابة كلمة المرور:";
+            this.labelpass2.Text = "أعد كلمة المرور:";
             // 
             // password2
             // 
             this.password2.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.password2.Location = new System.Drawing.Point(12, 87);
+            this.password2.Location = new System.Drawing.Point(62, 87);
             this.password2.Name = "password2";
             this.password2.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.password2.Size = new System.Drawing.Size(256, 35);
+            this.password2.Size = new System.Drawing.Size(206, 35);
             this.password2.TabIndex = 328;
             this.password2.UseSystemPasswordChar = true;
             // 
@@ -190,10 +193,10 @@ namespace PersAhwal
             // password1
             // 
             this.password1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.password1.Location = new System.Drawing.Point(12, 47);
+            this.password1.Location = new System.Drawing.Point(62, 47);
             this.password1.Name = "password1";
             this.password1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.password1.Size = new System.Drawing.Size(256, 35);
+            this.password1.Size = new System.Drawing.Size(206, 35);
             this.password1.TabIndex = 326;
             this.password1.UseSystemPasswordChar = true;
             // 
@@ -217,6 +220,18 @@ namespace PersAhwal
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(951, 129);
             this.panel2.TabIndex = 333;
+            // 
+            // btnActivate
+            // 
+            this.btnActivate.Image = global::PersAhwal.Properties.Resources.png_lock_picture_lock_2_icon_1600;
+            this.btnActivate.Location = new System.Drawing.Point(869, 12);
+            this.btnActivate.Name = "btnActivate";
+            this.btnActivate.Size = new System.Drawing.Size(70, 54);
+            this.btnActivate.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.btnActivate.TabIndex = 839;
+            this.btnActivate.TabStop = false;
+            this.btnActivate.Visible = false;
+            this.btnActivate.Click += new System.EventHandler(this.btnActivate_Click_1);
             // 
             // pictureBox1
             // 
@@ -309,23 +324,23 @@ namespace PersAhwal
             this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridView1.Location = new System.Drawing.Point(12, 390);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -366,8 +381,10 @@ namespace PersAhwal
             // 
             // panelEmployee
             // 
+            this.panelEmployee.Controls.Add(this.editPass);
+            this.panelEmployee.Controls.Add(this.editPassword);
             this.panelEmployee.Controls.Add(this.button1);
-            this.panelEmployee.Controls.Add(this.textBox2);
+            this.panelEmployee.Controls.Add(this.olspassword);
             this.panelEmployee.Controls.Add(this.label13);
             this.panelEmployee.Controls.Add(this.headOfMission);
             this.panelEmployee.Controls.Add(this.label11);
@@ -390,6 +407,27 @@ namespace PersAhwal
             this.panelEmployee.Size = new System.Drawing.Size(902, 207);
             this.panelEmployee.TabIndex = 671;
             // 
+            // editPass
+            // 
+            this.editPass.Location = new System.Drawing.Point(12, 86);
+            this.editPass.Name = "editPass";
+            this.editPass.Size = new System.Drawing.Size(43, 37);
+            this.editPass.TabIndex = 841;
+            this.editPass.Text = "تعديل";
+            this.editPass.UseVisualStyleBackColor = true;
+            this.editPass.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // editPassword
+            // 
+            this.editPassword.Image = global::PersAhwal.Properties.Resources.R__3_;
+            this.editPassword.Location = new System.Drawing.Point(12, 6);
+            this.editPassword.Name = "editPassword";
+            this.editPassword.Size = new System.Drawing.Size(44, 35);
+            this.editPassword.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.editPassword.TabIndex = 840;
+            this.editPassword.TabStop = false;
+            this.editPassword.Click += new System.EventHandler(this.editPassword_Click);
+            // 
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(149, 163);
@@ -400,15 +438,15 @@ namespace PersAhwal
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click_2);
             // 
-            // textBox2
+            // olspassword
             // 
-            this.textBox2.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox2.Location = new System.Drawing.Point(12, 6);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.textBox2.Size = new System.Drawing.Size(256, 35);
-            this.textBox2.TabIndex = 340;
-            this.textBox2.UseSystemPasswordChar = true;
+            this.olspassword.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.olspassword.Location = new System.Drawing.Point(62, 6);
+            this.olspassword.Name = "olspassword";
+            this.olspassword.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.olspassword.Size = new System.Drawing.Size(206, 35);
+            this.olspassword.TabIndex = 340;
+            this.olspassword.UseSystemPasswordChar = true;
             // 
             // label13
             // 
@@ -417,9 +455,9 @@ namespace PersAhwal
             this.label13.Location = new System.Drawing.Point(277, 9);
             this.label13.Name = "label13";
             this.label13.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label13.Size = new System.Drawing.Size(113, 27);
+            this.label13.Size = new System.Drawing.Size(107, 27);
             this.label13.TabIndex = 341;
-            this.label13.Text = "كلمة المرور السابقة:";
+            this.label13.Text = "كلمة المرور الحالية:";
             // 
             // headOfMission
             // 
@@ -673,18 +711,6 @@ namespace PersAhwal
             this.btnActiveteM.Visible = false;
             this.btnActiveteM.Click += new System.EventHandler(this.btnActiveteM_Click);
             // 
-            // btnActivate
-            // 
-            this.btnActivate.Image = global::PersAhwal.Properties.Resources.png_lock_picture_lock_2_icon_1600;
-            this.btnActivate.Location = new System.Drawing.Point(869, 12);
-            this.btnActivate.Name = "btnActivate";
-            this.btnActivate.Size = new System.Drawing.Size(70, 54);
-            this.btnActivate.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.btnActivate.TabIndex = 839;
-            this.btnActivate.TabStop = false;
-            this.btnActivate.Visible = false;
-            this.btnActivate.Click += new System.EventHandler(this.btnActivate_Click_1);
-            // 
             // SignUp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -705,15 +731,16 @@ namespace PersAhwal
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.SignUp_FormClosed);
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.btnActivate)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
             this.panelEmployee.ResumeLayout(false);
             this.panelEmployee.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.editPassword)).EndInit();
             this.panelMandoub.ResumeLayout(false);
             this.panelMandoub.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.btnActivate)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -760,7 +787,7 @@ namespace PersAhwal
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ComboBox الصفة;
         private System.Windows.Forms.TextBox رقم_الهاتف;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox olspassword;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.CheckBox headOfMission;
         private System.Windows.Forms.Label label11;
@@ -769,5 +796,7 @@ namespace PersAhwal
         private System.Windows.Forms.TextBox passport;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.PictureBox btnActivate;
+        private System.Windows.Forms.PictureBox editPassword;
+        private System.Windows.Forms.Button editPass;
     }
 }

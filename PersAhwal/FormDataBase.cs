@@ -760,15 +760,18 @@ namespace PersAhwal
                 {
                     try
                     {
-                        if (dataGrid.Rows[Xindex].Cells[4].Value.ToString() == username.Text.Trim())
+
+                        if (dataGrid.Rows[Xindex].Cells["UserName"].Value.ToString().Trim() == username.Text.Trim())
                         {
-                            idNo = Convert.ToInt32(dataGrid.Rows[Xindex].Cells[0].Value.ToString());
-                            userpass = dataGrid.Rows[Xindex].Cells[6].Value.ToString();
-                            userApro = dataGrid.Rows[Xindex].Cells[7].Value.ToString();
-                            joposition = dataGrid.Rows[Xindex].Cells[2].Value.ToString();
-                            name = dataGrid.Rows[Xindex].Cells[1].Value.ToString();
-                            division = dataGrid.Rows[Xindex].Cells[10].Value.ToString();
-                            career = dataGrid.Rows[Xindex].Cells[8].Value.ToString();
+
+                            idNo = Convert.ToInt32(dataGrid.Rows[Xindex].Cells["ID"].Value.ToString());
+                            userpass = dataGrid.Rows[Xindex].Cells["Pass"].Value.ToString();
+                            userApro = dataGrid.Rows[Xindex].Cells["Aproved"].Value.ToString();
+                            //MessageBox.Show(userApro);
+                            joposition = dataGrid.Rows[Xindex].Cells["JobPosition"].Value.ToString();
+                            name = dataGrid.Rows[Xindex].Cells["EmployeeName"].Value.ToString();
+                            division = dataGrid.Rows[Xindex].Cells["Purpose"].Value.ToString();
+                            career = dataGrid.Rows[Xindex].Cells["Career"].Value.ToString();
                             foundedUser = true;
                             if (division == "شؤون رعايا")
                             {
@@ -776,26 +779,28 @@ namespace PersAhwal
                                 DataSource = DataSource56;
                                 Pers_Peope = false;
                             }
-                            else if (division == "احوال شخصية" || division == "الأرشفة العامة"|| division == "محاسب")
+                            else if (division == "احوال شخصية" || division == "الأرشفة العامة" || division == "محاسب")
                             {
                                 Server = "57";
                                 DataSource = DataSource57;
                                 Pers_Peope = true;
                             }
-
+                            break;
                         }
                     }
-                    catch (Exception ex) {
+                    catch (Exception ex)
+                    {
                         Console.WriteLine(dataGrid.RowCount.ToString());
                         Console.WriteLine(Xindex.ToString());
                         Console.WriteLine(dataGrid.Rows[Xindex].Cells[4].Value.ToString());
-                        
+
                     }
 
                 }
                 if (!foundedUser) 
                 { 
-                    MessageBox.Show("اسم المستخدم غير معرف في النظام"); return; 
+                    MessageBox.Show("اسم المستخدم غير معرف في النظام");
+                    return; 
                 }
                 else
                 {
@@ -804,6 +809,7 @@ namespace PersAhwal
                 }
                 if (userApro == "" || userApro.Contains("غير")) 
                 {
+                    //MessageBox.Show(userApro);
                     MessageBox.Show("حساب المستخدم غير مفعل أو غير معرف"); return; 
                 }
 

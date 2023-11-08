@@ -347,6 +347,12 @@ namespace PersAhwal
                     dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightPink;
 
                 }
+                else if (dataGridView1.Rows[i].Cells["حالة_الايصال"].Value.ToString() == "تم الالغاء")
+                {
+                    // timerColor = false;
+                    dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightPink;
+
+                }
                 else 
                 {
                     // timerColor = false;
@@ -680,6 +686,7 @@ namespace PersAhwal
 
         private string save2DataBase(Panel panel, bool insert)
         {
+            تعليق.Text = commentInfo();
             string query = checkList(panel, allList, "TableReceipt", insert);
             Console.WriteLine(query);
             string id = "";
@@ -785,7 +792,7 @@ namespace PersAhwal
                 {
                     panelFill(control);
                 }
-
+                تعليق_قديم.Text = تعليق.Text;
             }
         }
 
@@ -919,13 +926,15 @@ namespace PersAhwal
             {                
                 case "طباعة ايصال":                    
                     save2DataBase(panelMain, insertCase);
-                    paid(noForm, حالة_الايصال.Text);
+                    if(نوع_المعاملة.Text != "أخرى")
+                        paid(noForm, حالة_الايصال.Text);
                     FillDataGridView(DataSource, GreDate, false); 
                     print();
                     ClearTonewReceipt();
                     break;
                 
                 case "إلغاء ايصال":
+                    string comment = "قام  " + المتحصل.Text + " بإلغاء المعاملة " + Environment.NewLine + DateTime.Now.ToString("G") + Environment.NewLine + "--------------" + Environment.NewLine;
                     if (التاريخ_الميلادي.Text == التاريخ.Text) {
                         حالة_الايصال.Text = "تم الالغاء";
 
@@ -936,7 +945,7 @@ namespace PersAhwal
                                 sqlCon.Open();
                             }
                             catch (Exception ex) { return; }
-                        SqlCommand sqlCmd = new SqlCommand("UPDATE TableReceipt SET حالة_الايصال =N'تم الالغاء' where ID = " + intID.ToString(), sqlCon);
+                        SqlCommand sqlCmd = new SqlCommand("UPDATE TableReceipt SET حالة_الايصال =N'تم الالغاء' , تعليق=N'"+ comment + "'where ID = " + intID.ToString(), sqlCon);
                         sqlCmd.CommandType = CommandType.Text;
                         
                         sqlCmd.ExecuteNonQuery();
@@ -954,6 +963,23 @@ namespace PersAhwal
             
         }
 
+        private string commentInfo()
+        {
+            string comment = "";
+            if (تعليق_جديد.Text == "" && تعليق_قديم.Text == "")
+                comment = "قام  " + المتحصل.Text + " بإدخال البيانات " + Environment.NewLine + DateTime.Now.ToString("G") + Environment.NewLine + "--------------" + Environment.NewLine;
+
+            if (تعليق_جديد.Text == "" && تعليق_قديم.Text != "")
+                comment = "قام  " + المتحصل.Text + " ببعض التعديلات " + Environment.NewLine + DateTime.Now.ToString("G") + Environment.NewLine + "--------------" + Environment.NewLine + تعليق_قديم.Text;
+
+            if (تعليق_جديد.Text != "" && تعليق_قديم.Text == "")
+                comment = تعليق_جديد.Text.Trim() + Environment.NewLine + "قام  " + المتحصل.Text + " ببعض التعديلات " + Environment.NewLine + DateTime.Now.ToString("G") + Environment.NewLine + "--------------" + Environment.NewLine;
+
+            if (تعليق_جديد.Text != "" && تعليق_قديم.Text != "")
+                comment = تعليق_جديد.Text.Trim() + Environment.NewLine + "قام  " + المتحصل.Text + " ببعض التعديلات " + Environment.NewLine + DateTime.Now.ToString("G") + Environment.NewLine + "--------------" + Environment.NewLine + "*" + تعليق_قديم.Text.Trim();
+
+            return comment;
+        }
         private void ClearTonewReceipt()
         {
             AddNewReceipt = true;
@@ -976,6 +1002,14 @@ namespace PersAhwal
             {
                 رقم_المعاملة.Text = DocIDGenerator();
                 رقم_المعاملة.Enabled = false;   
+            } 
+            else if (نوع_المعاملة.SelectedIndex == 5)
+            {
+                string formtype = "21";
+                string year = DateTime.Now.Year.ToString().Replace("20", "");
+                رقم_المعاملة.Text = txtMissionCode + year + "00" + getMAxID();
+
+                رقم_المعاملة.Enabled = false;   
             }           
             else رقم_المعاملة.Enabled = true;
         }
@@ -987,6 +1021,33 @@ namespace PersAhwal
             string query = "select max(cast (right(رقم_معاملة_القسم,LEN(رقم_معاملة_القسم) - 15) as int)) as newDocID from TableHandAuth where رقم_معاملة_القسم like N'" + txtMissionCodeNum + "/" + txtMissionCode + "/" + year + "/" + formtype + "%'";
             Console.WriteLine(query);
             return  year + formtype  + getUniqueID(query);
+        }
+        
+        private string getMAxID()
+        {
+            string query = "select max(ID) as newDocID from TableReceipt";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            string maxID = "1";
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                try
+                {
+                    maxID = (Convert.ToInt32(dataRow["newDocID"].ToString()) + 1).ToString();
+                    //MessageBox.Show(dataRow["newDocID"].ToString());
+                }
+                catch (Exception ex)
+                {
+                    return maxID;
+                }
+            }
+            return maxID;
         }
 
         private string getUniqueID(string query)
@@ -1382,12 +1443,14 @@ namespace PersAhwal
         private void button12_Click(object sender, EventArgs e)
         {
             panelItems.Visible = false;
-            panelItems.SendToBack();    
+            panelItems.SendToBack();
+            panelComment.Visible = dataGridView2.Visible = true;
         }
 
         private void button13_Click(object sender, EventArgs e)
         {
             panelItems.Visible = true;
+            panelComment.Visible = false;
             panelItems.BringToFront();
         }
 

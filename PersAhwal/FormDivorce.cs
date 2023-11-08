@@ -186,7 +186,7 @@ namespace PersAhwal
             foreach (DataRow row in dtbl.Rows)
             {
 
-                if (row["name"].ToString() != "endTime" && row["name"].ToString() != "تاريخ_الارشفة1"  && row["name"].ToString() != "تاريخ_الارشفة2" && row["name"].ToString() != "ID" && !row["name"].ToString().Contains("_off") && row["name"].ToString() != "حالة_الارشفة" && row["name"].ToString() != "sms")
+                if (row["name"].ToString() != "توضيح_التجاوز" && row["name"].ToString() != "endTime" && row["name"].ToString() != "تاريخ_الارشفة1"  && row["name"].ToString() != "تاريخ_الارشفة2" && row["name"].ToString() != "ID" && !row["name"].ToString().Contains("_off") && row["name"].ToString() != "حالة_الارشفة" && row["name"].ToString() != "sms")
                 {
                     allList[i] = row["name"].ToString();
                     //MessageBox.Show(row["name"].ToString());
@@ -1264,6 +1264,35 @@ namespace PersAhwal
             bs.Filter = dataGridView1.Columns[2].HeaderText.ToString() + " LIKE '" + ListSearch.Text + "%'";
             dataGridView1.DataSource = bs;
             ColorFulGrid9();
+        }
+
+        private void button20_Click(object sender, EventArgs e)
+        {
+            if ((comboReasons.SelectedIndex == 1) && (txtExplanation.Text == "" || txtExplanation.Text.Contains("كتابة")))
+                MessageBox.Show("يرجى كتابة رقم المعاملة المشار إليها أولا");
+            if ((comboReasons.SelectedIndex == 3) && (txtExplanation.Text == "" || txtExplanation.Text.Contains("أذكر السبب")))
+                MessageBox.Show("أذكر السبب أولا");
+            skipPayment("TableDivorce", comboReasons.Text + "-" + txtExplanation.Text);
+            panelNotPay.Visible = false;
+        }
+        private void skipPayment(string table, string state)
+        {
+
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+            SqlCommand sqlCmd = new SqlCommand("UPDATE " + table + " SET توضيح_التجاوز =N'" + state + "' where ID = " + genIDNo.ToString(), sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            panelNotPay.Visible = false;
         }
     }
 }

@@ -52,6 +52,7 @@ namespace PersAhwal
     public partial class Authentication : Form
     {
         string DataSource = "";
+        bool viewAdd = true;
         int Messid = 0;
         string appSex = "سوداني";
         int handIndex = 0;
@@ -98,13 +99,13 @@ namespace PersAhwal
             allList = getColList("TableHandAuth");
             if (checkReciptState() == "OK")
             {
-                picVersio.Visible = fileUpdate.Visible = addDoc.Visible = false;
+                //picVersio.Visible = fileUpdate.Visible = false;
 
                 //dataGridView1.Size = new System.Drawing.Size(1214, 616);
-                if (UserJobposition.Contains("قنصل"))
-                    addDoc.Visible = true;
-                else 
-                    addDoc.Visible = false;
+                //if (UserJobposition.Contains("قنصل"))
+                //    addDoc.Visible = true;
+                //else 
+                //    addDoc.Visible = false;
                 
             }
             else
@@ -170,7 +171,7 @@ namespace PersAhwal
         {
             
             SqlConnection sqlCon = new SqlConnection(DataSource);
-            string query1 = "SELECT ID,اسم_موقع_المكاتبة ,نوع_المكاتبة,جنسية_الدبلوماسي,تاريخ_الأرشفة, Viewed as صاحب_المستند,تاريخ_توقيع_المكاتبة,العدد,تعليق,مدير_القسم,موظف_الأرشقة,اسم_الجهة,اسم_صاحب_الشهادة,رقم_الشهادة,رقم_معاملة_القسم,الحالة FROM TableHandAuth order by ID desc";
+            string query1 = "SELECT ID,اسم_موقع_المكاتبة ,نوع_المكاتبة,جنسية_الدبلوماسي,تاريخ_الأرشفة, Viewed as صاحب_المستند,تاريخ_توقيع_المكاتبة,العدد,تعليق,مدير_القسم,موظف_الأرشقة,اسم_الجهة,اسم_صاحب_الشهادة,رقم_الشهادة,رقم_معاملة_القسم,الحالة,حالة_السداد,توضيح_التجاوز FROM TableHandAuth order by ID desc";
             //try
             //{
                 if (sqlCon.State == ConnectionState.Closed)
@@ -681,12 +682,73 @@ namespace PersAhwal
             if (dataGridView1.CurrentRow.Index != -1)
             {
                 Messid = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value.ToString());
+                رقم_معاملة_القسم = dataGridView1.CurrentRow.Cells["رقم_معاملة_القسم"].Value.ToString();
+                string payState = dataGridView1.CurrentRow.Cells["حالة_السداد"].Value.ToString(); 
+                string request = dataGridView1.CurrentRow.Cells["توضيح_التجاوز"].Value.ToString();
+                viewAdd = true;
+
+                
+                if (payState == "" && request == "")
+                {
+                    var selectedOption = MessageBox.Show("", "هل تود رفع طلب تجاوز؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (selectedOption == DialogResult.Yes)
+                    {
+                        panelNotPay.Visible = true;
+                        panelNotPay.BringToFront();
+                        
+                        return;
+                    }
+                    else if (selectedOption == DialogResult.No)
+                        viewAdd = false;
+
+                }
+                if (payState == "" && request.Contains("-"))
+                {
+                    MessageBox.Show("يوجد طلب في انتظار الموافقة");
+                    return;
+                }
                 panel1.Visible = picVersio.Visible = true;
                 gridFill = true;
                 fillInfo();
                 رقم_معاملة_القسم = dataGridView1.CurrentRow.Cells["رقم_معاملة_القسم"].Value.ToString();
+                ;
                 FillDatafromGenArch("data2", Messid.ToString(), "TableHandAuth");
                 التعليقات_السابقة_Off.Text = تعليق.Text;
+                if (checkReciptState() == "OK")
+                {
+                    if ((payState == "" || payState == "غير مسددة" || payState == "تم الرفض") && UserJobposition.Contains("قنصل"))
+                    {
+                        var selectedOption1 = MessageBox.Show("هل المعاملة تم سدادها؟", "متابعة الإجراء", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (selectedOption1 == DialogResult.Yes)
+                        {
+                            payState = "تم السداد";
+
+
+                        }
+                        else if (selectedOption1 == DialogResult.No)
+                        {
+                            var selectedOption = MessageBox.Show("متابعة الإجراء إكرامي؟", "المعاملة غير مسددة", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                            if (selectedOption == DialogResult.Yes)
+                            {
+                                payState = "إكرامي";
+                            }
+                            else if (selectedOption == DialogResult.No)
+                                viewAdd = false;
+                        }
+                        التعليقات_السابقة_Off.Text = "قام " + موظف_الأرشقة.Text + " بتصديق المعاملة إكراميا " + "*" + Environment.NewLine + DateTime.Now.ToString("g") + Environment.NewLine + "--------------" + Environment.NewLine + التعليقات_السابقة_Off.Text;
+                        skipPayment("حالة_السداد", "TableAuth", payState, التعليقات_السابقة_Off.Text);
+                    }
+                    else if ((payState == "" || payState == "غير مسددة" || payState == "تم الرفض") && !UserJobposition.Contains("قنصل"))
+                    {
+                        var selectedOption1 = MessageBox.Show("هل تود رفع طلب للتجاوز؟", "المعاملة لم يتم سدادها بعد", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (selectedOption1 == DialogResult.Yes)
+                        {
+                            panelNotPay.Visible = true;
+                            panelNotPay.BringToFront();
+                        }
+                        return;
+                    }
+                }
                 تعليق.Text = "";
                 حفظ_وإنهاء_الارشفة.Text = "تعديل وإنهاء الارشفة";
                 dataGridView1.Size = new System.Drawing.Size(577, 616);
@@ -696,7 +758,34 @@ namespace PersAhwal
             //gridFill = false;
             return;
         }
-        
+
+        private void autoCompleteBulk(TextBox textbox, string source, string col, string table)
+        {
+
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                saConn.Open();
+
+                string query = "select distinct " + col + " from " + table + " where " + col + " is not null";
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.ExecuteNonQuery();
+                DataTable Textboxtable = new DataTable();
+                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                dataAdapter.Fill(Textboxtable);
+                AutoCompleteStringCollection autoComplete = new AutoCompleteStringCollection();
+                bool newSrt = true;
+                textbox.AutoCompleteCustomSource.Clear();
+
+                foreach (DataRow dataRow in Textboxtable.Rows)
+                {
+                    autoComplete.Add(dataRow[col].ToString());
+                }
+                textbox.AutoCompleteMode = AutoCompleteMode.Suggest;
+                textbox.AutoCompleteSource = AutoCompleteSource.CustomSource;
+                textbox.AutoCompleteCustomSource = autoComplete;
+                saConn.Close();
+            }
+        }
         private void singleInfo()
         {
             
@@ -963,7 +1052,8 @@ namespace PersAhwal
                 حفظ_وإنهاء_الارشفة.Visible = false;
                 panelpicTemp.Height = 638;
             }
-            else {
+            else if(viewAdd)
+            {
                 حفظ_وإنهاء_الارشفة.Visible = true;
                 panelpicTemp.Height = 577;
             }
@@ -1110,6 +1200,7 @@ namespace PersAhwal
         {
             autoCompleteTextBox(اسم_موقع_المكاتبة, DataSource, "اسم_موقع_المكاتبة", "TableHandAuth");
             autoCompleteTextBox(نوع_المكاتبة, DataSource, "نوع_المكاتبة", "TableHandAuth");
+            autoCompleteBulk(صاحب_المستند, DataSource, "الاسم", "TableGenNames");
             fillYears(combYear);
         }
         private void autoCompleteTextBox(TextBox textbox, string source, string comlumnName, string tableName)
@@ -1236,6 +1327,7 @@ namespace PersAhwal
                     //dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightPink;
                     countSaudi++;
                 }
+
                 if (dataGridView1.Rows[i].Cells["الحالة"].Value.ToString() == "في انتظار تأكيد صحتها")
                 {
                     // timerColor = false;
@@ -1248,7 +1340,11 @@ namespace PersAhwal
                     dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.Red;
                     
                 }
+                if (dataGridView1.Rows[i].Cells["حالة_السداد"].Value.ToString() == "إكرامي")
+                {
 
+                    dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.Aquamarine;                    
+                }
             }
             labDescribed.Text = "عدد (" + i.ToString() + ") مستند (" + countSudan.ToString() + "/"+ countSaudi.ToString()+")";
 
@@ -1323,7 +1419,76 @@ namespace PersAhwal
             sqlCon.Close();
             fillDataGrid("");
             addDoc.Enabled = true;
-            MessageBox.Show("تم إضافة نافذة توثيق لمعاملة إكراميا");
+            //MessageBox.Show("تم إضافة نافذة توثيق لمعاملة إكراميا");
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            if ((comboReasons.SelectedIndex == 1) && (txtExplanation.Text == "" || txtExplanation.Text.Contains("كتابة")))
+                MessageBox.Show("يرجى كتابة رقم المعاملة المشار إليها أولا");
+            if ((comboReasons.SelectedIndex == 3) && (txtExplanation.Text == "" || txtExplanation.Text.Contains("أذكر السبب")))
+                MessageBox.Show("أذكر السبب أولا");
+            skipPayment("TableHandAuth", comboReasons.Text + "-" + txtExplanation.Text);
+            panelNotPay.Visible = false;
+        }
+
+        private void skipPayment(string table, string state)
+        {
+            string query = "UPDATE " + table + " SET توضيح_التجاوز =N'" + state + "' where رقم_معاملة_القسم = N'" + رقم_معاملة_القسم + "'";
+            Console.WriteLine(query);
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();
+        }
+
+
+        private void skipPayment(string column, string table, string state, string comment)
+        {
+            string query = "UPDATE " + table + " SET " + column + " =N'" + state + "',تعليق=N'" + comment + "' where رقم_معاملة_القسم = N'" + رقم_معاملة_القسم + "'";
+            query = "UPDATE " + table + " SET " + column + " =N'" + state + "' where رقم_معاملة_القسم = N'" + رقم_معاملة_القسم + "'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            try
+            {
+                sqlCmd.ExecuteNonQuery();
+            }
+            catch (Exception ex) { }
+        }
+
+        private void PaymentRequest(string column, string table, string state, string comment)
+        {
+            string query = "UPDATE " + table + " SET " + column + " =N'" + state + "',تعليق=N'" + comment + "',حالة_السداد = '' where رقم_معاملة_القسم = N'" + رقم_معاملة_القسم + "'";
+            if (comment == "")
+                query = "UPDATE " + table + " SET " + column + " =N'" + state + "' where رقم_معاملة_القسم = N'" + رقم_معاملة_القسم + "'";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            panelNotPay.Visible = false;
         }
     }
 }

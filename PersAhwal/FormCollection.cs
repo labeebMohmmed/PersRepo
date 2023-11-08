@@ -310,6 +310,12 @@ namespace PersAhwal
                     dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.LightBlue;
                     arch++;
                 }
+                if (dataGridView1.Rows[i].Cells["حالة_السداد"].Value.ToString() == "إكرامي")
+                {
+
+                    dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.Aquamarine;
+                    arch++;
+                }
                 if (dataGridView1.Rows[i].Cells["حالة_السداد"].Value.ToString() == "تم الالغاء")
                 {
 
@@ -468,10 +474,10 @@ namespace PersAhwal
                         checkAutoUpdate.Checked = true;
                     }
                     autoCompleteBulk(عنوان_المكاتبة, DataSource, "عنوان_المكاتبة", "TableCollection");
-                    طريقة_الطلب.Checked = الشاهد_الأول.Enabled = هوية_الأول.Enabled = true;
+                    طريقة_الطلب.Checked = الشاهد_الأول.Enabled = هوية_الأول.Enabled = طريقة_الطلب.Enabled = true;
                     
                     if (طريقة_الطلب.Text != "حضور مباشرة إلى القنصلية")
-                        طريقة_الطلب.Checked = الشاهد_الأول.Enabled = هوية_الأول.Enabled = false;
+                        طريقة_الطلب.Checked = الشاهد_الأول.Enabled = هوية_الأول.Enabled = طريقة_الطلب.Enabled = false;
 
                     if (PanelButtonInfo.Visible)
                     {
@@ -652,8 +658,11 @@ namespace PersAhwal
             }
         }
 
-        private void skipPayment(string table, string state) {
-
+        private void skipPayment(string column, string table, string state, string comment)
+        {
+            string query = "UPDATE " + table + " SET " + column + " =N'" + state + "',تعليق=N'" + comment + "' where ID = " + intID.ToString();
+            if (comment == "")
+                query = "UPDATE " + table + " SET " + column + " =N'" + state + "' where ID = " + intID.ToString();
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 try
@@ -661,11 +670,30 @@ namespace PersAhwal
                     sqlCon.Open();
                 }
                 catch (Exception ex) { return; }
-            SqlCommand sqlCmd = new SqlCommand("UPDATE "+ table + " SET حالة_السداد =N'"+ state + "' where ID = " + intID.ToString(), sqlCon);
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
             sqlCmd.CommandType = CommandType.Text;
             sqlCmd.Parameters.AddWithValue("@ID", intID);
             sqlCmd.ExecuteNonQuery();
         }
+
+        private void PaymentRequest(string column, string table, string state, string comment)
+        {
+            string query = "UPDATE " + table + " SET " + column + " =N'" + state + "',تعليق=N'" + comment + "',حالة_السداد = '' where ID = " + intID.ToString();
+            if (comment == "")
+                query = "UPDATE " + table + " SET " + column + " =N'" + state + "' where ID = " + intID.ToString();
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.Parameters.AddWithValue("@ID", intID);
+            sqlCmd.ExecuteNonQuery();
+        }
+
         public string existed(string table, string colName)
         {
             string query = "select حالة_السداد from " + table + " where " + colName + " = N'" + رقم_المعاملة.Text + "'";
@@ -1912,34 +1940,88 @@ namespace PersAhwal
                 ageDetected = تاريخ_الميلاد.Text;
                 fillInfo(PaneltxtReview, false);
                 fillInfo(panelapplicationInfo, false);
-                if ((حالة_السداد.Text == "" || حالة_السداد.Text == "غير مسددة") && Jobposition.Contains("قنصل"))
+                if (checkReciptState() == "OK")
                 {
-                    var selectedOption1 = MessageBox.Show("هل المعاملة تم سدادها؟", "متابعة الإجراء", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                    if (selectedOption1 == DialogResult.Yes)
+                    if ((حالة_السداد.Text == "" || حالة_السداد.Text == "غير مسددة" || حالة_السداد.Text == "تم الرفض") && Jobposition.Contains("قنصل"))
                     {
-                        حالة_السداد.Text = "تم السداد";
+                        var selectedOption1 = MessageBox.Show("هل المعاملة تم سدادها؟", "متابعة الإجراء", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (selectedOption1 == DialogResult.Yes)
+                        {
+                            حالة_السداد.Text = "تم السداد";
 
 
+                        }
+                        else if (selectedOption1 == DialogResult.No)
+                        {
+                            var selectedOption = MessageBox.Show("متابعة الإجراء إكرامي؟", "المعاملة غير مسددة", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                            if (selectedOption == DialogResult.Yes)
+                            {
+                                حالة_السداد.Text = "إكرامي";
+                            }
+                            else if (selectedOption == DialogResult.No)
+                            {
+                                currentPanelIndex--;
+                                return;
+                            }
+                        }
+                        التعليقات_السابقة_Off.Text = "قام " + اسم_الموظف.Text + " بتصديق المعاملة إكراميا " + "*" + Environment.NewLine + DateTime.Now.ToString("g") + Environment.NewLine + "--------------" + Environment.NewLine + التعليقات_السابقة_Off.Text;
+                        skipPayment("حالة_السداد", "TableAuth", حالة_السداد.Text, التعليقات_السابقة_Off.Text);
                     }
-                    else if (selectedOption1 == DialogResult.No)
+                    else if ((حالة_السداد.Text == "" || حالة_السداد.Text == "غير مسددة" || حالة_السداد.Text == "تم الرفض") && !Jobposition.Contains("قنصل"))
                     {
-                        var selectedOption = MessageBox.Show("متابعة الإجراء إكرامي؟(", "المعاملة غير مسددة", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                        if (selectedOption == DialogResult.Yes)
+                        var selectedOption1 = MessageBox.Show("هل تود رفع طلب للتجاوز؟", "المعاملة لم يتم سدادها بعد", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (selectedOption1 == DialogResult.Yes)
                         {
-                            حالة_السداد.Text = "إكرامي";
+                            panelNotPay.Visible = true;
+                            panelNotPay.BringToFront();
                         }
-                        else if (selectedOption == DialogResult.No)
-                        {
-                            currentPanelIndex--;
-                            return;
-                        }
+                        currentPanelIndex--;
+                        return;
                     }
-                    skipPayment("TableCollection", حالة_السداد.Text);
                 }
+
+                //if ((حالة_السداد.Text == "" || حالة_السداد.Text == "غير مسددة") && Jobposition.Contains("قنصل"))
+                //{
+                //    var selectedOption1 = MessageBox.Show("هل المعاملة تم سدادها؟", "متابعة الإجراء", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                //    if (selectedOption1 == DialogResult.Yes)
+                //    {
+                //        حالة_السداد.Text = "تم السداد";
+
+
+                //    }
+                //    else if (selectedOption1 == DialogResult.No)
+                //    {
+                //        var selectedOption = MessageBox.Show("متابعة الإجراء إكرامي؟(", "المعاملة غير مسددة", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                //        if (selectedOption == DialogResult.Yes)
+                //        {
+                //            //حالة_السداد.Text = "إكرامي";
+                //            panelNotPay.Visible = true;
+                //            panelNotPay.BringToFront();
+                //        }
+                //        else if (selectedOption == DialogResult.No)
+                //        {
+                //            currentPanelIndex--;
+                //            return;
+                //        }
+                //    }
+                //    //skipPayment("TableCollection", حالة_السداد.Text);
+                //}
+
+                //if (حالة_السداد.Text == "" || حالة_السداد.Text.Contains("-")|| حالة_السداد.Text == "غير مسددة")
+                //{
+                //    panelNotPay.Visible = true;
+                //    panelNotPay.BringToFront();
+                //    currentPanelIndex--;
+                //    return;
+                //}
                 fillInfo(PanelItemsboxes, false);
                 fillInfo(finalPanel, false);
                 currentPanelIndex = 1;
                 panelShow(currentPanelIndex);
+                if (طريقة_الطلب.Text != "حضور مباشرة إلى القنصلية")
+                    طريقة_الطلب.Checked = الشاهد_الأول.Enabled = هوية_الأول.Enabled = طريقة_الطلب.Enabled = false;
+                else طريقة_الطلب.Checked = الشاهد_الأول.Enabled = هوية_الأول.Enabled = طريقة_الطلب.Enabled = true;
+                اسم_المندوب.Enabled = false;
             }
 
             checkChanged(مقدم_الطلب, Panelapp);
@@ -6478,6 +6560,46 @@ namespace PersAhwal
         private void آلية_البحث_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void button20_Click(object sender, EventArgs e)
+        {
+            if ((comboReasons.SelectedIndex == 1) && (txtExplanation.Text == "" || txtExplanation.Text.Contains("كتابة")))
+                MessageBox.Show("يرجى كتابة رقم المعاملة المشار إليها أولا");
+            if ((comboReasons.SelectedIndex == 3) && (txtExplanation.Text == "" || txtExplanation.Text.Contains("أذكر السبب")))
+                MessageBox.Show("أذكر السبب أولا");
+            PaymentRequest("توضيح_التجاوز", "TableCollection", comboReasons.Text + "-" + txtExplanation.Text, "");
+            panelNotPay.Visible = false;
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            /*
+             مصدق عليها إكراميا
+المعاملة مرتبطة بمعاملة أخرى وقد تم سدادها
+تم السداد فعليا ولكن لا يمكن المتابعة
+آخر
+             */
+            switch (comboReasons.SelectedIndex)
+            {
+                case 0:
+                    txtExplanation.Text = "";
+                    break;
+                case 1:
+                    txtExplanation.Text = "يرجى كتابة رقم المعاملة المشار إليها";
+                    break;
+                case 2:
+                    txtExplanation.Text = "";
+                    break;
+                case 3:
+                    txtExplanation.Text = "أذكر السبب";
+                    break;
+            }
+        }
+
+        private void button1_Click_2(object sender, EventArgs e)
+        {
+            panelNotPay.Visible = false;
         }
     }
 }

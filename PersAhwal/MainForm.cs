@@ -35,6 +35,7 @@ using DocumentFormat.OpenXml;
 using OfficeOpenXml.Table.PivotTable;
 using Microsoft.SqlServer.Management.Assessment;
 using Microsoft.Reporting.WinForms;
+using static System.Windows.Forms.AxHost;
 
 namespace PersAhwal
 {
@@ -45,9 +46,13 @@ namespace PersAhwal
 
     public partial class MainForm : Form
     {
+        int intIDNotPay = 0;
+        string paymentState = "";
         string messageID = "";
+        string notpayTable = "";
         string AuthTitle = "";
         string ReceSearchDate = "";
+        string notpayAppSearchDate = "";
         DataTable dataRowTable;
         static string[] queryNewYear = new string[15];
         string DataSource, DataSource56, DataSource57, GregorianDate, HijriDate, GregorianDateReport;
@@ -239,6 +244,7 @@ namespace PersAhwal
             Combtn0.Select();
             dataSourceWrite(primeryLink + @"refresh.txt", "Allowed");
             ProcedSummayInfo();
+            button10.PerformClick();
             //filllExcelReq();
         }
 
@@ -419,7 +425,7 @@ namespace PersAhwal
 
             if (UserJobposition.Contains("قنصل"))
             {
-                picSettings.Visible = pictureBox2.Visible = picLock.Visible = true;
+                picSettings.Visible = pictureBox2.Visible = picLock.Visible = button10.Visible = true;
                 picVersio.BringToFront();
                 if (Server == "57")
                     backgroundWorker3.RunWorkerAsync();
@@ -1490,7 +1496,7 @@ namespace PersAhwal
             attendedVC.SelectedIndex = 2;
             if (UserJobposition.Contains("قنصل"))
             {
-                picVersio.Visible = true;
+                picVersio.Visible = button10.Visible = true;
                 picadd.Visible = true;
                 labelmonth.Visible = true;
                 picremove.Visible = true;
@@ -5536,7 +5542,7 @@ namespace PersAhwal
                 ReportPanel.BringToFront();
                 flowLayoutPanel1.Visible = ReportPanel.Visible = true;
                 panel4.Visible = false;
-                PanelMandounb.Visible = SearchPanel.Visible = fileManagePanel2.Visible = SearchPanel.Visible = PanelReceipt.Visible = false;
+                PanelMandounb.Visible = SearchPanel.Visible = fileManagePanel2.Visible = SearchPanel.Visible = PanelReceipt.Visible = paneFailedlNotPay.Visible = false;
                 fillYears(yearReport);
             }
             else ReportPanel.Visible = false;
@@ -10931,11 +10937,12 @@ namespace PersAhwal
                 PanelReceipt.BringToFront();
                 PanelReceipt.Visible = true;
                 panel4.Visible = false;
-                PanelMandounb.Visible = SearchPanel.Visible = fileManagePanel2.Visible = SearchPanel.Visible = ReportPanel.Visible = false;
-                ReceSearchDate = receSearDate.Text.Split('-')[1] + "-" + receSearDate.Text.Split('-')[2] + "-" + receSearDate.Text.Split('-')[0];
+                PanelMandounb.Visible = SearchPanel.Visible = fileManagePanel2.Visible = SearchPanel.Visible = ReportPanel.Visible = paneFailedlNotPay.Visible = false;
+                ReceSearchDate = receSearDate.Text.Split('-')[1] + "-" + receSearDate.Text.Split('-')[0] + "-" + receSearDate.Text.Split('-')[2];
                 getReceiptIfo(ReceSearchDate);
             }
             else PanelReceipt.Visible = false;
+            dataGridView8.Size = new System.Drawing.Size(401, 514);
         }
 
         public void getReceiptIfo(string greDate)
@@ -10950,6 +10957,7 @@ namespace PersAhwal
             DataTable dtbl = new DataTable();
             sqlDa.Fill(dtbl);
             dataGridView8.DataSource = dtbl;
+            
             dataGridView8.Sort(dataGridView8.Columns["ID"], System.ComponentModel.ListSortDirection.Descending);
             dataGridView8.Columns[0].Visible = false;
             //dataGridView8.Columns["نوع_المعاملة"].Visible = false ;
@@ -10961,20 +10969,49 @@ namespace PersAhwal
 
             ColorFulGrid9();
         }
+        
+        public void notpayApplication(string greDate)
+        {
+            string query = "notpayApplication";
+            
+            Console.WriteLine(greDate);
+            //MessageBox.Show(greDate);
+
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.StoredProcedure;
+            sqlDa.SelectCommand.Parameters.AddWithValue("@proDate" , greDate);
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            dataGridNotPay.DataSource = dtbl;
+            if (dtbl.Rows.Count == 0)
+            {
+                paneFailedlNotPay.Visible = false;
+                MessageBox.Show("لا توجد معاملات للتجاوز");
+            }
+            dataGridNotPay.Sort(dataGridNotPay.Columns["ID"], System.ComponentModel.ListSortDirection.Descending);
+            dataGridNotPay.Columns[0].Visible =dataGridNotPay.Columns[1].Visible = false;
+            //dataGridNotPay.Columns["نوع_المعاملة"].Visible = false ;
+            dataGridNotPay.Columns[1].Visible = false;
+            dataGridNotPay.Columns[2].Width = 200;
+            dataGridNotPay.Columns[3].Width = 150;
+            sqlCon.Close();
+
+            ColorFulGrid9();
+        }
 
         private void receSearDate_ValueChanged(object sender, EventArgs e)
         {
-            ReceSearchDate = receSearDate.Text.Split('-')[1] + "-" + receSearDate.Text.Split('-')[2] + "-" + receSearDate.Text.Split('-')[0];
+            ReceSearchDate = receSearDate.Text.Split('-')[1] + "-" + receSearDate.Text.Split('-')[0] + "-" + receSearDate.Text.Split('-')[2];
+
             getReceiptIfo(ReceSearchDate);
         }
 
         private void dataGridView8_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            foreach (Control control in PanelReceipt.Controls)
-            {
-                panelFill(control);
-                dataGridView8.Visible = false;
-            }
+            
 
         }
 
@@ -11000,10 +11037,138 @@ namespace PersAhwal
                 }
             }
         }
+        
+        
 
         private void button9_Click(object sender, EventArgs e)
         {
             dataGridView8.Visible  = true;
+        }
+
+        private void button15_Click(object sender, EventArgs e)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+            SqlCommand sqlCmd = new SqlCommand("UPDATE " + tableNotPayName.Text + " SET حالة_السداد =N'" + paymentState + "',توضيح_التجاوز =N'" + سبب_التجاوز.Text +" - "+ توضيح.Text +" - "+ notPayComment.Text + "' where ID = " + intIDNotPay.ToString(), sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.Parameters.AddWithValue("@ID", intIDNotPay);
+            sqlCmd.ExecuteNonQuery();
+            dataGridNotPay.Visible = true;
+            paneFailedlNotPay.Visible = false;    
+        }
+
+        private void textBox1_TextChanged_1(object sender, EventArgs e)
+        {
+            if (paymentState.Contains("إكراميا"))
+                paymentState = "إكرامي";
+            else if (paymentState.Contains("تم سدادها"))
+                paymentState = "إكرامي";
+            else if (paymentState.Contains("تم سدادها"))
+                paymentState = "تم السداد";
+            else
+                paymentState = "إكرامي";
+
+        }
+
+        
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            if (paneFailedlNotPay.Visible == false)
+            {
+                paneFailedlNotPay.BringToFront();
+                paneFailedlNotPay.Visible = true;
+                panel4.Visible = false;
+                PanelMandounb.Visible = SearchPanel.Visible = fileManagePanel2.Visible = SearchPanel.Visible = ReportPanel.Visible = false;
+                notpayAppSearchDate = notpayAppDate.Text.Split('-')[1] + "-" + notpayAppDate.Text.Split('-')[0] + "-" + notpayAppDate.Text.Split('-')[2];
+                notpayApplication(notpayAppSearchDate);
+            }
+            else paneFailedlNotPay.Visible = false;
+            dataGridNotPay.Size = new System.Drawing.Size(401, 514);
+        }
+
+        private void notpayAppDate_ValueChanged(object sender, EventArgs e)
+        {
+            notpayAppSearchDate = notpayAppDate.Text.Split('-')[1] + "-" + notpayAppDate.Text.Split('-')[1] + "-" + notpayAppDate.Text.Split('-')[2];
+        }
+
+        private void button13_Click_2(object sender, EventArgs e)
+        {
+            dataGridNotPay.Visible = true;
+        }
+
+        private void dataGridNotPay_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dataGridNotPay.CurrentRow.Index != -1)
+            {
+                intIDNotPay = Convert.ToInt32(dataGridNotPay.CurrentRow.Cells["ID"].Value.ToString());
+                اسم_مقدم_الطلب.Text = dataGridNotPay.CurrentRow.Cells["اسم_مقدم_الطلب"].Value.ToString();
+                tableNotPayName.Text = dataGridNotPay.CurrentRow.Cells["tableNotPayName"].Value.ToString();
+                try
+                {
+                    رقم_المعامله.Text = dataGridNotPay.CurrentRow.Cells[3].Value.ToString();
+                }
+                catch (Exception ex)
+                {
+                    //MessageBox.Show(dataGridNotPay.CurrentRow.Cells["رقم_المعامله"].Value.ToString());
+                }
+                توضيح_التجاوز.Text = dataGridNotPay.CurrentRow.Cells["توضيح_التجاوز"].Value.ToString();
+                سبب_التجاوز.Text = توضيح_التجاوز.Text.Split('-')[0];
+                توضيح.Text = توضيح_التجاوز.Text.Split('-')[1];
+            }
+            dataGridNotPay.Visible = false;
+        }
+
+        private void button14_Click(object sender, EventArgs e)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+            SqlCommand sqlCmd = new SqlCommand("UPDATE " + tableNotPayName.Text + " SET حالة_السداد =N'تم الرفض','توضيح_التجاوز =N'" + سبب_التجاوز.Text + " - " + توضيح.Text + " - " + notPayComment.Text + "' where ID = " + intIDNotPay.ToString(), sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.Parameters.AddWithValue("@ID", intIDNotPay);
+            sqlCmd.ExecuteNonQuery();
+            paneFailedlNotPay.Visible = false;
+        }
+
+        private void dataGridNotPay_CellClick_1(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dataGridNotPay.CurrentRow.Index != -1)
+            {
+                intIDNotPay = Convert.ToInt32(dataGridNotPay.CurrentRow.Cells["ID"].Value.ToString());
+                اسم_مقدم_الطلب.Text = dataGridNotPay.CurrentRow.Cells["اسم_مقدم_الطلب"].Value.ToString();
+                tableNotPayName.Text = dataGridNotPay.CurrentRow.Cells["tableNotPayName"].Value.ToString();
+                try
+                {
+                    رقم_المعامله.Text = dataGridNotPay.CurrentRow.Cells[3].Value.ToString();
+                }
+                catch (Exception ex)
+                {
+                    //MessageBox.Show(dataGridNotPay.CurrentRow.Cells["رقم_المعامله"].Value.ToString());
+                }
+                توضيح_التجاوز.Text = dataGridNotPay.CurrentRow.Cells["توضيح_التجاوز"].Value.ToString();
+                سبب_التجاوز.Text = توضيح_التجاوز.Text.Split('-')[0];
+                توضيح.Text = توضيح_التجاوز.Text.Split('-')[1];
+            }
+            dataGridNotPay.Visible = false;
+        }
+
+        private void dataGridView8_CellClick_1(object sender, DataGridViewCellEventArgs e)
+        {
+            foreach (Control control in PanelReceipt.Controls)
+            {
+                panelFill(control);
+                dataGridView8.Visible = false;
+            }
         }
 
         private void Open3File(int id, int fileNo)
