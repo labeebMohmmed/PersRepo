@@ -63,6 +63,16 @@ namespace PersAhwal.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap _533228 {
+            get {
+                object obj = ResourceManager.GetObject("533228", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap _61_613900_svg_royalty_free_download_png_icon_free_download {
             get {
                 object obj = ResourceManager.GetObject("61-613900_svg-royalty-free-download-png-icon-free-download", resourceCulture);

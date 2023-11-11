@@ -53,6 +53,7 @@ namespace PersAhwal
     {
         string DataSource = "";
         bool viewAdd = true;
+        bool newData = true;
         int Messid = 0;
         string appSex = "سوداني";
         int handIndex = 0;
@@ -749,6 +750,9 @@ namespace PersAhwal
                         return;
                     }
                 }
+                if (اسم_موقع_المكاتبة.Text == "")
+                    newData = true;
+                else newData = false;
                 تعليق.Text = "";
                 حفظ_وإنهاء_الارشفة.Text = "تعديل وإنهاء الارشفة";
                 dataGridView1.Size = new System.Drawing.Size(577, 616);
@@ -990,12 +994,15 @@ namespace PersAhwal
             dataGridView1.SendToBack();
             pictureBox1.BringToFront();
             عرض_القائمة.Visible = pictureBox1.Visible = true;
-            //var selectedOption = MessageBox.Show("حذف المستند من قائمة الأرشفة؟", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            //if (selectedOption == DialogResult.Yes)
-            //{
-            //    pictureBox.Visible = false;
-            //    PathImages[Convert.ToInt32(pictureBox.Name.Split('_')[1])] = "";
-            //}
+            if (newData)
+            {
+                var selectedOption = MessageBox.Show("حذف المستند من قائمة الأرشفة؟", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (selectedOption == DialogResult.Yes)
+                {
+                    pictureBox.Visible = false;
+                    PathImages[Convert.ToInt32(pictureBox.Name.Split('_')[1])] = "";
+                }
+            }
             fileUpdate.Enabled = true;
         }
         

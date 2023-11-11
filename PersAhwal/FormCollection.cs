@@ -374,7 +374,7 @@ namespace PersAhwal
                     btnNext.Visible = ListSearch.Visible = btnListView.Visible = PanelDataGrid.Visible = labDescribed.Visible = true;
 
                     //false
-                    btnSettings.Visible = btnDelete.Visible = btnFile1.Visible = btnFile2.Visible = btnFile3.Visible = Panelapp.Visible = false;
+                    btnDelete.Visible = btnFile1.Visible = btnFile2.Visible = btnFile3.Visible = Panelapp.Visible = false;
                     panelAuthRights.Visible = panelAuthRights.Visible = btnPrevious.Visible = panelapplicationInfo.Visible = false;
                     break;
                 case 1:
@@ -386,6 +386,12 @@ namespace PersAhwal
                     //false
                     panelAuthRights.Visible = ListSearch.Visible = btnListView.Visible = panelAuthRights.Visible = PanelDataGrid.Visible = labDescribed.Visible = false;
                     btnDelete.Visible = btnFile1.Visible = btnFile2.Visible = btnFile3.Visible = Panelapp.Visible = true;
+
+                    if (حالة_السداد.Text == "")
+                        حالة_السداد.Text = "غير مسددة";
+                    btnSettings.Visible = true;
+                    if (حالة_السداد.Text == "تم السداد" || حالة_السداد.Text == "معفي" || حالة_السداد.Text == "إكرامي")
+                        btnSettings.Enabled = false; 
                     break;
                 case 2:
                     حالة_السداد.Text = existed("TableCollection", "رقم_المعاملة");
@@ -396,9 +402,12 @@ namespace PersAhwal
                         نوع_الإجراء.Enabled = true;
                         currentPanelIndex--; return;
                     }
-                    if (حالة_السداد.Text == "")
-                        حالة_السداد.Text = "غير مسددة";
-                            نوع_الإجراء.Enabled = false;
+                    //if (حالة_السداد.Text == "")
+                    //    حالة_السداد.Text = "غير مسددة";
+                    //btnSettings.Visible = true;
+                    //if (حالة_السداد.Text == "تم السداد")
+                    //    btnSettings.Enabled = false;
+
                     التاريخ_الميلادي.Text = GregorianDate;
                     التاريخ_الهجري.Text = HijriDate;
 
@@ -1940,45 +1949,7 @@ namespace PersAhwal
                 ageDetected = تاريخ_الميلاد.Text;
                 fillInfo(PaneltxtReview, false);
                 fillInfo(panelapplicationInfo, false);
-                if (checkReciptState() == "OK")
-                {
-                    if ((حالة_السداد.Text == "" || حالة_السداد.Text == "غير مسددة" || حالة_السداد.Text == "تم الرفض") && Jobposition.Contains("قنصل"))
-                    {
-                        var selectedOption1 = MessageBox.Show("هل المعاملة تم سدادها؟", "متابعة الإجراء", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                        if (selectedOption1 == DialogResult.Yes)
-                        {
-                            حالة_السداد.Text = "تم السداد";
-
-
-                        }
-                        else if (selectedOption1 == DialogResult.No)
-                        {
-                            var selectedOption = MessageBox.Show("متابعة الإجراء إكرامي؟", "المعاملة غير مسددة", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                            if (selectedOption == DialogResult.Yes)
-                            {
-                                حالة_السداد.Text = "إكرامي";
-                            }
-                            else if (selectedOption == DialogResult.No)
-                            {
-                                currentPanelIndex--;
-                                return;
-                            }
-                        }
-                        التعليقات_السابقة_Off.Text = "قام " + اسم_الموظف.Text + " بتصديق المعاملة إكراميا " + "*" + Environment.NewLine + DateTime.Now.ToString("g") + Environment.NewLine + "--------------" + Environment.NewLine + التعليقات_السابقة_Off.Text;
-                        skipPayment("حالة_السداد", "TableAuth", حالة_السداد.Text, التعليقات_السابقة_Off.Text);
-                    }
-                    else if ((حالة_السداد.Text == "" || حالة_السداد.Text == "غير مسددة" || حالة_السداد.Text == "تم الرفض") && !Jobposition.Contains("قنصل"))
-                    {
-                        var selectedOption1 = MessageBox.Show("هل تود رفع طلب للتجاوز؟", "المعاملة لم يتم سدادها بعد", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                        if (selectedOption1 == DialogResult.Yes)
-                        {
-                            panelNotPay.Visible = true;
-                            panelNotPay.BringToFront();
-                        }
-                        currentPanelIndex--;
-                        return;
-                    }
-                }
+                
 
                 //if ((حالة_السداد.Text == "" || حالة_السداد.Text == "غير مسددة") && Jobposition.Contains("قنصل"))
                 //{
@@ -3768,7 +3739,7 @@ namespace PersAhwal
 
             if (count < AllowedTimes-1)
             {
-                var selectedOption = MessageBox.Show("لديك عدد " + (AllowedTimes - count).ToString() + " عرض متوفر", "طباعة ملف وورد على اي حال", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                var selectedOption = MessageBox.Show("لديك عدد " + (AllowedTimes - count).ToString() + " فرص متوفرة", "طباعة ملف وورد على اي حال", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                 if (selectedOption == DialogResult.Yes)
                 {
@@ -6337,10 +6308,53 @@ namespace PersAhwal
             FinalPrint("pdf");
         }
 
+        private bool checkPayment() {
+            if (checkReciptState() == "OK")
+            {
+                if ((حالة_السداد.Text == "" || حالة_السداد.Text == "غير مسددة" || حالة_السداد.Text == "تم الرفض") && Jobposition.Contains("قنصل"))
+                {
+                    var selectedOption1 = MessageBox.Show("هل المعاملة تم سدادها؟", "متابعة الإجراء", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (selectedOption1 == DialogResult.Yes)
+                    {
+                        حالة_السداد.Text = "تم السداد";
+
+
+                    }
+                    else if (selectedOption1 == DialogResult.No)
+                    {
+                        var selectedOption = MessageBox.Show("متابعة الإجراء إكرامي؟", "المعاملة غير مسددة", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (selectedOption == DialogResult.Yes)
+                        {
+                            حالة_السداد.Text = "إكرامي";
+                        }
+                        else if (selectedOption == DialogResult.No)
+                        {
+                            currentPanelIndex--;
+                            return false;
+                        }
+                    }
+                    التعليقات_السابقة_Off.Text = "قام " + اسم_الموظف.Text + " بتصديق المعاملة إكراميا " + "*" + Environment.NewLine + DateTime.Now.ToString("g") + Environment.NewLine + "--------------" + Environment.NewLine + التعليقات_السابقة_Off.Text;
+                    skipPayment("حالة_السداد", "TableAuth", حالة_السداد.Text, التعليقات_السابقة_Off.Text);
+                }
+                else if ((حالة_السداد.Text == "" || حالة_السداد.Text == "غير مسددة" || حالة_السداد.Text == "تم الرفض") && !Jobposition.Contains("قنصل"))
+                {
+                    var selectedOption1 = MessageBox.Show("هل تود رفع طلب للتجاوز؟", "المعاملة لم يتم سدادها بعد", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (selectedOption1 == DialogResult.Yes)
+                    {
+                        panelNotPay.Visible = true;
+                        panelNotPay.BringToFront();
+                    }
+                    currentPanelIndex--;
+                    return false;
+                }
+            }
+            return true;
+        }
         private void FinalPrint(string doc)
         {
-           
 
+            if (!checkPayment())
+                return;
             if (getDocxPdf() != "docx")
                 setDocxPdf(doc);
 
@@ -6363,11 +6377,11 @@ namespace PersAhwal
             {
                 direction_off.Text = "";
             }
-            else 
+            else
                 direction_off.Text = "- لا يعتمد هذا الإقرار بجمهورية السودان ما لم يتم توثيقه من وزارة خارجية جمهورية السودان";
             التاريخ_الميلادي.Text = GregorianDate;
             التاريخ_الهجري.Text = HijriDate;
-            
+
             save2DataBase(panelapplicationInfo, "");
             //MessageBox.Show(نص_مقدم_الطلب0_off.Text);
             fillDocFileAppInfo(panelapplicationInfo);
@@ -6382,7 +6396,7 @@ namespace PersAhwal
             {
                 CreateMessageWord(مقدم_الطلب.Text, وجهة_المعاملة.Text, رقم_المعاملة.Text.Replace("_", " و"), "إقرار", preffix[صفة_مقدم_الطلب_off.SelectedIndex, 17], التاريخ_الميلادي_off.Text, HijriDate, موقع_المعاملة.Text);
             }
-            string col = نوع_المعاملة .Text.Replace(" ", "_") + "_" + نوع_الإجراء.Text.Replace(" ", "_");
+            string col = نوع_المعاملة.Text.Replace(" ", "_") + "_" + نوع_الإجراء.Text.Replace(" ", "_");
             calcAuthSub(DataSource, col, "TableCollection", "TableCollectStarText");
             addarchives();
             //fileUpload(رقم_المعاملة.Text, "missed");
@@ -6600,6 +6614,12 @@ namespace PersAhwal
         private void button1_Click_2(object sender, EventArgs e)
         {
             panelNotPay.Visible = false;
+        }
+
+        private void btnSettings_Click(object sender, EventArgs e)
+        {
+            panelNotPay.Visible = true;
+            panelNotPay.BringToFront();
         }
     }
 }

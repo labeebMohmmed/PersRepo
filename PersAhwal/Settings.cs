@@ -58,6 +58,7 @@ namespace PersAhwal
         string[] allList = new string[100];
         static string[] Empty = new string[1] { "" };
         string Server = "M";
+        string GregorianDate = "";
         string DataSource;
         int CombAuthTypeIndex = 1;
         string updateAll = "";
@@ -87,11 +88,14 @@ namespace PersAhwal
         int idList = 0;
         int idModelList = 0;
         string[] location ;
+        string EmpName = "";
         string[] colReqList = new string[11];
-        public Settings(string server, bool newSettings, string dataSource56, string dataSource57, bool setDataBase, string filepathIn, string filepathOut, string archFile, string formDataFile, string colName)
+        public Settings(string empName, string gregorianDate, string server, bool newSettings, string dataSource56, string dataSource57, bool setDataBase, string filepathIn, string filepathOut, string archFile, string formDataFile, string colName)
         {
             InitializeComponent();
+            GregorianDate = gregorianDate;
             Server = server;
+            EmpName = empName;
             DataSource56 = dataSource56;
             DataSource57 = dataSource57;
 
@@ -149,6 +153,10 @@ namespace PersAhwal
             {
                 checkReceip.Checked = false;
                 checkReceip.Text = "تفعيل الايصالات المالية";
+            }
+            if (colName == "model") {
+                flowLayoutPanelModel.BringToFront();
+                flowLayoutPanelModel.Visible = true;
             }
         }
         private string checkReciptState()
@@ -2633,6 +2641,59 @@ namespace PersAhwal
 
         }
 
+        private void button40_Click(object sender, EventArgs e)
+        {
+            string mP4File = loadDocxFile();
+            if (mP4File == "") return;
+            using (Stream stream = File.OpenRead(mP4File))
+            {
+                byte[] buffer1 = new byte[stream.Length];
+                stream.Read(buffer1, 0, buffer1.Length);
+                var fileinfo1 = new FileInfo(mP4File);
+                string extn1 = fileinfo1.Extension;
+                string DocName1 = fileinfo1.Name;
+
+                insertModel( GregorianDate, EmpName, DataSource, extn1, serName.Text, buffer1);
+                //Console.WriteLine(docid);
+            }
+        }
+
+        private void insertModel( string date, string employee, string dataSource, string extn1, string serName, byte[] buffer1)
+        {
+            dataSource = dataSource.Replace("AhwalDataBase", "ArchFilesDB");
+            dataSource = dataSource.Replace("SudaneseAffairs", "ArchFilesDB");
+            string query = "INSERT INTO TableModel (Data1,Extension1,الموظف,التاريخ,الاسم) values (@Data1,@Extension1,@الموظف,@التاريخ,@الاسم)";
+            SqlConnection sqlCon = new SqlConnection(dataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.Parameters.AddWithValue("@الاسم", serName);
+            sqlCmd.Parameters.AddWithValue("@الموظف", employee);
+            sqlCmd.Parameters.AddWithValue("@التاريخ", date);
+            sqlCmd.Parameters.Add("@Data1", SqlDbType.VarBinary).Value = buffer1;
+            sqlCmd.Parameters.Add("@Extension1", SqlDbType.Char).Value = extn1;
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
+        }
+
+        private string loadDocxFile()
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                string mP4File = dlg.FileName;
+                var fileinfo1 = new FileInfo(mP4File);
+                string extn1 = fileinfo1.Extension;
+                //if (extn1 == "mp4")
+                   return dlg.FileName;
+                //else {
+                //    MessageBox.Show("ملف " + extn1 + "غير صالح");
+                //    return "";
+                //}
+            }
+            return "";
+        }
         private void CreateColumns(string Columnname)
         {
             string query = "alter table TableAuthRights add " + Columnname + " nvarchar(1000)";

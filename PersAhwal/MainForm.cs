@@ -8291,7 +8291,7 @@ namespace PersAhwal
 
         private void pictureBox4_Click(object sender, EventArgs e)
         {
-            var settings = new Settings(Server, false, DataSource56, DataSource57, false, LocalModelFiles, ArchFile, ArchFile, LocalModelForms, "");
+            var settings = new Settings(EmployeeName, GregorianDate, Server, false, DataSource56, DataSource57, false, LocalModelFiles, ArchFile, ArchFile, LocalModelForms, "");
             settings.Show();
         }
 
@@ -11169,6 +11169,17 @@ namespace PersAhwal
                 panelFill(control);
                 dataGridView8.Visible = false;
             }
+        }
+
+        private void pictureBox8_MouseEnter(object sender, EventArgs e)
+        {
+            label3.Text = "دليل الاستخدام";
+        }
+
+        private void pictureBox8_Click(object sender, EventArgs e)
+        {
+            var settings = new Settings(EmployeeName, GregorianDate, Server, false, DataSource56, DataSource57, false, LocalModelFiles, ArchFile, ArchFile, LocalModelForms, "model");
+            settings.Show();
         }
 
         private void Open3File(int id, int fileNo)

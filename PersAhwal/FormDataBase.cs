@@ -91,6 +91,7 @@ namespace PersAhwal
                     System.IO.Directory.CreateDirectory(mainWorkingFile + "sqlbackup");
                 }
             }
+           
 
             if (Directory.Exists(workingDisk))
             {
@@ -169,8 +170,10 @@ namespace PersAhwal
             else DataSource = DataSource56;
             userTable = new DataTable();
 
-            if (IP == "192.168.100.100")
-                backup(mainWorkingFile);
+            //if (IP == "192.168.100.100")
+            //    backup(mainWorkingFile);
+            //else if (IP == "192.168.100.67")
+            //    backup(BackupDisck("backupFile") + @":\");
 
             Console.WriteLine(Server);
             file = archFile + @"\dataSource.txt";
@@ -345,7 +348,7 @@ namespace PersAhwal
                     Console.WriteLine("Files to Delete " + backfiles[i]);
                     try
                     {
-                       File.Delete(backfiles[i]);
+                       //File.Delete(backfiles[i]);
                     }
                     catch (Exception ex) { }
                 }
@@ -365,7 +368,7 @@ namespace PersAhwal
                     Console.WriteLine("Files to Delete " + backfiles[i]);
                     try
                     {
-                        File.Delete(backfiles[i]);
+                        //File.Delete(backfiles[i]);
                     }
                     catch (Exception ex) { }
                 }
@@ -385,7 +388,7 @@ namespace PersAhwal
                     Console.WriteLine("Files to Delete " + backfiles[i]);
                     try
                     {
-                       File.Delete(backfiles[i]);
+                       //File.Delete(backfiles[i]);
                     }
                     catch (Exception ex) { }
                 }
