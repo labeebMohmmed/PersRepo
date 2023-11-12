@@ -394,7 +394,7 @@ namespace PersAhwal
                         btnSettings.Enabled = false; 
                     break;
                 case 2:
-                    حالة_السداد.Text = existed("TableCollection", "رقم_المعاملة");
+                    //حالة_السداد.Text = existed("TableCollection", "رقم_المعاملة");
                     if (نوع_الإجراء.Text.Contains("عامة")||نوع_الإجراء.Text.Contains("توكيل"))
                     {
                         نوع_الإجراء.BackColor = System.Drawing.Color.MistyRose;
@@ -441,22 +441,22 @@ namespace PersAhwal
                         boxesPreparationsEnglish(addNameIndex, نوع_المعاملة.SelectedIndex);
                     else 
                         boxesPreparationsArabic(addNameIndex, نوع_المعاملة.SelectedIndex);
-                    if (checkReciptState() == "OK")
-                    {
-                        if (حالة_السداد.Text == "تم الالغاء")
-                        {
-                            MessageBox.Show("تم إلغاء الايصال المالي للمعاملة، لا يمكن المتابعة");
-                            currentPanelIndex--;
-                            return;
-                        }                        
-                        else if ((حالة_السداد.Text == "" || حالة_السداد.Text == "غير مسددة") && !Jobposition.Contains("قنصل"))
-                        {
-                            MessageBox.Show("لم يتم سداد الايصال المالي للمعاملة، لا يمكن المتابعة");
-                            currentPanelIndex--;
-                            return;
+                    //if (checkReciptState() == "OK")
+                    //{
+                    //    if (حالة_السداد.Text == "تم الالغاء")
+                    //    {
+                    //        MessageBox.Show("تم إلغاء الايصال المالي للمعاملة، لا يمكن المتابعة");
+                    //        currentPanelIndex--;
+                    //        return;
+                    //    }                        
+                    //    else if ((حالة_السداد.Text == "" || حالة_السداد.Text == "غير مسددة") && !Jobposition.Contains("قنصل"))
+                    //    {
+                    //        MessageBox.Show("لم يتم سداد الايصال المالي للمعاملة، لا يمكن المتابعة");
+                    //        currentPanelIndex--;
+                    //        return;
 
-                        }
-                    }
+                    //    }
+                    //}
                     //txtReview.Text = writeStrSpecPur();
                     panelAuthRights.Size = new System.Drawing.Size(1315, 622);
                     panelAuthRights.Location = new System.Drawing.Point(10, 36);
