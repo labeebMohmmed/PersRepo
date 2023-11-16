@@ -32,6 +32,7 @@ namespace PersAhwal
         bool grdview = false;
         string Update = "";
         string[] allList;
+        string diplomat = "";
 
         public SignUp(string employee, string jobposition, string datasource, string serverType, string griDate, string update, string career, int jobIndex)
         {
@@ -292,7 +293,7 @@ namespace PersAhwal
             for (int i = 0; i<item.Length&& item[i] != ""; i++)
             {
                 sqlCmd.Parameters.AddWithValue("@" + item[i], value[i]);
-                Console.WriteLine( item[i] + " - "+ value[i]);
+               MessageBox.Show( item[i] + " - "+ value[i]);
             }
             //try
             //{
@@ -304,12 +305,16 @@ namespace PersAhwal
             return true;
             
         }
+
+
         private void button1_Click(object sender, EventArgs e)
         {
             string career = "مدير";
             string newPass = userpass;
             if (JobPosition.Text == "تعين محلي" || JobPosition.Text == "مندوب جالية" || JobPosition.Text == "محاسب")
                 career = "موظف";
+            
+            
             
             if (JobPosition.Text == "محاسب"||JobPosition.Text == "مدير مالي")
                 ServerType = "محاسب";            
@@ -320,8 +325,8 @@ namespace PersAhwal
                 if (!passwordCheck())
                     return;
                 addInfo = "تم تسجيل حساب الموظف/" + UserName.Text + " بتاريخ " + GriDate + Environment.NewLine + "----------------------------------------------";
-                items = new string[15] { "EmployeeName", "Career", "JobPosition", "Gender", "UserName", "Pass", "EngEmployeeName", "Aproved", "Purpose", "RestPAss", "headOfMission", "comment", "", "", "" };
-                values = new string[15] { EmployeeName.Text, career, JobPosition.Text, Gender.Text, UserName.Text, password1.Text, EngEmployeeName.Text, "غير مؤكد", ServerType, "done", headOfMission.Text, addInfo + التعليقات_السابقة_Off.Text, "", "", "" };
+                items = new string[15] { "EmployeeName", "Career", "JobPosition", "Gender", "UserName", "Pass", "EngEmployeeName", "Aproved", "Purpose", "RestPAss", "headOfMission", "comment", "الدبلوماسيون", "", "" };
+                values = new string[15] { EmployeeName.Text, career, JobPosition.Text, Gender.Text, UserName.Text, password1.Text, EngEmployeeName.Text, "غير مؤكد", ServerType, "done", headOfMission.Text, addInfo + التعليقات_السابقة_Off.Text, diplomat, "", "" };
                 if (saveItems("TableUser", items, values, true))
                     MessageBox.Show("تم التسجيل بنجاح");
                 else
@@ -339,12 +344,13 @@ namespace PersAhwal
                     return ;
                 }
                 addInfo = "تم تعديل بيانات حساب الموظف/" + UserName.Text + " بتاريخ " + GriDate + Environment.NewLine + "----------------------------------------------";
-                items = new string[14] { "EmployeeName",     "Career", "JobPosition",    "Gender",    "UserName",     "EngEmployeeName",     "Aproved", "Purpose",   "RestPAss", "headOfMission",    "comment", "", "", "" };
-                values = new string[14] { EmployeeName.Text, career, JobPosition.Text, Gender.Text, UserName.Text,   EngEmployeeName.Text, "غير مؤكد", ServerType, "done",     headOfMission.Text, addInfo + التعليقات_السابقة_Off.Text, "", "", "" };
+                items = new string[14] { "EmployeeName",     "Career", "JobPosition",    "Gender", "UserName",     "EngEmployeeName",     "Aproved", "Purpose",   "RestPAss", "headOfMission",    "comment", "الدبلوماسيون", "", "" };
+                values = new string[14] { EmployeeName.Text, career, JobPosition.Text, Gender.Text, UserName.Text,   EngEmployeeName.Text, "غير مؤكد", ServerType, "done",     headOfMission.Text, addInfo + التعليقات_السابقة_Off.Text, diplomat, "", "" };
                 if (saveItems("TableUser", items, values, false))
                     MessageBox.Show("تم التعديل بنجاح");
                 else
                     MessageBox.Show("تعذر التعديل لاسباب فنية");
+                MessageBox.Show("بتطلب تعديل البيانات إعادة تفعيل الحساب بواسطة مدير القسم الحالي");
 
             }
             this.Close();
@@ -650,6 +656,9 @@ namespace PersAhwal
 
         private void JobPossition_SelectedIndexChanged(object sender, EventArgs e)
         {
+            
+            if (JobPosition.Text == "القنصل العام" || JobPosition.Text == "القنصل العام بالإنابة" || JobPosition.Text == "نائب قنصل")
+                diplomat = "yes"; 
             if (JobPosition.SelectedIndex == 5) {
                 comJob2.SelectedIndex = 5;
                 btnActiveteM.Visible = btnDeActiveteM.Visible = panelMandoub.Visible = true;

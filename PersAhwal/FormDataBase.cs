@@ -180,8 +180,8 @@ namespace PersAhwal
             
             if (!green57.Visible)
             {
-                fillDatagrid(userTable, DataSource57, green57, red57, labebserver57, "الاتصال مع مخدم قسمي الاحوال الشخصية وشؤون الرعايا غير متاح يرجى التواصل مع مشغل النظام");
-                fillDatagrid(userTable, DataSource56, green57, red57, labebserver57, "الاتصال مع مخدم قسمي الاحوال الشخصية وشؤون الرعايا غير متاح يرجى التواصل مع مشغل النظام");
+                fillDatagrid(userTable, DataSource57, green57, red57, "الاتصال مع مخدم قسمي الاحوال الشخصية وشؤون الرعايا غير متاح يرجى التواصل مع مشغل النظام");
+                fillDatagrid(userTable, DataSource56, green57, red57, "الاتصال مع مخدم قسمي الاحوال الشخصية وشؤون الرعايا غير متاح يرجى التواصل مع مشغل النظام");
             }
 
             username.Select();
@@ -560,7 +560,7 @@ namespace PersAhwal
             }
         }
 
-        private void fillDatagrid(DataTable dtbl,string DataSource, PictureBox green,PictureBox red, Label label, string text)
+        private void fillDatagrid(DataTable dtbl,string DataSource, PictureBox green,PictureBox red, string text)
         {
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
@@ -583,8 +583,7 @@ namespace PersAhwal
                 {
                     green.Visible = false;
                     red.Visible = true;
-                    label.Visible = true;
-                    label.Text = text;                    
+                                       
                 }
                 finally
                 {
@@ -1105,8 +1104,8 @@ namespace PersAhwal
         {
             
             if (!green57.Visible) {
-                fillDatagrid(userTable, DataSource57, green57, red57, labebserver57, "الاتصال مع مخدم قسمي الاحوال الشخصية وشؤون الرعايا غير متاح يرجى التواصل مع مشغل النظام");
-                fillDatagrid(userTable, DataSource56, green57, red57, labebserver57, "الاتصال مع مخدم قسمي الاحوال الشخصية وشؤون الرعايا غير متاح يرجى التواصل مع مشغل النظام");
+                fillDatagrid(userTable, DataSource57, green57, red57, "الاتصال مع مخدم قسمي الاحوال الشخصية وشؤون الرعايا غير متاح يرجى التواصل مع مشغل النظام");
+                fillDatagrid(userTable, DataSource56, green57, red57, "الاتصال مع مخدم قسمي الاحوال الشخصية وشؤون الرعايا غير متاح يرجى التواصل مع مشغل النظام");
             }
         }
 

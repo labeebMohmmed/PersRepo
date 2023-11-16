@@ -11086,6 +11086,7 @@ namespace PersAhwal
                 panel4.Visible = false;
                 PanelMandounb.Visible = SearchPanel.Visible = fileManagePanel2.Visible = SearchPanel.Visible = ReportPanel.Visible = false;
                 notpayAppSearchDate = notpayAppDate.Text.Split('-')[1] + "-" + notpayAppDate.Text.Split('-')[0] + "-" + notpayAppDate.Text.Split('-')[2];
+                //MessageBox.Show(notpayAppSearchDate);
                 notpayApplication(notpayAppSearchDate);
             }
             else paneFailedlNotPay.Visible = false;

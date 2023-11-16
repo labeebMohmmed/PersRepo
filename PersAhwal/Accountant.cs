@@ -42,8 +42,8 @@ namespace PersAhwal
         string txtMissionCode = "";
         string[] foundList;
         string[] allList;
-        string[] values = new string[8];
-        string[] items = new string[8] { "barcode", "التاريخ_الميلادي", "القيمة", "المتحصل", "رقم_المعاملة", "مقدم_الطلب" , "المعاملة" , "البعثة" };
+        string[] values = new string[9];
+        string[] items = new string[9] { "barcode", "التاريخ_الميلادي", "القيمة", "المتحصل", "رقم_المعاملة", "مقدم_الطلب" , "المعاملة" , "البعثة", "الزكاة" };
         int intID = 0;
         int itemID = 0;
         string updateAll, insertAll;
@@ -250,10 +250,39 @@ namespace PersAhwal
                 saConn.Close();
             }
         }
+        
+        private void autoCompleteBulk(ComboBox  textbox, string source, string col, string table)
+        {
+
+            using (SqlConnection saConn = new SqlConnection(source))
+            {
+                saConn.Open();
+
+                string query = "select distinct " + col + " from " + table + " where " + col + " is not null";
+                SqlCommand cmd = new SqlCommand(query, saConn);
+                cmd.ExecuteNonQuery();
+                DataTable Textboxtable = new DataTable();
+                SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+                dataAdapter.Fill(Textboxtable);
+                AutoCompleteStringCollection autoComplete = new AutoCompleteStringCollection();
+                bool newSrt = true;
+                textbox.AutoCompleteCustomSource.Clear();
+
+                foreach (DataRow dataRow in Textboxtable.Rows)
+                {
+                    autoComplete.Add(dataRow[col].ToString());
+                }
+                textbox.AutoCompleteMode = AutoCompleteMode.Suggest;
+                textbox.AutoCompleteSource = AutoCompleteSource.CustomSource;
+                textbox.AutoCompleteCustomSource = autoComplete;
+                saConn.Close();
+            }
+        }
 
         private void Accountant_Load(object sender, EventArgs e)
         {
             autoCompleteBulk(مقدم_الطلب, DataSource, "الاسم", "TableGenNames");
+            autoCompleteBulk(المعاملة, DataSource, "البند", "TableReceiptItems");
             fileColComboBox(المعاملة, DataSource, "البند", "TableReceiptItems");
         }
 
@@ -548,6 +577,7 @@ namespace PersAhwal
             values[4] = رقم_المعاملة.Text;
             values[5] = مقدم_الطلب.Text;
             values[6] = المعاملة.Text;
+            values[8] = الزكاة.Text;
             
 
             if (نوع_المعاملة.SelectedIndex == 4)
@@ -835,6 +865,14 @@ namespace PersAhwal
         {
             string noForm = SpecificDigit(رقم_المعاملة.Text, 3, 4);
             string state = existed(getTables(noForm), colName);
+
+
+            try {
+                int i = Convert.ToInt32(الزكاة.Text);  
+            }
+            catch (Exception ex) { الزكاة.Text = "0"; }
+            
+
             if (AddNewReceipt)
             {
                 if (state == "معفي")
@@ -1155,9 +1193,9 @@ namespace PersAhwal
             DataTable dtbl = new DataTable();
             sqlDa.Fill(dtbl);
             inertName();
-            allSum = new int[dtbl.Rows.Count +3];
-            StrallSum = new string[dtbl.Rows.Count +3];
-            StrallCol = new string[dtbl.Rows.Count +3];
+            allSum = new int[dtbl.Rows.Count +4];
+            StrallSum = new string[dtbl.Rows.Count +4];
+            StrallCol = new string[dtbl.Rows.Count +4];
             StrallSum[0] = "الاسم";
             StrallCol[0] = "الجملة";
             int count = 1;
@@ -1170,9 +1208,12 @@ namespace PersAhwal
                 count++;                             
             }
             StrallCol[dtbl.Rows.Count + 1] = "المقر";
-            StrallCol[dtbl.Rows.Count + 2] = "الجملة";
+            StrallCol[dtbl.Rows.Count + 2] = "الزكاة";
+            StrallCol[dtbl.Rows.Count + 3] = "الجملة";
             CreateColumns("المقر");
             inertColName("المقر");
+            CreateColumns("الزكاة");
+            inertColName("الزكاة");
             CreateColumns("الجملة");
             inertColName("الجملة");
             itemSum = "الاسم";
@@ -1186,7 +1227,7 @@ namespace PersAhwal
         {
             string items;
             string values;
-            string query = "select رقم_معاملة_القسم,مقدم_الطلب,المعاملة,القيمة,المقر from TableReceipt where التاريخ_الميلادي = '" + date + "' and حالة_الايصال = N'تم السداد' order by ID desc";
+            string query = "select رقم_معاملة_القسم,مقدم_الطلب,المعاملة,القيمة,المقر,الزكاة from TableReceipt where التاريخ_الميلادي = '" + date + "' and حالة_الايصال = N'تم السداد' order by ID desc";
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
@@ -1200,13 +1241,16 @@ namespace PersAhwal
                 string col = dataRow["المعاملة"].ToString().Replace(" ", "_");
                 string name = dataRow["مقدم_الطلب"].ToString();
                 string value = dataRow["القيمة"].ToString(); 
+                string zakah = dataRow["الزكاة"].ToString(); 
                 string buildsupp = dataRow["المقر"].ToString();
                 if (buildsupp == "")
                     buildsupp = "0";
+                if (zakah == "")
+                    zakah = "0";
 
                 string sum = (Convert.ToInt32(buildsupp) + Convert.ToInt32(value)).ToString();
-                items = "الاسم,المقر,الجملة," + col;
-                values = "N'" + name + "'," + buildsupp +","+sum+","+ value;
+                items = "الاسم,المقر,الزكاة,الجملة," + col;
+                values = "N'" + name + "'," + buildsupp +","+ zakah + ","+sum+","+ value;
 
                 count++;
                 inert(items, values);
@@ -1456,7 +1500,23 @@ namespace PersAhwal
 
         private void المعاملة_TextChanged(object sender, EventArgs e)
         {
+            المعاملة.BackColor = System.Drawing.Color.White;
+            string query = "select القيم,المقر from TableReceiptItems where البند = N'" + المعاملة.Text + "'"; ;
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
             القيمة.Text = "بدون";
+            foreach (DataRow dataRow in dtbl.Rows)
+            {
+                القيمة.Text = dataRow["القيم"].ToString();
+                المقر.Text = dataRow["المقر"].ToString();
+            }
+            if (المقر.Text == "")
+                المقر.Text = "0";            
         }
 
         private void آلية_البحث_SelectedIndexChanged(object sender, EventArgs e)

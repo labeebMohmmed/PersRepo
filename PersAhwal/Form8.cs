@@ -161,8 +161,8 @@ namespace PersAhwal
             checlList[0] = "نص موضوع الانابة غير موجود";
             checlList[1] = "نص موضوع المكاتبة غير موجود";
             checlList[2] = "نص الحقوق غير موجود";
-            checlList[3] = "استمارة الطلب غير موجودة";
-            checlList[4] = "المطلوبات الأولية غير محددة";
+            checlList[3] = "المطلوبات الأولية غير محددة";
+            checlList[4] = "استمارة الطلب غير موجودة";
             checlList[6] = "المطلوبات النهائية غير محددة";
             checlList[5] = "شرح المعاملة غير موجودة";
         }
@@ -927,6 +927,7 @@ namespace PersAhwal
         private void قائمة_النصوص_SelectedIndexChanged(object sender, EventArgs e)
         {
             //newFillComboBox1(قائمة_النصوص_الفرعية, DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_"));
+            setCheclList();
             string right = "= ''";
             if(الموضوع.SelectedIndex != 0)
                 right = "<> ''";
@@ -955,7 +956,7 @@ namespace PersAhwal
                 }
                 معاملات_السابق.Visible = معاملات_التالي.Visible = جميع_المعاملات.Visible = false;
             }
-
+            
         }
         private void newFillComboBox1(ComboBox combbox, string source, string colName)
         {
@@ -1005,7 +1006,7 @@ namespace PersAhwal
                     النص.Text = SuffReplacements(dr["TextModel"].ToString(), 0, 0);
                     قائمة_الحقوق.Text = SuffReplacements(dr["قائمة_الحقوق"].ToString(), 0, 0);
                     اللغة.Text = dr["Lang"].ToString();
-                    AddContextID = dr["Lang"].ToString();
+                    AddContextID = dr["ID"].ToString();
                     payment.Text = dr["payment"].ToString();
                     if (الموضوع.SelectedIndex == 1)
                     {
@@ -1017,10 +1018,14 @@ namespace PersAhwal
                     if (اللغة.Text == "الانجليزية")
                         اللغة.Checked = true;
                     else اللغة.Checked = false;
-                    
+
                     if (payment.Text == "معفي")
                         payment.Checked = true;
-                    else payment.Checked = false;
+                    else
+                    {
+                        payment.Checked = false;
+                        payment.Text = "عادي";
+                    }
 
 
                     foreach (Control control in PanelItemsboxes.Controls) 
@@ -1099,6 +1104,7 @@ namespace PersAhwal
 
         private void قائمة_النصوص_الفرعية_SelectedIndexChanged(object sender, EventArgs e)
         {
+            setCheclList();
             if (الموضوع.SelectedIndex == 0)
             {
                 checkStarTextExist(DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), selectTable);
@@ -1121,6 +1127,7 @@ namespace PersAhwal
                 flllPanelItemsboxes();
             }
             معاملات_السابق.Visible = معاملات_التالي.Visible = جميع_المعاملات.Visible = false;
+            
         }
 
         private void OpenFile(string documenNo)
@@ -1184,17 +1191,21 @@ namespace PersAhwal
             {
 
 
-                checlList[4] = "";
+                checlList[3] = "";//c
+                
                 foreach (DataRow row in dtbl.Rows)
                 {
                     idList = Convert.ToInt32(row["ID"].ToString());
                     if (row["proForm1"].ToString() != "")
-                        checlList[3] = "";
+                        checlList[4] = "";//c
 
-                    if (row["proForm1"].ToString() != "")
+                    if (row["المطلوب_رقم1"].ToString() != "")
                         btnUploadFroms.Visible = true;
                     else
+                    {
                         btnUploadFroms.Visible = reviewForms.Visible = false;
+                        //MessageBox.Show(row["proForm1"].ToString());
+                    }
 
                     if (CurrentFile != "")
                         reviewForms.Visible = true;
@@ -1203,7 +1214,10 @@ namespace PersAhwal
                     //MessageBox.Show(row["توضيح_المعاملة"].ToString());
 
                     if (row["توضيح_المعاملة"].ToString() != "")
+                    {
                         checlList[5] = "";
+                        txtExplain.Text = row["توضيح_المعاملة"].ToString();
+                    }
 
                     for (int index = 2; index < 11; index++)
                     {
@@ -1217,6 +1231,7 @@ namespace PersAhwal
                     }
                 }
             }
+            //MessageBox.Show(checlList[3]);
         }
         
         private bool view_PreReqID(int ID)
@@ -1255,13 +1270,13 @@ namespace PersAhwal
             {
                 rowFound = true;
 
-                checlList[4] = "";
+                checlList[3] = "";//c
                 foreach (DataRow row in dtbl.Rows)
                 {
                     idList = Convert.ToInt32(row["ID"].ToString());
                     labID.Text = row["ID"].ToString();
                     if (row["proForm1"].ToString() != "")
-                        checlList[3] = "";
+                        checlList[4] = "";//c
                     
                     if (row["توضيح_المعاملة"].ToString() != "")
                         checlList[5] = "";
@@ -1330,7 +1345,7 @@ namespace PersAhwal
             IDs = new int[dtbl.Rows.Count];
             int index = 0;
             IDsMax = IDsMin = 1;
-            reviewForms.Visible = btnUploadFroms.Visible = false;
+            //reviewForms.Visible = btnUploadFroms.Visible = false;
             foreach (DataRow row in dtbl.Rows)
             {
                 IDs[index] = Convert.ToInt32(row["ID"].ToString());
@@ -1519,7 +1534,7 @@ namespace PersAhwal
                     }
                 }
             }
-            queryAll = "UPDATE TableAddContext SET الأهلية=@الأهلية ,قائمة_الحقوق=@قائمة_الحقوق,titleDefault=@titleDefault,Lang=@Lang,TextModel=@TextModel,ColName=@ColName,ColRight=@ColRight,altColName=@altColName,altSubColName=@altSubColName" + updateValues + " WHERE ID = " + AddContextID;
+            queryAll = "UPDATE TableAddContext SET payment=@payment,الأهلية=@الأهلية ,قائمة_الحقوق=@قائمة_الحقوق,titleDefault=@titleDefault,Lang=@Lang,TextModel=@TextModel,ColName=@ColName,ColRight=@ColRight,altColName=@altColName,altSubColName=@altSubColName" + updateValues + " WHERE ID = " + AddContextID;
             Console.WriteLine(queryAll);
             save2DataBase(PanelItemsboxes, updateAllIndex, text, lawfull, right);
         }
@@ -1536,8 +1551,8 @@ namespace PersAhwal
             sqlCon.Close();
             allList = new string[dtbl.Rows.Count];
             insertAllIndex = 0;
-            string insertItems = "TextModel,ColName,ColRight,altColName,altSubColName,Lang,titleDefault,الأهلية,قائمة_الحقوق";
-            string insertValues = "@TextModel,@ColName,@ColRight,@altColName,@altSubColName,@Lang,@titleDefault,@الأهلية,@قائمة_الحقوق";
+            string insertItems = "TextModel,ColName,ColRight,altColName,altSubColName,Lang,titleDefault,الأهلية,قائمة_الحقوق,payment";
+            string insertValues = "@TextModel,@ColName,@ColRight,@altColName,@altSubColName,@Lang,@titleDefault,@الأهلية,@قائمة_الحقوق,@payment";
             foreach (DataRow row in dtbl.Rows)
             {
                 foreach (Control control in PanelItemsboxes.Controls)
@@ -1575,17 +1590,21 @@ namespace PersAhwal
                         if (control.Name == allList[i] || (allList[i].Contains("Option") && control.Name == "نص_" + allList[i].Replace("Option", "")))
                         {
                             sqlCommand.Parameters.AddWithValue("@" + allList[i], control.Text);
+
                         }
                     }
                 }
             }
             StaticParameters(sqlCommand, text);
+            sqlCommand.Parameters.AddWithValue("@payment", payment.Text);
             sqlCommand.Parameters.AddWithValue("@Lang", اللغة.Text);
             sqlCommand.Parameters.AddWithValue("@الأهلية", lawfull);
             sqlCommand.Parameters.AddWithValue("@قائمة_الحقوق", right);
             sqlCommand.Parameters.AddWithValue("@titleDefault", titleDefault.Text);
-            sqlCommand.ExecuteNonQuery();
-            if (queryAll.Contains("update"))
+            //MessageBox.Show(queryAll);
+            
+            //sqlCommand.ExecuteNonQuery();
+            if (queryAll.Contains("UPDATE"))
                 sqlCommand.ExecuteNonQuery();
             else
             {
@@ -1669,10 +1688,10 @@ namespace PersAhwal
                 {
                     query = "insert into TableAuthStarText (" + قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_") + ") values (N'" + النص.Text.Replace("'", "!") + "')";
                     insertData(query);
-                    query = "insert into TableAuthsub (" + قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_") + ") values (N'" + قائمة_الحقوق.Text.Replace("'", "!") + "')";
+                    query = "insert into TableAuthRightStarText (" + قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_") + ") values (N'" + قائمة_الحقوق.Text.Replace("'", "!") + "')";
                     insertData(query);
                 }
-                this.Close();
+               // this.Close();
 
             }
             else
@@ -1680,12 +1699,12 @@ namespace PersAhwal
                 updateAllFields(RevText, lawfull, rights);
                 if (الموضوع.SelectedIndex == 0)
                 {
-                    updateText(false, "TableCollectStarText",النص.Text);
+                    updateText(false, "TableCollectStarText", RevText);
                 }
                 else if (الموضوع.SelectedIndex == 1)
                 {
-                    updateText(false, "TableAuthStarText", النص.Text);
-                    updateText(false, "TableAuthsub", قائمة_الحقوق.Text);
+                    updateText(false, "TableAuthStarText", RevText);
+                    updateText(false, "TableAuthsub", rights);
                 }
             }
             goPanel();
@@ -1730,29 +1749,43 @@ namespace PersAhwal
             catch (Exception ex) { }
             
         }
+
+        /*
+         النص
+المستندات المطلوبة واستمارة الطلب
+المستندات النهائية للارشفة
+الاستمارات الأولية
+توضيح المعاملات
+الرموز المرجعية
+         */
         private bool  goPanel() {
             for (int i = 0; i < 6; i++)
                 if (checlList[i] != "")
                 {
-                    if (i == 3 || i == 4)
+                    if (i == 4)
                     {
                         otherPro.SelectedIndex = 1;
+                        otherPro.Text = "المستندات المطلوبة للإجراء";
                         MessageBox.Show(checlList[i]);
                         return true;
                     }
+                    else if (i == 3 )
+                    {
+                        btnUploadFroms.Visible = true;
+                        otherPro.SelectedIndex = 1;
+                        otherPro.Text = "المستندات المطلوبة للإجراء";
+                        MessageBox.Show(checlList[i]);
+                        return true;
+                    }
+                    
                     else if (i == 5)
                     {
-                        otherPro.SelectedIndex = 5;
+                        otherPro.SelectedIndex = 4;
+                        otherPro.Text = "توضيح المعاملات";
                         dataGridView2.Visible = false;
                         MessageBox.Show(checlList[i]);
                         return true;
-                    }
-                    else if (i == 6)
-                    {
-                        otherPro.SelectedIndex = 2;
-                        MessageBox.Show(checlList[i]);
-                        return true;
-                    }
+                    }                    
 
                 }
             this.Close();
@@ -1993,6 +2026,7 @@ namespace PersAhwal
             if (الموضوع.SelectedIndex == 0)
             {
                 selectTable = "TableCollectStarText";
+                setCheclList();
                 otherPro.Items.Clear();
                 otherPro.Items.Add("النص");
                 otherPro.Items.Add("المستندات المطلوبة للإجراء");
@@ -2000,14 +2034,14 @@ namespace PersAhwal
                 otherPro.Items.Add("استمارة الطلب");
                 otherPro.Items.Add("الرموز المرجعية");
                 
-                setCheclList();
-                checlList[0] = "";
-                checlList[1] = "نص موضوع المكاتبة غير موجود";
-                checlList[2] = "";
-                checlList[3] = "استمارة الطلب غير موجودة";
-                checlList[4] = "المطلوبات الأولية غير محددة";
-                checlList[6] = "المطلوبات النهائية غير محددة";
-                checlList[5] = "شرح المعاملة غير موجودة";
+                
+                //checlList[0] = "";
+                //checlList[1] = "نص موضوع المكاتبة غير موجود";
+                //checlList[2] = "";
+                //checlList[4] = "استمارة الطلب غير موجودة";//c
+                //checlList[3] = "المطلوبات الأولية غير محددة";//c
+                //checlList[6] = "المطلوبات النهائية غير محددة";
+                //checlList[5] = "شرح المعاملة غير موجودة";
                 قائمة_الحقوق.Text = "";
                 الأهلية.Text = "";
                 قائمة_الحقوق.Visible = label8.Visible = label3.Visible = label8.Visible = الأهلية.Visible = false;
@@ -2017,6 +2051,7 @@ namespace PersAhwal
             }
             else if (الموضوع.SelectedIndex == 1)
             {
+                setCheclList();
                 selectTable = "TableAuthStarText";
                 النص.Size = new System.Drawing.Size(680, 117);
 
@@ -2071,6 +2106,7 @@ namespace PersAhwal
                 }
                 معاملات_السابق.Visible = معاملات_التالي.Visible = جميع_المعاملات.Visible = false;
             }
+            
         }
 
         private void ColRight_SelectedIndexChanged(object sender, EventArgs e)
@@ -2098,8 +2134,8 @@ namespace PersAhwal
             
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
-            //try
-            //{
+            try
+            {
                 sqlDa.Fill(dtbl);
                 sqlCon.Close();
                 int rowIndex = 0;
@@ -2139,8 +2175,8 @@ namespace PersAhwal
                     }
                     rowIndex++;
                 }
-            //}
-            //catch (Exception ex) { }
+            }
+            catch (Exception ex) { }
 
             txtRights.Text = removeSpace(txtRights.Text);
         }
@@ -2189,9 +2225,11 @@ namespace PersAhwal
             
             else if (otherPro.Text == "توضيح المعاملات")
             {
-                dataGridView2.Visible = true;                
-                dataGridView2.BringToFront();
-                dataGridView2.Location = new System.Drawing.Point(4,  50);
+                //dataGridView2.Visible = true;                
+                //dataGridView2.BringToFront();
+                //dataGridView2.Location = new System.Drawing.Point(4,  50);
+                panel_شرح.Visible = true;
+                panel_شرح.BringToFront();
                 getIDs("TableProcReq");
                 FillDataGridViewReq("TableProcReq", dataGridView2);
             }
@@ -2438,7 +2476,7 @@ namespace PersAhwal
             }
             if (معاملات_التالي.Visible)
                 معاملات_التالي.PerformClick();
-
+            checlList[3] = "";
             goPanel();
         }
 
@@ -2512,6 +2550,7 @@ namespace PersAhwal
                 uploadFormsReq(CurrentFile);
                 reviewForms.Visible = true;
             }
+            checlList[4] = "";
             if (!goPanel())
             النص.Text = "";
         }
@@ -2526,7 +2565,7 @@ namespace PersAhwal
                     stream.Read(buffer1, 0, buffer1.Length);
                     var fileinfo1 = new FileInfo(location);
                     //string query = "UPDATE TableProcReq SET Data1=@Data1,proForm1=@proForm1 WHERE ID=" + AddContextID;
-                    string query = "UPDATE TableProcReq SET Data1=@Data1,proForm1=@proForm1 WHERE ID=N'" + idList.ToString();
+                    string query = "UPDATE TableProcReq SET Data1=@Data1,proForm1=@proForm1 WHERE ID=" + idList.ToString();
                     SqlConnection sqlCon = new SqlConnection(DataSource);
                     try
                     {
@@ -2540,7 +2579,7 @@ namespace PersAhwal
                     sqlCmd.Parameters.Add("@proForm1", SqlDbType.NVarChar).Value = قائمة_النصوص_العامة.Text + "-" + قائمة_النصوص_الفرعية.Text;
                     sqlCmd.ExecuteNonQuery();
                     sqlCon.Close();
-                    checlList[3] = "";
+                    checlList[4] = "";//c
                     label1.Visible = true;
                     return;
                 }
@@ -2609,7 +2648,11 @@ namespace PersAhwal
 
         private void btnExpl_Click(object sender, EventArgs e)
         {
-            string query = "UPDATE TableProcReq SET توضيح_المعاملة=N'" + txtExplain.Text + "'  where  المعاملة=N'" + قائمة_النصوص_العامة.Text + "-" + قائمة_النصوص_الفرعية.Text + "'";
+            if (btnExpl.Text == "")
+            {
+                
+            }
+            string query = "UPDATE TableProcReq SET توضيح_المعاملة=N'" + txtExplain.Text + "'  where  ID = " + TableProcReqID + "";
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
@@ -2619,9 +2662,12 @@ namespace PersAhwal
             sqlCmd.ExecuteNonQuery();
             if (معاملات_التالي.Visible)
                 معاملات_التالي.PerformClick();
+            checlList[5] = "";
+            MessageBox.Show("تمت الإضافة بنجاح");
+            this.Close();
             //button2.PerformClick();
-            if (!goPanel())
-                النص.Text = "";
+            //if (!goPanel())
+            //    النص.Text = "";
         }
 
         private void button15_Click(object sender, EventArgs e)
@@ -2666,8 +2712,8 @@ namespace PersAhwal
 
         private void معاملات_الجميع_Click(object sender, EventArgs e)
         {
-            معاملات_الجميع.Size = new System.Drawing.Size(90, 35);
-            معاملات_الجميع.Location = new System.Drawing.Point(578, 5);
+            //معاملات_الجميع.Size = new System.Drawing.Size(90, 35);
+            //معاملات_الجميع.Location = new System.Drawing.Point(578, 5);
             معاملات_السابق.Visible = معاملات_التالي.Visible = جميع_المعاملات.Visible = true;
             idList = 1;
             switch (otherPro.Text)
@@ -2809,9 +2855,13 @@ namespace PersAhwal
         {
             if (button23.Text == "إظهار خيارات الادخال") {
                 button23.Text = "إخفاء خيارات الادخال";
+                panel_fields.Visible = true;
+                panel_fields.BringToFront();
             }
             else  {
                 button23.Text = "إظهار خيارات الادخال";
+                panel_fields.Visible = false;
+
             }
         }
 

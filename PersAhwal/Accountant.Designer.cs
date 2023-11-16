@@ -42,6 +42,7 @@
             this.المتحصل = new System.Windows.Forms.TextBox();
             this.المعاملة = new System.Windows.Forms.ComboBox();
             this.panelMain = new System.Windows.Forms.Panel();
+            this.تعليق = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -76,10 +77,11 @@
             this.البند = new System.Windows.Forms.ComboBox();
             this.القيم = new System.Windows.Forms.TextBox();
             this.button11 = new System.Windows.Forms.Button();
-            this.تعليق_جديد = new System.Windows.Forms.TextBox();
-            this.تعليق_قديم = new System.Windows.Forms.TextBox();
-            this.تعليق = new System.Windows.Forms.TextBox();
             this.panelComment = new System.Windows.Forms.Panel();
+            this.تعليق_قديم = new System.Windows.Forms.TextBox();
+            this.تعليق_جديد = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.الزكاة = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panelMain.SuspendLayout();
@@ -190,6 +192,8 @@
             // 
             // panelMain
             // 
+            this.panelMain.Controls.Add(this.label9);
+            this.panelMain.Controls.Add(this.الزكاة);
             this.panelMain.Controls.Add(this.تعليق);
             this.panelMain.Controls.Add(this.label8);
             this.panelMain.Controls.Add(this.label7);
@@ -217,6 +221,16 @@
             this.panelMain.Name = "panelMain";
             this.panelMain.Size = new System.Drawing.Size(1231, 134);
             this.panelMain.TabIndex = 549;
+            // 
+            // تعليق
+            // 
+            this.تعليق.Enabled = false;
+            this.تعليق.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.تعليق.Location = new System.Drawing.Point(186, 48);
+            this.تعليق.Name = "تعليق";
+            this.تعليق.Size = new System.Drawing.Size(38, 35);
+            this.تعليق.TabIndex = 505;
+            this.تعليق.Visible = false;
             // 
             // label8
             // 
@@ -543,11 +557,11 @@
             this.panelItems.Controls.Add(this.button10);
             this.panelItems.Controls.Add(this.textBox1);
             this.panelItems.Controls.Add(this.button9);
-            this.panelItems.Controls.Add(this.dataGridView2);
             this.panelItems.Controls.Add(this.البند);
             this.panelItems.Controls.Add(this.القيم);
             this.panelItems.Controls.Add(this.button11);
             this.panelItems.Controls.Add(this.panelComment);
+            this.panelItems.Controls.Add(this.dataGridView2);
             this.panelItems.Location = new System.Drawing.Point(3, 50);
             this.panelItems.Name = "panelItems";
             this.panelItems.Size = new System.Drawing.Size(1240, 651);
@@ -672,13 +686,15 @@
             this.button11.Text = "المعاملة:";
             this.button11.UseVisualStyleBackColor = true;
             // 
-            // تعليق_جديد
+            // panelComment
             // 
-            this.تعليق_جديد.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.تعليق_جديد.Location = new System.Drawing.Point(10, 9);
-            this.تعليق_جديد.Name = "تعليق_جديد";
-            this.تعليق_جديد.Size = new System.Drawing.Size(1198, 35);
-            this.تعليق_جديد.TabIndex = 497;
+            this.panelComment.AutoScroll = true;
+            this.panelComment.Controls.Add(this.تعليق_قديم);
+            this.panelComment.Controls.Add(this.تعليق_جديد);
+            this.panelComment.Location = new System.Drawing.Point(9, 140);
+            this.panelComment.Name = "panelComment";
+            this.panelComment.Size = new System.Drawing.Size(1231, 161);
+            this.panelComment.TabIndex = 558;
             // 
             // تعليق_قديم
             // 
@@ -690,25 +706,33 @@
             this.تعليق_قديم.Size = new System.Drawing.Size(1199, 403);
             this.تعليق_قديم.TabIndex = 498;
             // 
-            // تعليق
+            // تعليق_جديد
             // 
-            this.تعليق.Enabled = false;
-            this.تعليق.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.تعليق.Location = new System.Drawing.Point(186, 48);
-            this.تعليق.Name = "تعليق";
-            this.تعليق.Size = new System.Drawing.Size(38, 35);
-            this.تعليق.TabIndex = 505;
-            this.تعليق.Visible = false;
+            this.تعليق_جديد.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.تعليق_جديد.Location = new System.Drawing.Point(10, 9);
+            this.تعليق_جديد.Name = "تعليق_جديد";
+            this.تعليق_جديد.Size = new System.Drawing.Size(1198, 35);
+            this.تعليق_جديد.TabIndex = 497;
             // 
-            // panelComment
+            // label9
             // 
-            this.panelComment.AutoScroll = true;
-            this.panelComment.Controls.Add(this.تعليق_قديم);
-            this.panelComment.Controls.Add(this.تعليق_جديد);
-            this.panelComment.Location = new System.Drawing.Point(9, 140);
-            this.panelComment.Name = "panelComment";
-            this.panelComment.Size = new System.Drawing.Size(1231, 161);
-            this.panelComment.TabIndex = 558;
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Location = new System.Drawing.Point(561, 51);
+            this.label9.Name = "label9";
+            this.label9.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.label9.Size = new System.Drawing.Size(41, 27);
+            this.label9.TabIndex = 507;
+            this.label9.Text = "الزكاة:";
+            // 
+            // الزكاة
+            // 
+            this.الزكاة.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.الزكاة.Location = new System.Drawing.Point(472, 47);
+            this.الزكاة.Name = "الزكاة";
+            this.الزكاة.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.الزكاة.Size = new System.Drawing.Size(83, 35);
+            this.الزكاة.TabIndex = 506;
             // 
             // Accountant
             // 
@@ -787,5 +811,7 @@
         private System.Windows.Forms.TextBox تعليق_جديد;
         private System.Windows.Forms.TextBox تعليق;
         private System.Windows.Forms.Panel panelComment;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TextBox الزكاة;
     }
 }

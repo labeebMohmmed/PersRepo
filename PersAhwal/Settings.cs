@@ -23,6 +23,7 @@ using Word = Microsoft.Office.Interop.Word;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using System.Runtime;
 using System.Windows.Media.Animation;
+using System.ServiceProcess.Design;
 
 namespace PersAhwal
 {
@@ -30,6 +31,7 @@ namespace PersAhwal
     {
         private string DataSource56, DataSource57, FilepathIn, FilepathOut, ArchFile, FormDataFile;
         private static bool NewSettings = false;
+        
         string comboBoxOptions1 = "", comboBoxOptions2 = "";
         string[] txtComboOptions = new string[5] { "", "", "", "", "" };
         string[] DPTitle = new string[5];
@@ -43,6 +45,7 @@ namespace PersAhwal
         string AuthBody1 = "لينوب عني ويقوم مقامي في ";
         int combo1index = 0, combo2index = 0, combo3index = 0, combo4index = 0, combo5index = 0;
         int id = 0;
+        int serID = 0;
         int idIndex = 1;
         bool review1 = false;
         string RightColumnName = "";
@@ -104,9 +107,11 @@ namespace PersAhwal
             else if (Server == "56")
                 DataSource = DataSource56;
             allList = getColList("TableAddContext");
+            
             initialInfo();
-            detectCharacter1(DataSource);
-            detectCharacter2(DataSource);            
+            //detectCharacter1(DataSource);
+            //detectCharacter2(DataSource);
+            //return;
             NewSettings = newSettings;
             FilepathIn = filepathIn + @"\";
             FilepathOut = filepathOut;
@@ -155,10 +160,10 @@ namespace PersAhwal
                 checkReceip.Text = "تفعيل الايصالات المالية";
             }
             if (colName == "model") {
-                flowLayoutPanelModel.BringToFront();
-                flowLayoutPanelModel.Visible = true;
+                button30.PerformClick();
             }
         }
+
         private string checkReciptState()
         {
             SqlConnection Con = new SqlConnection(DataSource);
@@ -175,6 +180,39 @@ namespace PersAhwal
                 state = reader["activeReceipt"].ToString();
             }
             return state;
+        }
+
+        
+        
+        private void getModels()
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
+            string query = "select ID,الاسم from TableModel";
+            try
+            {
+                if (sqlCon.State == ConnectionState.Closed)
+                    sqlCon.Open();
+            }
+            catch (Exception ex) { return; }
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            int id = 0;
+            foreach (Control control in panelServices.Controls) 
+            {
+                control.Name = "unvalid_" + id.ToString();
+                control.Visible = false;
+                id++;
+            }
+            foreach (DataRow row in dtbl.Rows)
+            {                
+                string serviceID = row["ID"].ToString();
+                string serviceName = row["الاسم"].ToString();
+                insertServiceExp(serviceName, serviceID);
+            }
+            return ;
         }
 
 
@@ -2654,10 +2692,83 @@ namespace PersAhwal
                 string DocName1 = fileinfo1.Name;
 
                 insertModel( GregorianDate, EmpName, DataSource, extn1, serName.Text, buffer1);
+                getModels();
                 //Console.WriteLine(docid);
             }
         }
+        
+        private void service_Click(object sender, EventArgs e)
+        {
+            Button service = (Button)sender;
+            string ID = service.Name.Split('_')[1];
+            OpenVideo(ID);
+        }
 
+        private void OpenVideo(string ID)
+        {
+            SqlConnection Con = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
+            string query = "SELECT Data1, Extension1, الاسم from TableModel where ID = " + ID;
+            SqlCommand sqlCmd1 = new SqlCommand(query, Con);
+            if (Con.State == ConnectionState.Closed)
+                Con.Open();
+            var reader = sqlCmd1.ExecuteReader();
+            if (reader.Read())
+            {
+                var Data = (byte[])reader["Data1"];
+                var ext = reader["Extension1"].ToString();
+                string name = reader["الاسم"].ToString();
+                string fileName = FilepathOut + name.Replace(ext, DateTime.Now.ToString("mmss")) + ext;
+                File.WriteAllBytes(fileName, Data);
+                System.Diagnostics.Process.Start(fileName);
+            }
+            Con.Close();
+        }
+        private void delservice_Click(object sender, EventArgs e)
+        {
+            Button service = (Button)sender;            
+            SqlConnection Con = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
+            string query = "DELETE FROM TableModel where ID = " + service.Name.Split('_')[1];
+            if (Con.State == ConnectionState.Closed)
+                Con.Open();
+            SqlCommand sqlCmd = new SqlCommand(query, Con);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();
+            Con.Close();
+            getModels();
+        }
+
+        private void insertServiceExp(string serviceName, string serviceID)
+        {
+            // 
+            // الخدمة
+            // 
+            Button service = new Button();
+            service.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            service.Location = new System.Drawing.Point(216, 3);
+            service.Name = "الخدمة_" + serviceID;
+            service.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            service.Size = new System.Drawing.Size(590, 34);
+            service.TabIndex = 356;
+            service.Text = serviceName;
+            service.UseVisualStyleBackColor = true;
+            service.Click += new System.EventHandler(this.service_Click);
+            // 
+            // حذف
+            // 
+            Button delService = new Button();
+            delService.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            delService.Location = new System.Drawing.Point(3, 3);
+            delService.Name = "حذف_" + serviceID;
+            delService.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            delService.Size = new System.Drawing.Size(207, 34);
+            delService.TabIndex = 357;
+            delService.Text = "حذف";
+            delService.UseVisualStyleBackColor = true;
+            delService.Click += new System.EventHandler(this.delservice_Click);
+            panelServices.Controls.Add(service);
+            panelServices.Controls.Add(delService);
+            serID++;
+        }
         private void insertModel( string date, string employee, string dataSource, string extn1, string serName, byte[] buffer1)
         {
             dataSource = dataSource.Replace("AhwalDataBase", "ArchFilesDB");
@@ -2694,6 +2805,16 @@ namespace PersAhwal
             }
             return "";
         }
+
+        private void button30_Click(object sender, EventArgs e)
+        {
+            flowLayoutPanelModel.BringToFront();
+            flowLayoutPanelModel.Visible = true;
+            panelServices.BringToFront();
+            panelServices.Visible = true;
+            getModels();
+        }
+
         private void CreateColumns(string Columnname)
         {
             string query = "alter table TableAuthRights add " + Columnname + " nvarchar(1000)";

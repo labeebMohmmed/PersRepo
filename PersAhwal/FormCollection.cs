@@ -1185,7 +1185,7 @@ namespace PersAhwal
                         غرض_المعاملة.Text = "This certificate has been issued upon " + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 18] + " request,,,";
                     break;
                 case "مذكرة لسفارة أجنبية":
-                    نص_مقدم_الطلب1_off.Text = "The Consulate General of the Republic of Sudan avails itself this opportunity to renew to the esteemed Consulate the assurances of its highest consideration.";
+                    نص_مقدم_الطلب1_off.Text = "The Consulate General of the Republic of Sudan avails itself this opportunity to renew to the esteemed Consulate General of " + Vitext1.Text + " in Jeddah the assurances of its highest consideration.";
                     غرض_المعاملة.Text = "The Consulate General of " + Vitext1.Text + " in Jeddah";
                     break;
 

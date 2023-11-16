@@ -46,7 +46,6 @@ namespace PersAhwal
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.green57 = new System.Windows.Forms.PictureBox();
             this.red57 = new System.Windows.Forms.PictureBox();
-            this.labebserver57 = new System.Windows.Forms.Label();
             this.timer3 = new System.Windows.Forms.Timer(this.components);
             this.pass1 = new System.Windows.Forms.TextBox();
             this.pass2 = new System.Windows.Forms.TextBox();
@@ -118,8 +117,10 @@ namespace PersAhwal
             // btnLog
             // 
             this.btnLog.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.btnLog.FlatAppearance.BorderSize = 0;
+            this.btnLog.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLog.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLog.Location = new System.Drawing.Point(486, 168);
+            this.btnLog.Location = new System.Drawing.Point(486, 169);
             this.btnLog.Name = "btnLog";
             this.btnLog.Size = new System.Drawing.Size(123, 36);
             this.btnLog.TabIndex = 8;
@@ -162,12 +163,14 @@ namespace PersAhwal
             // button1
             // 
             this.button1.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.button1.FlatAppearance.BorderSize = 0;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(357, 168);
+            this.button1.Location = new System.Drawing.Point(357, 170);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(123, 36);
             this.button1.TabIndex = 19;
-            this.button1.Text = "تسجيل جديد";
+            this.button1.Text = "تسجيل حساب";
             this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -207,7 +210,7 @@ namespace PersAhwal
             // green57
             // 
             this.green57.Image = global::PersAhwal.Properties.Resources.green_circle;
-            this.green57.Location = new System.Drawing.Point(12, 258);
+            this.green57.Location = new System.Drawing.Point(12, 12);
             this.green57.Name = "green57";
             this.green57.Size = new System.Drawing.Size(28, 28);
             this.green57.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -218,24 +221,13 @@ namespace PersAhwal
             // red57
             // 
             this.red57.Image = global::PersAhwal.Properties.Resources.red;
-            this.red57.Location = new System.Drawing.Point(12, 258);
+            this.red57.Location = new System.Drawing.Point(12, 12);
             this.red57.Name = "red57";
             this.red57.Size = new System.Drawing.Size(28, 28);
             this.red57.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.red57.TabIndex = 25;
             this.red57.TabStop = false;
             this.red57.Visible = false;
-            // 
-            // labebserver57
-            // 
-            this.labebserver57.AutoSize = true;
-            this.labebserver57.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labebserver57.Location = new System.Drawing.Point(46, 258);
-            this.labebserver57.Name = "labebserver57";
-            this.labebserver57.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.labebserver57.Size = new System.Drawing.Size(345, 27);
-            this.labebserver57.TabIndex = 29;
-            this.labebserver57.Text = "مخدم الاحوال الشخصية والخدمات القنصلية متصل بشكل صحيح";
             // 
             // timer3
             // 
@@ -302,8 +294,6 @@ namespace PersAhwal
             this.ClientSize = new System.Drawing.Size(941, 299);
             this.Controls.Add(this.labelpass2);
             this.Controls.Add(this.labelpass1);
-            this.Controls.Add(this.pass2);
-            this.Controls.Add(this.labebserver57);
             this.Controls.Add(this.appversion);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.SeePass);
@@ -319,6 +309,7 @@ namespace PersAhwal
             this.Controls.Add(this.green57);
             this.Controls.Add(this.red57);
             this.Controls.Add(this.pass1);
+            this.Controls.Add(this.pass2);
             this.Name = "FormDataBase";
             this.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.RightToLeftLayout = true;
@@ -353,7 +344,6 @@ namespace PersAhwal
         private System.Windows.Forms.Timer timer2;
         private System.Windows.Forms.PictureBox green57;
         private System.Windows.Forms.PictureBox red57;
-        private System.Windows.Forms.Label labebserver57;
         private System.Windows.Forms.Timer timer3;
         private System.Windows.Forms.TextBox pass1;
         private System.Windows.Forms.TextBox pass2;

@@ -186,7 +186,7 @@ namespace PersAhwal
             //Application.Run(new Form8(dataSource100A, archFile));
             //string[] str = new string[1] { "" };
             //Application.Run(new FormPics("57", EmployeeName, "لبيب محمد أحمد", "نائب قنصل", dataSource100A, 0, FormDataFile, archFile, 10, str, str, false, str, str));
-            //Application.Run(new Settings("57", false, dataSource100S, dataSource100A, false, Modelfilespath + @"\", archFile, archFile, FormDataFile + @"\", ""));
+            //Application.Run(new Settings("لبيب محمد أحمد", Cdate, "57", false, dataSource100S, dataSource100A, false, Modelfilespath + @"\", archFile, archFile, FormDataFile + @"\", ""));
             //////Application.Run(new SignUp("جديد", "موظف محلي", dataSource100A, "احوال شخصية"));
             //Application.Run(new SignUp("جديد", "نائب قنصل", dataSource100A, "احوال شخصية","01-05-2023"));
 
