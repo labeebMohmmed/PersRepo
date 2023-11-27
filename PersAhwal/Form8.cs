@@ -947,13 +947,13 @@ namespace PersAhwal
                     checkStarTextExist(DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), selectTable);
                 }
                 view_PreReq(false);
-                
+
                 if (الموضوع.SelectedIndex == 1)
                 {
                     PopulateCheckBoxes(قائمة_النصوص_الفرعية.Text.Replace(" ", "_").Replace("-", "_") + "_" + قائمة_النصوص_العامة.Text.ToString(), "TableAuthRights", DataSource);
-
-                    flllPanelItemsboxes();
                 }
+                    flllPanelItemsboxes();
+                
                 معاملات_السابق.Visible = معاملات_التالي.Visible = جميع_المعاملات.Visible = false;
             }
             
@@ -1119,13 +1119,13 @@ namespace PersAhwal
             }
             
             view_PreReq(false);
-            
+
             if (الموضوع.SelectedIndex == 1)
             {
                 PopulateCheckBoxes(قائمة_النصوص_الفرعية.Text.Replace(" ", "_").Replace("-", "_") + "_" + قائمة_النصوص_العامة.Text.ToString(), "TableAuthRights", DataSource);
-
-                flllPanelItemsboxes();
             }
+                flllPanelItemsboxes();
+            
             معاملات_السابق.Visible = معاملات_التالي.Visible = جميع_المعاملات.Visible = false;
             
         }
@@ -2097,13 +2097,13 @@ namespace PersAhwal
                     checkStarTextExist(DataSource, قائمة_النصوص_العامة.Text.Replace(" ", "_") + "_" + قائمة_النصوص_الفرعية.Text.Replace(" ", "_"), selectTable);                    
                 }
                 view_PreReq(false);
-                
+
                 if (الموضوع.SelectedIndex == 1)
                 {
                     PopulateCheckBoxes(قائمة_النصوص_الفرعية.Text.Replace(" ", "_").Replace("-", "_") + "_" + قائمة_النصوص_العامة.Text.ToString(), "TableAuthRights", DataSource);
-
-                    flllPanelItemsboxes();
                 }
+                    flllPanelItemsboxes();
+                
                 معاملات_السابق.Visible = معاملات_التالي.Visible = جميع_المعاملات.Visible = false;
             }
             

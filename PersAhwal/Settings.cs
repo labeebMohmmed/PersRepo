@@ -2569,13 +2569,25 @@ namespace PersAhwal
 
         private void button27_Click(object sender, EventArgs e)
         {
+            fillModelsGrid();
+            foreach (Control control in this.Controls)
+            {
+                if (control.Name.Contains("panel") || control.Name.Contains("dataGrid"))
+                    control.Visible = false;
+            }
+            dataGridModel.Visible = btnAddModel.Visible = true;
+            dataGridModel.BringToFront(); 
+            btnAddModel.BringToFront();
+        }
+
+        private void fillModelsGrid() {
             SqlConnection sqlCon = new SqlConnection(DataSource);
             try
             {
                 if (sqlCon.State == ConnectionState.Closed)
                     sqlCon.Open();
             }
-            catch (Exception ex) { return; } 
+            catch (Exception ex) { return; }
             SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT ID,المستند FROM TableModelFiles order by المستند asc", sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtbl = new DataTable();
@@ -2583,19 +2595,10 @@ namespace PersAhwal
             sqlCon.Close();
             dataGridModel.DataSource = dtbl;
             dataGridModel.Columns[1].Width = 250;
-            dataGridModel.Columns["ID"].Visible = false;            
+            dataGridModel.Columns["ID"].Visible = false;
             dataGridModel.BringToFront();
-            dataGridModel.Visible = true; 
-            
-            foreach (Control control in this.Controls)
-            {
-                if (control.Name.Contains("panel") || control.Name.Contains("dataGrid"))
-                    control.Visible = false;
-            }
-            dataGridModel.Visible = true;
-            dataGridModel.BringToFront();
-        }
 
+        }
         private void dataGridModel_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (dataGridModel.CurrentRow.Index != -1)
@@ -2813,6 +2816,31 @@ namespace PersAhwal
             panelServices.BringToFront();
             panelServices.Visible = true;
             getModels();
+        }
+
+        private void btnAddModel_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                string strLocation = @dlg.FileName;
+                try
+                {
+                    using (Stream stream = File.OpenRead(strLocation))
+                    {
+                        byte[] buffer1 = new byte[stream.Length];
+                        stream.Read(buffer1, 0, buffer1.Length);
+                        var fileinfo1 = new FileInfo(strLocation);
+                        string extn1 = fileinfo1.Extension;
+                        string DocName1 = fileinfo1.Name.Split('.')[0];
+                        insertDoc(extn1, DocName1, buffer1);
+                        fillModelsGrid();
+                    }
+                }
+                catch (Exception ex) {
+                    MessageBox.Show("يرجى إغلاق الملف أولا");
+                }
+            }
         }
 
         private void CreateColumns(string Columnname)

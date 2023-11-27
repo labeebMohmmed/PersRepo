@@ -721,11 +721,11 @@ namespace PersAhwal
             this.Controls.Add(this.btnDeActivete);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.btnActiveteM);
             this.Controls.Add(this.btnDeActiveteM);
             this.Controls.Add(this.btnActivete);
             this.Controls.Add(this.panelEmployee);
             this.Controls.Add(this.panelMandoub);
+            this.Controls.Add(this.btnActiveteM);
             this.Name = "SignUp";
             this.Text = "SignUp";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.SignUp_FormClosed);

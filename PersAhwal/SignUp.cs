@@ -293,7 +293,7 @@ namespace PersAhwal
             for (int i = 0; i<item.Length&& item[i] != ""; i++)
             {
                 sqlCmd.Parameters.AddWithValue("@" + item[i], value[i]);
-               MessageBox.Show( item[i] + " - "+ value[i]);
+               //MessageBox.Show( item[i] + " - "+ value[i]);
             }
             //try
             //{
@@ -568,11 +568,11 @@ namespace PersAhwal
             sqlCmd.Parameters.AddWithValue("@ID", IDEmp);
             sqlCmd.Parameters.AddWithValue("@mode", "Edit");
 
-            sqlCmd.Parameters.AddWithValue("@EmployeeName", UserName.Text);
+            sqlCmd.Parameters.AddWithValue("@UserName", UserName.Text);
             sqlCmd.Parameters.AddWithValue("@Career", career);
             sqlCmd.Parameters.AddWithValue("@JobPosition", JobPosition.Text);
             sqlCmd.Parameters.AddWithValue("@Gender", Gender.Text);
-            sqlCmd.Parameters.AddWithValue("@UserName", EmployeeName.Text);
+            sqlCmd.Parameters.AddWithValue("@EmployeeName", EmployeeName.Text);
             sqlCmd.Parameters.AddWithValue("@Email", "");
             sqlCmd.Parameters.AddWithValue("@EngEmployeeName", EngEmployeeName.Text);
             sqlCmd.Parameters.AddWithValue("@Pass", userpass);

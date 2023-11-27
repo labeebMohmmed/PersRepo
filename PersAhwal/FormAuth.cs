@@ -809,7 +809,7 @@ namespace PersAhwal
             catch (Exception ex)
             {
                 Console.WriteLine(query);
-                MessageBox.Show(query);
+                //MessageBox.Show(query);
             }
             return true;
         }
@@ -3465,10 +3465,12 @@ namespace PersAhwal
 
         }
 
-        private void filteringRights( int caseIndex)
+        private void filteringRights( int caseIndex, bool genForm)
         {
             string textRights = ""; 
             string query = "select قائمة_الحقوق from TableAddContext where altColName = N'" + نوع_التوكيل.Text + "' and altSubColName = N'" + إجراء_التوكيل.Text + "'";
+            if(genForm)
+                query = "select قائمة_الحقوق from TableAddContext where altColName = N'توكيل بصيغة غير مدرجة' and altSubColName = N'توكيل بصيغة غير مدرجة'";
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
@@ -3875,6 +3877,7 @@ namespace PersAhwal
                     //false
                     finalPanel.Visible = panelAuthRights.Visible = ListSearch.Visible = btnListView.Visible = panelAuthRights.Visible = PanelDataGrid.Visible = labDescribed.Visible = false;
                     btnDelete.Visible = btnFile1.Visible = btnFile2.Visible = btnFile3.Visible = Panelapp.Visible = true;
+                    حالة_السداد.Text = existed("TableReceipt", "رقم_معاملة_القسم");
                     if (حالة_السداد.Text == "")
                         حالة_السداد.Text = "غير مسددة";
                     btnSettings.Visible = true;
@@ -4029,7 +4032,7 @@ namespace PersAhwal
                     }
                     break;
                 case 3:
-                    checkAutoUpdate.Checked = false;
+                    //checkAutoUpdate.Checked = false;
                     الصفة_القانونية.Text = removeSpaceSub(الصفة_القانونية.Text);
                     قائمة_الحقوق.Text = removeSpaceRight(قائمة_الحقوق.Text);
                     txtReview.Text = removeSpaceSub(txtReview.Text);                    
@@ -4178,7 +4181,7 @@ namespace PersAhwal
         private void updateRight(string right)
         {// altColName = N'" + نوع_التوكيل.Text + "' and altSubColName = N'" + إجراء_التوكيل.Text + "'";
             string query = "update TableAddContext set قائمة_الحقوق = N'" + right + "' where altColName = N'" + نوع_التوكيل.Text + "' and altSubColName = N'" + إجراء_التوكيل.Text + "'";
-            MessageBox.Show(query);
+            //MessageBox.Show(query);
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 try
@@ -4206,7 +4209,7 @@ namespace PersAhwal
         }
         public string existed(string table, string colName)
         {
-            string query = "select حالة_السداد from " + table + " where " + colName + " = N'" + رقم_التوكيل.Text + "'";
+            string query = "select حالة_الايصال from " + table + " where " + colName + " = N'" + رقم_التوكيل.Text + "'";
             string state = "";
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
@@ -4221,8 +4224,10 @@ namespace PersAhwal
             else
                 foreach (DataRow dataRow in dtbl.Rows)
                 {
-                    state = dataRow["حالة_السداد"].ToString();
+                    state = dataRow["حالة_الايصال"].ToString();
                 }
+            //MessageBox.Show(query);
+            //MessageBox.Show(state);
             return state;
         }
         private void updateGenName(string name, string idDoc)
@@ -4499,8 +4504,9 @@ namespace PersAhwal
 
         private void txtReviewBody()
         {
-            fillSamplesCodes(DataSource);
-            
+            fillSamplesCodes(DataSource); 
+
+
             string text = StrSpecPur + LegaceyPreStr;
             if (إجراء_التوكيل.Text == "إقرار بالتنازل") text = StrSpecPur;
             text = SuffReplacements(text, صفة_مقدم_الطلب_off.SelectedIndex, صفة_الموكل_off.SelectedIndex);
@@ -4566,7 +4572,7 @@ namespace PersAhwal
                 //MessageBox.Show(" نوع_التوكيل + " + Environment.NewLine + قائمة_الحقوق.Text);
                 checkBoxesJob();
 
-                if (نوع_التوكيل.SelectedIndex == 0)
+                if (نوع_التوكيل.Text == "توكيل بصيغة غير مدرجة")
                 {
                     generalForms(true);
                     return;
@@ -4580,7 +4586,7 @@ namespace PersAhwal
                     نوع_المعاملة.Text = "إقرار بالتنازل";
                 else نوع_المعاملة.Text = "توكيل";
 
-                if (نوع_التوكيل.SelectedIndex == 6)
+                if (نوع_التوكيل.Text == "ورثة")
                 {
                     LegaceyPreStr = " في التركة المذكورة أعلاه";
                 }
@@ -4695,20 +4701,16 @@ namespace PersAhwal
 
         private void إجراء_التوكيل_SelectedIndexChanged(object sender, EventArgs e)
         {
-            MessageBox.Show("إجراء_التوكيل_SelectedIndexChanged");
+            //MessageBox.Show("إجراء_التوكيل_SelectedIndexChanged");
             Pro();            
         }
 
         private void Pro() {
-            //MessageBox.Show(نوع_التوكيل.Text);
-            //MessageBox.Show(إجراء_التوكيل.Text);
             if (إجراء_التوكيل.Text == "إختر الإجراء")
                 return;
             reversTextReview();
             reversTextRight();
-            //MessageBox.Show("Pro" + Environment.NewLine + قائمة_الحقوق.Text);
             checkBoxesJob();
-            //MessageBox.Show("إجراء_التوكيل_SelectedIndexChanged" + Environment.NewLine + قائمة_الحقوق.Text);
             fillInfo(PanelItemsboxes, false);
             updateProType("TableAuth", نوع_التوكيل, إجراء_التوكيل, "رقم_التوكيل", رقم_التوكيل.Text);
         }
@@ -4754,8 +4756,8 @@ namespace PersAhwal
                 }
                 else
                 {
-                    //MessageBox.Show(" checkBoxesJob5 + " + Environment.NewLine + قائمة_الحقوق.Text);
-                    filteringRights(صفة_مقدم_الطلب_off.SelectedIndex);
+                    filteringRights(صفة_مقدم_الطلب_off.SelectedIndex, genForm);
+                    
                     //MessageBox.Show(" checkBoxesJob6 + " + Environment.NewLine + قائمة_الحقوق.Text);
                     if (قائمة_الحقوق.Text == "")
                     {
@@ -4840,7 +4842,7 @@ namespace PersAhwal
                 }
                 //MessageBox.Show(إجراء_التوكيل.SelectedIndex.ToString());
             }
-            MessageBox.Show("إجراء_التوكيل_TextChanged");
+            //MessageBox.Show("إجراء_التوكيل_TextChanged");
             Pro();
         }
 
@@ -5580,6 +5582,7 @@ namespace PersAhwal
             if (genType)
             {
                 checkAutoUpdate.Checked = checkAutoUpdate.Visible = PanelItemsboxes.Visible = false;
+                إجراء_التوكيل.Enabled = true;
                 //إجراء_التوكيل.Text = "صيغة عامة";
                 //txtReview.Size = new System.Drawing.Size(1290, 182);
 
@@ -5590,7 +5593,8 @@ namespace PersAhwal
             }
             else
             {
-                إجراء_التوكيل.Enabled = checkAutoUpdate.Checked = checkAutoUpdate.Visible = PanelItemsboxes.Visible = panelAuthOptions.Visible = true;                //txtAddRight.Visible = btnAddRight.Visible =
+                إجراء_التوكيل.Enabled = false;
+                checkAutoUpdate.Checked = checkAutoUpdate.Visible = PanelItemsboxes.Visible = panelAuthOptions.Visible = true;                //txtAddRight.Visible = btnAddRight.Visible =
                 //txtReview.Size = new System.Drawing.Size(1176, 57);
                 //قائمة_الحقوق.Visible = false;
                 //قائمة_الحقوق.Size = new System.Drawing.Size(226, 46);
@@ -6389,7 +6393,7 @@ namespace PersAhwal
             if (نوع_التوكيل.Text == "توكيل بصيغة غير مدرجة") genForm = true;
             
             PopulateCheckBoxes( الحقوق_off.Text.Replace(" ", "_"), "TableAuthRights", DataSource, صفة_مقدم_الطلب_off.SelectedIndex, false);
-            MessageBox.Show("button8 " + قائمة_الحقوق.Text);
+           // MessageBox.Show("button8 " + قائمة_الحقوق.Text);
             //autoCompleteTextBox(txtAddRight, DataSource, "قائمة_الحقوق_الكاملة", "TableAuthRight");
         }
 

@@ -497,7 +497,7 @@ namespace PersAhwal
                 VersionUpdate(cVersion56);
                 dataSourceWrite(fileVersio = primeryLink + @"SuddaneseAffairs\getVersio.txt", cVersion56.ToString());
                 dataSourceWrite(primeryLink + @"\updatingSetup.txt", "updating");
-                
+                this.Close();
             }
             catch (Exception e)
             {
@@ -1150,6 +1150,26 @@ namespace PersAhwal
         private void appversion_MouseClick(object sender, MouseEventArgs e)
         {
             upDateClose();
+        }
+
+        private void timer5_Tick(object sender, EventArgs e)
+        {
+            CultureInfo arSA = new CultureInfo("ar-SA");
+            arSA.DateTimeFormat.Calendar = new GregorianCalendar();
+
+
+            Thread.CurrentThread.CurrentCulture = arSA;
+            new System.Globalization.GregorianCalendar();
+            if (GregorianDate != DateTime.Now.ToString("MM-dd-yyyy"))
+                {
+                MessageBox.Show("سيتم إغلاق النافذة نسبة لتجاوز القيد الزمني لليوم");
+                this.Close();
+            }
+        }
+
+        private void appversion_Click(object sender, EventArgs e)
+        {
+
         }
 
         string actDate = "";

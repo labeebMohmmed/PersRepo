@@ -354,6 +354,7 @@ namespace PersAhwal
         }
 
         private void prepareFiles(string modelFiles, string modelForms, string formDataFile, string archFile, string filepathOut) {
+            button10.BringToFront();
             if (Directory.Exists(@"D:\"))
             {
                 primeryLink = @"D:\PrimariFiles\";
@@ -425,15 +426,17 @@ namespace PersAhwal
 
             if (UserJobposition.Contains("قنصل"))
             {
-                picSettings.Visible = pictureBox2.Visible = picLock.Visible = button10.Visible = true;
+                picSettings.Visible = pictureBox2.Visible = picLock.Visible = button10.Visible = redCircle.Visible = redLabel.Visible = true;
                 picVersio.BringToFront();
                 if (Server == "57")
                     backgroundWorker3.RunWorkerAsync();
                 عدد_الفرص.Enabled =  true;
+                timer7.Enabled = true;
             }
             else
             {
-                عدد_الفرص.Enabled = picSettings.Visible = pictureBox2.Visible = picLock.Visible = false;
+                timer7.Enabled = false;
+                عدد_الفرص.Enabled = picSettings.Visible = pictureBox2.Visible = picLock.Visible = redCircle.Visible = redLabel.Visible = false;
                 empUpdate.BringToFront();
             }
         }
@@ -11181,6 +11184,40 @@ namespace PersAhwal
         {
             var settings = new Settings(EmployeeName, GregorianDate, Server, false, DataSource56, DataSource57, false, LocalModelFiles, ArchFile, ArchFile, LocalModelForms, "model");
             settings.Show();
+        }
+
+        private void timer7_Tick(object sender, EventArgs e)
+        {
+            if (!UserJobposition.Contains("قنصل"))
+                return;
+                string query = "notpayApplication";
+
+            //MessageBox.Show(greDate);
+
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) {
+                    return;
+                }
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.StoredProcedure;
+            sqlDa.SelectCommand.Parameters.AddWithValue("@proDate", notpayAppSearchDate);
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            if (dtbl.Rows.Count != 0)
+            {
+                redLabel.Text = dtbl.Rows.Count.ToString();
+                button10.Size = new System.Drawing.Size(196, 39);
+                button10.Location = new System.Drawing.Point(479, 521);
+            } else {
+                button10.Size = new System.Drawing.Size(246, 39);
+                button10.Location = new System.Drawing.Point(429, 521);
+            }
+            sqlCon.Close();
         }
 
         private void Open3File(int id, int fileNo)

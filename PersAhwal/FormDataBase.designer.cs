@@ -52,6 +52,7 @@ namespace PersAhwal
             this.labelpass1 = new System.Windows.Forms.Label();
             this.labelpass2 = new System.Windows.Forms.Label();
             this.timer4 = new System.Windows.Forms.Timer(this.components);
+            this.timer5 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.green57)).BeginInit();
@@ -194,6 +195,7 @@ namespace PersAhwal
             this.appversion.Size = new System.Drawing.Size(56, 27);
             this.appversion.TabIndex = 23;
             this.appversion.Text = "0.0.0.0";
+            this.appversion.Click += new System.EventHandler(this.appversion_Click);
             this.appversion.MouseClick += new System.Windows.Forms.MouseEventHandler(this.appversion_MouseClick);
             // 
             // timer1
@@ -287,6 +289,12 @@ namespace PersAhwal
             this.timer4.Enabled = true;
             this.timer4.Tick += new System.EventHandler(this.timer4_Tick);
             // 
+            // timer5
+            // 
+            this.timer5.Enabled = true;
+            this.timer5.Interval = 3600000;
+            this.timer5.Tick += new System.EventHandler(this.timer5_Tick);
+            // 
             // FormDataBase
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -306,10 +314,10 @@ namespace PersAhwal
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnLog);
-            this.Controls.Add(this.green57);
-            this.Controls.Add(this.red57);
             this.Controls.Add(this.pass1);
             this.Controls.Add(this.pass2);
+            this.Controls.Add(this.green57);
+            this.Controls.Add(this.red57);
             this.Name = "FormDataBase";
             this.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.RightToLeftLayout = true;
@@ -350,5 +358,6 @@ namespace PersAhwal
         private System.Windows.Forms.Label labelpass1;
         private System.Windows.Forms.Label labelpass2;
         private System.Windows.Forms.Timer timer4;
+        private System.Windows.Forms.Timer timer5;
     }
 }

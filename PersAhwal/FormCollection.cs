@@ -386,7 +386,7 @@ namespace PersAhwal
                     //false
                     panelAuthRights.Visible = ListSearch.Visible = btnListView.Visible = panelAuthRights.Visible = PanelDataGrid.Visible = labDescribed.Visible = false;
                     btnDelete.Visible = btnFile1.Visible = btnFile2.Visible = btnFile3.Visible = Panelapp.Visible = true;
-
+                    حالة_السداد.Text = existed("TableReceipt", "رقم_معاملة_القسم");
                     if (حالة_السداد.Text == "")
                         حالة_السداد.Text = "غير مسددة";
                     btnSettings.Visible = true;
@@ -705,7 +705,7 @@ namespace PersAhwal
 
         public string existed(string table, string colName)
         {
-            string query = "select حالة_السداد from " + table + " where " + colName + " = N'" + رقم_المعاملة.Text + "'";
+            string query = "select حالة_الايصال from " + table + " where " + colName + " = N'" + رقم_المعاملة.Text + "'";
             string state = "";
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
@@ -720,11 +720,12 @@ namespace PersAhwal
             else
                 foreach (DataRow dataRow in dtbl.Rows)
                 {
-                    state = dataRow["حالة_السداد"].ToString();
+                    state = dataRow["حالة_الايصال"].ToString();
                 }
+            //MessageBox.Show(query);
+            //MessageBox.Show(state);
             return state;
         }
-
         private bool checkRelevencey() 
         {
             
@@ -1185,7 +1186,7 @@ namespace PersAhwal
                         غرض_المعاملة.Text = "This certificate has been issued upon " + preffix[صفة_مقدم_الطلب_off.SelectedIndex, 18] + " request,,,";
                     break;
                 case "مذكرة لسفارة أجنبية":
-                    نص_مقدم_الطلب1_off.Text = "The Consulate General of the Republic of Sudan avails itself this opportunity to renew to the esteemed Consulate General of " + Vitext1.Text + " in Jeddah the assurances of its highest consideration.";
+                    نص_مقدم_الطلب1_off.Text = "The Consulate General of The Republic of the Sudan avails itself this opportunity to renew to the esteemed Consulate General of " + Vitext1.Text + " in Jeddah the assurances of its highest consideration.";
                     غرض_المعاملة.Text = "The Consulate General of " + Vitext1.Text + " in Jeddah";
                     break;
 
