@@ -46,6 +46,7 @@ namespace PersAhwal
 
     public partial class MainForm : Form
     {
+        string colName = "";
         int intIDNotPay = 0;
         string paymentState = "";
         string messageID = "";
@@ -222,6 +223,7 @@ namespace PersAhwal
             DataSource57 = dataSource57;
             UserJobposition = jobposition;
             FilespathIn = filespathIn;
+            WriteOpenFile();
             sqlCon = new SqlConnection(DataSource);
             Realwork = realwork;
             GregorianDate = gregorianDate;
@@ -246,6 +248,99 @@ namespace PersAhwal
             ProcedSummayInfo();
             button10.PerformClick();
             //filllExcelReq();
+        }
+
+        private void WriteOpenFile()
+        {
+            string query = "SELECT  ID, Data1 from TableProcReq";
+
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            foreach (DataRow reader in dtbl.Rows)
+            {
+                try
+                {
+                    var Data = (byte[])reader["Data1"];
+                    var ID = reader["ID"].ToString();
+                    string reqFile = @"D:\ArchiveFile\" + i.ToString() + DateTime.Now.ToString("ssmm") + ".docx";
+                    i++;
+
+
+                    File.WriteAllBytes(reqFile, Data);
+                    CreateAuth("AuthID", reqFile, reqFile);
+                    saveToDatabase(ID, reqFile);
+
+                    Console.WriteLine("reqFile " + reqFile);
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+
+        }
+
+        private void CreateAuth(string AuthID, string DocxInFile, string DocxOutFile)
+        {
+            object oBMiss = System.Reflection.Missing.Value;
+            Word.Application oBMicroWord = new Word.Application();
+            object objCurrentCopy = DocxInFile;
+            Word.Document oBDoc = oBMicroWord.Documents.Open(objCurrentCopy, oBMiss);
+            oBMicroWord.Selection.Find.ClearFormatting();
+            oBMicroWord.Selection.Find.Replacement.ClearFormatting();
+
+            object ParaAuthIDNo = "MarkAuthIDNo";
+            Word.Range BookAuthIDNo = oBDoc.Bookmarks.get_Item(ref ParaAuthIDNo).Range;
+            BookAuthIDNo.Text = "AuthID";
+            object rangeAuthIDNo = BookAuthIDNo;
+            oBDoc.Bookmarks.Add("AuthAuthIDNo", ref rangeAuthIDNo);
+
+            string proName = "proName";
+
+            try
+            {
+                object ParaProType = "نوع_الإجراء";
+                Word.Range BookProType = oBDoc.Bookmarks.get_Item(ref ParaProType).Range;
+                BookProType.Text = proName;
+                object rangeProType = BookProType;
+                oBDoc.Bookmarks.Add("نوع_الإجراء", ref rangeProType);
+            }
+            catch (Exception ex) { }
+
+            oBDoc.SaveAs2(DocxOutFile);
+            oBDoc.Close(false, oBMiss);
+            oBMicroWord.Quit(false, false);
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(oBMicroWord);
+
+            //System.Diagnostics.Process.Start(DocxOutFile);
+        }
+
+        private void saveToDatabase(string id, string filePath)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlCommand sqlCmd = new SqlCommand("update TableProcReq set Data2 = @Data2 where ID = @ID", sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.Parameters.AddWithValue("@ID", id);
+
+            using (Stream stream = File.OpenRead(filePath))
+            {
+                byte[] buffer1 = new byte[stream.Length];
+                stream.Read(buffer1, 0, buffer1.Length);
+                var fileinfo1 = new FileInfo(filePath);
+                Console.WriteLine(fileinfo1.Name + "-" + id);
+                sqlCmd.Parameters.Add("@Data2", SqlDbType.VarBinary).Value = buffer1;
+                //MessageBox.Show(fileinfo1.Name + "-" + id);
+            }
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
         }
 
         private void filllExcelReq()
@@ -347,7 +442,7 @@ namespace PersAhwal
             perbtn1.Visible = false;
 
 
-
+            
 
 
 
@@ -2556,12 +2651,17 @@ namespace PersAhwal
             {
                 if (RetrievedNameAffadivit[x - 1] != "")
                 {
-                    table1.Rows.Add();
-                    table1.Rows[x + 1].Cells[4].Range.Text = (x).ToString();
-                    table1.Rows[x + 1].Cells[3].Range.Text = RetrievedNameAffadivit[x - 1];
-                    table1.Rows[x + 1].Cells[2].Range.Text = RetrievedTypeAffadivit[x - 1];
-                    string[] orderNo = RetrievedNoAffadivit[x - 1].Split('/');
-                    table1.Rows[x + 1].Cells[1].Range.Text = orderNo[4] + "/" + orderNo[3] + "/" + orderNo[2] + "/" + orderNo[1] + "/" + orderNo[0];
+                    try
+                    {
+                        table1.Rows.Add();
+                    
+                        table1.Rows[x + 1].Cells[4].Range.Text = (x).ToString();
+                        table1.Rows[x + 1].Cells[3].Range.Text = RetrievedNameAffadivit[x - 1];
+                        table1.Rows[x + 1].Cells[2].Range.Text = RetrievedTypeAffadivit[x - 1];
+                        string[] orderNo = RetrievedNoAffadivit[x - 1].Split('/');
+                        table1.Rows[x + 1].Cells[1].Range.Text = orderNo[4] + "/" + orderNo[3] + "/" + orderNo[2] + "/" + orderNo[1] + "/" + orderNo[0];
+                    }
+                    catch (Exception ex) { }
                 }
             }
 
@@ -4250,39 +4350,48 @@ namespace PersAhwal
                 }
             }
 
-            //SqlConnection sqlCon = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
-
-            //if (sqlCon.State == ConnectionState.Closed)
-
-            //    if (txDocID.Text != "")
-            //    {
-
-            //        if (sqlCon.State == ConnectionState.Closed)
-            //            try
-            //            {
-            //                sqlCon.Open();
-            //            }
-            //            catch (Exception ex) { return; }
-            //        SqlCommand sqlCmd1 = new SqlCommand(, sqlCon);
-
-
-            //                sqlCmd1.Parameters.Add("@col", SqlDbType.NVarChar).Value = search;
-            //                var reader = sqlCmd1.ExecuteReader();
-
-            //        if (reader.Read())
-            //        {
-
-
-
-            //            //SearchPanel.height = 391;
-            //        }
-
-
-            //        sqlCon.Close();
-
-            //    }
 
         }
+
+        public string existed(string table, string colName, string appNo)
+        {
+            string query = "select حالة_السداد from " + table + " where " + colName + " = N'" + appNo + "'";
+            مقدم_الطلب.Text = "";
+            Console.WriteLine(query);
+            //MessageBox.Show(رقم_معاملة_القسم.Text);
+            //MessageBox.Show(query);
+            string state = "";
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            try
+            {
+                sqlDa.Fill(dtbl);
+                sqlCon.Close();
+                btnPaymentState.Text = "غير مسددة";
+                if (dtbl.Rows.Count != 0)
+                  
+                {
+                    foreach (DataRow dataRow in dtbl.Rows)
+                    {
+                        if (dataRow["حالة_السداد"].ToString() != "")
+                            btnPaymentState.Text = dataRow["حالة_السداد"].ToString();
+                        //MessageBox.Show(dataRow["حالة_السداد"].ToString());
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                btnPaymentState.Text = "غير مسددة";
+            }
+            return state;
+        }
+
+
         private void getInfo12_10(string search, string table)
         {
             string query = "SELECT ID, رقم_التوكيل, مقدم_الطلب ,التاريخ_الميلادي, N'توكيل' FROM TableAuth WHERE رقم_التوكيل LIKE N'" + search + "%' order by التاريخ_الميلادي";
@@ -7573,7 +7682,7 @@ namespace PersAhwal
                 //return;
             }
 
-            if (mangerArch.CheckState == CheckState.Checked)
+            if (mangerArch.CheckState == CheckState.Checked && index != 7)
             {
                 string[] str = new string[Affbtn0.Items.Count];
                 for (int x = 0; x < Affbtn0.Items.Count; x++)
@@ -7590,7 +7699,10 @@ namespace PersAhwal
                 {
                     dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
                     FormPics form2 = new FormPics(Server, GregorianDate, EmployeeName, attendedVC.Text, UserJobposition, DataSource, index, FormDataFile, FilespathOut, 13, str, strSub, true, MandoubM, GriDateM);
-                    form2.ShowDialog();
+                    try
+                    {
+                        form2.ShowDialog();
+                    }catch(Exception ex) { }
                 }
                 else if (index == 11)
                 {
@@ -8085,6 +8197,9 @@ namespace PersAhwal
         private void applicant_TextChanged(object sender, EventArgs e)
         {
             if (gridShow || nameNo || applicant.Text == "") return;
+            string noForm = SpecificDigit(txDocID.Text, 13, 14);
+            //MessageBox.Show(noForm);
+            existed(getTables(noForm), colName, txDocID.Text);
             //MessageBox.Show("name changed");
             string query = "SELECT ID, رقم_التوكيل, مقدم_الطلب  , التاريخ_الميلادي , N'توكيل' as [نوع المكاتبة] FROM TableAuth WHERE مقدم_الطلب LIKE N'" + applicant.Text + "%'" +
                 " union " +
@@ -8122,6 +8237,35 @@ namespace PersAhwal
             }
             if (nameNo) return;
             FillDatafromGenArch(applicant.Text, "الاسم");
+        }
+
+        private string getTables(string id)
+        {
+            string tableName = "";
+            switch (id)
+            {
+                case "10":
+                    tableName = "TableCollection";
+                    colName = "رقم_المعاملة";
+                    break;
+                case "12":
+                    tableName = "TableAuth";
+                    colName = "رقم_التوكيل";
+                    break;
+                case "15":
+                    tableName = "TableMerrageDoc";
+                    colName = "رقم_المعاملة";
+                    break;
+                case "17":
+                    tableName = "TableDivorce";
+                    colName = "رقم_المعاملة";
+                    break;
+                case "21":
+                    tableName = "TableHandAuth";
+                    colName = "رقم_معاملة_القسم";
+                    break;
+            }
+            return tableName;
         }
 
         private void txtSearch_Click(object sender, EventArgs e)
@@ -10296,7 +10440,7 @@ namespace PersAhwal
             m = Convert.ToInt16(YearMonthDayS[1]);
             d = Convert.ToInt16(YearMonthDayS[2]);
 
-            MessageBox.Show("day " + d.ToString() + " month " + m.ToString() + " year " + year.ToString());
+            //MessageBox.Show("day " + d.ToString() + " month " + m.ToString() + " year " + year.ToString());
             if (m < 10) Currentmonth = "0" + m.ToString();
             else Currentmonth = m.ToString();
             if (d < 10) CurrentDay = "0" + d.ToString();
@@ -11207,7 +11351,9 @@ namespace PersAhwal
             sqlDa.SelectCommand.CommandType = CommandType.StoredProcedure;
             sqlDa.SelectCommand.Parameters.AddWithValue("@proDate", notpayAppSearchDate);
             DataTable dtbl = new DataTable();
-            sqlDa.Fill(dtbl);
+            try{
+                sqlDa.Fill(dtbl);
+            }catch(Exception ex) { return; }
             if (dtbl.Rows.Count != 0)
             {
                 redLabel.Text = dtbl.Rows.Count.ToString();
@@ -11218,6 +11364,35 @@ namespace PersAhwal
                 button10.Location = new System.Drawing.Point(429, 521);
             }
             sqlCon.Close();
+        }
+
+        private void btnPaymentState_Click(object sender, EventArgs e)
+        {
+            var selectedOption = MessageBox.Show("", "السماح بالسداد؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (selectedOption == DialogResult.Yes)
+            {
+                string noForm = SpecificDigit(txDocID.Text, 13, 14);
+                //MessageBox.Show(noForm);
+                existed(getTables(noForm), colName, txDocID.Text);
+                SqlConnection sqlCon = new SqlConnection(DataSource);
+                try
+                {
+                    if (sqlCon.State == ConnectionState.Closed)
+                        try
+                        {
+                            sqlCon.Open();
+                        }
+                        catch (Exception ex) { return; }
+                    SqlCommand sqlCmd = new SqlCommand("update "+ getTables(noForm) + " set حالة_السداد = '' where "+ colName + "= N'" + txDocID.Text +"'", sqlCon);
+                    sqlCmd.CommandType = CommandType.Text;
+                    sqlCmd.ExecuteNonQuery();
+                    sqlCon.Close();
+                    SearchPanel.Visible = false;
+                }
+                catch (Exception ex)
+                {
+                }
+            }
         }
 
         private void Open3File(int id, int fileNo)

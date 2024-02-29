@@ -146,10 +146,11 @@
             this.panelNotPay = new System.Windows.Forms.FlowLayoutPanel();
             this.label35 = new System.Windows.Forms.Label();
             this.comboReasons = new System.Windows.Forms.ComboBox();
+            this.button7 = new System.Windows.Forms.Button();
             this.button20 = new System.Windows.Forms.Button();
             this.label49 = new System.Windows.Forms.Label();
             this.txtExplanation = new System.Windows.Forms.TextBox();
-            this.button7 = new System.Windows.Forms.Button();
+            this.editNo = new System.Windows.Forms.Button();
             this.PanelFiles.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView6)).BeginInit();
             this.PanelMain.SuspendLayout();
@@ -323,6 +324,7 @@
             // 
             // PanelMain
             // 
+            this.PanelMain.Controls.Add(this.editNo);
             this.PanelMain.Controls.Add(this.حالة_السداد);
             this.PanelMain.Controls.Add(this.label4);
             this.PanelMain.Controls.Add(this.عقد_تراجع);
@@ -911,12 +913,13 @@
             // رقم_الوثيقة
             // 
             this.رقم_الوثيقة.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.رقم_الوثيقة.Location = new System.Drawing.Point(397, 3);
+            this.رقم_الوثيقة.Location = new System.Drawing.Point(465, 3);
             this.رقم_الوثيقة.Name = "رقم_الوثيقة";
             this.رقم_الوثيقة.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.رقم_الوثيقة.Size = new System.Drawing.Size(181, 35);
+            this.رقم_الوثيقة.Size = new System.Drawing.Size(113, 35);
             this.رقم_الوثيقة.TabIndex = 960;
             this.رقم_الوثيقة.Text = "بدون";
+            this.رقم_الوثيقة.TextChanged += new System.EventHandler(this.رقم_الوثيقة_TextChanged);
             // 
             // المهنة
             // 
@@ -1548,6 +1551,17 @@
             this.comboReasons.Size = new System.Drawing.Size(417, 35);
             this.comboReasons.TabIndex = 589;
             // 
+            // button7
+            // 
+            this.button7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.button7.Location = new System.Drawing.Point(133, 3);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(122, 35);
+            this.button7.TabIndex = 671;
+            this.button7.Text = "إلغاء";
+            this.button7.UseVisualStyleBackColor = false;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
             // button20
             // 
             this.button20.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
@@ -1580,16 +1594,18 @@
             this.txtExplanation.Size = new System.Drawing.Size(693, 189);
             this.txtExplanation.TabIndex = 651;
             // 
-            // button7
+            // editNo
             // 
-            this.button7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
-            this.button7.Location = new System.Drawing.Point(133, 3);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(122, 35);
-            this.button7.TabIndex = 671;
-            this.button7.Text = "إلغاء";
-            this.button7.UseVisualStyleBackColor = false;
-            this.button7.Click += new System.EventHandler(this.button7_Click);
+            this.editNo.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.editNo.Location = new System.Drawing.Point(356, 3);
+            this.editNo.Name = "editNo";
+            this.editNo.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.editNo.Size = new System.Drawing.Size(103, 35);
+            this.editNo.TabIndex = 1019;
+            this.editNo.Text = "تعديل الرقم";
+            this.editNo.UseVisualStyleBackColor = true;
+            this.editNo.Visible = false;
+            this.editNo.Click += new System.EventHandler(this.editNo_Click);
             // 
             // MerriageDoc
             // 
@@ -1738,5 +1754,6 @@
         private System.Windows.Forms.Label label49;
         private System.Windows.Forms.TextBox txtExplanation;
         private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button editNo;
     }
 }

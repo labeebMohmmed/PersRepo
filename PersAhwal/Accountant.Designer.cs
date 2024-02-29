@@ -61,6 +61,8 @@
             this.التاريخ = new System.Windows.Forms.TextBox();
             this.رقم_معاملة_القسم = new System.Windows.Forms.TextBox();
             this.القيمة = new System.Windows.Forms.TextBox();
+            this.red57 = new System.Windows.Forms.PictureBox();
+            this.green57 = new System.Windows.Forms.PictureBox();
             this.البعثة = new System.Windows.Forms.TextBox();
             this.ListSearch = new System.Windows.Forms.TextBox();
             this.آلية_البحث = new System.Windows.Forms.ComboBox();
@@ -68,6 +70,7 @@
             this.gridExcel = new System.Windows.Forms.DataGridView();
             this.dateTimeFrom = new System.Windows.Forms.DateTimePicker();
             this.panelList = new System.Windows.Forms.Panel();
+            this.button1 = new System.Windows.Forms.Button();
             this.labDescribed = new System.Windows.Forms.Button();
             this.button13 = new System.Windows.Forms.Button();
             this.textBox4 = new System.Windows.Forms.TextBox();
@@ -85,15 +88,18 @@
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.label10 = new System.Windows.Forms.Label();
             this.رقم_الايصال = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.pictureBox4 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panelMain.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.red57)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.green57)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridExcel)).BeginInit();
             this.panelList.SuspendLayout();
             this.panelItems.SuspendLayout();
             this.panelComment.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             this.SuspendLayout();
             // 
             // dataGridView1
@@ -157,7 +163,7 @@
             // 
             this.التاريخ_الميلادي.Enabled = false;
             this.التاريخ_الميلادي.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.التاريخ_الميلادي.Location = new System.Drawing.Point(472, 3);
+            this.التاريخ_الميلادي.Location = new System.Drawing.Point(457, 3);
             this.التاريخ_الميلادي.Name = "التاريخ_الميلادي";
             this.التاريخ_الميلادي.Size = new System.Drawing.Size(83, 35);
             this.التاريخ_الميلادي.TabIndex = 476;
@@ -221,6 +227,8 @@
             this.panelMain.Controls.Add(this.رقم_المعاملة);
             this.panelMain.Controls.Add(this.المعاملة);
             this.panelMain.Controls.Add(this.مقدم_الطلب);
+            this.panelMain.Controls.Add(this.red57);
+            this.panelMain.Controls.Add(this.green57);
             this.panelMain.Location = new System.Drawing.Point(12, 50);
             this.panelMain.Name = "panelMain";
             this.panelMain.Size = new System.Drawing.Size(1231, 134);
@@ -230,7 +238,7 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(561, 51);
+            this.label9.Location = new System.Drawing.Point(546, 51);
             this.label9.Name = "label9";
             this.label9.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.label9.Size = new System.Drawing.Size(41, 27);
@@ -240,7 +248,7 @@
             // الزكاة
             // 
             this.الزكاة.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.الزكاة.Location = new System.Drawing.Point(472, 47);
+            this.الزكاة.Location = new System.Drawing.Point(457, 47);
             this.الزكاة.Name = "الزكاة";
             this.الزكاة.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.الزكاة.Size = new System.Drawing.Size(83, 35);
@@ -271,7 +279,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(561, 9);
+            this.label7.Location = new System.Drawing.Point(546, 9);
             this.label7.Name = "label7";
             this.label7.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.label7.Size = new System.Drawing.Size(94, 27);
@@ -282,7 +290,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(561, 91);
+            this.label5.Location = new System.Drawing.Point(546, 91);
             this.label5.Name = "label5";
             this.label5.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.label5.Size = new System.Drawing.Size(88, 27);
@@ -349,7 +357,7 @@
             // 
             this.المقر.Enabled = false;
             this.المقر.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.المقر.Location = new System.Drawing.Point(472, 88);
+            this.المقر.Location = new System.Drawing.Point(457, 88);
             this.المقر.Name = "المقر";
             this.المقر.Size = new System.Drawing.Size(83, 35);
             this.المقر.TabIndex = 495;
@@ -441,14 +449,35 @@
             this.القيمة.Size = new System.Drawing.Size(91, 35);
             this.القيمة.TabIndex = 483;
             // 
+            // red57
+            // 
+            this.red57.Image = global::PersAhwal.Properties.Resources.red;
+            this.red57.Location = new System.Drawing.Point(646, 11);
+            this.red57.Name = "red57";
+            this.red57.Size = new System.Drawing.Size(28, 28);
+            this.red57.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.red57.TabIndex = 508;
+            this.red57.TabStop = false;
+            // 
+            // green57
+            // 
+            this.green57.Image = global::PersAhwal.Properties.Resources.green_circle;
+            this.green57.Location = new System.Drawing.Point(646, 11);
+            this.green57.Name = "green57";
+            this.green57.Size = new System.Drawing.Size(28, 28);
+            this.green57.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.green57.TabIndex = 509;
+            this.green57.TabStop = false;
+            this.green57.Visible = false;
+            // 
             // البعثة
             // 
             this.البعثة.Enabled = false;
             this.البعثة.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.البعثة.Location = new System.Drawing.Point(12, 9);
+            this.البعثة.Location = new System.Drawing.Point(61, 9);
             this.البعثة.Name = "البعثة";
             this.البعثة.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.البعثة.Size = new System.Drawing.Size(422, 35);
+            this.البعثة.Size = new System.Drawing.Size(373, 35);
             this.البعثة.TabIndex = 485;
             // 
             // ListSearch
@@ -556,6 +585,18 @@
             this.panelList.Name = "panelList";
             this.panelList.Size = new System.Drawing.Size(1231, 349);
             this.panelList.TabIndex = 556;
+            // 
+            // button1
+            // 
+            this.button1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.Location = new System.Drawing.Point(267, 6);
+            this.button1.Name = "button1";
+            this.button1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.button1.Size = new System.Drawing.Size(198, 34);
+            this.button1.TabIndex = 635;
+            this.button1.Text = "طباعة اورنيك 67 (إكسل)";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // labDescribed
             // 
@@ -775,23 +816,23 @@
             this.رقم_الايصال.Size = new System.Drawing.Size(451, 35);
             this.رقم_الايصال.TabIndex = 558;
             // 
-            // button1
+            // pictureBox4
             // 
-            this.button1.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(267, 6);
-            this.button1.Name = "button1";
-            this.button1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.button1.Size = new System.Drawing.Size(198, 34);
-            this.button1.TabIndex = 635;
-            this.button1.Text = "طباعة اورنيك 67 (إكسل)";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.pictureBox4.Image = global::PersAhwal.Properties.Resources.img_222195;
+            this.pictureBox4.Location = new System.Drawing.Point(3, 9);
+            this.pictureBox4.Name = "pictureBox4";
+            this.pictureBox4.Size = new System.Drawing.Size(52, 33);
+            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox4.TabIndex = 832;
+            this.pictureBox4.TabStop = false;
+            this.pictureBox4.Click += new System.EventHandler(this.pictureBox4_Click);
             // 
             // Accountant
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1255, 749);
+            this.Controls.Add(this.pictureBox4);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.رقم_الايصال);
             this.Controls.Add(this.gridExcel);
@@ -806,6 +847,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panelMain.ResumeLayout(false);
             this.panelMain.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.red57)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.green57)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridExcel)).EndInit();
             this.panelList.ResumeLayout(false);
             this.panelList.PerformLayout();
@@ -814,6 +857,7 @@
             this.panelComment.ResumeLayout(false);
             this.panelComment.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -872,5 +916,8 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox رقم_الايصال;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.PictureBox red57;
+        private System.Windows.Forms.PictureBox green57;
+        private System.Windows.Forms.PictureBox pictureBox4;
     }
 }

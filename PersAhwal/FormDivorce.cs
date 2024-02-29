@@ -628,6 +628,20 @@ namespace PersAhwal
             sqlCmd.ExecuteNonQuery();
             sqlCon.Close();
         }
+        
+        private void updatelocalName(string idDoc, string DocNo)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            string query = "update TableDivorce set رقم_الوثيقة=N'" + رقم_الوثيقة.Text + "',رقم_المعاملة = N'"+ DocNo + "' where ID = " + idDoc ;
+            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
+        }
         private string commentInfo()
         {
             string comment = "";
@@ -815,7 +829,9 @@ namespace PersAhwal
 
         private void رقم_الوثيقة_TextChanged(object sender, EventArgs e)
         {
-            //MessageBox.Show(رقم_الوثيقة.Text);
+            if(!grid)
+                editNo.Visible = true;
+            
 
         }
 
@@ -1293,6 +1309,16 @@ namespace PersAhwal
         private void button9_Click(object sender, EventArgs e)
         {
             panelNotPay.Visible = false;
+        }
+
+        private void editNo_Click(object sender, EventArgs e)
+        {
+            editNo.Visible = false;
+            string part1to3 = رقم_المعاملة.Text.Split('/')[0] + "/" + رقم_المعاملة.Text.Split('/')[1] + "/" + رقم_المعاملة.Text.Split('/')[2] + "/" + رقم_المعاملة.Text.Split('/')[3] + "/";
+            if (رقم_الوثيقة.Text != "" && رقم_الوثيقة.Text != "بدون")
+                رقم_المعاملة.Text = part1to3 + رقم_الوثيقة.Text;
+            updateGenName(رقم_المعاملة.Text, genIDNo.ToString());
+            updatelocalName(genIDNo.ToString(), رقم_المعاملة.Text);
         }
     }
 }

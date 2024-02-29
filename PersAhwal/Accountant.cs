@@ -28,18 +28,22 @@ using static System.Windows.Forms.AxHost;
 using System.Diagnostics;
 using Xceed.Document.NET;
 using Xceed.Words.NET;
+using DocumentFormat.OpenXml.Drawing;
+using DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace PersAhwal
 {
     public partial class Accountant : Form
     {
         string[] columns;
+        string appName = "";
+        string existedState = "";
         string DocxOutFile = @"D:\ArchiveFiles\" + DateTime.Now.ToString("dd-hh-mm-ss") + "ايصال.docx";
         string pdfOutFile = @"D:\ArchiveFiles\" + DateTime.Now.ToString("dd-hh-mm-ss") + "ايصال.pdf";
         //string DocxInFile  = @"D:\PrimariFiles\ModelFiles\الايصال.docx";
         string pictureName = @"D:\PrimariFiles\ModelFiles\صقر.png";
         string DataSource = "";
-        bool gridFill = true;
+        bool gridFill = false;
         string GreDate = "";
         //string Dec19 = "11-19-2023";
         string SearchDate = "";
@@ -152,25 +156,61 @@ namespace PersAhwal
                 case "10":
                     tableName = "TableCollection";
                     colName = "رقم_المعاملة";
+                    appName = "مقدم_الطلب";
                     break;
                 case "12":
                     tableName = "TableAuth";
                     colName = "رقم_التوكيل";
+                    appName = "مقدم_الطلب";
                     break;
                 case "15":
                     tableName = "TableMerrageDoc";
                     colName = "رقم_المعاملة";
+                    appName = "اسم_الزوج";
                     break;
                 case "17":
                     tableName = "TableDivorce";
+                    appName = "اسم_الزوج";
                     colName = "رقم_المعاملة";
                     break;
                 case "21":
                     tableName = "TableHandAuth";
                     colName = "رقم_معاملة_القسم";
+                    appName = "Viewed";
                     break;
             }
             return tableName;
+        }
+        /*
+         توكيل
+إقرار أو إقرار مشفوع باليمين
+إفادة أو شهادة لمن يهمه الأمر
+مذكرة لمخاطبة قصنلية أخرى
+توثيق مستند
+أخرى
+وثيقة زواج
+قسيمة طلاق
+         */
+        private void selectTable(string id) {
+            tableName = "";
+            switch (id) {
+                case "10":
+                    نوع_المعاملة.SelectedIndex = 1;
+                    break;
+                case "12":
+                    نوع_المعاملة.SelectedIndex = 0;
+                    break;
+                case "15":
+                    نوع_المعاملة.SelectedIndex = 6;
+                    break;
+                case "17":
+                    نوع_المعاملة.SelectedIndex = 7;
+                    break;
+                case "21":
+                    نوع_المعاملة.SelectedIndex = 4;
+                    break;
+            }
+            
         }
         private void paid(string form, string payState) {
             getTables(form);
@@ -378,8 +418,8 @@ namespace PersAhwal
         {
             int inComb = 0;
             int i = 0;
-            if (dataGridView1.Rows.Count < 2)
-                dataGridView1.Visible = false;
+            //if (dataGridView1.Rows.Count < 2)
+            //    dataGridView1.Visible = false;
             for (; i < dataGridView1.Rows.Count - 1; i++)
             {
 
@@ -426,10 +466,13 @@ namespace PersAhwal
             else return false;
         }
 
-        public string existed(string table, string colName)
-        {
-            string query = "select حالة_السداد from " + table + " where " + colName + " = N'" + رقم_معاملة_القسم.Text + "'";
+        public string existed(string table, string colName, bool checkName)
+        {                     
+            string query = "select حالة_السداد, "+ appName + " from " + table + " where " + colName + " = N'" + رقم_معاملة_القسم.Text + "'";
+            مقدم_الطلب.Text = "";
             Console.WriteLine(query);
+            //MessageBox.Show(رقم_معاملة_القسم.Text);
+            //MessageBox.Show(query);
             string state = "";
             SqlConnection sqlCon = new SqlConnection(DataSource);
             if (sqlCon.State == ConnectionState.Closed)
@@ -442,14 +485,25 @@ namespace PersAhwal
                 sqlDa.Fill(dtbl);
                 sqlCon.Close();
                 if (dtbl.Rows.Count == 0)
-                    state = "لا توجد معاملة";
+                    state = "";
                 else
+                {
                     foreach (DataRow dataRow in dtbl.Rows)
                     {
                         state = dataRow["حالة_السداد"].ToString();
+                        if(!gridFill && checkName)
+                            مقدم_الطلب.Text = dataRow[appName].ToString();
                     }
+                    if (state != "تم السداد")
+                    {
+                        green57.Visible = true;
+                        green57.BringToFront();
+                    }
+                }
+        }
+            catch (Exception ex) {
+                green57.Visible = false;
             }
-            catch (Exception ex) { }
             return state;
         }
 
@@ -464,12 +518,16 @@ namespace PersAhwal
             {
                 int FormType = Convert.ToInt32(SpecificDigit(رقم_المعاملة.Text, 3, 4));
                 string noForm = SpecificDigit(رقم_المعاملة.Text, 3, 4);
+                selectTable(noForm);
                 string rowCount = SpecificDigit(رقم_المعاملة.Text, 5, رقم_المعاملة.Text.Length);
                 رقم_المعاملة.Text = رقم_المعاملة.Text.TrimStart().TrimEnd();
                 string year = SpecificDigit(رقم_المعاملة.Text, 1, 2).Trim();
                 رقم_معاملة_القسم.Text = txtMissionCodeNum + "/" + txtMissionCode + "/" + year + "/" + noForm + "/" + rowCount;
 
+                green57.Visible = false;
 
+                existedState = existed(getTables(noForm), colName, true);
+                //MessageBox.Show(state);
             }
         }
 
@@ -523,7 +581,7 @@ namespace PersAhwal
         {
             string noForm = SpecificDigit(رقم_المعاملة.Text, 3, 4);
             string DocxInFile = "الايصال.docx";
-            string state = existed(getTables(noForm), colName);
+            //string state = existed(getTables(noForm), colName, false);
             //if (state == "تم السداد" && AddNewReceipt)
             //{
             //    var selectedOption = MessageBox.Show("طباعة الابصال؟","المعاملة الموضح تم سدادها مسبقا", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -554,7 +612,7 @@ namespace PersAhwal
             //    return;
             //}
             //else 
-            if (state == "تم الالغاء")
+            if (existedState == "تم الالغاء")
             {
                 var selectedOption = MessageBox.Show("المعاملة الموضح تم إلغاءها", "معاينة تفاصيل الالغاء؟", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (selectedOption == DialogResult.Yes)
@@ -926,7 +984,6 @@ namespace PersAhwal
         private bool checkDate()
         {
             string noForm = SpecificDigit(رقم_المعاملة.Text, 3, 4);
-            string state = existed(getTables(noForm), colName);
 
 
             try {
@@ -937,12 +994,12 @@ namespace PersAhwal
 
             if (AddNewReceipt)
             {
-                if (state == "معفي")
+                if (existedState == "معفي")
                 {
                     MessageBox.Show("المعاملة مصدق عليها إكراميا ومعفية من سداد الرسوم");
                     return false;
                 }
-                if (state == "تم السداد")
+                if (existedState == "تم السداد")
                 {
                     getReceiptData("رقم_المعاملة", رقم_المعاملة.Text);
 
@@ -990,7 +1047,7 @@ namespace PersAhwal
             }
 
 
-            if (state == "لا توجد معاملة" && نوع_المعاملة.SelectedIndex != 4 && نوع_المعاملة.Text != "أخرى")
+            if (existedState == "لا توجد معاملة" && نوع_المعاملة.SelectedIndex != 4 && نوع_المعاملة.Text != "أخرى")
             {
                 MessageBox.Show("رقم المعاملة غير موجود، يرجى التأكد أولا من الرقم المدخل");
                 return false;
@@ -1622,7 +1679,7 @@ namespace PersAhwal
         {
             if (dataGridView2.CurrentRow.Index != -1)
             {
-                gridFill = true;
+                //gridFill = true;
                 itemID = Convert.ToInt32(dataGridView2.CurrentRow.Cells[0].Value.ToString());
                 foreach (Control control in panelMain.Controls)
                 {
@@ -1855,6 +1912,12 @@ namespace PersAhwal
 
             filllExcelGrid();
             
+        }
+
+        private void pictureBox4_Click(object sender, EventArgs e)
+        {
+            SignUp signUp = new SignUp(AccountantEmp, "محاسب", DataSource, "احوال شخصية", GreDate, "yes", Joposition, -1);
+            signUp.ShowDialog();
         }
 
         private void dataSourceWrite(string dataSourcepath, string text)

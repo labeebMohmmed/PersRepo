@@ -698,13 +698,13 @@ namespace PersAhwal
             this.Controls.Add(this.lalProType);
             this.Controls.Add(this.docId);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.Combo2);
             this.Controls.Add(this.تاريخ_الميلاد);
             this.Controls.Add(this.txtIDNo);
             this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.Combo1);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
+            this.Controls.Add(this.Combo2);
             this.Name = "FormPics";
             this.Text = "أرشفة الملفات";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormPics_FormClosed);

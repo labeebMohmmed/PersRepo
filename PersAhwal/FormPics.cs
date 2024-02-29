@@ -174,7 +174,7 @@ namespace PersAhwal
             Console.WriteLine(4);
             Console.WriteLine(5);
             //correctNo();
-            checkRenew();
+            //checkRenew();
             try
             {
                 txtMissionCode = missionBasicInfo().Split('*')[3];
@@ -386,7 +386,7 @@ namespace PersAhwal
                 }
 
                 if (index != 12 && Combo1.Items.Count > 0)
-                    Combo1.SelectedIndex = index;
+                    Combo1.SelectedIndex = index;//error
 
                 for (int x = 0; x < 100; x++)
                     PathImage[x] = ImageName[x] = "";

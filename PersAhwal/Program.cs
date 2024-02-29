@@ -199,7 +199,7 @@ namespace PersAhwal
             //{
             //    Console.WriteLine(dataSource100A);
             Application.Run(new FormDataBase("57", dataSource100S, dataSource100A, Modelfilespath + @"\", archFile, archFile, FormDataFile + @"\", newFiles));
-            //Application.Run(new Accountant(dataSource100A, Cdate, "نضال محمد الحسن", "موظف"));
+            //Application.Run(new Accountant(dataSource100A, Cdate, "لبيب محمد أحمد", "مدير"));
             //}
         }
     }
