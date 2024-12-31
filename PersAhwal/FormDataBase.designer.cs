@@ -43,7 +43,6 @@ namespace PersAhwal
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.appversion = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.green57 = new System.Windows.Forms.PictureBox();
             this.red57 = new System.Windows.Forms.PictureBox();
             this.timer3 = new System.Windows.Forms.Timer(this.components);
@@ -51,8 +50,8 @@ namespace PersAhwal
             this.pass2 = new System.Windows.Forms.TextBox();
             this.labelpass1 = new System.Windows.Forms.Label();
             this.labelpass2 = new System.Windows.Forms.Label();
-            this.timer4 = new System.Windows.Forms.Timer(this.components);
             this.timer5 = new System.Windows.Forms.Timer(this.components);
+            this.checkArchFiles = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.green57)).BeginInit();
@@ -204,11 +203,6 @@ namespace PersAhwal
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // timer2
-            // 
-            this.timer2.Enabled = true;
-            this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
-            // 
             // green57
             // 
             this.green57.Image = global::PersAhwal.Properties.Resources.green_circle;
@@ -284,16 +278,17 @@ namespace PersAhwal
             this.labelpass2.Text = "إعادة ادخال كلمة المرور:";
             this.labelpass2.Visible = false;
             // 
-            // timer4
-            // 
-            this.timer4.Enabled = true;
-            this.timer4.Tick += new System.EventHandler(this.timer4_Tick);
-            // 
             // timer5
             // 
             this.timer5.Enabled = true;
             this.timer5.Interval = 3600000;
             this.timer5.Tick += new System.EventHandler(this.timer5_Tick);
+            // 
+            // checkArchFiles
+            // 
+            this.checkArchFiles.Enabled = true;
+            this.checkArchFiles.Interval = 3600000;
+            this.checkArchFiles.Tick += new System.EventHandler(this.checkArchFiles_Tick);
             // 
             // FormDataBase
             // 
@@ -349,7 +344,6 @@ namespace PersAhwal
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label appversion;
         private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.Timer timer2;
         private System.Windows.Forms.PictureBox green57;
         private System.Windows.Forms.PictureBox red57;
         private System.Windows.Forms.Timer timer3;
@@ -357,7 +351,7 @@ namespace PersAhwal
         private System.Windows.Forms.TextBox pass2;
         private System.Windows.Forms.Label labelpass1;
         private System.Windows.Forms.Label labelpass2;
-        private System.Windows.Forms.Timer timer4;
         private System.Windows.Forms.Timer timer5;
+        private System.Windows.Forms.Timer checkArchFiles;
     }
 }

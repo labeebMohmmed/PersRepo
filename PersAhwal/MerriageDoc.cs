@@ -36,6 +36,7 @@ namespace PersAhwal
 {
     public partial class MerriageDoc : Form
     {
+        bool quitNoPrint = false;
         string DataSource = "";
         string insertAll = "";
         string updateAll = "";
@@ -174,7 +175,7 @@ namespace PersAhwal
             foreach (DataRow row in dtbl.Rows)
             {
                 
-                if (row["name"].ToString() != "توضيح_التجاوز" && row["name"].ToString() != "endTime" && row["name"].ToString() != "ID" && row["name"].ToString() != "تاريخ_الارشفة1" && row["name"].ToString() != "تاريخ_الارشفة2" && row["name"].ToString() != "حالة_الارشفة"&& row["name"].ToString() != "sms")
+                if (row["name"].ToString() != "activity" && row["name"].ToString() != "مهنة_الزوجة" && row["name"].ToString() != "صلة_الوكيل_بالخاطب" && row["name"].ToString() != "الرقم_المرجعي" && row["name"].ToString() != "الإجراء_الأخير" && row["name"].ToString() != "توضيح_التجاوز" && row["name"].ToString() != "endTime" && row["name"].ToString() != "ID" && row["name"].ToString() != "تاريخ_الارشفة1" && row["name"].ToString() != "تاريخ_الارشفة2" && row["name"].ToString() != "حالة_الارشفة"&& row["name"].ToString() != "sms")
                 {
                     allList[i] = row["name"].ToString();
                     //MessageBox.Show(row["name"].ToString());
@@ -315,6 +316,7 @@ namespace PersAhwal
                     }
                     
                 }
+                رقم_الوثيقة.Text = رقم_المعاملة.Text.Split('/')[4];
                 gridFill = false;
                 التعليقات_السابقة_Off.Text = dataGridView1.CurrentRow.Cells["تعليق"].Value.ToString();
                 if (dataGridView1.CurrentRow.Cells["اسم_الزوج"].Value.ToString() == "" && File.ReadAllText(FilespathOut + @"\autoDocs.txt") == "Yes")
@@ -434,7 +436,7 @@ namespace PersAhwal
                             return false;
                         }
 
-                        if (control.Name == "رقم_الوثيقة" && control.Text.Length > 5)
+                        if (control.Name == "رقم_الوثيقة" && control.Text.Length > 6)
                         {
                             MessageBox.Show(" رقم الوثيقة غير صالح");
                             return false;
@@ -526,7 +528,9 @@ namespace PersAhwal
         }
 
         private void button1_Click(object sender, EventArgs e)
-        {            
+        {
+            editNo.PerformClick();
+            if (quitNoPrint) return;
             string part1to3 = رقم_المعاملة.Text.Split('/')[0] + "/" + رقم_المعاملة.Text.Split('/')[1] + "/" + رقم_المعاملة.Text.Split('/')[2] + "/" + رقم_المعاملة.Text.Split('/')[3] + "/";
             رقم_المعاملة.Text = part1to3 + رقم_الوثيقة.Text;
             addNewAppNameInfo1(اسم_الزوج);
@@ -558,7 +562,13 @@ namespace PersAhwal
                         }
                     }
             }
+            //try
+            //{
             sqlCommand.ExecuteNonQuery();
+            //}catch(Exception ex)
+            //{
+            //    MessageBox.Show("إدخال البيانات غير مكتمل");
+            //}
             updateGenName(رقم_المعاملة.Text, genIDNo.ToString());
             if (!checkSentSMS(genIDNo, "TableMerrageDoc"))
                 SMS(genIDNo, "TableMerrageDoc");
@@ -1705,8 +1715,8 @@ namespace PersAhwal
 
         private void رقم_الوثيقة_TextChanged(object sender, EventArgs e)
         {
-            if (!grid)
-                editNo.Visible = true;
+            //if (!grid)
+            //    editNo.Visible = true;
         }
 
         private void updatelocalName(string idDoc, string DocNo)
@@ -1719,7 +1729,14 @@ namespace PersAhwal
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
             sqlCmd.CommandType = CommandType.Text;
-            sqlCmd.ExecuteNonQuery();
+            try
+            {
+                sqlCmd.ExecuteNonQuery();
+            }catch (Exception ex) {
+                MessageBox.Show("يوجد وثيقة بالنظام تحمل الرقم " + رقم_الوثيقة.Text + " يرحى استخدام رقم غير محجور ");
+                quitNoPrint = true;
+                return; }
+            quitNoPrint = false;
             sqlCon.Close();
         }
 
@@ -1731,6 +1748,11 @@ namespace PersAhwal
                 رقم_المعاملة.Text = part1to3 + رقم_الوثيقة.Text;
             updateGenName(رقم_المعاملة.Text, genIDNo.ToString());
             updatelocalName(genIDNo.ToString(), رقم_المعاملة.Text);
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }

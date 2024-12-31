@@ -69,7 +69,7 @@ namespace PersAhwal
             DataSource56 = dataSource56;
             DataSource57 = dataSource57;
             DataSource = DataSource57;
-            //MessageBox.Show(MacAdd);
+            //MessageBox.Show(IP);
             
             //MessageBox.Show("1");
             FilepathOut = filepathOut.Replace("D", BackupDisck("workingDisk"));
@@ -274,7 +274,7 @@ namespace PersAhwal
             return max;
         }
 
-        private void backup(string workFile) {
+        private void backup() {
             string sqlInfoBackup = "AhwalDataBase_backup_";
             string sqlArchBackup = "ArchFilesDB_backup_";
             string sqlAffairBackup = "SudaneseAffairs_backup_";
@@ -283,8 +283,10 @@ namespace PersAhwal
             string year = "";
             string month = "";
             string date = "";
+            string defaultArchFile = "E:\\SQL Server\\MSSQL16.MSSQLSERVER\\MSSQL\\Backup";
             
-            string[] backfiles = Directory.GetFiles(workFile + @"sqlbackup\");
+            //string[] backfiles = Directory.GetFiles(workFile + @"sqlbackup\");
+            string[] backfiles = Directory.GetFiles(defaultArchFile); 
             int[] datesInfo = new int[backfiles.Length];
             int[] datesArch = new int[backfiles.Length];
             int[] datesAffa = new int[backfiles.Length];
@@ -338,7 +340,7 @@ namespace PersAhwal
             year = SpecificDigit(maxdate,1,4);
             month = SpecificDigit(maxdate, 5, 6);
             date = SpecificDigit(maxdate, 7, 8);
-
+            
             string newerFile = sqlInfoBackup + year + "_" + month + "_" + date + "_";
             //Console.WriteLine(newerFile);
             for (int i = 0; i < backfiles.Length; i++)
@@ -348,7 +350,7 @@ namespace PersAhwal
                     Console.WriteLine("Files to Delete " + backfiles[i]);
                     try
                     {
-                       //File.Delete(backfiles[i]);
+                       File.Delete(backfiles[i]);
                     }
                     catch (Exception ex) { }
                 }
@@ -368,7 +370,7 @@ namespace PersAhwal
                     Console.WriteLine("Files to Delete " + backfiles[i]);
                     try
                     {
-                        //File.Delete(backfiles[i]);
+                        File.Delete(backfiles[i]);
                     }
                     catch (Exception ex) { }
                 }
@@ -386,13 +388,54 @@ namespace PersAhwal
                 if (backfiles[i].Contains(sqlAffairBackup) && !backfiles[i].Contains(newerFile))
                 {
                     Console.WriteLine("Files to Delete " + backfiles[i]);
+                    //insertFileToDelete(backfiles[i], "AutoArchRecord");
                     try
                     {
-                       //File.Delete(backfiles[i]);
+                       File.Delete(backfiles[i]);
                     }
                     catch (Exception ex) { }
                 }
             }
+        }
+
+        private void insertFileToDelete(string name, string table)
+        {
+            if(checkFiles(name, table)) return;
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return; }
+
+            SqlCommand sqlCmd = new SqlCommand("INSERT INTO "+ table + " (Files) values (@Files)", sqlCon);
+            sqlCmd.CommandType = CommandType.Text;
+            sqlCmd.Parameters.AddWithValue("@Files", name);
+            sqlCmd.ExecuteNonQuery();
+            sqlCon.Close();
+        }
+
+        private bool checkFiles(string name, string table)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+
+                try
+                {
+                    sqlCon.Open();
+                }
+                catch (Exception ex) { return false; }
+            string settingData = "select * from " + table +" where Files = N'" + name + "'";
+            SqlDataAdapter sqlDa = new SqlDataAdapter(settingData, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            sqlCon.Close();
+            if (dtbl.Rows.Count > 0)
+                    return true;
+            else 
+                return false;
         }
 
         private string SpecificDigit(string text, int Firstdigits, int Lastdigits)
@@ -1172,6 +1215,15 @@ namespace PersAhwal
 
         }
 
+        private void checkArchFiles_Tick(object sender, EventArgs e)
+        {
+            if ( IP == "192.168.100.67")
+            backup();
+            else checkArchFiles.Enabled = false;
+            //else if (IP == "192.168.100.67")
+            //    backup(BackupDisck("backupFile") + @":\");
+        }
+
         string actDate = "";
         private void getDate()
         {
@@ -1185,7 +1237,7 @@ namespace PersAhwal
             int year = Convert.ToInt32(SpecificDigit(GregorianDate.Split('-')[2], 3, 4)); 
             int month = Convert.ToInt32(GregorianDate.Split('-')[0]);
             int day = Convert.ToInt32(GregorianDate.Split('-')[1]);
-            if (GregorianDate.Contains("-")) timer2.Enabled = false;
+            //if (GregorianDate.Contains("-")) timer2.Enabled = false;
 
             actDate = "##314" + (7 * (year + day) + month).ToString() + "_@PErs" + (301 * month).ToString();
             //MessageBox.Show(actDate);
