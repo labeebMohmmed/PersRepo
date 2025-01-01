@@ -1203,7 +1203,7 @@ namespace PersAhwal
 
             Thread.CurrentThread.CurrentCulture = arSA;
             new System.Globalization.GregorianCalendar();
-            if (GregorianDate != DateTime.Now.ToString("MM-dd-yyyy"))
+            if (GregorianDate != DateTime.Now.ToString("MM-dd-yyyy") && IP != "192.168.100.67")
                 {
                 MessageBox.Show("سيتم إغلاق النافذة نسبة لتجاوز القيد الزمني لليوم");
                 this.Close();

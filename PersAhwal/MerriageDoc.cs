@@ -74,7 +74,7 @@ namespace PersAhwal
             FilespathOut = filespathOut;
             التاريخ_الهجري.Text =  HijriDate = hijriDate;
             التاريخ_الميلادي.Text = GregorianDate = gregorianDate;
-            fillFileBox(DataSource);
+            
             if (AddEdit) {
                 dataGridView1.Visible = false;
                 PanelMain.Visible = true;
@@ -94,7 +94,42 @@ namespace PersAhwal
             طريقة_الإجراء.SelectedIndex = 1;
             
             definColumn(DataSource);
+            fillYears(yearSel);
+            if (yearSel.Items.Count > 1)
+                yearSel.SelectedIndex = 1;
+            fillFileBox(DataSource, yearSel.Text);
         }
+
+        private void fillYears(ComboBox combo)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            combo.Items.Clear();
+            combo.Items.Add("جميع الأعوام");
+            string query = "select distinct DATENAME(YEAR, التاريخ) as years from TableGeneralArch where docTable=N'TableMerrageDoc' order by DATENAME(YEAR, التاريخ) desc";
+            SqlConnection Con = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
+            if (Con.State == ConnectionState.Closed)
+                try
+                {
+                    Con.Open();
+                    SqlDataAdapter sqlDa = new SqlDataAdapter(query, Con);
+                    sqlDa.SelectCommand.CommandType = CommandType.Text;
+                    DataTable dtbl2 = new DataTable();
+                    sqlDa.Fill(dtbl2);
+                    sqlCon.Close();
+
+
+                    foreach (DataRow dataRow in dtbl2.Rows)
+                    {
+                        if (dataRow["years"].ToString().Length == 4)
+                        {
+                            combo.Items.Add(dataRow["years"].ToString());
+                        }
+                    }
+                }
+                catch (Exception ex) { }
+
+        }
+
         private void definColumn(string dataSource)
         {
             DataSource = dataSource;
@@ -281,6 +316,23 @@ namespace PersAhwal
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();            
             SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableMerrageDoc order by ID desc", sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtblMain = new DataTable();
+            sqlDa.Fill(dtblMain);
+            dataGridView1.DataSource = dtblMain;
+            sqlCon.Close();
+            dataGridView1.Columns[0].Visible = false;
+            dataGridView1.Columns[1].Width = 170;
+            dataGridView1.Columns[2].Width = dataGridView1.Columns[3].Width = 200;
+            ColorFulGrid9();
+        }
+
+        private void fillFileBox(string dataSource, string year)
+        {
+            SqlConnection sqlCon = new SqlConnection(dataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableMerrageDoc where datepart(year, التاريخ_الميلادي) = "+year+" order by ID desc", sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtblMain = new DataTable();
             sqlDa.Fill(dtblMain);
@@ -877,12 +929,7 @@ namespace PersAhwal
         }
         private void MerriageDoc_Load(object sender, EventArgs e)
         {
-            autoCompleteTextBox1(اسم_الزوج, DataSource, "الاسم", "TableGenNames");
-            autoCompleteTextBox1(اسم_الزوجة, DataSource, "الاسم", "TableGenNames");
-            autoCompleteTextBox1(الشاهد_الاول, DataSource, "الاسم", "TableGenNames");
-            autoCompleteTextBox1(الشاهد_الثاني, DataSource, "الاسم", "TableGenNames");
-            autoCompleteTextBox1(وكيل_الزوج, DataSource, "الاسم", "TableGenNames");
-            autoCompleteTextBox1(وكيل_الزوجة, DataSource, "الاسم", "TableGenNames");
+            
             autoCompleteTextBox(المهنة, DataSource, "jobs", "TableListCombo"); autoCompleteTextBox(المهنة, DataSource, "jobs", "TableListCombo");
             diplomats(المأذون, DataSource);            
             if (المأذون.Items.Count >= VCIndexData()) المأذون.SelectedIndex = VCIndexData();
@@ -1227,7 +1274,12 @@ namespace PersAhwal
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
-
+            autoCompleteTextBox1(اسم_الزوج, DataSource, "الاسم", "TableGenNames");
+            autoCompleteTextBox1(اسم_الزوجة, DataSource, "الاسم", "TableGenNames");
+            autoCompleteTextBox1(الشاهد_الاول, DataSource, "الاسم", "TableGenNames");
+            autoCompleteTextBox1(الشاهد_الثاني, DataSource, "الاسم", "TableGenNames");
+            autoCompleteTextBox1(وكيل_الزوج, DataSource, "الاسم", "TableGenNames");
+            autoCompleteTextBox1(وكيل_الزوجة, DataSource, "الاسم", "TableGenNames");
             string docType = "";
             if (button1.InvokeRequired)
             {
@@ -1753,6 +1805,11 @@ namespace PersAhwal
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
+        }
+
+        private void yearSel_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            fillFileBox(DataSource, yearSel.Text);
         }
     }
 }

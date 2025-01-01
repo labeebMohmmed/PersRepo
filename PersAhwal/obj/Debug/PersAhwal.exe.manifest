@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
-  <asmv1:assemblyIdentity name="PersAhwal.exe" version="1.0.0.1161" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
+  <asmv1:assemblyIdentity name="PersAhwal.exe" version="1.0.0.1163" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
   <application />
   <entryPoint>
     <assemblyIdentity name="PersAhwal" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
@@ -145,7 +145,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>ldMYFv9P8DViD5oynvLlBfSx85wj4rK3ohFtnhK635M=</dsig:DigestValue>
+        <dsig:DigestValue>3SHykwZt2WaVcaHtJeeuHwDdXy1k3oeFhZPWthy1w70=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -1014,14 +1014,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="PersAhwal.exe" size="8136704">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="PersAhwal.exe" size="8139776">
       <assemblyIdentity name="PersAhwal" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>w1yazZXfXp3+0ljmTC3aBOkQ/7Bd9vNOd1YEZkUVQF0=</dsig:DigestValue>
+        <dsig:DigestValue>E8UwIWeibHyDuUOTV7w7x9/D05YuGcl5cf8iYNjXaz0=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -1033,7 +1033,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>3G9kiD4OUkzIMyFIsHGyL80PdWGV9RI9/Z8iwck1FQE=</dsig:DigestValue>
+        <dsig:DigestValue>IL2F/s/N20Qy+dmJURyydym7hzg5nPVUcj6xNkJ+Otc=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

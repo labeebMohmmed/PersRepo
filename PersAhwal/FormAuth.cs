@@ -218,6 +218,9 @@ namespace PersAhwal
             chart1 = new Chart();
             legend1 = new Legend();
             chartArea1 = new ChartArea();
+            if (yearSel.Items.Count > 1)
+                yearSel.SelectedIndex = 1;            
+            
         }
 
         private void fillYears(ComboBox combo)
@@ -236,14 +239,49 @@ namespace PersAhwal
                     DataTable dtbl2 = new DataTable();
                     sqlDa.Fill(dtbl2);
                     sqlCon.Close();
+                    
+
                     foreach (DataRow dataRow in dtbl2.Rows)
                     {
-                        if(dataRow["years"].ToString().Length == 4) 
+                        if (dataRow["years"].ToString().Length == 4)
+                        {
                             combo.Items.Add(dataRow["years"].ToString());
+                        }
                     }
                 }
                 catch (Exception ex) { }
-           
+            
+        }
+
+        private void fillMonth(ComboBox combo, string year)
+        {
+            SqlConnection sqlCon = new SqlConnection(DataSource);
+            combo.Items.Clear();
+            combo.Items.Add("جميع الأشهر");
+            MessageBox.Show(year);
+            string query = "select distinct DATEPART(MONTH, التاريخ) as month from TableGeneralArch where DATENAME(YEAR, التاريخ) = N'"+year+"' order by DATEPART(MONTH, التاريخ) desc";
+            SqlConnection Con = new SqlConnection(DataSource.Replace("AhwalDataBase", "ArchFilesDB"));
+            if (Con.State == ConnectionState.Closed)
+                try
+                {
+                    Con.Open();
+                    SqlDataAdapter sqlDa = new SqlDataAdapter(query, Con);
+                    sqlDa.SelectCommand.CommandType = CommandType.Text;
+                    DataTable dtbl2 = new DataTable();
+                    sqlDa.Fill(dtbl2);
+                    sqlCon.Close();
+
+
+                    foreach (DataRow dataRow in dtbl2.Rows)
+                    {
+                        if (year.Length == 4)
+                        {
+                            combo.Items.Add(dataRow["month"].ToString());
+                        }
+                    }
+                }
+                catch (Exception ex) { }
+
         }
 
         private void fillSamplesCodes(string source)
@@ -6497,6 +6535,37 @@ namespace PersAhwal
         {
             removeComma();
             string query = "select * from TableAuth where DATEPART(year,تاريخ_الارشفة1) =" + year +" order by ID";
+
+            if (year == "جميع الأعوام")
+                query = "select * from TableAuth order by ID";
+            Console.WriteLine(query);
+            SqlConnection sqlCon = new SqlConnection(dataSource);
+            if (sqlCon.State == ConnectionState.Closed)
+                sqlCon.Open();
+            SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+            sqlDa.SelectCommand.CommandType = CommandType.Text;
+            DataTable dtbl = new DataTable();
+            sqlDa.Fill(dtbl);
+            dataGridView1.DataSource = dtbl;
+            rowCount = dtbl.Rows.Count.ToString();
+            dataGridView1.Sort(dataGridView1.Columns["ID"], System.ComponentModel.ListSortDirection.Descending);
+            //dataGridView1.Columns[0].Visible = false ;
+            dataGridView1.Columns[1].Width = 200;
+            dataGridView1.Columns[3].Width = 50;
+            dataGridView1.Columns[8].Width = 50;
+            dataGridView1.Columns[9].Width = 170;
+            dataGridView1.Columns[7].Width = dataGridView1.Columns[2].Width = 200;
+            AuthNoPart2 = dataGridView1.Rows.Count.ToString();
+            sqlCon.Close();
+            int bre = 0;
+            ColorFulGrid9();
+
+        }
+
+        public void FillDataGridView(string dataSource, string year, string month)
+        {
+            removeComma();
+            string query = "select * from TableAuth where DATEPART(year,تاريخ_الارشفة1) =" + year + " and DATEPART(month,تاريخ_الارشفة1) = "+month+"order by ID";
             if (year == "جميع الأعوام")
                 query = "select * from TableAuth order by ID";
             Console.WriteLine(query);
