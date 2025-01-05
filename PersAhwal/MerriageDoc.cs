@@ -332,7 +332,7 @@ namespace PersAhwal
             SqlConnection sqlCon = new SqlConnection(dataSource);
             if (sqlCon.State == ConnectionState.Closed)
                 sqlCon.Open();
-            SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableMerrageDoc where datepart(year, التاريخ_الميلادي) = "+year+" order by ID desc", sqlCon);
+            SqlDataAdapter sqlDa = new SqlDataAdapter("select * from TableMerrageDoc where datepart(year, تاريخ_الارشفة1) = " + year+" order by ID desc", sqlCon);
             sqlDa.SelectCommand.CommandType = CommandType.Text;
             DataTable dtblMain = new DataTable();
             sqlDa.Fill(dtblMain);
@@ -524,7 +524,7 @@ namespace PersAhwal
                     arch++;
                 }
             }
-            labDescribed.Text = "عدد (" + i.ToString() + ") معاملة .. عدد (" + inComb.ToString() + ") غير مكتمل.. والمؤرشف منها عدد (" + arch.ToString() + ")...";
+            labDescribed.Text = "عدد (" + i.ToString() + ") معاملة .. عدد (" + inComb.ToString() + ") غير مكتمل.. والمؤرشف نهائيا منها عدد (" + arch.ToString() + ")...";
 
         }
         void FillDatafromGenArch(string doc, string id, string table)
@@ -929,7 +929,12 @@ namespace PersAhwal
         }
         private void MerriageDoc_Load(object sender, EventArgs e)
         {
-            
+            autoCompleteTextBox1(اسم_الزوج, DataSource, "الاسم", "TableGenNames");
+            autoCompleteTextBox1(اسم_الزوجة, DataSource, "الاسم", "TableGenNames");
+            autoCompleteTextBox1(الشاهد_الاول, DataSource, "الاسم", "TableGenNames");
+            autoCompleteTextBox1(الشاهد_الثاني, DataSource, "الاسم", "TableGenNames");
+            autoCompleteTextBox1(وكيل_الزوج, DataSource, "الاسم", "TableGenNames");
+            autoCompleteTextBox1(وكيل_الزوجة, DataSource, "الاسم", "TableGenNames");
             autoCompleteTextBox(المهنة, DataSource, "jobs", "TableListCombo"); autoCompleteTextBox(المهنة, DataSource, "jobs", "TableListCombo");
             diplomats(المأذون, DataSource);            
             if (المأذون.Items.Count >= VCIndexData()) المأذون.SelectedIndex = VCIndexData();
@@ -1044,7 +1049,7 @@ namespace PersAhwal
                 foreach (DataRow dataRow in Textboxtable.Rows)
                 {
                     string text = dataRow[comlumnName].ToString().Trim();
-                    Console.WriteLine("autoCompleteTextBox " + text);
+                    //Console.WriteLine("autoCompleteTextBox " + text);
                     autoComplete.Add(text);
                 }
                 textbox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
@@ -1274,12 +1279,7 @@ namespace PersAhwal
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
-            autoCompleteTextBox1(اسم_الزوج, DataSource, "الاسم", "TableGenNames");
-            autoCompleteTextBox1(اسم_الزوجة, DataSource, "الاسم", "TableGenNames");
-            autoCompleteTextBox1(الشاهد_الاول, DataSource, "الاسم", "TableGenNames");
-            autoCompleteTextBox1(الشاهد_الثاني, DataSource, "الاسم", "TableGenNames");
-            autoCompleteTextBox1(وكيل_الزوج, DataSource, "الاسم", "TableGenNames");
-            autoCompleteTextBox1(وكيل_الزوجة, DataSource, "الاسم", "TableGenNames");
+            
             string docType = "";
             if (button1.InvokeRequired)
             {
