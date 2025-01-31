@@ -144,11 +144,10 @@ namespace PersAhwal
             Jobposition = jobposition;
             التاريخ_الميلادي.Text = GregorianDate = gregorianDate;
             التاريخ_الهجري.Text = HijriDate = hijriDate;
-            Console.WriteLine("1");
+            
             genPreperations();
-            Console.WriteLine("2");
             FillDataGridView(DataSource, year);
-            Console.WriteLine("3");
+            
             getMaxRange(DataSource);
             backgroundWorker2.RunWorkerAsync();
             try
@@ -1888,7 +1887,7 @@ namespace PersAhwal
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-
+            Console.WriteLine("1");
 
             intID = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value.ToString());
             addNameIndex = 0;
@@ -1897,6 +1896,7 @@ namespace PersAhwal
             {
                 gridFill = true;
                 fillInfo(Panelapp, true);
+                Console.WriteLine("2");
                 //MessageBox.Show(مقدم_الطلب.Text);
                 string appJob, appBirth;
                 try
@@ -1911,13 +1911,14 @@ namespace PersAhwal
 
                 //fillFirstInfo(مقدم_الطلب.Text.Split('_')[0], النوع.Text.Split('_')[0], نوع_الهوية.Text.Split('_')[0], رقم_الهوية.Text.Split('_')[0], مكان_الإصدار.Text.Split('_')[0], "العربية", المهنة.Text.Split('_')[0], تاريخ_الميلاد.Text.Split('_')[0], "0");
                 //MessageBox.Show(مقدم_الطلب.Text);
-
+                Console.WriteLine("3");
 
                 if (مقدم_الطلب.Text == "")
                 {
                     addNames("", "ذكر", "جواز سفر", "P0", "", "العربية", appJob, appBirth, "");
                     ArchData = true;
                 }
+                Console.WriteLine("4");
                 for (int app = 0; app < مقدم_الطلب.Text.Split('_').Length; app++)
                 {
                     //MessageBox.Show(مقدم_الطلب.Text.Split('_')[app]);
@@ -1948,52 +1949,23 @@ namespace PersAhwal
                     }
                 }
                 ageDetected = تاريخ_الميلاد.Text;
+                Console.WriteLine("5");
                 fillInfo(PaneltxtReview, false);
+                Console.WriteLine("6");
                 fillInfo(panelapplicationInfo, false);
-                
-
-                //if ((حالة_السداد.Text == "" || حالة_السداد.Text == "غير مسددة") && Jobposition.Contains("قنصل"))
-                //{
-                //    var selectedOption1 = MessageBox.Show("هل المعاملة تم سدادها؟", "متابعة الإجراء", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                //    if (selectedOption1 == DialogResult.Yes)
-                //    {
-                //        حالة_السداد.Text = "تم السداد";
-
-
-                //    }
-                //    else if (selectedOption1 == DialogResult.No)
-                //    {
-                //        var selectedOption = MessageBox.Show("متابعة الإجراء إكرامي؟(", "المعاملة غير مسددة", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                //        if (selectedOption == DialogResult.Yes)
-                //        {
-                //            //حالة_السداد.Text = "إكرامي";
-                //            panelNotPay.Visible = true;
-                //            panelNotPay.BringToFront();
-                //        }
-                //        else if (selectedOption == DialogResult.No)
-                //        {
-                //            currentPanelIndex--;
-                //            return;
-                //        }
-                //    }
-                //    //skipPayment("TableCollection", حالة_السداد.Text);
-                //}
-
-                //if (حالة_السداد.Text == "" || حالة_السداد.Text.Contains("-")|| حالة_السداد.Text == "غير مسددة")
-                //{
-                //    panelNotPay.Visible = true;
-                //    panelNotPay.BringToFront();
-                //    currentPanelIndex--;
-                //    return;
-                //}
+                Console.WriteLine("7");
                 fillInfo(PanelItemsboxes, false);
+                Console.WriteLine("8");
                 fillInfo(finalPanel, false);
+                Console.WriteLine("9");
                 currentPanelIndex = 1;
                 panelShow(currentPanelIndex);
+                Console.WriteLine("10");
                 if (طريقة_الطلب.Text != "حضور مباشرة إلى القنصلية")
                     طريقة_الطلب.Checked = الشاهد_الأول.Enabled = هوية_الأول.Enabled = طريقة_الطلب.Enabled = false;
                 else طريقة_الطلب.Checked = الشاهد_الأول.Enabled = هوية_الأول.Enabled = طريقة_الطلب.Enabled = true;
                 اسم_المندوب.Enabled = false;
+                Console.WriteLine("11");
             }
 
             checkChanged(مقدم_الطلب, Panelapp);
@@ -3442,14 +3414,51 @@ namespace PersAhwal
                 textbox.AutoCompleteCustomSource = autoComplete;
                 saConn.Close();
             }
-        } private void autoCompleteTextBox(ComboBox textbox, string source, string comlumnName, string tableName)
+        } 
+        //private void autoCompleteTextBox(ComboBox textbox, string source, string comlumnName, string tableName)
+        //{
+
+        //    using (SqlConnection saConn = new SqlConnection(source))
+        //    {
+        //        saConn.Open();
+
+        //        string query = "select " + comlumnName + " from " + tableName;
+        //        SqlCommand cmd = new SqlCommand(query, saConn);
+        //        cmd.ExecuteNonQuery();
+        //        DataTable Textboxtable = new DataTable();
+        //        SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);
+        //        dataAdapter.Fill(Textboxtable);
+        //        AutoCompleteStringCollection autoComplete = new AutoCompleteStringCollection();
+        //        bool newSrt = true;
+        //        textbox.AutoCompleteCustomSource.Clear();
+
+        //        foreach (DataRow dataRow in Textboxtable.Rows)
+        //        {
+        //            if (!string.IsNullOrEmpty(dataRow[comlumnName].ToString()))
+        //            {
+        //                for (int x = 0; x < Textboxtable.Rows.Count; x++)
+        //                    if (dataRow[comlumnName].ToString().Equals(Textboxtable.Rows[x]))
+        //                        newSrt = false;
+
+        //                if (newSrt)
+        //                    autoComplete.Add(dataRow[comlumnName].ToString());
+        //            }
+        //        }
+        //        textbox.AutoCompleteMode = AutoCompleteMode.Suggest;
+        //        textbox.AutoCompleteSource = AutoCompleteSource.CustomSource;
+        //        textbox.AutoCompleteCustomSource = autoComplete;
+        //        saConn.Close();
+        //    }
+        //}
+
+        private void autoFillTextBox(ComboBox textbox, string source, string comlumnName, string tableName)
         {
 
             using (SqlConnection saConn = new SqlConnection(source))
             {
                 saConn.Open();
 
-                string query = "select " + comlumnName + " from " + tableName;
+                string query = "select distinct " + comlumnName + " from " + tableName + " where " + comlumnName + " is not null";
                 SqlCommand cmd = new SqlCommand(query, saConn);
                 cmd.ExecuteNonQuery();
                 DataTable Textboxtable = new DataTable();
@@ -3461,15 +3470,8 @@ namespace PersAhwal
 
                 foreach (DataRow dataRow in Textboxtable.Rows)
                 {
-                    if (!string.IsNullOrEmpty(dataRow[comlumnName].ToString()))
-                    {
-                        for (int x = 0; x < Textboxtable.Rows.Count; x++)
-                            if (dataRow[comlumnName].ToString().Equals(Textboxtable.Rows[x]))
-                                newSrt = false;
-
-                        if (newSrt)
-                            autoComplete.Add(dataRow[comlumnName].ToString());
-                    }
+                     autoComplete.Add(dataRow[comlumnName].ToString());
+                    
                 }
                 textbox.AutoCompleteMode = AutoCompleteMode.Suggest;
                 textbox.AutoCompleteSource = AutoCompleteSource.CustomSource;
@@ -3568,8 +3570,11 @@ namespace PersAhwal
         private void نوع_المعاملة_SelectedIndexChanged(object sender, EventArgs e)
         {
             نوع_الإجراء.Items.Clear();
+            Console.WriteLine("*1");
             fileComboBoxSub(نوع_الإجراء, DataSource, "altColName", "altSubColName");
-            autoCompleteTextBox(نوع_الإجراء, DataSource, "نوع_الإجراء", "TableCollection");
+            Console.WriteLine("*2");
+            autoFillTextBox(نوع_الإجراء, DataSource, "نوع_الإجراء", "TableCollection");
+            Console.WriteLine("*3");
             عنوان_المكاتبة.Items.Clear();
                 عنوان_المكاتبة.Items.Add(نوع_المعاملة.Text);
             عنوان_المكاتبة.Items.Add(نوع_الإجراء.Text);
@@ -3595,6 +3600,7 @@ namespace PersAhwal
                 autoCompleteTextBox(Vitext1, DataSource, "ForiegnCountries", "TableListCombo");
                 autoCompleteTextBox(Vitext2, DataSource, "Vitext1", "TableCollection");                
             }
+            Console.WriteLine("*4");
         }
 
         private void fileComboBoxSub(ComboBox combbox, string source, string comlumnName, string SubComlumnName)
@@ -4756,12 +4762,16 @@ namespace PersAhwal
         private void نوع_الإجراء_SelectedIndexChanged(object sender, EventArgs e)
         {
             resetBoxes();
+            Console.WriteLine("+1"); 
             reversTextReview();
-            reversTextPurpose(); 
+            Console.WriteLine("+2");
+            reversTextPurpose();
+            Console.WriteLine("+3");
             flllPanelItemsboxes("ColName", نوع_الإجراء.Text + "-" + نوع_المعاملة.SelectedIndex.ToString());
+            Console.WriteLine("+4");
             fillInfo(PanelItemsboxes, false);
             updateProType("TableCollection", نوع_المعاملة, نوع_الإجراء, "رقم_المعاملة", رقم_المعاملة.Text);
-
+            Console.WriteLine("+5");
         }
         private void reversTextReview()
         {
@@ -5000,6 +5010,7 @@ namespace PersAhwal
             //MessageBox.Show(query);
             Console.WriteLine(query + " - " + dtbl.Rows.Count.ToString());
             string lang = "العربية";
+            //MessageBox.Show("test1");
             if (dtbl.Rows.Count > 0)
                 foreach (DataRow dr in dtbl.Rows)
                 {
@@ -6202,12 +6213,12 @@ namespace PersAhwal
 
         private void نوع_الإجراء_TextUpdate(object sender, EventArgs e)
         {
-            reversTextReview();
+            //reversTextReview();
         }
 
         private void نوع_الإجراء_TextChanged(object sender, EventArgs e)
         {
-            reversTextReview();
+            //reversTextReview();
         }
 
         private void pictureBox5_Click(object sender, EventArgs e)
