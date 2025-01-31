@@ -188,7 +188,7 @@ namespace PersAhwal
             // 
             this.appversion.AutoSize = true;
             this.appversion.Font = new System.Drawing.Font("Arabic Typesetting", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.appversion.Location = new System.Drawing.Point(859, 258);
+            this.appversion.Location = new System.Drawing.Point(835, 258);
             this.appversion.Name = "appversion";
             this.appversion.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.appversion.Size = new System.Drawing.Size(56, 27);
