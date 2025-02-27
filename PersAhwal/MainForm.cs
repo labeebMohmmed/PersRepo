@@ -10493,7 +10493,7 @@ namespace PersAhwal
             else
             {
                 dataSourceWrite(primeryLink + "updatingStatus.txt", "Not Allowed");
-                MerriageDoc merriageDoc = new MerriageDoc(DataSource, false, EmployeeName, attendedVC.SelectedIndex, GregorianDate, HijriDate, FilespathOut);
+                MerriageDoc merriageDoc = new MerriageDoc(DataSource, false, EmployeeName, attendedVC.SelectedIndex, GregorianDate, HijriDate, FilespathOut, UserJobposition);
                 merriageDoc.ShowDialog();
             }
         }

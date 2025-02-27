@@ -63,12 +63,18 @@ namespace PersAhwal
         string localCopy_off1 = "";
         bool newInfo = true;
         bool grid = false;
-        public MerriageDoc(string dataSource, bool addEdit, string empName, int atVCIndex, string gregorianDate, string hijriDate, string filespathOut)
+        string UserJobposition = "";
+        public MerriageDoc(string dataSource, bool addEdit, string empName, int atVCIndex, string gregorianDate, string hijriDate, string filespathOut, string userJobposition)
         {
             InitializeComponent();
             DataSource = dataSource;
             AddEdit = addEdit;
             AtVCIndex = atVCIndex;
+            UserJobposition = userJobposition;
+            //MessageBox.Show(UserJobposition);
+            if (UserJobposition.Contains("قنصل")) {
+                رقم_الوثيقة.Enabled = editNo.Enabled = true;
+            }else رقم_الوثيقة.Enabled = editNo.Enabled = false;
             allList = getColList("TableMerrageDoc");
             //FilespathIn = filespathIn;
             FilespathOut = filespathOut;
